@@ -2,6 +2,8 @@
 
 Written 2026-10-06. Living version: [Claude Doc](https://claude.ai/code/artifact/965d4890-47d1-44a7-a629-985c83b64dd4).
 
+Screen-by-screen detail for design, the navigation map and sequence diagrams are in [feature-spec.md](feature-spec.md); where the two differ, the spec wins.
+
 ## Overview
 
 Jx-Care is an offline React Native app for one person to track skin and hair care products, follow routines, and stay consistent. Everything lives on the phone: no account, no server, no sync.
@@ -201,6 +203,8 @@ Expo-managed React Native with TypeScript on the newest versions, so Android and
 | Backup | expo-file-system + expo-sharing | Export/import a JSON backup |
 | Tests | Jest 30 + React Native Testing Library 14 | Unit tests for expiry, streak and conflict logic |
 | Base components | rn-primitives 1.5 (@rn-primitives/* packages) | Unstyled, accessible dialogs, selects, switches, tabs and more, styled with the app's own theme |
+| Styling | NativeWind 4.2 (Tailwind CSS 3.4) | Tailwind classes on RN components, light/dark tokens as CSS variables; same setup as React Native Reusables. Move to NativeWind 5 once it leaves RC |
+| Animation | react-native-reanimated 4 | Smooth screen, sheet and list transitions; see the motion rules in docs/feature-spec.md |
 
 Notification caveat: iOS keeps at most 64 pending local notifications, so the app schedules only the next ones in the coming weeks and tops them up each time it opens.
 
@@ -208,7 +212,7 @@ Notification caveat: iOS keeps at most 64 pending local notifications, so the ap
 
 Twelve milestones, each ending in something usable on the phone; later ones depend on the product list from milestone 2.
 
-1. **Foundation:** Expo + TypeScript project, tab navigation, SQLite schema and migrations, LT/EN translation setup, Settings screen with language switch.
+1. **Foundation:** Expo + TypeScript project, tab navigation, SQLite schema and migrations, LT/EN translation setup, NativeWind theme from the design system tokens, Settings screen with language switch.
 2. **Products:** product list, add/edit form with all fields and photo, ingredients, archive, search/filter, expiry status badges, cost per day.
 3. **PIN lock:** first-run onboarding (language, PIN, recovery question), lock screen, auto-lock, biometrics, forgot-PIN flow, change PIN, reset app.
 4. **Expiry notifications:** schedule/cancel per product, warning-days setting, "Expiring soon" home card.
