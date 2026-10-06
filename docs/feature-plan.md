@@ -25,7 +25,7 @@ Defaults picked where the ask was open:
 
 ## Features
 
-Eight features, grouped as the app's main areas. Each lists what the user can do and the rules behind it.
+Nine features, grouped as the app's main areas. Each lists what the user can do and the rules behind it.
 
 ### 1. PIN login
 
@@ -89,9 +89,20 @@ Eight features, grouped as the app's main areas. Each lists what the user can do
 - Marking "washed today" logs which products were used.
 - Hair care has its own streak: each hair task done on its due day extends it, a missed due day breaks it. Days shown as on time / late.
 
+### 9. Shopping list
+
+- One list of things to buy. An item is either linked to an existing product ("buy again") or typed as free text for something new (name, optional brand, Skin/Hair, note).
+- Quick add: "Add to shopping list" on any product, including archived ones, and on the "Expiring soon" card.
+- Suggestions: when a product is marked **Finished**, or its effective expiry is within the warning window, the app offers to add it. Since there is no "how much is left" counter, nothing is added without the user's tap.
+- Items show the last known price and size from the linked product, so the user knows what they paid before.
+- Tick an item when bought. For a linked item the app offers "Add as new product", which copies name, brand, category, area, size, unit and ingredients into a new product with today's purchase date; expiry and opened dates are filled in fresh.
+- Bought items move to a "Bought" section and are cleared after 30 days, or manually with "Clear bought".
+- Filter by Skin / Hair; share the list as plain text (e.g. to a messaging app) for use in the shop.
+- Shopping list items are included in the JSON backup.
+
 ## Data model
 
-Eleven tables in a local SQLite database; expiry status and streaks are computed, not stored.
+Twelve tables in a local SQLite database; expiry status and streaks are computed, not stored.
 
 | Table | Key fields | Notes |
 | --- | --- | --- |
@@ -106,6 +117,7 @@ Eleven tables in a local SQLite database; expiry status and streaks are computed
 | routine_log | id, routineId, date, completedStepIds, completedAt | Feeds the calendar and skin streak |
 | hair_task | id, name, productIds, everyNDays or daysOfWeek, reminderTime, lastDoneAt | Next due = lastDoneAt + N |
 | hair_log | id, hairTaskId, date, productIds | Wash history, feeds hair streak |
+| shopping_item | id, productId (nullable), name, brand, area, note, addedAt, boughtAt | productId set for "buy again", null for free-text items |
 
 Notification ids are kept per product, routine and hair task so they can be cancelled and rescheduled on edits.
 
@@ -123,12 +135,14 @@ First launch (language, PIN) → Lock screen (PIN / biometrics; every open, and 
 │ Tick off     │ Add / edit     │ Routine editor │ Month view   │ PIN, biometrics │
 │ Hair due     │ Product detail │ Hair schedule  │ Day detail   │ Ingredients     │
 │ Expiring soon│ Archive        │ Hair tasks     │ Streak stats │ Conflicts       │
-│ Streak       │                │                │              │ Expiry warning  │
+│ Streak       │ Shopping list  │                │              │ Expiry warning  │
 │              │                │                │              │ Backup, reset   │
 └──────────────┴────────────────┴────────────────┴──────────────┴─────────────────┘
 ```
 
 Routine reminders open straight into Today with that routine expanded; expiry reminders open the product's detail screen.
+
+The shopping list sits inside the Products tab (a "Shopping" switch at the top of the list) to keep five tabs; Today shows a small "N to buy" chip linking to it.
 
 ## Tech stack
 
@@ -157,7 +171,7 @@ Notification caveat: iOS keeps at most 64 pending local notifications, so the ap
 
 ## Build order
 
-Nine milestones, each ending in something usable on the phone; later ones depend on the product list from milestone 2.
+Ten milestones, each ending in something usable on the phone; later ones depend on the product list from milestone 2.
 
 1. **Foundation:** Expo + TypeScript project, tab navigation, SQLite schema and migrations, LT/EN translation setup, Settings screen with language switch.
 2. **Products:** product list, add/edit form with all fields and photo, ingredients, archive, search/filter, expiry status badges.
@@ -167,7 +181,8 @@ Nine milestones, each ending in something usable on the phone; later ones depend
 6. **Calendar + streak:** routine log, month calendar, current and best skin streak.
 7. **Conflicts:** ingredient groups, conflict editor, whole-day warnings in routines.
 8. **Hair care calendar:** hair tasks with frequency, next-due logic, hair calendar, reminders, wash log, hair streak.
-9. **Polish:** JSON backup export/import, empty states, full LT/EN copy review, app icon.
+9. **Shopping list:** list with linked and free-text items, add from product and expiring card, finished/expiring suggestions, tick bought and "Add as new product", share as text.
+10. **Polish:** JSON backup export/import, empty states, full LT/EN copy review, app icon.
 
 PIN lock comes after products on purpose: it is easier to test the data screens without a lock, and the lock wraps the finished navigation.
 
