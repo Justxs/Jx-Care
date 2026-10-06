@@ -12,9 +12,9 @@ This spec describes every screen, state and flow in Jx-Care in enough detail to 
 | --- | --- | --- | --- |
 | 1 | Day boundary | An evening routine done at 00:30 would count for the wrong day | The app's day ends at 04:00, not midnight, for routines, streaks and logs |
 | 2 | Streak + step schedules | "Every step done" was unclear once steps have their own schedule | Only steps due that day count toward done |
-| 3 | Two routines at one time of day | Unclear what Today shows | Today shows one card per time of day with A/B chips; finishing either completes it |
+| 3 | Two routines at one time of day | Unclear what Today shows | Today shows one card per time of day with A/B chips; finishing either completes it. The two are alternatives, so they are never checked against each other for conflicts |
 | 4 | Expiry without dates | No rule for unopened products with no printed date | Status "No date" (grey); no reminders |
-| 5 | Conflicts + step schedules | Whole-day checks could flag steps that never meet | Only steps due on the same weekday are compared; every-few-days steps show "mild" |
+| 5 | Conflicts + step schedules | Whole-day checks could flag steps that never meet | Only steps due on the same weekday are compared, and A/B alternates at one time of day are never compared with each other; every-few-days steps show "mild" |
 | 6 | Hair schedule | No rule for washing early | Early counts as on time and resets the next due date; late shows orange |
 | 7 | PIN lockout | Only one lockout step | 5 wrong tries: 30 s wait; 10: 5 min. Recovery answer: 5 wrong tries, 15 min |
 | 8 | Notification permission | Never asked | Asked in context: when the first product with an expiry date is saved, and when the first routine reminder is switched on, with "Not now" |
@@ -56,6 +56,10 @@ One word per idea, used the same way on every screen and in notifications:
 - **Destructive actions** say what is lost and whether it can be undone.
 - **Success toasts** name the thing and offer the next step or Undo ("Body lotion bought. Add it to your products?").
 - **Spoken labels:** "Delete last digit" on the PIN pad, "More actions" on overflow menus.
+- **Conflict tag:** the only conflict marker anywhere (Today, Routines, player, editor): an amber pill with a triangle and the word "Conflict" or "Mild conflict", tappable with a 44 pt hit area where it opens details. Never a colour-only dot; red is kept for expiry and the avoid list.
+- **No faded text:** states like done, waiting, bought or expired change text colour (muted) or add a badge or strike-through; text is never dimmed with opacity, so it keeps 4.5:1 contrast.
+- **Weekday dots** show scheduled days in soft pink (accent-soft with accent text), not solid pink, and their spoken label lists the days in words.
+- **Progress bars** fill with a transform (scaleX from the left), not by animating width.
 
 ### Styling
 
@@ -243,18 +247,18 @@ There is no reminders step. Notification permission is asked in context instead 
 
 - Shows the saved question and an answer field; answer is compared ignoring case, accents and extra spaces.
 - Correct: Create new PIN (O2/O3 layout), then Today.
-- 5 wrong answers: wait 15 minutes. Link at the bottom: "Reset app and delete all data" opens a dialog that requires typing RESET.
+- 5 wrong answers: wait 15 minutes. Link at the bottom: "Reset app and delete all data" opens a dialog that requires typing RESET. The dialog names what is lost with real counts and never suggests exporting (the person is locked out): "This deletes 84 products, 6 routines and 52 progress photos. Progress photos are not in your gallery, so they are lost too. Your last backup is from 1 Sep; you can restore it after the reset." The Settings path (S7, unlocked) shows the same text plus an Export backup button.
 
 ### T1 Today
 
 The home screen answers "what do I need to do today?". Sections top to bottom, each hidden when empty:
 
 1. **Header:** greeting by time of day, date ("Tuesday, 6 Oct"), skin and hair streak chips (flame icon + number).
-2. **Routine cards:** one card per time of day due today (Morning, Evening, custom), in time order. Card shows the time of day, "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), progress ring (3/5), and a conflict warning icon if any. Two routines at one time of day: A/B chips on the card; the chosen one is remembered for that weekday. Tap: opens the routine player. Done: card collapses to a ticked row.
+2. **Routine cards:** one card per time of day due today (Morning, Evening, custom), in time order. Card shows the time of day, "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), progress ring (3/5), and a conflict tag if any (see Conflict tag below). If a product in the routine is expired, the card or its done row names it in red ("SPF 50 fluid expired 2 Oct"). Two routines at one time of day: A/B chips on the card with "Pick one. Jx-Care remembers it for Tuesdays."; the chosen one is remembered for that weekday. The chips show only until the first step is ticked; the button says Start before any tick and Continue after. Tap: opens the routine player. Done: card collapses to a ticked row.
 3. **Hair due:** rows for hair tasks due today or overdue ("Wash: shampoo + conditioner", "Overdue 1 day" in orange). Tap: Hair task done sheet.
-4. **Weekly photo card:** shown on the weekly photo day until taken ("Time for this week's skin photo"), buttons Take photo / Skip this week.
+4. **Weekly photo card:** shown on the weekly photo day until taken ("Time for this week's skin photo"), buttons Take photo (secondary) / Skip this week (ghost).
 5. **How's your skin today?:** compact chips (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy) plus a hair row; tapping one saves at once, "Add note" opens the Condition log sheet.
-6. **Expiring soon:** up to 3 product rows with days left ("12 days", red when expired) and "See all".
+6. **Expiring soon:** up to 3 product rows with days left ("12 days", red when expired) and "See all". While any product is expired, this section and the To buy chip move up to sit directly under the routine cards.
 7. **To buy chip:** "3 to buy" linking to the shopping list.
 
 First-run state: a "Set up Jx-Care" card with progress "n of 3" and three fixed-height rows: Add your first product (opens P3 quick mode), Build a routine (opens routine templates), Set up hair care (opens quick hair setup). Done rows show a green check and what was made. Below the card, an Optional group: weekly progress photo, ingredients to avoid. No streak chips or routine cards show until a routine exists. When all three rows are done the card says "You're set" and is removed the next day; long press, Hide removes it at once.
@@ -263,9 +267,9 @@ First-run state: a "Set up Jx-Care" card with progress "n of 3" and three fixed-
 
 - Full screen, opened from Today, Routines or a reminder. Header: routine name, time of day, close (X), progress "Step 2 of 5".
 - List of steps due today in order; skipped-today steps are hidden. Each row: product photo, name, brand, note ("2 drops"), checkbox.
-- Ticking a step with a wait timer starts a countdown in a fixed bar at the bottom of the player ("Wait 1:00 before the next step") with Skip wait; the next step is dimmed until it ends.
-- Conflict mark on a step: red dot; tap shows "Retinol conflicts with the AHA in Evening B on Tuesday.".
-- Finished product: the step shows "Finished" with Pick another and Buy again.
+- Ticking a step with a wait timer starts a countdown in a fixed bar at the bottom of the player ("Wait 1:00 before the next step") with Skip wait; until it ends the next step's text turns muted and its caption reads "Next, after the wait" (text is never faded with opacity).
+- Conflict on a step: a tappable conflict tag; an amber line under the list names the other routine and the risk ("Vitamin C serum conflicts with the glycolic acid toner in tonight's Evening B. Using both on one day can irritate.").
+- Expired or finished product: the step becomes a card ("Step 4 · SPF 50 fluid") with a red "Expired 2 Oct" or neutral "Finished" badge, the line "Pick another product for this step, or tick it to use this one today.", and Pick another / Buy again.
 - All ticked: success state with confetti-free subtle check, updated streak ("Skin streak: 12 days") and Done.
 - Leaving mid-way keeps ticks for the day.
 
@@ -331,6 +335,8 @@ Live preview at the bottom: "Expires on 6 Apr 2027 (in 182 days)". An avoided in
 ### P4 Ingredient entry
 
 Ingredients are entered one per line in a multi-line field, not separated by commas: each line is one ingredient and Enter starts the next. While typing a line, matching ingredients from the user's list are suggested above the keyboard; tapping one fills the line. Pasting a list with one ingredient per line works the same way. Blank lines are ignored, extra spaces are trimmed and duplicates are merged. Below the field, a live preview shows the parsed ingredients as chips: chips in a conflict show a small link icon, avoided ones show red, and ones not yet in the user's list show a "New" tag. Done saves the list and adds new ingredients to the user's list. Product detail links here with "Edit list".
+
+Pasted lists: when pasted text contains a line with two or more commas (a list copied from a pack or a shop), that line is split at the commas and the hint reads "Pasted list split at commas into 5 lines." with Undo. Typed text is never split. The chip preview and the button ("Save 5 ingredients") always match the parsed lines.
 
 ### P5 Archive
 
@@ -406,7 +412,7 @@ Preview line: "Next due: Friday, 9 Oct". Washes count toward the hair streak; ot
 ### C1 Calendar
 
 - Segmented switch: Skin / Hair / Condition / Progress (Progress opens C3).
-- **Skin view:** month grid; each day a coloured dot: done (accent), partly done (half), missed (grey ring), nothing scheduled (none); today outlined. Above: streak card with current and best ("Best 21 days").
+- **Skin view:** month grid, Monday first; each day a 10 pt mark: done (accent), partly done (half), missed (grey ring), nothing scheduled (none); today outlined; the selected day uses the soft accent background (never the solid "done" colour). Each day's spoken label includes its status ("5 October, partly done"). Above: streak card with current and best ("Best 21 days").
 - **Hair view:** wash days done (filled), due (outlined), overdue (orange), other care as small icons (scissors, palette). Hair streak card.
 - **Condition view:** each day shows the logged skin state as a small coloured chip (calm green, oily yellow, dry blue, breakout red, redness pink); legend below.
 - Swipe left/right between months; "Today" button returns.
@@ -453,7 +459,7 @@ Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), 
 
 ### S3 Conflicts + editor
 
-- List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note ("Can cause flushing"), number of affected routines, or "Not in routines" when none uses both sides.
+- List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note ("Can cause flushing"), number of routines it currently fires in, or "No clashes" when its two sides never fall on the same day.
 - Editor sheet: left side picker, right side picker, note. Saving re-checks all routines and shows "Affects 2 routines".
 
 ### S4 Avoid list
@@ -472,7 +478,7 @@ Rows: ingredient or group, note ("allergic"), "in 1 product" warning count, or "
 | Weekly digest | Monday 09:00 | On/off |
 | Snooze length | 15 min | 5 / 15 / 30 min |
 
-If system permission is off, a banner at the top: "Notifications are off for Jx-Care" with Open phone settings.
+If phone permission is off, an amber card at the top: "Notifications are off in phone settings" / "Your choices below are kept, but nothing is sent until notifications are on." with the filled button "Open phone settings". Every switch is replaced by its saved state as text ("Paused" or "Off") so nothing looks on when it is not. The card's space is reserved so the list does not jump when permission returns.
 
 ### S6 PIN and security
 
