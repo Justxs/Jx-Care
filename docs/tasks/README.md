@@ -49,17 +49,17 @@ Status: **todo**, **in progress**, **done**. "Pending" in the file column means 
 | 009 | Forms, sheets, dialogs and toasts (pending) | 008 | Global UI rules, Motion | todo |
 | 010 | App shell and navigation (pending) | 005, 009 | Navigation map | todo |
 | 011 | Settings list and preferences (pending) | 010 | S1, S7 | todo |
-| 012 | Products data (pending) | 005, 006 | P1–P5 | todo |
+| 012 | [Products data](012-products-data.md) | 005, 006 | P1–P5 | todo |
 | 013 | Products list (pending) | 010, 012 | P1 | todo |
 | 014 | Product form and ingredient entry (pending) | 010, 012 | P3, P4 | todo |
 | 015 | Product detail and archive (pending) | 010, 012 | P2, P5 | todo |
-| 016 | PIN and secure storage service (pending) | 004 | O2–O4, L1, L2 rules | todo |
+| 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | todo |
 | 017 | Onboarding (pending) | 010, 016 | O1–O5 | todo |
 | 018 | Lock screen and forgot PIN (pending) | 017 | L1, L2 | todo |
 | 019 | PIN and security settings (pending) | 011, 018 | S6 | todo |
-| 020 | Notification service (pending) | 005 | Notifications | todo |
+| 020 | [Notification service](020-notification-service.md) | 005 | Notifications | todo |
 | 021 | Expiry reminders and the Reminders screen (pending) | 011, 014, 020 | P3 reminder ask, S5 | todo |
-| 022 | Routines data (pending) | 007, 012 | R1–R3, T2 | todo |
+| 022 | [Routines data](022-routines-data.md) | 007, 012 | R1–R3, T2 | todo |
 | 023 | Routines list and templates (pending) | 010, 022 | R1 skin, R2 starter | todo |
 | 024 | Routine editor, step editor, product picker (pending) | 023 | R2, R3, R4 | todo |
 | 025 | Today (pending) | 010, 012, 022 | T1 | todo |
@@ -68,11 +68,11 @@ Status: **todo**, **in progress**, **done**. "Pending" in the file column means 
 | 028 | Skin calendar and day detail (pending) | 007, 022, 010 | C1 skin, C2 | todo |
 | 029 | Ingredients, groups and conflict rules (pending) | 011, 012 | S2, S3 | todo |
 | 030 | Conflict warnings and avoid list (pending) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | todo |
-| 031 | Hair data (pending) | 005, 007 | R5, T3 | todo |
+| 031 | [Hair data](031-hair-data.md) | 005, 007 | R5, T3 | todo |
 | 032 | Hair setup and hair task editor (pending) | 023, 031 | R1 hair, R5 | todo |
 | 033 | Hair done, hair calendar and hair reminders (pending) | 020, 025, 028, 032 | T3, C1 hair | todo |
 | 034 | Shopping list (pending) | 014, 015 | P6, P7, sequence 7 | todo |
-| 035 | Progress photo data and storage (pending) | 005 | C3–C7 data | todo |
+| 035 | [Progress photo data and storage](035-progress-data-storage.md) | 005 | C3–C7 data | todo |
 | 036 | Progress camera and review (pending) | 020, 025, 035 | C4, C5, T1 weekly card | todo |
 | 037 | Progress timeline, week detail and compare (pending) | 036 | C3, C6, C7, S7 photos | todo |
 | 038 | Condition log (pending) | 025, 028 | T4, C1 condition, C2 | todo |
