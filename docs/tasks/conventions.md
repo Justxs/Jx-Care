@@ -9,7 +9,7 @@ Read them in this order when they disagree:
 1. **The task file** you are working on.
 2. **[docs/feature-spec.md](../feature-spec.md)**: screens (IDs O1–S8), states, flows, copy, motion and layout rules. It wins over the feature plan.
 3. **[DESIGN.md](../../DESIGN.md)**: colour tokens, type scale, spacing, radius, motion and the "what we avoid" rules.
-4. **[docs/design/](../design/)**: the design system copied from the Claude artifact (component props, screen notes, NativeWind config) so you can read it offline. The live artifact is https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU; you may not be able to open it, and you don't need to.
+4. **[docs/design/](../design/)**: the design system copied from the Claude artifact (component props, screen notes, NativeWind config) so you can read it offline. Its README lists the places where those notes disagree with the spec and what to build instead. The live artifact is https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU; you may not be able to open it, and you don't need to.
 5. **[docs/feature-plan.md](../feature-plan.md)**: background and the original data model.
 6. **[PRODUCT.md](../../PRODUCT.md)** and **[docs/brand.md](../brand.md)**: voice, principles, logo and icon files.
 
@@ -31,7 +31,8 @@ Use the newest stable versions. Expo packages go in with `npx expo install <pkg>
 | Styling | `nativewind` **4.2** + `tailwindcss` **3.4** (not Tailwind 4, not NativeWind 5 RC) | 4.2.7 / 3.4.19 |
 | Animation | `react-native-reanimated` 4 (+ `react-native-worklets`), `react-native-gesture-handler` | 4.x |
 | Sheets | `@gorhom/bottom-sheet` 5 | 5.x |
-| Icons | `lucide-react-native` | latest |
+| Icons | `lucide-react-native` + `react-native-svg` | latest |
+| Other UI helpers | `expo-haptics` (tick feedback), `expo-blur` (app switcher overlay), `react-native-keyboard-controller` (forms and sheets), `react-native-draggable-flatlist` (step reorder) | latest |
 | Font | `@expo-google-fonts/figtree` + `expo-font` | latest |
 | i18n | `i18next`, `react-i18next`, `expo-localization` | 26 / 17 |
 | Dates | `date-fns` 4 (+ `Intl.DateTimeFormat` for display) | 4.x |

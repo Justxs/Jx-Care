@@ -49,6 +49,7 @@ type ExpiryStatus = 'ok' | 'expiring' | 'expired' | 'unopened' | 'nodate';
 ### `src/lib/ingredients.ts`
 
 - `parseIngredientLines(text)`: split on `\n` (also `\r\n`), trim, collapse spaces, drop blank lines, merge duplicates by `normalizeName` keeping the first spelling, keep order. Commas inside a line stay part of that ingredient (one per line is the rule, spec P4).
+- `splitPastedText(pasted)` → `{ text, splitLines }` (spec P4 "Pasted lists", added by the 2026-10-06 critique): only for text that arrives by **paste**, never for typing. Every pasted line with **two or more commas** is split at its commas into separate lines; a line with one comma or none stays as it is. Commas inside parentheses don't split ("Parfum (fragrance, limonene)" stays one part of its line). `splitLines` is how many lines the split produced (for "Pasted list split at commas into 5 lines."), 0 when nothing was split. The caller keeps the original text for Undo.
 - `classifyIngredients(parsed, known)`: given the user's known ingredients (`{ id, name, normalizedName }[]`), mark each parsed line `existing` (with id) or `new`.
 - `suggestIngredients(prefix, known, limit = 5)`: case- and accent-insensitive prefix matches first, then substring matches.
 
@@ -61,6 +62,7 @@ Out:
 
 - [ ] All functions above exist with the signatures shown (names can change only if you note it under Decisions).
 - [ ] Tests cover every rule listed, including: printed date earlier than opened + PAO, PAO earlier than printed date, opened with no PAO and no printed date (`'nodate'`), unopened with a printed date inside the warning window (`'expiring'`), unopened far from expiry (`'unopened'`), expiring exactly on the warning boundary, expiring today (0 days, `'expiring'`), expired yesterday.
+- [ ] `splitPastedText` tests: a comma list from a pack splits; a line with one comma doesn't; commas in parentheses don't split; mixed pasted text with some lines split and some not; the result run through `parseIngredientLines` drops blanks and duplicates.
 - [ ] Coverage of `src/lib/` files from this task is at least 95% of lines.
 - [ ] `npm run check` passes.
 
