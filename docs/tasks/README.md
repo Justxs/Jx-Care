@@ -1,0 +1,130 @@
+# Jx-Care build tasks
+
+The app broken into 41 tasks that a coding agent can pick up one at a time. Each task file says what to build, which spec sections and design cards it covers, what is out of scope, how to test it and when it is done.
+
+**Before starting any task, read [conventions.md](conventions.md).** It holds the stack, the folder layout, the code and UI rules and the definition of done that every task assumes.
+
+## How to pick a task
+
+1. Take the lowest-numbered task whose status is **todo** and whose "Depends on" tasks are all **done**.
+2. Set it to **in progress** in the table below, commit that one line to `main` and push, so nobody else takes it.
+3. Build it, meet the definition of done in conventions.md, set it to **done** and push.
+
+Tasks in the same phase with no dependency between them can run in parallel (for example 006 next to 002–005, or 029 next to 022–028).
+
+## Phases
+
+| Phase | Tasks | Ends with |
+| --- | --- | --- |
+| A. Foundation | 001–007 | An empty app that builds, with theme, translations, database and all core rules tested |
+| B. UI kit and shell | 008–011 | Five tabs with placeholder screens, every base component, Settings with language switch |
+| C. Products | 012–015 | Products can be added, listed, filtered, viewed, finished and restored |
+| D. Security | 016–019 | Onboarding, PIN lock, forgot PIN, security settings |
+| E. Expiry reminders | 020–021 | Local notifications for expiry, the reminder ask and the Reminders screen |
+| F. Routines and Today | 022–027 | Skin routines, Today, the routine player and routine reminders |
+| G. Calendar | 028 | Skin calendar, streaks and day detail |
+| H. Conflicts | 029–030 | Ingredient groups, conflict rules, avoid list and warnings everywhere |
+| I. Hair | 031–033 | Hair tasks, quick setup, hair done, hair calendar and reminders |
+| J. Shopping | 034 | Shopping list with Buy again and suggestions |
+| K. Progress photos | 035–037 | Weekly photos, camera with guide, timeline and compare |
+| L. Condition and notes | 038–039 | Daily condition log, product notes and ratings |
+| M. Finish | 040–041 | Backup and restore, final quality pass and release builds |
+
+PIN lock comes after products on purpose (as in the feature plan): the data screens are easier to test without a lock, and the lock then wraps the finished navigation.
+
+## Task list
+
+Status: **todo**, **in progress**, **done**. "Pending" in the file column means the detailed task file is written once the design critique is finished, so it matches the final designs.
+
+| # | Task | Depends on | Spec | Status |
+| --- | --- | --- | --- | --- |
+| 001 | [Project scaffold](001-project-scaffold.md) | none | Global UI rules | todo |
+| 002 | [Theme, fonts and motion](002-theme-fonts-motion.md) | 001 | Styling, Motion | todo |
+| 003 | [Translations and formatting](003-i18n-formatting.md) | 001 | Global UI rules, Words and copy | todo |
+| 004 | [Database schema and migrations](004-database.md) | 001 | Data model | todo |
+| 005 | [Data access and app state](005-data-access-app-state.md) | 003, 004 | Sequence diagrams (Data) | todo |
+| 006 | [Logic: app day, expiry, cost, ingredients](006-logic-dates-expiry.md) | 001 | Refinements 1, 4; P1, P4 | todo |
+| 007 | [Logic: schedules, streaks, hair, conflicts](007-logic-schedules-streaks-conflicts.md) | 006 | Refinements 2, 3, 5, 6; R3, R5, C1 | todo |
+| 008 | Base components (pending) | 002, 003 | DESIGN.md Components | todo |
+| 009 | Forms, sheets, dialogs and toasts (pending) | 008 | Global UI rules, Motion | todo |
+| 010 | App shell and navigation (pending) | 005, 009 | Navigation map | todo |
+| 011 | Settings list and preferences (pending) | 010 | S1, S7 | todo |
+| 012 | Products data (pending) | 005, 006 | P1–P5 | todo |
+| 013 | Products list (pending) | 010, 012 | P1 | todo |
+| 014 | Product form and ingredient entry (pending) | 010, 012 | P3, P4 | todo |
+| 015 | Product detail and archive (pending) | 010, 012 | P2, P5 | todo |
+| 016 | PIN and secure storage service (pending) | 004 | O2–O4, L1, L2 rules | todo |
+| 017 | Onboarding (pending) | 010, 016 | O1–O5 | todo |
+| 018 | Lock screen and forgot PIN (pending) | 017 | L1, L2 | todo |
+| 019 | PIN and security settings (pending) | 011, 018 | S6 | todo |
+| 020 | Notification service (pending) | 005 | Notifications | todo |
+| 021 | Expiry reminders and the Reminders screen (pending) | 011, 014, 020 | P3 reminder ask, S5 | todo |
+| 022 | Routines data (pending) | 007, 012 | R1–R3, T2 | todo |
+| 023 | Routines list and templates (pending) | 010, 022 | R1 skin, R2 starter | todo |
+| 024 | Routine editor, step editor, product picker (pending) | 023 | R2, R3, R4 | todo |
+| 025 | Today (pending) | 010, 012, 022 | T1 | todo |
+| 026 | Routine player (pending) | 022, 025 | T2 | todo |
+| 027 | Routine reminders (pending) | 020, 024, 026 | Notifications, sequence 4 | todo |
+| 028 | Skin calendar and day detail (pending) | 007, 022, 010 | C1 skin, C2 | todo |
+| 029 | Ingredients, groups and conflict rules (pending) | 011, 012 | S2, S3 | todo |
+| 030 | Conflict warnings and avoid list (pending) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | todo |
+| 031 | Hair data (pending) | 005, 007 | R5, T3 | todo |
+| 032 | Hair setup and hair task editor (pending) | 023, 031 | R1 hair, R5 | todo |
+| 033 | Hair done, hair calendar and hair reminders (pending) | 020, 025, 028, 032 | T3, C1 hair | todo |
+| 034 | Shopping list (pending) | 014, 015 | P6, P7, sequence 7 | todo |
+| 035 | Progress photo data and storage (pending) | 005 | C3–C7 data | todo |
+| 036 | Progress camera and review (pending) | 020, 025, 035 | C4, C5, T1 weekly card | todo |
+| 037 | Progress timeline, week detail and compare (pending) | 036 | C3, C6, C7, S7 photos | todo |
+| 038 | Condition log (pending) | 025, 028 | T4, C1 condition, C2 | todo |
+| 039 | Product notes and rating (pending) | 015, 034 | P2 rating, P8 | todo |
+| 040 | Backup and restore (pending) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | todo |
+| 041 | Final quality pass and release builds (pending) | all | Global UI rules | todo |
+
+## Dependency graph
+
+```mermaid
+flowchart LR
+  001 --> 002 & 003 & 004 & 006
+  003 & 004 --> 005
+  006 --> 007
+  002 & 003 --> 008 --> 009
+  005 & 009 --> 010 --> 011
+  005 & 006 --> 012
+  010 & 012 --> 013 & 014 & 015
+  004 --> 016
+  010 & 016 --> 017 --> 018
+  011 & 018 --> 019
+  005 --> 020
+  011 & 014 & 020 --> 021
+  007 & 012 --> 022 --> 023 --> 024
+  010 & 012 & 022 --> 025 --> 026
+  020 & 024 & 026 --> 027
+  007 & 022 --> 028
+  011 & 012 --> 029
+  024 & 026 & 029 --> 030
+  005 & 007 --> 031
+  023 & 031 --> 032
+  020 & 025 & 028 & 032 --> 033
+  014 & 015 --> 034
+  005 --> 035 --> 036 --> 037
+  025 & 028 --> 038
+  015 & 034 --> 039
+  021 & 030 & 033 & 037 & 038 & 039 --> 040 --> 041
+```
+
+## Decisions this plan makes
+
+Choices the spec left open, made here so every task agrees. Change them here if Justas decides otherwise.
+
+| Topic | Decision |
+| --- | --- |
+| Storage of dates | Calendar days are `'YYYY-MM-DD'` app days (day ends 04:00); moments are epoch ms |
+| Weekdays | ISO 1 = Monday … 7 = Sunday; weeks start on Monday |
+| Money | Integer cents plus the currency code from settings |
+| PIN and recovery answer | Salted SHA-256 hashes in expo-secure-store, with the lockout counters, so a restart doesn't reset a lockout |
+| Calendar day colours | Done = every time of day due that day is complete; partly done = something ticked but not all; missed = nothing ticked; none = nothing due |
+| Skin streak | A day extends the streak when at least one routine due that day is complete (feature plan rule); a day with nothing due is skipped; today only counts once complete and never breaks the streak while it is still today |
+| History before a routine existed | Days before a routine's creation date never count as missed |
+| Hair "twice a week" in quick setup | Set days Monday and Thursday |
+| Hair "every few weeks" | Stored as a number of days with a weeks unit for display |
+| Tests for repositories | Run in Node on better-sqlite3 with the same Drizzle schema and migrations |
