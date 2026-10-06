@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 44 168 144">
+  <title>Jx-Care</title>
+  <defs>
+    <mask id="jxc-head" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="62" cy="88" r="35"/><circle cx="138" cy="88" r="35"/>
+      <path d="M 68 140 Q 100 164 132 140" fill="none" stroke="#000" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="92" cy="120" r="2.6"/><circle cx="108" cy="120" r="2.6"/>
+    </mask>
+    <mask id="jxc-eyes" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="62" cy="88" r="25" fill="none" stroke="#000" stroke-width="4"/><ellipse cx="73.50" cy="88.00" rx="2.3" ry="3.8" transform="rotate(90 73.50 88.00)"/><ellipse cx="67.75" cy="97.96" rx="2.3" ry="3.8" transform="rotate(150 67.75 97.96)"/><ellipse cx="56.25" cy="97.96" rx="2.3" ry="3.8" transform="rotate(210 56.25 97.96)"/><ellipse cx="50.50" cy="88.00" rx="2.3" ry="3.8" transform="rotate(270 50.50 88.00)"/><ellipse cx="56.25" cy="78.04" rx="2.3" ry="3.8" transform="rotate(330 56.25 78.04)"/><ellipse cx="67.75" cy="78.04" rx="2.3" ry="3.8" transform="rotate(390 67.75 78.04)"/><circle cx="138" cy="88" r="25" fill="none" stroke="#000" stroke-width="4"/><ellipse cx="149.50" cy="88.00" rx="2.3" ry="3.8" transform="rotate(90 149.50 88.00)"/><ellipse cx="143.75" cy="97.96" rx="2.3" ry="3.8" transform="rotate(150 143.75 97.96)"/><ellipse cx="132.25" cy="97.96" rx="2.3" ry="3.8" transform="rotate(210 132.25 97.96)"/><ellipse cx="126.50" cy="88.00" rx="2.3" ry="3.8" transform="rotate(270 126.50 88.00)"/><ellipse cx="132.25" cy="78.04" rx="2.3" ry="3.8" transform="rotate(330 132.25 78.04)"/><ellipse cx="143.75" cy="78.04" rx="2.3" ry="3.8" transform="rotate(390 143.75 78.04)"/>
+    </mask>
+  </defs>
+  <g fill="#ffffff">
+    <path mask="url(#jxc-head)" d="M 24 132 C 24 100 58 90 100 90 C 142 90 176 100 176 132 C 176 164 144 180 100 180 C 56 180 24 164 24 132 Z"/>
+    <g mask="url(#jxc-eyes)"><circle cx="62" cy="88" r="30"/><circle cx="138" cy="88" r="30"/></g>
+  </g>
+</svg>
