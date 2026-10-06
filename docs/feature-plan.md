@@ -166,6 +166,7 @@ Expo-managed React Native with TypeScript on the newest versions, so Android and
 | Photos | expo-image-picker | Product photo from camera or gallery |
 | Backup | expo-file-system + expo-sharing | Export/import a JSON backup |
 | Tests | Jest 30 + React Native Testing Library 14 | Unit tests for expiry, streak and conflict logic |
+| Base components | rn-primitives 1.5 (@rn-primitives/* packages) | Unstyled, accessible dialogs, selects, switches, tabs and more, styled with the app's own theme |
 
 Notification caveat: iOS keeps at most 64 pending local notifications, so the app schedules only the next ones in the coming weeks and tops them up each time it opens.
 
