@@ -10,7 +10,7 @@ The app broken into 41 tasks that a coding agent can pick up one at a time. Each
 2. Set it to **in progress** in the table below, commit that one line to `main` and push, so nobody else takes it.
 3. Build it, meet the definition of done in conventions.md, set it to **done** and push.
 
-Tasks in the same phase with no dependency between them can run in parallel (for example 006 next to 002–005, or 029 next to 022–028).
+Tasks in the same phase with no dependency between them can run in parallel (for example 006 next to 002–005, or 031 next to 022–028).
 
 ## Phases
 
@@ -34,7 +34,7 @@ PIN lock comes after products on purpose (as in the feature plan): the data scre
 
 ## Task list
 
-Status: **todo**, **in progress**, **done**. "Pending" in the file column means the detailed task file is written once the design critique is finished, so it matches the final designs.
+Status: **todo**, **in progress**, **done**. Task files 008 onward follow the final designs (design system v14).
 
 | # | Task | Depends on | Spec | Status |
 | --- | --- | --- | --- | --- |
@@ -45,40 +45,40 @@ Status: **todo**, **in progress**, **done**. "Pending" in the file column means 
 | 005 | [Data access and app state](005-data-access-app-state.md) | 003, 004 | Sequence diagrams (Data) | todo |
 | 006 | [Logic: app day, expiry, cost, ingredients](006-logic-dates-expiry.md) | 001 | Refinements 1, 4; P1, P4 | todo |
 | 007 | [Logic: schedules, streaks, hair, conflicts](007-logic-schedules-streaks-conflicts.md) | 006 | Refinements 2, 3, 5, 6; R3, R5, C1 | todo |
-| 008 | Base components (pending) | 002, 003 | DESIGN.md Components | todo |
-| 009 | Forms, sheets, dialogs and toasts (pending) | 008 | Global UI rules, Motion | todo |
-| 010 | App shell and navigation (pending) | 005, 009 | Navigation map | todo |
-| 011 | Settings list and preferences (pending) | 010 | S1, S7 | todo |
+| 008 | [Base components](008-base-components.md) | 002, 003 | DESIGN.md Components | todo |
+| 009 | [Forms, sheets, dialogs and toasts](009-forms-overlays-feedback.md) | 008 | Global UI rules, Motion | todo |
+| 010 | [App shell and navigation](010-app-shell-navigation.md) | 005, 009 | Navigation map | todo |
+| 011 | [Settings list and preferences](011-settings-preferences.md) | 010 | S1, S7 | todo |
 | 012 | [Products data](012-products-data.md) | 005, 006 | P1–P5 | todo |
-| 013 | Products list (pending) | 010, 012 | P1 | todo |
-| 014 | Product form and ingredient entry (pending) | 010, 012 | P3, P4 | todo |
-| 015 | Product detail and archive (pending) | 010, 012 | P2, P5 | todo |
+| 013 | [Products list](013-products-list.md) | 010, 012 | P1 | todo |
+| 014 | [Product form and ingredient entry](014-product-form-ingredients.md) | 010, 012 | P3, P4 | todo |
+| 015 | [Product detail and archive](015-product-detail-archive.md) | 010, 012 | P2, P5 | todo |
 | 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | todo |
-| 017 | Onboarding (pending) | 010, 016 | O1–O5 | todo |
-| 018 | Lock screen and forgot PIN (pending) | 017 | L1, L2 | todo |
-| 019 | PIN and security settings (pending) | 011, 018 | S6 | todo |
+| 017 | [Onboarding](017-onboarding.md) | 010, 016 | O1–O5 | todo |
+| 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | todo |
+| 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | todo |
 | 020 | [Notification service](020-notification-service.md) | 005 | Notifications | todo |
-| 021 | Expiry reminders and the Reminders screen (pending) | 011, 014, 020 | P3 reminder ask, S5 | todo |
+| 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | todo |
 | 022 | [Routines data](022-routines-data.md) | 007, 012 | R1–R3, T2 | todo |
-| 023 | Routines list and templates (pending) | 010, 022 | R1 skin, R2 starter | todo |
-| 024 | Routine editor, step editor, product picker (pending) | 023 | R2, R3, R4 | todo |
-| 025 | Today (pending) | 010, 012, 022 | T1 | todo |
-| 026 | Routine player (pending) | 022, 025 | T2 | todo |
-| 027 | Routine reminders (pending) | 020, 024, 026 | Notifications, sequence 4 | todo |
-| 028 | Skin calendar and day detail (pending) | 007, 022, 010 | C1 skin, C2 | todo |
-| 029 | Ingredients, groups and conflict rules (pending) | 011, 012 | S2, S3 | todo |
-| 030 | Conflict warnings and avoid list (pending) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | todo |
+| 023 | [Routines list and templates](023-routines-list-templates.md) | 010, 022 | R1 skin, R2 starter | todo |
+| 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | todo |
+| 025 | [Today](025-today.md) | 010, 012, 022 | T1 | todo |
+| 026 | [Routine player](026-routine-player.md) | 022, 025 | T2 | todo |
+| 027 | [Routine reminders](027-routine-reminders.md) | 020, 024, 026 | Notifications, sequence 4 | todo |
+| 028 | [Skin calendar and day detail](028-skin-calendar-day-detail.md) | 007, 022, 010 | C1 skin, C2 | todo |
+| 029 | [Ingredients, groups and conflict rules](029-ingredients-conflict-rules.md) | 011, 012, 022 | S2, S3 | todo |
+| 030 | [Conflict warnings and avoid list](030-conflict-warnings-avoid-list.md) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | todo |
 | 031 | [Hair data](031-hair-data.md) | 005, 007 | R5, T3 | todo |
-| 032 | Hair setup and hair task editor (pending) | 023, 031 | R1 hair, R5 | todo |
-| 033 | Hair done, hair calendar and hair reminders (pending) | 020, 025, 028, 032 | T3, C1 hair | todo |
-| 034 | Shopping list (pending) | 014, 015 | P6, P7, sequence 7 | todo |
+| 032 | [Hair setup and hair task editor](032-hair-setup-editor.md) | 023, 031 | R1 hair, R5 | todo |
+| 033 | [Hair done, hair calendar and hair reminders](033-hair-done-calendar-reminders.md) | 020, 025, 028, 032 | T3, C1 hair | todo |
+| 034 | [Shopping list](034-shopping-list.md) | 014, 015 | P6, P7, sequence 7 | todo |
 | 035 | [Progress photo data and storage](035-progress-data-storage.md) | 005 | C3–C7 data | todo |
-| 036 | Progress camera and review (pending) | 020, 025, 035 | C4, C5, T1 weekly card | todo |
-| 037 | Progress timeline, week detail and compare (pending) | 036 | C3, C6, C7, S7 photos | todo |
-| 038 | Condition log (pending) | 025, 028 | T4, C1 condition, C2 | todo |
-| 039 | Product notes and rating (pending) | 015, 034 | P2 rating, P8 | todo |
-| 040 | Backup and restore (pending) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | todo |
-| 041 | Final quality pass and release builds (pending) | all | Global UI rules | todo |
+| 036 | [Progress camera and review](036-progress-camera-review.md) | 020, 025, 035 | C4, C5, T1 weekly card | todo |
+| 037 | [Progress timeline, week detail and compare](037-progress-timeline-compare.md) | 036 | C3, C6, C7, S7 photos | todo |
+| 038 | [Condition log](038-condition-log.md) | 025, 028 | T4, C1 condition, C2 | todo |
+| 039 | [Product notes and rating](039-product-notes-rating.md) | 015, 034 | P2 rating, P8 | todo |
+| 040 | [Backup and restore](040-backup-restore.md) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | todo |
+| 041 | [Final quality pass and release builds](041-final-quality-release.md) | all | Global UI rules | todo |
 
 ## Dependency graph
 
@@ -100,7 +100,7 @@ flowchart LR
   010 & 012 & 022 --> 025 --> 026
   020 & 024 & 026 --> 027
   007 & 022 --> 028
-  011 & 012 --> 029
+  011 & 012 & 022 --> 029
   024 & 026 & 029 --> 030
   005 & 007 --> 031
   023 & 031 --> 032
