@@ -12,26 +12,50 @@ This spec describes every screen, state and flow in Jx-Care in enough detail to 
 | --- | --- | --- | --- |
 | 1 | Day boundary | An evening routine done at 00:30 would count for the wrong day | The app's day ends at 04:00, not midnight, for routines, streaks and logs |
 | 2 | Streak + step schedules | "Every step done" was unclear once steps have their own schedule | Only steps due that day count toward done |
-| 3 | Two routines in one slot | Unclear what Today shows | Today shows one card per slot with A/B chips; finishing either completes the slot |
+| 3 | Two routines at one time of day | Unclear what Today shows | Today shows one card per time of day with A/B chips; finishing either completes it |
 | 4 | Expiry without dates | No rule for unopened products with no printed date | Status "No date" (grey); no reminders |
-| 5 | Conflicts + step schedules | Whole-day checks could flag steps that never meet | Only steps due on the same weekday are compared; every-N-days steps show "may clash" |
+| 5 | Conflicts + step schedules | Whole-day checks could flag steps that never meet | Only steps due on the same weekday are compared; every-few-days steps show "mild" |
 | 6 | Hair schedule | No rule for washing early | Early counts as on time and resets the next due date; late shows orange |
 | 7 | PIN lockout | Only one lockout step | 5 wrong tries: 30 s wait; 10: 5 min. Recovery answer: 5 wrong tries, 15 min |
-| 8 | Notification permission | Never asked | Last onboarding step asks, with "Not now"; asked again the first time a reminder is switched on |
+| 8 | Notification permission | Never asked | Asked in context: when the first product with an expiry date is saved, and when the first routine reminder is switched on, with "Not now" |
 | 9 | Currency | Price had no currency | Currency set in Settings, default EUR |
-| 10 | Archive vs delete | Two ways to remove a product | "Finished" archives (keeps history); "Delete" only from the archive, with confirmation |
-| 11 | Missing product in a routine | A finished product left a broken step | The step shows "Missing" with "Replace" and "Add to shopping list" actions |
+| 10 | Archive vs delete | Two ways to remove a product | "Mark finished" moves it to the Archive (keeps history); "Delete" only from the archive, with confirmation |
+| 11 | Missing product in a routine | A finished product left a broken step | The step shows "Finished" with "Pick another" and "Buy again" actions |
 
 ### Global UI rules
 
 - **Platforms:** iOS and Android phones, portrait only. Designs at 390 × 844 (iPhone) with checks at 360 × 800 (small Android).
 - **Theme:** light and dark, following the phone; Figtree; pink accent; rn-primitives for every base component.
 - **Language:** every string comes from LT and EN translation files. Lithuanian runs about 20–30% longer, so labels wrap to two lines instead of truncating.
-- **Dates and numbers:** LT uses 2026-10-06, 24-hour time and "12,50 €"; EN follows the phone's locale.
+- **Dates and numbers:** LT uses 2026-10-06, 24-hour time and "12,50 €". EN shows dates as "15 Oct", adding the year only when it is not this year ("1 Mar 2027"); a date field whose value is today reads "Today, 6 Oct". Dates use Intl.DateTimeFormat with the app language; numbers and currency follow the phone's locale.
 - **Touch:** targets at least 44 × 44 pt; ticking a step gives a light haptic.
 - **States:** every list screen has an empty state (illustration, one line, one action), and every form has inline validation under the field.
-- **Destructive actions:** confirm in an AlertDialog (delete, reset app). Reversible ones (archive, clear bought) show a toast with Undo for 5 seconds.
+- **Destructive actions:** confirm in an AlertDialog (delete, reset app). Their text says what is lost and whether it can be undone. Reversible ones (Mark finished, Clear bought) show a toast that names the thing, with Undo for 5 seconds ("Vitamin C serum moved to Archive").
 - **Privacy:** photos are never written to the phone gallery; the app content is hidden in the app switcher (blur overlay) while locked.
+
+### Words and copy
+
+One word per idea, used the same way on every screen and in notifications:
+
+| Idea | Say |
+| --- | --- |
+| Put a product on the shopping list | Buy again |
+| Product used up | Mark finished (action), Finished (state), Archive (place); toast "Vitamin C serum moved to Archive" |
+| Start a routine | Start |
+| Morning / Evening / Custom | Time of day |
+| Schedule options for steps and hair tasks | Every time, Set days, Every few days (field "Repeat every (days)") |
+| Trims, colour, scrubs | Other care (hair group and task type) |
+| Soft conflict | mild |
+| Skin tags (condition log, photo review, product notes) | Calm, Glow, Oily, Dry, Breakout, Redness, Itchy |
+| Weekly progress photo | Weekly photo |
+| Faded last photo in the camera | Last photo as a guide (setting), "Show last photo as a guide" (camera button) |
+| Settings group that holds Reminders | Notifications |
+
+- **Errors** say what happened and what to do, and never guess a cause. A field error replaces the hint under the field in place ("Enter a name.").
+- **Warnings** that don't block say so ("You can still save."); warnings that lead to a confirm say that.
+- **Destructive actions** say what is lost and whether it can be undone.
+- **Success toasts** name the thing and offer the next step or Undo ("Body lotion bought. Add it to your products?").
+- **Spoken labels:** "Delete last digit" on the PIN pad, "More actions" on overflow menus.
 
 ### Styling
 
@@ -73,6 +97,24 @@ No layout shift rules:
 - **Lithuanian text:** layouts use minimum heights, not fixed ones, so longer LT labels wrap without overlapping; tab bar labels are sized for the LT words.
 - **Keyboard:** forms scroll the focused field into view smoothly; the screen never jumps when the keyboard opens.
 
+### Empty states
+
+Every list has a title, one line of body text and at most one action.
+
+| Screen | Title | Body | Action |
+| --- | --- | --- | --- |
+| Products | No products yet | Add the one you use most. Jx-Care tracks when it expires. | Add product |
+| Shopping | Nothing to buy | Finished and expiring products show up here as suggestions. | Add item |
+| Routines, skin | No routines yet | Start from a template and swap in your products. | New routine |
+| Routines, hair | Hair care is not set up | Tell Jx-Care how often you wash your hair. | Set up hair care |
+| Calendar | Your month fills in as you go | Each day you tick a routine gets a dot here. | None |
+| Progress | No photos yet | Take one a week in the same light to see your skin change. | Take first photo |
+| Archive | Nothing finished yet | Products you mark finished move here with their cost per day. | None |
+| Avoid list | Nothing to avoid yet | Add ingredients that irritate you. Products that contain them get a red Avoid badge. | Add ingredient |
+| Conflicts | No conflict rules | Start with common pairs, like retinol with AHA, or write your own. | Add common rules (secondary: Add a rule) |
+
+"Add common rules" adds editable rules: retinoids × AHA/BHA, retinoids × benzoyl peroxide, vitamin C × AHA/BHA.
+
 ## Navigation map
 
 Every screen sits behind the lock screen in five bottom tabs; sheets (S) slide up over the current screen and dialogs (D) are centred. Dotted lines are notification taps.
@@ -80,7 +122,7 @@ Every screen sits behind the lock screen in five bottom tabs; sheets (S) slide u
 ```mermaid
 flowchart TD
   open((App opens)) --> first{First launch?}
-  first -- yes --> ob1[Welcome + language] --> ob2[Create PIN] --> ob3[Confirm PIN] --> ob4[Recovery question] --> ob5[Biometrics opt-in] --> ob6[Allow reminders] --> today
+  first -- yes --> ob1[Welcome + language] --> ob2[Create PIN] --> ob3[Confirm PIN] --> ob4[Recovery question] --> ob5[Biometrics opt-in] --> today
   first -- no --> lock[Lock screen]
   lock -- PIN or biometrics OK --> today
   lock -- Forgot PIN --> rec[Answer recovery question] --> newpin[Set new PIN] --> today
@@ -107,12 +149,15 @@ flowchart TD
   products --> shop[Shopping list] --> shopform[/S: Shopping item/]
   shop -- Add as new product --> pform
   pdetail --> note[/S: Product note/]
-  pdetail -- Add to shopping list --> shop
+  pdetail -- Buy again --> shop
   pform --> ingpick[/S: Ingredient entry/]
+  pform -- first product with expiry --> remask[/S: Reminder ask/]
 
   routines --> reditor[Routine editor] --> step[/S: Step editor/] --> prodpick[/S: Product picker/]
   routines --> player
   routines --> htask[Hair task editor]
+  routines --> starter[/S: Routine templates/] --> reditor
+  routines --> hairsetup[/S: Quick hair setup/]
 
   calendar --> day[Day detail] --> cond
   calendar --> progress[Progress timeline] --> week[Week detail] --> compare[Compare]
@@ -137,7 +182,7 @@ flowchart TD
 
 | ID | Screen | Type | Reached from |
 | --- | --- | --- | --- |
-| O1–O6 | Onboarding: welcome + language, create PIN, confirm PIN, recovery question, biometrics, reminders | Full screen | First launch, reset |
+| O1–O5 | Onboarding: welcome + language, create PIN, confirm PIN, recovery question, biometrics | Full screen | First launch, reset |
 | L1 | Lock screen | Full screen | Every open, after 1 min away |
 | L2 | Forgot PIN: recovery answer, new PIN | Full screen | Lock screen |
 | T1 | Today | Tab | Home |
@@ -175,16 +220,17 @@ flowchart TD
 
 ## Onboarding, lock and Today
 
-### O1–O6 Onboarding
+### O1–O5 Onboarding
 
-Six short steps with a progress bar (1/6…6/6) at the top and Back on every step after the first. Nothing is saved until O4 finishes, so quitting mid-way restarts onboarding.
+Five short steps with a step bar ("1 of 5" to "5 of 5") at the top and Back on every step after the first. Nothing is saved until O4 finishes, so quitting mid-way restarts onboarding.
 
-1. **O1 Welcome + language:** logo, app name, one-line pitch ("Track your skin and hair care in one place"), two large choices: Lietuvių / English, pre-selected from the phone language. Button: Continue.
-2. **O2 Create PIN:** title "Create a 4-digit PIN", four dots, PinPad (0–9, delete). Moves on automatically after the 4th digit. Rejects 0000, 1234 and four identical digits with an inline hint.
+1. **O1 Welcome + language:** logo, app name, one-line pitch ("Track your skin and hair care in one place"), two large choices: Lietuvių / English, pre-selected from the phone language. Privacy line under the choices: "Everything stays on this phone. No account needed." (LT: "Viskas lieka šiame telefone. Paskyros nereikia."). Button: Continue.
+2. **O2 Create PIN:** title "Create a 4-digit PIN", four dots, PinPad (0–9, "Delete last digit"). Moves on automatically after the 4th digit. Rejects 0000, 1234 and four identical digits with an inline hint.
 3. **O3 Confirm PIN:** same layout, "Enter it again". Mismatch: dots shake, error "PINs don't match", back to O2.
 4. **O4 Recovery question:** picker with 5 preset questions (first pet, mother's maiden name, first school, favourite teacher, birth city) plus "Write my own"; answer field (min 3 characters); helper text "You'll need this if you forget your PIN."
-5. **O5 Biometrics:** shown only if the phone supports it. Icon, "Unlock with Face ID / fingerprint?", buttons: Turn on / Not now.
-6. **O6 Reminders:** "Allow reminders for expiring products and routines?", buttons: Allow (system prompt) / Not now. Then lands on an empty Today.
+5. **O5 Biometrics:** shown only if the phone supports it. Icon, "Unlock with Face ID / fingerprint?", buttons: Turn on / Not now. Either button lands on Today in its first-run state.
+
+There is no reminders step. Notification permission is asked in context instead (see the reminder ask in P3).
 
 ### L1 Lock screen
 
@@ -203,23 +249,23 @@ Six short steps with a progress bar (1/6…6/6) at the top and Back on every ste
 
 The home screen answers "what do I need to do today?". Sections top to bottom, each hidden when empty:
 
-1. **Header:** greeting by time of day, date ("Tuesday, 6 October"), skin and hair streak chips (flame icon + number).
-2. **Routine cards:** one card per time slot due today (Morning, Evening, custom), in time order. Card shows slot name, reminder time, step count, progress ring (3/5), and a conflict warning icon if any. Two routines in one slot: A/B chips on the card; the chosen one is remembered for that weekday. Tap: opens the routine player. Done: card collapses to a ticked row.
+1. **Header:** greeting by time of day, date ("Tuesday, 6 Oct"), skin and hair streak chips (flame icon + number).
+2. **Routine cards:** one card per time of day due today (Morning, Evening, custom), in time order. Card shows the time of day, "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), progress ring (3/5), and a conflict warning icon if any. Two routines at one time of day: A/B chips on the card; the chosen one is remembered for that weekday. Tap: opens the routine player. Done: card collapses to a ticked row.
 3. **Hair due:** rows for hair tasks due today or overdue ("Wash: shampoo + conditioner", "Overdue 1 day" in orange). Tap: Hair task done sheet.
-4. **Weekly photo card:** shown on the check-in day until taken ("Time for this week's skin photo"), buttons Take photo / Skip this week.
-5. **How's your skin today?:** compact chips (calm, oily, dry, breakout, redness) plus a hair row; tapping one saves at once, "Add note" opens the Condition log sheet.
+4. **Weekly photo card:** shown on the weekly photo day until taken ("Time for this week's skin photo"), buttons Take photo / Skip this week.
+5. **How's your skin today?:** compact chips (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy) plus a hair row; tapping one saves at once, "Add note" opens the Condition log sheet.
 6. **Expiring soon:** up to 3 product rows with days left ("12 days", red when expired) and "See all".
 7. **To buy chip:** "3 to buy" linking to the shopping list.
 
-Empty state (no products or routines yet): three setup cards: Add your first product, Create a routine, Set up hair care.
+First-run state: a "Set up Jx-Care" card with progress "n of 3" and three fixed-height rows: Add your first product (opens P3 quick mode), Build a routine (opens routine templates), Set up hair care (opens quick hair setup). Done rows show a green check and what was made. Below the card, an Optional group: weekly progress photo, ingredients to avoid. No streak chips or routine cards show until a routine exists. When all three rows are done the card says "You're set" and is removed the next day; long press, Hide removes it at once.
 
 ### T2 Routine player
 
-- Full screen, opened from Today, Routines or a reminder. Header: routine name, slot, close (X), progress "Step 2 of 5".
+- Full screen, opened from Today, Routines or a reminder. Header: routine name, time of day, close (X), progress "Step 2 of 5".
 - List of steps due today in order; skipped-today steps are hidden. Each row: product photo, name, brand, note ("2 drops"), checkbox.
-- Ticking a step with a wait timer starts a countdown in a fixed bar at the bottom of the player ("Wait 1:00 before the next step") with Skip; the next step is dimmed until it ends.
-- Conflict mark on a step: red dot; tap shows "Retinol conflicts with AHA in Evening B (Tue)".
-- Missing product: step shows "Missing" with Replace and Add to shopping list.
+- Ticking a step with a wait timer starts a countdown in a fixed bar at the bottom of the player ("Wait 1:00 before the next step") with Skip wait; the next step is dimmed until it ends.
+- Conflict mark on a step: red dot; tap shows "Retinol conflicts with the AHA in Evening B on Tuesday.".
+- Finished product: the step shows "Finished" with Pick another and Buy again.
 - All ticked: success state with confetti-free subtle check, updated streak ("Skin streak: 12 days") and Done.
 - Leaving mid-way keeps ticks for the day.
 
@@ -230,7 +276,7 @@ Empty state (no products or routines yet): three setup cards: Add your first pro
 
 ### T4 Condition log sheet
 
-- Date at top (today by default). Skin chips (multi-select) and Hair chips (multi-select), each optional; note field (max 280 characters). Save.
+- Date at top (today by default). Skin chips (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy; multi-select) and Hair chips (multi-select), each optional; note field (max 280 characters). Save.
 
 ## Products and shopping
 
@@ -239,9 +285,9 @@ Empty state (no products or routines yet): three setup cards: Add your first pro
 - **Top:** segmented switch My products / Shopping (with count badge), search field, filter button, + (add) button.
 - **Filters (sheet):** Area (All, Skin, Hair), Category (multi-select), Status (OK, Expiring soon, Expired, Not opened, No date), Avoid badge only. Sort: Soonest expiry (default), Name, Recently added.
 - **Row (ProductRow):** photo thumbnail (or category icon), name, brand, AreaTag (Skin/Hair/Both), status Badge with days left ("Expires in 12 days" / "Expired 3 days ago" / "Not opened"), avoid badge if it contains an avoided ingredient.
-- **Swipe or long-press actions:** Mark as opened (if not opened), Finished, Add to shopping list, Duplicate.
+- **Swipe or long-press actions:** Mark as opened (if not opened), Mark finished, Buy again, Duplicate.
 - **Footer link:** Archive (N).
-- **Empty state:** "No products yet", button Add product.
+- **Empty state:** see the Empty states table in the Overview; Add product opens quick mode.
 
 Status rules: effective expiry = earlier of printed expiry and opened date + period after opening. Expiring soon = within the warning window (default 30 days). Not opened with a printed date uses that date. No dates at all = "No date" (grey).
 
@@ -249,16 +295,18 @@ Status rules: effective expiry = earlier of printed expiry and opened date + per
 
 - Large photo (tap to view full screen), name, brand, AreaTag, category.
 - **Expiry block:** status badge, progress bar from opened date to effective expiry, dates listed: purchased, opened, printed expiry, period after opening ("12M").
-- **Info:** size + unit, price with currency, ingredients as chips (conflicting ones marked, avoided ones marked red), notes.
+- **Details:** size + unit, price with currency, ingredients as chips (conflicting ones marked, avoided ones marked red), notes.
 - **Used in:** routines and hair tasks that use it, each tappable.
 - **My rating:** 1–5 stars and "Would buy again" Yes/No toggle.
 - **Notes timeline:** dated reaction notes, newest first, + Add note.
 - **Cost per day:** shown once finished ("€0.21 a day over 142 days").
-- **Actions bar:** Edit, Mark as opened, Finished, Add to shopping list, more menu (Duplicate, Delete only when archived).
+- **Actions bar:** Edit, Mark finished, Buy again, More (spoken label "More actions": Mark as opened, Duplicate, Delete only when in the Archive). Mark finished shows the toast "Vitamin C serum moved to Archive" with Undo.
 
 ### P3 Product form (add / edit)
 
-One scrolling form in groups; only Name and Area are required.
+One scrolling form in groups; only Name and Area are required. The only save action is the "Save product" button at the bottom; there is no Save in the header. A field error replaces the hint under the field in place ("Enter a name.").
+
+**Quick mode** is used from the Today setup card and the Products empty state while there are no products yet; after that, Add opens the full form. Fields: Name, Used on (Skin / Hair / Both), "Is it open?" (Yes, I use it / Not yet). Yes shows Opened on and Use within chips 3M, 6M, 12M, 24M; Not yet shows an optional printed expiry. A live "Expires on" line, "More details" expanding photo, brand, category, price and ingredients, and one button: Save product.
 
 | Field | Control | Rules |
 | --- | --- | --- |
@@ -276,24 +324,26 @@ One scrolling form in groups; only Name and Area are required.
 | Ingredients | Multi-line field, one ingredient per line (P4) | Optional |
 | Notes | Multi-line text | Max 500 |
 
-Live preview at the bottom: "Expires on 2027-04-06 (in 182 days)". Saving a product with an avoided ingredient shows a warning dialog (Save anyway / Edit ingredients).
+Live preview at the bottom: "Expires on 6 Apr 2027 (in 182 days)". An avoided ingredient shows a warning under the ingredients field ("Parfum is on your avoid list. Saving asks you to confirm."); saving then asks to confirm (Save anyway / Edit ingredients).
+
+**Reminder ask:** when the first product with an expiry date is saved, a sheet asks "Get a reminder before it expires?" with the product name, when it would fire (30 days before and on the day) and an example notification. Buttons: Allow reminders / Not now. Allow shows the system prompt and turns on expiry reminders only. Not now doesn't ask again; Settings, Notifications, Reminders can turn them on. Switching on the first routine reminder asks the same way.
 
 ### P4 Ingredient entry
 
-Ingredients are entered one per line in a multi-line field, not separated by commas: each line is one ingredient and Enter starts the next. While typing a line, matching ingredients from the user's list are suggested above the keyboard; tapping one fills the line. Pasting a list with one ingredient per line works the same way. Blank lines are ignored, extra spaces are trimmed and duplicates are merged. Below the field, a live preview shows the parsed ingredients as chips: chips in a conflict show a small link icon, avoided ones show red, and ones not yet in the user's list show a "New" tag. Done saves the list and adds new ingredients to the user's list.
+Ingredients are entered one per line in a multi-line field, not separated by commas: each line is one ingredient and Enter starts the next. While typing a line, matching ingredients from the user's list are suggested above the keyboard; tapping one fills the line. Pasting a list with one ingredient per line works the same way. Blank lines are ignored, extra spaces are trimmed and duplicates are merged. Below the field, a live preview shows the parsed ingredients as chips: chips in a conflict show a small link icon, avoided ones show red, and ones not yet in the user's list show a "New" tag. Done saves the list and adds new ingredients to the user's list. Product detail links here with "Edit list".
 
 ### P5 Archive
 
-Finished products, newest first, with finished date and cost per day. Sort by date or cost per day. Actions: Restore, Add to shopping list, Delete (confirm).
+Finished products, newest first, with finished date and cost per day. Sort by date or cost per day. Actions: Restore, Buy again, Delete (the dialog says the product, its notes and dates are deleted for good).
 
 ### P6 Shopping list
 
 - **Suggested** (top, collapsible): finished or expiring products not yet on the list, each with + and dismiss. Products marked "Would buy again: No" never appear.
 - **To buy:** checkbox rows: name, brand, AreaTag, last price and size for linked items, note. Filter chips: All, Skin, Hair.
 - **Want to try:** separate section for ideas, same rows; "Move to To buy".
-- **Bought:** ticked items, cleared after 30 days; Clear bought button.
+- **Bought:** ticked items, each showing "Bought 4 Oct · leaves the list after 30 days"; Clear bought button.
 - Top bar: + Add item, Share (plain text list).
-- Ticking a linked item opens a prompt: "Add as new product?" with Add / Not now. Add opens the product form pre-filled (name, brand, category, area, size, unit, ingredients, purchase date today).
+- Ticking a linked item shows a toast "Body lotion bought. Add it to your products?" with Add. Add opens the product form pre-filled (name, brand, category, area, size, unit, ingredients, purchase date today).
 
 ### P7 Shopping item sheet
 
@@ -301,82 +351,86 @@ Toggle Buy again (pick product) / New item. New item fields: name (required), br
 
 ### P8 Product note sheet
 
-Date (default today), text (required, max 280), quick tags (breakout, irritation, calm, glow). Save.
+Date (default today), text (required, max 280), quick tags (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy). Save.
 
 ## Routines and hair tasks
 
 ### R1 Routines list
 
 - Segmented switch: Skin / Hair.
-- **Skin:** routines grouped by slot (Morning, Evening, custom). Card: name, weekday dots (M T W T F S S, active ones filled), reminder time, step count, conflict icon, active switch. Tap: editor. Play button: routine player. + New routine. Long-press: Duplicate as variant, Delete.
-- **Hair:** two groups, Washes and Events. Row: name, frequency ("Every 3 days", "Every 8 weeks", "Mon, Thu"), next due date, last done ("Last trim 7 weeks ago"). + New hair task.
-- Empty states: "No routines yet: build your morning routine" / "Set how often you wash your hair".
+- **Skin:** routines grouped by time of day (Morning, Evening, custom). Card: name, weekday dots (M T W T F S S, active ones filled), "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), conflict icon, active switch. Tap: editor. Start button: routine player. + New routine. Long-press: Duplicate as variant, Delete.
+- **Hair:** two groups, Washes and Other care. Row: name, frequency ("Every 3 days", "Every 8 weeks", "Mon, Thu"), next due date, last done as a date ("Last 18 Aug"). + New hair task.
+- Empty states: see the Empty states table in the Overview.
 
 ### R2 Routine editor
+
+**Starting a routine:** + New routine first opens a templates sheet with a Morning / Evening toggle. Evening: Treatment (cleanser, serum, moisturiser), Basics (cleanser, moisturiser), Start empty. Morning: Basics (cleanser, moisturiser, SPF), Light (rinse, moisturiser, SPF), Start empty. Steps are filled from the user's products by category; gaps say "Pick a product later". Create routine opens this editor to set days, time and reminder.
 
 | Field | Control | Rules |
 | --- | --- | --- |
 | Name | Text | Required, e.g. "Evening A: retinol" |
-| Slot | Chips: Morning / Evening / Custom (name + default time) | Required |
+| Time of day | Chips: Morning / Evening / Custom (name + default time) | Required |
 | Days | Seven weekday toggles + "Every day" shortcut | At least one day |
 | Reminder | Switch + time picker | Optional |
 | Steps | Reorderable list (drag handle) | At least one step to save |
 
 - Step row (RoutineStep): order number, product photo + name, schedule chip if not every time ("Tue, Fri" / "Every 3 days"), wait chip ("1 min"), conflict dot. Tap: step editor. Swipe: delete.
-- **Conflict panel** at the bottom, when any: "2 conflicts this week", each line "Retinol (step 3) × Glycolic acid in Evening B, Tue" with "may clash" label for every-N-days steps. Saving is still allowed.
+- **Conflict panel** at the bottom, when any: "2 conflicts this week", each line "Retinol (step 3) × Glycolic acid in Evening B, Tue" with a "mild" label for every-few-days steps. Saving is still allowed, and the panel says so ("You can still save.").
 - Unsaved changes: leaving asks Discard / Keep editing.
 
 ### R3 Step editor sheet
 
-- Product (opens product picker; only Skin or Both products), note ("2 drops"), schedule: Every time (default) / Only on (weekday toggles limited to the routine's days) / Every N days (number + start date), wait after step: none, 30 s, 1, 2, 5, 10, 15, 20 min.
+- Product (opens product picker; only Skin or Both products), note ("2 drops"), schedule: Every time (default) / Set days (weekday toggles limited to the routine's days) / Every few days ("Repeat every (days)" number + start date), wait after step: none, 30 s, 1, 2, 5, 10, 15, 20 min.
 
 ### R4 Product picker sheet
 
-Search, filters by category, rows with status badge; expired products are shown but marked; + Add new product opens the product form and returns with it selected.
+Search, filters by category, rows with status badge; expired products just show the Expired badge; + Add new product opens the product form and returns with it selected.
 
 ### R5 Hair task editor
 
+**Quick hair setup** (the first time, from the Today setup card or the Hair empty state): wash frequency chips (every day, every 2 days, every 3 days, twice a week, once a week, other), last wash chips (today, yesterday, 2 days ago, pick a date), a live "Next wash" line and an optional trim reminder every 8 weeks (other care, not counted in the streak). Saving creates the wash task and the trim task; the full editor below is for later changes.
+
 | Field | Control | Rules |
 | --- | --- | --- |
-| Type | Toggle: Wash / Event | Required |
+| Type | Toggle: Wash / Other care | Required |
 | Name | Text | e.g. "Wash", "Hair mask", "Trim" |
 | Products | Product picker, multi (Hair or Both) | Wash only |
-| Frequency | Every N days / On weekdays / Every N weeks (events) | Required |
+| Frequency | Every few days ("Repeat every (days)") / Set days / Every few weeks (other care) | Required |
 | Last done | Date | Default today; sets the first due date |
 | Reminder | Switch + time | Optional |
 
-Preview line: "Next due: Friday, 9 Oct". Washes count toward the hair streak; events don't.
+Preview line: "Next due: Friday, 9 Oct". Washes count toward the hair streak; other care doesn't.
 
 ## Calendar, progress and condition
 
 ### C1 Calendar
 
 - Segmented switch: Skin / Hair / Condition / Progress (Progress opens C3).
-- **Skin view:** month grid; each day a coloured dot: done (accent), partly done (half), missed (grey ring), nothing scheduled (none); today outlined. Above: streak card with current and best.
-- **Hair view:** wash days done (filled), due (outlined), overdue (orange), events as small icons (scissors, palette). Hair streak card.
+- **Skin view:** month grid; each day a coloured dot: done (accent), partly done (half), missed (grey ring), nothing scheduled (none); today outlined. Above: streak card with current and best ("Best 21 days").
+- **Hair view:** wash days done (filled), due (outlined), overdue (orange), other care as small icons (scissors, palette). Hair streak card.
 - **Condition view:** each day shows the logged skin state as a small coloured chip (calm green, oily yellow, dry blue, breakout red, redness pink); legend below.
 - Swipe left/right between months; "Today" button returns.
 
 ### C2 Day detail
 
-- Date title, skin routines (done/partly/missed with each step ticked or not), hair tasks done, condition log (or "Log how your skin was"), product notes written that day, progress photo thumbnail if that week's check-in was that day.
+- Date title, skin routines (done/partly/missed with each step ticked or not), hair tasks done, condition log (or "Log how your skin was"), product notes written that day, the weekly photo thumbnail if it was taken that day ("Week 41 photo, taken 6 Oct."). A day with nothing done says so and what was due ("Nothing done · Next wash was due 6 Oct").
 - Past days are editable up to 7 days back (tick a forgotten step); older days are read-only.
 
 ### C3 Progress timeline
 
 - Switch Skin / Hair (Hair only when the hair album is on).
-- Grid of weekly check-ins, newest first: front photo thumbnail, week label ("Week 41 · 6 Oct"), rating stars. Missing weeks shown as empty tiles "No photo".
+- Grid of weekly photos, newest first: front photo thumbnail, week label ("Week 41 · 6 Oct"), rating stars. Missing weeks shown as empty tiles "No photo".
 - Top: Take this week's photo (if not taken), Compare button.
-- Empty state: example illustration, "Take a photo each week to see your skin change", Take first photo.
+- Empty state: see the Empty states table in the Overview.
 
 ### C4 Progress camera
 
-- Full-screen front camera. Overlay: last week's photo at 30% opacity (toggle on/off), face oval guide, angle label ("Front", then "Left side", "Right side" for tracked angles), flash off, tips row "Same light · no makeup · hair back".
+- Full-screen front camera. Last photo as a guide: last week's photo at 30% opacity, toggled with the "Show last photo as a guide" button, face oval guide, angle label ("Front", then "Left side", "Right side" for tracked angles), flash off, tips row "Same light · no makeup · hair back".
 - Shutter, retake, switch camera. After each angle: next angle; after the last: review.
 
 ### C5 Photo review + rating
 
-Photos of all angles, rating 1–5, tags (breakout, redness, dryness, oiliness, calm), note. Save. Saving shows "Saved privately in Jx-Care".
+Photos of all angles, rating 1–5, tags (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy), note. Save. Saving shows "Saved privately in Jx-Care".
 
 ### C6 Week detail
 
@@ -390,7 +444,7 @@ Two modes: side by side (two columns, week labels on top) and slider (one image,
 
 ### S1 Settings list
 
-Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), **Reminders**, **Security** (PIN and security), **Preferences** (Language, Currency, Progress photos), **Data** (Backup and restore, Reset app), **About** (version, licences).
+Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), **Notifications** (Reminders), **Security** (PIN and security), **Preferences** (Language, Currency, Progress photos), **Data** (Backup and restore, Reset app), **About** (version, licences).
 
 ### S2 Ingredients + groups
 
@@ -399,12 +453,12 @@ Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), 
 
 ### S3 Conflicts + editor
 
-- List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note, number of affected routines.
+- List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note ("Can cause flushing"), number of affected routines, or "Not in routines" when none uses both sides.
 - Editor sheet: left side picker, right side picker, note. Saving re-checks all routines and shows "Affects 2 routines".
 
 ### S4 Avoid list
 
-Rows: ingredient or group, note ("allergic"), "in 1 product" warning count. + Add. Products containing an avoided item show a red avoid badge everywhere.
+Rows: ingredient or group, note ("allergic"), "in 1 product" warning count, or "in no products". The header + is labelled "Add ingredient". Products containing an avoided item show a red avoid badge everywhere.
 
 ### S5 Reminders
 
@@ -418,7 +472,7 @@ Rows: ingredient or group, note ("allergic"), "in 1 product" warning count. + Ad
 | Weekly digest | Monday 09:00 | On/off |
 | Snooze length | 15 min | 5 / 15 / 30 min |
 
-If system permission is off, a banner at the top: "Notifications are off for Jx-Care" with Open settings.
+If system permission is off, a banner at the top: "Notifications are off for Jx-Care" with Open phone settings.
 
 ### S6 PIN and security
 
@@ -426,7 +480,7 @@ Change PIN (old PIN, new, confirm), change recovery question (needs PIN), biomet
 
 ### S7 Preferences
 
-Language (Lietuvių / English, applies at once), currency (EUR default, then USD, GBP, PLN, others), progress photos: tracked skin angles, hair album on/off, hair angles, overlay opacity.
+Language (Lietuvių / English, applies at once), currency (EUR default, then USD, GBP, PLN, others), progress photos: tracked skin angles, hair album on/off ("Photos of your hair, in their own album"), hair angles, last photo as a guide (on/off and opacity).
 
 ### S8 Backup and restore
 
@@ -440,11 +494,11 @@ All notifications are local, scheduled on the phone, and open the app behind the
 
 | Notification | When | Example text (EN) | Opens | Actions |
 | --- | --- | --- | --- | --- |
-| Expiry warning | Warning date, 09:00 | "Vitamin C serum expires in 30 days" | Product detail | Add to shopping list |
-| Expiry day | Effective expiry date, 09:00 | "Vitamin C serum expires today" | Product detail | Finished |
+| Expiry warning | Warning date, 09:00 | "Vitamin C serum expires in 30 days" | Product detail | Buy again |
+| Expiry day | Effective expiry date, 09:00 | "Vitamin C serum expires today" | Product detail | Mark finished |
 | Routine reminder | Routine time on its days, skipped if already done | "Evening routine: 5 steps" | Routine player | Snooze |
 | Hair task due | Due date, chosen time | "Hair wash day: shampoo + conditioner" | Hair task done sheet | Done, Snooze |
-| Hair event due | Due date | "Time for a trim (8 weeks)" | Hair task done sheet | Done |
+| Other care due | Due date | "Time for a trim (8 weeks)" | Hair task done sheet | Done |
 | Weekly photo | Chosen weekday and time, once | "Time for this week's skin photo" | Progress camera | Skip this week |
 | Weekly digest | Monday 09:00 | "2 expiring soon, 1 expired, 3 unopened" | Products list, filtered | None |
 | Backup reminder | 30 days after last backup, once a month | "Back up your Jx-Care data" | Backup and restore | None |
@@ -472,11 +526,9 @@ sequenceDiagram
   U->>A: Pick recovery question + answer
   A->>S: Save salted pinHash + answerHash
   A->>D: Create settings row (language, currency EUR)
-  A->>U: Offer biometrics, then reminders
-  U->>A: Allow reminders
-  A->>N: Request permission
-  N-->>A: Granted
-  A->>U: Show empty Today with setup cards
+  A->>U: Offer biometrics
+  A->>U: Today first-run state (Set up Jx-Care card)
+  Note over A,N: Notification permission is asked later, when the first product with an expiry date is saved
 ```
 
 ### 2. Unlock, auto-lock and forgotten PIN
@@ -529,6 +581,11 @@ sequenceDiagram
   end
   A->>D: Insert product + ingredients
   D-->>A: Invalidate product queries
+  opt First product with an expiry date
+    A->>U: Reminder ask sheet
+    U->>A: Allow reminders
+    A->>N: Request permission
+  end
   A->>N: Cancel old ids, schedule warning + expiry-day reminders (if within 14 days)
   A->>U: Product detail with status badge
   Note over A,N: On each app open the app tops up reminders for the next 14 days
@@ -551,7 +608,7 @@ sequenceDiagram
     A->>D: Save tick in routine_log (app day ends 04:00)
     opt Step has wait time
       A->>U: Countdown, next step dimmed
-      U->>A: Wait or Skip
+      U->>A: Wait or Skip wait
     end
   end
   A->>D: Mark routine done for the day
@@ -574,7 +631,7 @@ sequenceDiagram
     A->>A: Collect steps due that weekday across all routines
     A->>D: Expand ingredients and groups, match conflict rules
   end
-  A->>U: Conflict panel (every-N-days steps marked may clash)
+  A->>U: Conflict panel (every-few-days steps marked mild)
   U->>A: Save anyway
   A->>D: Save routine + steps
   A->>N: Reschedule this routine's reminders
@@ -606,9 +663,9 @@ sequenceDiagram
   actor U as User
   participant A as App
   participant D as Data
-  U->>A: Mark product Finished
+  U->>A: Mark finished
   A->>D: Set archivedAt, compute cost per day
-  A->>U: Toast with Undo + "Add to shopping list?"
+  A->>U: Toast "moved to Archive" with Undo + Buy again
   alt Would buy again is not No
     A->>D: Show in Suggested
     U->>A: Add
@@ -616,7 +673,7 @@ sequenceDiagram
   end
   U->>A: Tick item as bought (in the shop)
   A->>D: Set boughtAt
-  A->>U: Add as new product?
+  A->>U: Toast "bought. Add it to your products?"
   U->>A: Add
   A->>U: Product form pre-filled, purchase date today
   U->>A: Enter new expiry, save
@@ -635,7 +692,7 @@ sequenceDiagram
   N->>U: Time for this week's skin photo
   U->>A: Tap, unlock
   A->>F: Load last week's front photo
-  A->>U: Camera with 30% overlay + face guide
+  A->>U: Camera with last photo as a guide (30%) + face guide
   loop Each tracked angle
     U->>A: Take photo
   end
