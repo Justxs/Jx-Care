@@ -25,7 +25,7 @@ This spec describes every screen, state and flow in Jx-Care in enough detail to 
 ### Global UI rules
 
 - **Platforms:** iOS and Android phones, portrait only. Designs at 390 × 844 (iPhone) with checks at 360 × 800 (small Android).
-- **Theme:** light and dark, following the phone; Plus Jakarta Sans; pink accent; rn-primitives for every base component.
+- **Theme:** light and dark, following the phone; Figtree; pink accent; rn-primitives for every base component.
 - **Language:** every string comes from LT and EN translation files. Lithuanian runs about 20–30% longer, so labels wrap to two lines instead of truncating.
 - **Dates and numbers:** LT uses 2026-10-06, 24-hour time and "12,50 €"; EN follows the phone's locale.
 - **Touch:** targets at least 44 × 44 pt; ticking a step gives a light haptic.

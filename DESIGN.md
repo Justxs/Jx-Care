@@ -35,7 +35,7 @@ Light and dark are both designed; the app follows the phone. One pink accent, tw
 
 ## Typography
 
-One family: **Plus Jakarta Sans** (covers Lithuanian diacritics). Tabular figures for every number that changes.
+One family: **Figtree** (covers Lithuanian diacritics; replaced Plus Jakarta Sans on 2026-10-06). Tabular figures for every number that changes.
 
 | Style | Size / line | Weight | Use |
 |---|---|---|---|
