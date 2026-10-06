@@ -42,7 +42,7 @@ Eleven features, grouped as the app's main areas. Each lists what the user can d
 
 - Add, edit, archive and delete products; each is tagged **Skin** or **Hair** (or both, for things like oils).
 - Fields: name, brand, category (cleanser, toner, serum, moisturizer, SPF, mask, shampoo, conditioner, hair mask, oil, styling, other), photo, size + unit (ml, g, pcs), price (optional), purchase date, printed expiry date, opened date, period after opening in months, ingredients ("made of"), notes.
-- Ingredients are picked from the user's own ingredient list or typed new, so conflicts can match on them.
+- Ingredients are entered one per line (typed or pasted), not separated by commas. Each line is matched against the user's own ingredient list with suggestions, and new ones are added to it, so conflicts can match on them.
 - List shows a status badge: OK, expiring soon, expired, not opened yet.
 - Filter by Skin / Hair, category, status; search by name or brand; sort by soonest expiry.
 - "Mark as opened" quick action sets opened date to today.

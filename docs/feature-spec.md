@@ -108,7 +108,7 @@ flowchart TD
   shop -- Add as new product --> pform
   pdetail --> note[/S: Product note/]
   pdetail -- Add to shopping list --> shop
-  pform --> ingpick[/S: Ingredient picker/]
+  pform --> ingpick[/S: Ingredient entry/]
 
   routines --> reditor[Routine editor] --> step[/S: Step editor/] --> prodpick[/S: Product picker/]
   routines --> player
@@ -147,7 +147,7 @@ flowchart TD
 | P1 | Products list (My products / Shopping switch) | Tab | Tab bar |
 | P2 | Product detail | Screen | List, Today, expiry reminder |
 | P3 | Product form (add/edit) | Screen | List, detail, shopping list |
-| P4 | Ingredient picker | Sheet | Product form |
+| P4 | Ingredient entry (one per line) | Sheet | Product form |
 | P5 | Archive | Screen | Products list |
 | P6 | Shopping list | Tab view | Products switch, Today chip |
 | P7 | Shopping item | Sheet | Shopping list |
@@ -273,14 +273,14 @@ One scrolling form in groups; only Name and Area are required.
 | Printed expiry date | Date picker | Optional |
 | Opened | Toggle; reveals Opened date | Date ≤ today |
 | Period after opening | Chips 3M, 6M, 9M, 12M, 18M, 24M, 36M + custom | Optional |
-| Ingredients | Ingredient picker (P4) | Optional |
+| Ingredients | Multi-line field, one ingredient per line (P4) | Optional |
 | Notes | Multi-line text | Max 500 |
 
 Live preview at the bottom: "Expires on 2027-04-06 (in 182 days)". Saving a product with an avoided ingredient shows a warning dialog (Save anyway / Edit ingredients).
 
-### P4 Ingredient picker
+### P4 Ingredient entry
 
-Search across the user's ingredient list; tap to add as chips; "Add 'niacinamide'" when not found. Paste mode: paste a comma-separated INCI list and the app splits it into chips. Chips that are in a conflict show a small link icon; avoided ones show red.
+Ingredients are entered one per line in a multi-line field, not separated by commas: each line is one ingredient and Enter starts the next. While typing a line, matching ingredients from the user's list are suggested above the keyboard; tapping one fills the line. Pasting a list with one ingredient per line works the same way. Blank lines are ignored, extra spaces are trimmed and duplicates are merged. Below the field, a live preview shows the parsed ingredients as chips: chips in a conflict show a small link icon, avoided ones show red, and ones not yet in the user's list show a "New" tag. Done saves the list and adds new ingredients to the user's list.
 
 ### P5 Archive
 
