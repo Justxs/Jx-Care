@@ -25,7 +25,7 @@ Defaults picked where the ask was open:
 
 ## Features
 
-Nine features, grouped as the app's main areas. Each lists what the user can do and the rules behind it.
+Ten features, grouped as the app's main areas. Each lists what the user can do and the rules behind it.
 
 ### 1. PIN login
 
@@ -100,9 +100,21 @@ Nine features, grouped as the app's main areas. Each lists what the user can do 
 - Filter by Skin / Hair; share the list as plain text (e.g. to a messaging app) for use in the shop.
 - Shopping list items are included in the JSON backup.
 
+### 10. Skin progress photos
+
+- Weekly check-in: a reminder on a chosen weekday and time (default Sunday 10:00) says it's time for this week's skin photo. Today shows a "Weekly photo" card until it's taken; a missed week gets no extra nagging.
+- Guided capture with the in-app camera: last week's photo shows as a faint overlay so face position, angle and distance line up. A short hint reminds the user to use the same light and no makeup.
+- Angles: the user picks which to track (front, left side, right side); front only by default. One check-in holds one photo per tracked angle.
+- Each week can also get a 1–5 skin rating, tags (breakout, redness, dryness, oiliness) and a note.
+- Timeline: a grid of weekly check-ins, newest first, with the rating shown on each.
+- Compare: pick any two weeks side by side, or drag a slider across them; a quick "4 weeks ago vs now" button.
+- Context: each week shows which routines were done that week and which products started or stopped, so changes in the skin can be linked to changes in the routine.
+- Privacy: photos are saved in the app's private storage, never in the phone gallery, and are only visible after the PIN. The JSON backup leaves them out by default; "Include photos" exports a zip instead.
+- Delete a single photo or a whole week.
+
 ## Data model
 
-Twelve tables in a local SQLite database; expiry status and streaks are computed, not stored.
+Fourteen tables in a local SQLite database; expiry status and streaks are computed, not stored.
 
 | Table | Key fields | Notes |
 | --- | --- | --- |
@@ -118,6 +130,8 @@ Twelve tables in a local SQLite database; expiry status and streaks are computed
 | hair_task | id, name, productIds, everyNDays or daysOfWeek, reminderTime, lastDoneAt | Next due = lastDoneAt + N |
 | hair_log | id, hairTaskId, date, productIds | Wash history, feeds hair streak |
 | shopping_item | id, productId (nullable), name, brand, area, note, addedAt, boughtAt | productId set for "buy again", null for free-text items |
+| progress_entry | id, weekStart, takenAt, rating, tags, note | One per weekly check-in |
+| progress_photo | id, entryId, angle (front/left/right), fileUri | Files in app-private storage |
 
 Notification ids are kept per product, routine and hair task so they can be cancelled and rescheduled on edits.
 
@@ -135,14 +149,16 @@ First launch (language, PIN) → Lock screen (PIN / biometrics; every open, and 
 │ Tick off     │ Add / edit     │ Routine editor │ Month view   │ PIN, biometrics │
 │ Hair due     │ Product detail │ Hair schedule  │ Day detail   │ Ingredients     │
 │ Expiring soon│ Archive        │ Hair tasks     │ Streak stats │ Conflicts       │
-│ Streak       │ Shopping list  │                │              │ Expiry warning  │
-│              │                │                │              │ Backup, reset   │
+│ Streak       │ Shopping list  │                │ Progress     │ Expiry warning  │
+│ Weekly photo │                │                │              │ Backup, reset   │
 └──────────────┴────────────────┴────────────────┴──────────────┴─────────────────┘
 ```
 
 Routine reminders open straight into Today with that routine expanded; expiry reminders open the product's detail screen.
 
 The shopping list sits inside the Products tab (a "Shopping" switch at the top of the list) to keep five tabs; Today shows a small "N to buy" chip linking to it.
+
+Skin progress photos sit inside the Calendar tab as a "Progress" view next to the skin and hair calendars; the weekly reminder opens the camera directly.
 
 ## Tech stack
 
@@ -164,6 +180,7 @@ Expo-managed React Native with TypeScript on the newest versions, so Android and
 | Calendar UI | react-native-calendars | Month view with coloured day marks |
 | Lists | react-native-draggable-flatlist 4 | Reorder routine steps |
 | Photos | expo-image-picker | Product photo from camera or gallery |
+| Camera | expo-camera | Weekly progress photo with last week's photo as an overlay |
 | Backup | expo-file-system + expo-sharing | Export/import a JSON backup |
 | Tests | Jest 30 + React Native Testing Library 14 | Unit tests for expiry, streak and conflict logic |
 | Base components | rn-primitives 1.5 (@rn-primitives/* packages) | Unstyled, accessible dialogs, selects, switches, tabs and more, styled with the app's own theme |
@@ -172,7 +189,7 @@ Notification caveat: iOS keeps at most 64 pending local notifications, so the ap
 
 ## Build order
 
-Ten milestones, each ending in something usable on the phone; later ones depend on the product list from milestone 2.
+Eleven milestones, each ending in something usable on the phone; later ones depend on the product list from milestone 2.
 
 1. **Foundation:** Expo + TypeScript project, tab navigation, SQLite schema and migrations, LT/EN translation setup, Settings screen with language switch.
 2. **Products:** product list, add/edit form with all fields and photo, ingredients, archive, search/filter, expiry status badges.
@@ -183,7 +200,8 @@ Ten milestones, each ending in something usable on the phone; later ones depend 
 7. **Conflicts:** ingredient groups, conflict editor, whole-day warnings in routines.
 8. **Hair care calendar:** hair tasks with frequency, next-due logic, hair calendar, reminders, wash log, hair streak.
 9. **Shopping list:** list with linked and free-text items, add from product and expiring card, finished/expiring suggestions, tick bought and "Add as new product", share as text.
-10. **Polish:** JSON backup export/import, empty states, full LT/EN copy review, app icon.
+10. **Skin progress photos:** weekly reminder, guided camera with overlay, angles, rating and tags, timeline, side-by-side and slider compare, routine context, private storage.
+11. **Polish:** JSON backup export/import (photos optional as zip), empty states, full LT/EN copy review, app icon.
 
 PIN lock comes after products on purpose: it is easier to test the data screens without a lock, and the lock wraps the finished navigation.
 
