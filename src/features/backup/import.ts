@@ -102,7 +102,7 @@ export async function restoreBackup(
   let available: (path: string) => boolean;
 
   if (source.kind === 'zip') {
-    const total = source.photoPaths.length + 1;
+    const total = source.photoPaths.length;
     const staged = new Set<string>();
     try {
       const bytes = await files.readBytes(source.uri);
@@ -142,5 +142,4 @@ export async function restoreBackup(
   } catch {
     files.clearStaged();
   }
-  onProgress?.({ done: 1, total: 1 });
 }

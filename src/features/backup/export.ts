@@ -20,7 +20,7 @@ export const MIME_TYPES: Record<ExportKind, string> = {
   zip: 'application/zip',
 };
 
-/** Files written so far out of the total (the JSON counts as one), for the progress bar. */
+/** Photos written (or restored) so far out of the photos in the zip, for the progress bar. */
 export type BackupProgress = { done: number; total: number };
 
 /** Lets the screen redraw between photos, so a large zip never freezes it. */
@@ -68,22 +68,18 @@ export async function writeBackup(
   } catch {
     // An old export left in the cache is harmless; the phone clears the cache by itself.
   }
-  if (kind === 'json') {
-    const uri = files.writeCacheText(name, json);
-    onProgress?.({ done: 1, total: 1 });
-    return uri;
-  }
+  if (kind === 'json') return files.writeCacheText(name, json);
 
   const photos = files.listPhotoFiles();
-  const total = photos.length + 1;
+  const total = photos.length;
   const out = files.createCacheFile(name);
   const zip = createZipWriter(out.append);
   zip.add(BACKUP_JSON_NAME, strToU8(json), true);
-  onProgress?.({ done: 1, total });
+  onProgress?.({ done: 0, total });
   for (const [i, photo] of photos.entries()) {
     await pause();
     zip.add(photo.path, await files.readBytes(photo.uri), false);
-    onProgress?.({ done: i + 2, total });
+    onProgress?.({ done: i + 1, total });
   }
   zip.end();
   return out.uri;

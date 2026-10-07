@@ -32,13 +32,6 @@ const IN_CARD = 'rounded-none bg-transparent shadow-none dark:shadow-none';
 
 const NO_PROGRESS: BackupProgress = { done: 0, total: 0 };
 
-/** Photos done out of photos in all (the progress counts the JSON as one more file). */
-function photoProgress(p: BackupProgress, jsonFirst: boolean) {
-  return jsonFirst
-    ? { done: Math.max(0, p.done - 1), total: Math.max(0, p.total - 1) }
-    : { done: Math.min(p.done, Math.max(0, p.total - 1)), total: Math.max(0, p.total - 1) };
-}
-
 /**
  * S8 Backup and restore: the last backup (with an amber callout when it is older than 30 days or
  * missing), Export backup as JSON or a zip with photos, Import backup (preview counts, then
@@ -98,8 +91,6 @@ export function BackupScreen() {
     });
   };
 
-  const exportPhotos = photoProgress(exportProgress, true);
-  const restorePhotos = photoProgress(restoreProgress, false);
   const restoringZip = prepared?.source.kind === 'zip' && restorer.isPending;
 
   return (
@@ -148,9 +139,8 @@ export function BackupScreen() {
             </Button>
             <Collapsible open={exporter.isPending && kind === 'zip'}>
               <ProgressRow
-                label={t('backup.export.progress', exportPhotos)}
-                done={exportProgress.done}
-                total={exportProgress.total}
+                label={t('backup.export.progress', exportProgress)}
+                {...exportProgress}
               />
             </Collapsible>
           </View>
@@ -179,9 +169,8 @@ export function BackupScreen() {
             )}
             <Collapsible open={restoringZip}>
               <ProgressRow
-                label={t('backup.import.progress', restorePhotos)}
-                done={restoreProgress.done}
-                total={restoreProgress.total}
+                label={t('backup.import.progress', restoreProgress)}
+                {...restoreProgress}
               />
             </Collapsible>
             {/* Reserved helper line: an error never pushes the cards below. */}
