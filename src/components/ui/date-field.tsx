@@ -59,10 +59,10 @@ function PickerField({ mode, shown, initial, min, max, onPick, field }: PickerPr
 
   const press = () => {
     if (Platform.OS === 'android') {
+      // No is24Hour: the dialog follows the phone's 12/24-hour setting, like the times we show.
       DateTimePickerAndroid.open({
         value: initial,
         mode,
-        is24Hour: true,
         minimumDate: min,
         maximumDate: max,
         onChange: (event, date) => {
