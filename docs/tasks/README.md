@@ -78,7 +78,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 038 | [Condition log](038-condition-log.md) | 025, 028 | T4, C1 condition, C2 | done |
 | 039 | [Product notes and rating](039-product-notes-rating.md) | 015, 034 | P2 rating, P8 | done |
 | 040 | [Backup and restore](040-backup-restore.md) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | done |
-| 041 | [Final quality pass and release builds](041-final-quality-release.md) | all | Global UI rules | waiting on device build |
+| 041 | [Final quality pass and release builds](041-final-quality-release.md) | all | Global UI rules | done |
 
 ## Dependency graph
 
