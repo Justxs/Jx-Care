@@ -78,7 +78,8 @@ export function migrateForward(
 
 // ─── Photo paths ────────────────────────────────────────────────────────────
 
-const withSlash = (uri: string) => (uri.endsWith('/') ? uri : `${uri}/`);
+/** A folder uri ending in '/'. */
+export const withSlash = (uri: string) => (uri.endsWith('/') ? uri : `${uri}/`);
 
 /**
  * A photo uri on this phone as a path under the documents folder (`products/a.jpg`). A uri from

@@ -1,6 +1,6 @@
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { PHOTO_ROOTS } from './format';
+import { PHOTO_ROOTS, toRelativePath, withSlash } from './format';
 
 /**
  * Backup file work on the phone (expo-file-system), behind an interface so export and import run
@@ -39,8 +39,6 @@ export interface BackupFiles {
 
 const STAGING = 'restore-staging';
 
-const withSlash = (uri: string) => (uri.endsWith('/') ? uri : `${uri}/`);
-
 function walk(dir: Directory, out: File[]): void {
   for (const item of dir.list()) {
     if (item instanceof Directory) walk(item, out);
@@ -69,7 +67,7 @@ export const backupFiles: BackupFiles = {
     const base = documentUri();
     return PHOTO_ROOTS.flatMap((root) =>
       filesUnder(new Directory(Paths.document, root)).map((f) => ({
-        path: f.uri.startsWith(base) ? f.uri.slice(base.length) : `${root}/${f.name}`,
+        path: toRelativePath(f.uri, base),
         uri: f.uri,
         bytes: f.size ?? 0,
       })),
