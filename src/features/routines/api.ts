@@ -66,7 +66,7 @@ function useDayContext() {
 
 const todayRoutinesKey = (day: string) => [...qk.today(day), 'routines'] as const;
 
-/** Today's routine cards on `day`; shared by `useTodayRoutines` and Today's prefetch. */
+/** Today's routine cards on `day`; shared by `useToday` and Today's prefetch. */
 export const todayRoutinesQuery = (day: string, warnDays: number) =>
   queryOptions({
     queryKey: [...todayRoutinesKey(day), warnDays],
@@ -96,12 +96,6 @@ export function useRoutine(id: number) {
     queryKey: [...qk.routines.detail(id), day, warnDays],
     queryFn: () => getRoutine(getDb(), id, day, warnDays),
   });
-}
-
-/** Today's routine cards, keyed by the app day. */
-export function useTodayRoutines() {
-  const { day, warnDays } = useDayContext();
-  return useQuery(todayRoutinesQuery(day, warnDays));
 }
 
 /** One routine on the current app day, for the player (T2). */

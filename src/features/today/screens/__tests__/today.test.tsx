@@ -3,7 +3,7 @@ import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-
 
 import { Text } from 'react-native';
 
-import { getDayLog, getTodayRoutines, tickStep } from '@/features/routines/repo';
+import { getDayLog, getTodayRoutines, tickSteps } from '@/features/routines/repo';
 import { productListStore } from '@/features/products/listState';
 import { defaultProductFilters } from '@/features/products/types';
 import { quickSetup } from '@/features/hair/repo';
@@ -169,7 +169,7 @@ describe('TodayScreen routine cards', () => {
 
     // A tick (here from the player) fixes the choice for the day.
     const due = getTodayRoutines(app.db, MON, 30)[0]!.routines.find((r) => r.id === b)!;
-    tickStep(app.db, b, due.steps[0]!.id, MON, true, due.progress.dueStepIds);
+    tickSteps(app.db, b, [due.steps[0]!.id], MON, true, due.progress.dueStepIds);
     await act(async () => {
       await app.client.invalidateQueries({ queryKey: ['today'] });
     });

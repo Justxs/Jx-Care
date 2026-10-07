@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { act, waitFor } from '@testing-library/react-native';
 import { eq } from 'drizzle-orm';
 
@@ -12,7 +13,7 @@ import {
   useSaveRoutine,
   useSkinStreak,
   useTickStep,
-  useTodayRoutines,
+  todayRoutinesQuery,
 } from './api';
 import * as repo from './repo';
 import type { SaveRoutineInput } from './repo';
@@ -57,7 +58,7 @@ describe('useTickStep', () => {
   it('shows the tick in the cache before it is saved, then completes the routine', async () => {
     const app = setup();
     const { result } = await app.renderHook(() => ({
-      today: useTodayRoutines(),
+      today: useQuery(todayRoutinesQuery(MON, 30)),
       streak: useSkinStreak(),
       tick: useTickStep(),
     }));
@@ -94,7 +95,7 @@ describe('useTickStep', () => {
   it('rolls the cache back when saving fails', async () => {
     const app = setup();
     const { result } = await app.renderHook(() => ({
-      today: useTodayRoutines(),
+      today: useQuery(todayRoutinesQuery(MON, 30)),
       tick: useTickStep(),
     }));
     await waitFor(() => expect(result.current.today.data).toHaveLength(1));

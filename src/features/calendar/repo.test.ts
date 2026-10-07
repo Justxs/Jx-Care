@@ -7,7 +7,6 @@ import {
   getRoutine,
   saveRoutine,
   streakInput,
-  tickStep,
   tickSteps,
   type SaveRoutineInput,
 } from '@/features/routines/repo';
@@ -68,9 +67,9 @@ function seededMonth() {
   const [m1] = stepIds(db, morning);
   const ev = stepIds(db, evening);
   // 5 Oct: both done. 6 Oct: one evening step. 4 Oct: nothing. 7 Oct (today): nothing yet.
-  tickStep(db, morning, m1!, '2026-10-05', true, [m1!]);
+  tickSteps(db, morning, [m1!], '2026-10-05', true, [m1!]);
   tickSteps(db, evening, ev, '2026-10-05', true, ev);
-  tickStep(db, evening, ev[0]!, '2026-10-06', true, ev);
+  tickSteps(db, evening, [ev[0]!], '2026-10-06', true, ev);
   return { db, morning, evening, m1: m1!, ev };
 }
 
@@ -172,7 +171,7 @@ describe('getSkinDay', () => {
       b,
     ]);
     const [s] = stepIds(db, b);
-    tickStep(db, b, s!, '2026-10-05', true, stepIds(db, b));
+    tickSteps(db, b, [s!], '2026-10-05', true, stepIds(db, b));
     const day = getSkinDay(db, '2026-10-05', TODAY, WARN);
     expect(day.groups[0]!.routines.map((r) => r.id)).toEqual([b]);
     expect(day.status).toBe('partly');
@@ -182,7 +181,7 @@ describe('getSkinDay', () => {
     const { db, morning, m1 } = seededMonth();
     // 5 Oct done; 6 Oct is partly (not complete), so the streak is broken after 5 Oct.
     expect(skinStreak(streakInput(db, TODAY))).toEqual({ current: 0, best: 1 });
-    tickStep(db, morning, m1, '2026-10-06', true, [m1]);
+    tickSteps(db, morning, [m1], '2026-10-06', true, [m1]);
     expect(getSkinDay(db, '2026-10-06', TODAY, WARN).status).toBe('partly');
     expect(skinStreak(streakInput(db, TODAY))).toEqual({ current: 2, best: 2 });
   });

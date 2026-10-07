@@ -379,10 +379,6 @@ export function routinesUsingProduct(db: Db, productId: number): UsedIn[] {
     .map((r) => ({ kind: 'routine' as const, id: r.id, name: r.name }));
 }
 
-export function routineCountByProduct(db: Db, productId: number): number {
-  return routinesUsingProduct(db, productId).length;
-}
-
 addUsedInSource(routinesUsingProduct);
 
 // ─── Writes ─────────────────────────────────────────────────────────────────
@@ -583,18 +579,6 @@ export function tickSteps(
     }
     return tx.update(routineLog).set(values).where(eq(routineLog.id, log.id)).returning().get();
   });
-}
-
-export function tickStep(
-  db: Db,
-  routineId: number,
-  stepId: number,
-  day: string,
-  done: boolean,
-  dueStepIds: readonly number[],
-  now: number = Date.now(),
-): RoutineLog | null {
-  return tickSteps(db, routineId, [stepId], day, done, dueStepIds, now);
 }
 
 /** Remembers the A/B pick for a time of day on a weekday (T1). */
