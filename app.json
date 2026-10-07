@@ -50,6 +50,21 @@
           "cameraPermission": "Jx-Care uses the camera so you can photograph a product.",
           "microphonePermission": false
         }
+      ],
+      "expo-secure-store",
+      "expo-background-task",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Unlock Jx-Care with Face ID."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#B83A6E"
+        }
       ]
     ],
     "experiments": {
