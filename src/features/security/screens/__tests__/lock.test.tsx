@@ -498,6 +498,28 @@ describe('ResetDialog from Settings', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
     expect(await screen.findByText('Enter your PIN')).toBeTruthy();
   });
+
+  it('asks for the PIN again when the check finishes after Cancel', async () => {
+    const app = await setUp();
+    let finish: (() => void) | undefined;
+    const verify = jest.spyOn(pinService, 'verifyPin').mockImplementation(
+      () =>
+        new Promise((done) => {
+          finish = () => done({ ok: true });
+        }),
+    );
+    await app.render(<SettingsStub onExport={jest.fn()} reset={jest.fn(async () => {})} />);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
+    await fireEvent.changeText(await screen.findByLabelText('PIN'), '2580');
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    await act(async () => finish?.());
+    verify.mockRestore();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
+    expect(await screen.findByText('Enter your PIN')).toBeTruthy();
+    expect(screen.queryByText('Reset app and delete all data?')).toBeNull();
+  });
 });
 
 describe('PrivacyOverlay', () => {
