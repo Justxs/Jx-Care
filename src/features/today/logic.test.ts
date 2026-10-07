@@ -107,7 +107,7 @@ describe('setupView', () => {
 });
 
 describe('sectionOrder', () => {
-  const all = { setup: false, routines: true, expiring: true, hair: true, checkIn: true };
+  const all = { setup: false, routines: true, expiring: true, hair: true };
 
   it('puts Expiring soon under the routine cards while anything is expired', () => {
     expect(sectionOrder({ ...all, anyExpired: true })).toEqual([
@@ -135,9 +135,8 @@ describe('sectionOrder', () => {
         expiring: false,
         anyExpired: false,
         hair: false,
-        checkIn: false,
       }),
-    ).toEqual(['setup']);
+    ).toEqual(['setup', 'checkIn']);
   });
 });
 

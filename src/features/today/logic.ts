@@ -78,8 +78,9 @@ export function setupView(
 export type SectionKey = 'setup' | 'routines' | 'expiring' | 'hair' | 'checkIn';
 
 /**
- * Today's sections top to bottom, each left out when empty. While any product is expired,
- * Expiring soon sits directly under the routine cards; otherwise it comes after Hair due.
+ * Today's sections top to bottom, each left out when empty (Check-in never is: its skin chips
+ * always show). While any product is expired, Expiring soon sits directly under the routine
+ * cards; otherwise it comes after Hair due.
  */
 export function sectionOrder(p: {
   setup: boolean;
@@ -87,7 +88,6 @@ export function sectionOrder(p: {
   expiring: boolean;
   anyExpired: boolean;
   hair: boolean;
-  checkIn: boolean;
 }): SectionKey[] {
   const out: SectionKey[] = [];
   if (p.setup) out.push('setup');
@@ -95,7 +95,7 @@ export function sectionOrder(p: {
   if (p.expiring && p.anyExpired) out.push('expiring');
   if (p.hair) out.push('hair');
   if (p.expiring && !p.anyExpired) out.push('expiring');
-  if (p.checkIn) out.push('checkIn');
+  out.push('checkIn');
   return out;
 }
 

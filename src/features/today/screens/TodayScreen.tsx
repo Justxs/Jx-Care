@@ -43,7 +43,6 @@ import {
   useHairDueSlot,
   useHairStreakSlot,
   useShoppingToBuySlot,
-  useSkinCheckInSlot,
   useWeeklyPhotoSlot,
 } from '../slots';
 import { useRoutineActions } from '../useRoutineActions';
@@ -97,7 +96,6 @@ export function TodayScreen() {
   const toBuy = useShoppingToBuySlot();
   const photoRow = useWeeklyPhotoSlot();
   const weeklyPhoto = useWeeklyPhotoOptional();
-  const skinRow = useSkinCheckInSlot();
 
   const [streakOpen, setStreakOpen] = useState(false);
   const [abOpen, setAbOpen] = useState(false);
@@ -171,7 +169,7 @@ export function TodayScreen() {
     routines: routinesNode,
     expiring: expiringNode,
     hair: hairDue,
-    checkIn: <CheckInCard photo={photoRow} skin={skinRow} />,
+    checkIn: <CheckInCard photo={photoRow} />,
   };
 
   const sections = sectionOrder({
@@ -180,7 +178,6 @@ export function TodayScreen() {
     expiring: expiring === undefined || expiring.length > 0,
     anyExpired,
     hair: !!hairDue,
-    checkIn: !!photoRow || !!skinRow,
   });
 
   return (

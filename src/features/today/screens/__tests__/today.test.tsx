@@ -369,17 +369,9 @@ describe('TodayScreen first run', () => {
 });
 
 describe('CheckInCard', () => {
-  it('holds the photo row and the skin chips, divided, and hides when both are empty', async () => {
+  it('holds the photo row above the skin chips', async () => {
     const app = setupTestApp();
-    const view = await app.render(<CheckInCard photo={null} skin={null} />);
-    expect(view.toJSON()).toBeNull();
-
-    await view.rerender(
-      <CheckInCard
-        photo={<Text>This week's skin photo</Text>}
-        skin={<Text>How's your skin today?</Text>}
-      />,
-    );
+    await app.render(<CheckInCard photo={<Text>This week's skin photo</Text>} />);
     expect(screen.getByText('Check-in')).toBeTruthy();
     expect(screen.getByText("This week's skin photo")).toBeTruthy();
     expect(screen.getByText("How's your skin today?")).toBeTruthy();
