@@ -192,7 +192,8 @@ describe('Edit product (full form)', () => {
     );
     await app.show();
     expect(await screen.findByText('Edit product')).toBeTruthy();
-    expect(screen.getByLabelText('Name')).toHaveProp('value', 'Serum');
+    // The header shows while the product loads; wait for the form itself.
+    expect(await screen.findByLabelText('Name')).toHaveProp('value', 'Serum');
     expect(screen.getByLabelText('Size')).toHaveProp('value', '30');
     expect(screen.getByLabelText('Price')).toHaveProp('value', '24,90');
     for (const label of ['Purchase date', 'Printed expiry date', 'Opened on', 'Notes']) {

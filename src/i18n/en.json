@@ -112,6 +112,23 @@
   },
   "onboarding": {},
   "lock": {},
+  "security": {
+    "errors": {
+      "pinFormat": "Enter 4 digits.",
+      "pinTooEasy": "{{pin}} is too easy to guess. Try another.",
+      "answerShort": "Use at least 3 characters."
+    },
+    "questions": {
+      "first_pet": "What was the name of your first pet?",
+      "mother_maiden": "What is your mother's maiden name?",
+      "first_school": "What was the name of your first school?",
+      "favourite_teacher": "What was the name of your favourite teacher?",
+      "birth_city": "In which city were you born?"
+    },
+    "biometrics": {
+      "usePin": "Use PIN"
+    }
+  },
   "today": {},
   "products": {
     "errors": {

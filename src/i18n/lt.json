@@ -118,6 +118,23 @@
   },
   "onboarding": {},
   "lock": {},
+  "security": {
+    "errors": {
+      "pinFormat": "Įveskite 4 skaitmenis.",
+      "pinTooEasy": "{{pin}} per lengva atspėti. Pabandykite kitą.",
+      "answerShort": "Įveskite bent 3 simbolius."
+    },
+    "questions": {
+      "first_pet": "Koks buvo jūsų pirmojo augintinio vardas?",
+      "mother_maiden": "Kokia jūsų mamos mergautinė pavardė?",
+      "first_school": "Kaip vadinosi jūsų pirmoji mokykla?",
+      "favourite_teacher": "Koks buvo jūsų mėgstamiausio mokytojo vardas?",
+      "birth_city": "Kuriame mieste gimėte?"
+    },
+    "biometrics": {
+      "usePin": "Naudoti PIN"
+    }
+  },
   "today": {},
   "products": {
     "errors": {

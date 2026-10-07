@@ -53,7 +53,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 013 | [Products list](013-products-list.md) | 010, 012 | P1 | done |
 | 014 | [Product form and ingredient entry](014-product-form-ingredients.md) | 010, 012 | P3, P4 | done |
 | 015 | [Product detail and archive](015-product-detail-archive.md) | 010, 012 | P2, P5 | todo |
-| 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | todo |
+| 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | done |
 | 017 | [Onboarding](017-onboarding.md) | 010, 016 | O1–O5 | todo |
 | 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | todo |
 | 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | todo |
