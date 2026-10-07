@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "printWidth": 100,
+  "trailingComma": "all",
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "node_modules",
+    ".expo",
+    "dist",
+    "docs",
+    "assets",
+    "src/db/migrations",
+    "**/*.md",
+    "package-lock.json"
+  ]
+}

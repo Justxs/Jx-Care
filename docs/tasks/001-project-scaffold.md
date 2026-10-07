@@ -20,15 +20,15 @@ In:
   - `experiments.typedRoutes` true.
 - TypeScript: `strict: true`, `noUncheckedIndexedAccess: true`, path alias `"@/*": ["src/*"]`.
 - Create the empty folder layout from conventions.md with a `.gitkeep` where a folder would otherwise be empty: `src/components/ui`, `src/features`, `src/db`, `src/lib`, `src/i18n`, `src/state`, `src/notifications`, `src/theme`.
-- Lint and format: `npx expo lint` (sets up `eslint-config-expo` with the flat config), Prettier with `singleQuote: true`, `printWidth: 100`, `trailingComma: 'all'`, plus `eslint-config-prettier`.
+- Lint and format with oxc (Justas, 2026-10-07: "for linting and formating use oxc"): `oxlint` with `.oxlintrc.json` (TypeScript, React, React hooks, import, Jest and jsx-a11y plugins) and `oxfmt` with `.oxfmtrc.json` (`singleQuote: true`, `printWidth: 100`, `trailingComma: 'all'`). No ESLint or Prettier.
 - Jest: `npx expo install jest-expo jest @types/jest --dev`, preset `jest-expo`, `@testing-library/react-native`. One sample test for a tiny function in `src/lib/` (it can be deleted by task 006) and one render test for the placeholder screen.
 - npm scripts:
   - `start`, `android`, `ios` (Expo defaults)
   - `typecheck`: `tsc --noEmit`
-  - `lint`: `expo lint`
-  - `format`: `prettier --write .`
+  - `lint`: `oxlint --deny-warnings`
+  - `format`: `oxfmt`; `format:check`: `oxfmt --check`
   - `test`: `jest`
-  - `check`: `npm run typecheck && npm run lint && npm run test -- --ci`
+  - `check`: `npm run typecheck && npm run lint && npm run format:check && npm run test -- --ci`
 - `.gitignore` from the template plus `/tmp`, `*.db`, `.expo/`.
 - Replace `README.md` with a short one: what the app is (one paragraph from PRODUCT.md), how to run it (`npm install`, `npx expo start`), `npm run check`, and a link to `docs/tasks/README.md`.
 
@@ -56,6 +56,6 @@ Out:
 - Expo SDK 57.0.27 from the template, with React Native 0.86.3 and React 19.2.3 (conventions.md expected RN 0.87; SDK 57 ships 0.86).
 - `api.expo.dev` and the React Native Directory are blocked from the cloud build container, so packages were added with `EXPO_OFFLINE=1 npx expo install …`, which uses the SDK's bundled version list. `expo-doctor` passes 19 of 21 checks; the two that fail are the app.json schema and React Native Directory checks, which need those blocked hosts. Re-run `npx expo-doctor` on a machine with normal network.
 - Jest 29.7 instead of 30: `jest-expo` 57 is built on Jest 29 (babel-jest 29, jest-environment 29). `@testing-library/react-native` 14 needs `test-renderer`; it is pinned to 1.2 because 1.3 pulls a React 19.3 reconciler and the SDK pins React 19.2.3.
-- ESLint 9 (not 10): `eslint-config-expo` 57 and its React plugins are built for ESLint 9.
+- Linting and formatting moved from ESLint 9 + Prettier to oxc (`oxlint` 1.87, `oxfmt` 0.72) on 2026-10-07 at Justas's request. `npm run lint` fails on warnings too, and `npm run check` also runs `oxfmt --check`.
 - `tsconfig.json` lists `types: ["jest", "node"]` because TypeScript 6 no longer loads every `@types` package by default.
 - `react-dom` 19.2.3 is a dev dependency so npm doesn't resolve Expo's optional `react-dom` peer to a newer React.

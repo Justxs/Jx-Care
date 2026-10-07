@@ -8,6 +8,10 @@ function keys(obj: unknown, prefix = ''): string[] {
   return Object.entries(obj).flatMap(([k, v]) => keys(v, prefix ? `${prefix}.${k}` : k));
 }
 
+function values(obj: unknown): unknown[] {
+  return typeof obj === 'object' && obj !== null ? Object.values(obj).flatMap(values) : [obj];
+}
+
 function normalised(obj: unknown): string[] {
   return [...new Set(keys(obj).map((k) => k.replace(pluralSuffix, '')))].sort();
 }
@@ -30,8 +34,6 @@ describe('translation files', () => {
   });
 
   it('has no empty strings', () => {
-    const values = (obj: unknown): unknown[] =>
-      typeof obj === 'object' && obj !== null ? Object.values(obj).flatMap(values) : [obj];
     expect(values(en).filter((v) => v === '')).toEqual([]);
     expect(values(lt).filter((v) => v === '')).toEqual([]);
   });

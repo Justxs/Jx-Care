@@ -64,23 +64,23 @@ describe('database schema', () => {
     db.insert(routineLog).values({ routineId: r.id, day: '2026-10-06' }).run();
     expect(() =>
       db.insert(routineLog).values({ routineId: r.id, day: '2026-10-06' }).run(),
-    ).toThrow();
+    ).toThrow(/UNIQUE constraint failed/);
 
     db.insert(conditionLog).values({ day: '2026-10-06', area: 'skin' }).run();
     db.insert(conditionLog).values({ day: '2026-10-06', area: 'hair' }).run();
-    expect(() =>
-      db.insert(conditionLog).values({ day: '2026-10-06', area: 'skin' }).run(),
-    ).toThrow();
+    expect(() => db.insert(conditionLog).values({ day: '2026-10-06', area: 'skin' }).run()).toThrow(
+      /UNIQUE constraint failed/,
+    );
 
     db.insert(progressEntry).values({ area: 'skin', weekStart: '2026-10-05' }).run();
     expect(() =>
       db.insert(progressEntry).values({ area: 'skin', weekStart: '2026-10-05' }).run(),
-    ).toThrow();
+    ).toThrow(/UNIQUE constraint failed/);
 
     db.insert(ingredient).values({ name: 'Niacinamide', normalizedName: 'niacinamide' }).run();
     expect(() =>
       db.insert(ingredient).values({ name: 'niacinamide', normalizedName: 'niacinamide' }).run(),
-    ).toThrow();
+    ).toThrow(/UNIQUE constraint failed/);
   });
 
   it('sets step and shopping product ids to null when a product is deleted', () => {

@@ -150,7 +150,11 @@ export function hairMonthMarks(
 }
 
 export type QuickWashFrequency =
-  'every_day' | 'every_2_days' | 'every_3_days' | 'twice_a_week' | 'once_a_week';
+  | 'every_day'
+  | 'every_2_days'
+  | 'every_3_days'
+  | 'twice_a_week'
+  | 'once_a_week';
 
 export type HairScheduleChoice = {
   scheduleKind: 'interval' | 'days';
