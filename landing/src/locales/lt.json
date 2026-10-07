@@ -1,13 +1,14 @@
 {
   "meta": {
-    "title": "Jx-Care: odos ir plaukų priežiūra jūsų telefone",
-    "description": "Jx-Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare ir kaip oda keičiasi kas savaitę. Nemokama, privati, lietuvių ir anglų kalbomis."
+    "title": "Jx Care: odos ir plaukų priežiūra jūsų telefone",
+    "description": "Jx Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare ir kaip oda keičiasi kas savaitę. Nemokama, privati, lietuvių ir anglų kalbomis.",
+    "featuresTitle": "Funkcijos · Jx Care"
   },
   "skip": "Pereiti prie turinio",
   "opensInNewTab": "atsidaro naujame skirtuke",
   "nav": {
     "label": "Pagrindinis",
-    "home": "Jx-Care pradžia",
+    "home": "Jx Care pradžia",
     "features": "Funkcijos",
     "privacy": "Privatumas"
   },
@@ -21,7 +22,7 @@
   },
   "hero": {
     "title": "Žinokite, ką naudoti šiandien",
-    "lead": "Jx-Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare, kada plauti plaukus ir kaip oda keičiasi kas savaitę. Viskas lieka jūsų telefone, apsaugota PIN kodu.",
+    "lead": "Jx Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare, kada plauti plaukus ir kaip oda keičiasi kas savaitę. Viskas lieka jūsų telefone, apsaugota PIN kodu.",
     "primary": "Kas viduje",
     "source": "Žiūrėti GitHub",
     "soon": "Netrukus iOS ir Android. App Store ir Google Play jos dar nėra."
@@ -194,7 +195,7 @@
   },
   "features": {
     "title": "Ką rasite viduje",
-    "lead": "Šešios sritys, vienas ekranas „Šiandien“. Jx-Care rodo tik tai, kas suplanuota, todėl rutina prie vonios lentynos trunka minutę.",
+    "lead": "Šešios sritys, vienas ekranas „Šiandien“. Jx Care rodo tik tai, kas suplanuota, todėl rutina prie vonios lentynos trunka minutę.",
     "example": "Pavyzdžiui:",
     "groups": {
       "products": "Produktai",
@@ -212,7 +213,7 @@
       },
       "expiry": {
         "title": "Galiojimo datos",
-        "text": "Jx-Care apskaičiuoja, kada produktas nebegalios, pagal datą ant pakuotės, atidarymo dieną ir kiek jis galioja po atidarymo.",
+        "text": "Jx Care apskaičiuoja, kada produktas nebegalios, pagal datą ant pakuotės, atidarymo dieną ir kiek jis galioja po atidarymo.",
         "example": "priminimas prieš 30 dienų ir ženklelis „Gerai“, „Baigia galioti“ arba „Nebegalioja“ kiekvienoje eilutėje."
       },
       "notes": {
@@ -222,7 +223,7 @@
       },
       "costPerDay": {
         "title": "Kaina per dieną",
-        "text": "Kai produktas baigiasi, Jx-Care padalija jo kainą iš dienų, kiek jį naudojote.",
+        "text": "Kai produktas baigiasi, Jx Care padalija jo kainą iš dienų, kiek jį naudojote.",
         "example": "18,90 € per 92 dienas yra 0,21 € per dieną."
       },
       "timeOfDay": {
@@ -267,7 +268,7 @@
       },
       "conflicts": {
         "title": "Konfliktai per visą dieną",
-        "text": "Jx-Care tikrina visus tą pačią dieną naudojamus produktus, rytą ir vakarą, pagal jūsų porų, kurios neturėtų susitikti, sąrašą.",
+        "text": "Jx Care tikrina visus tą pačią dieną naudojamus produktus, rytą ir vakarą, pagal jūsų porų, kurios neturėtų susitikti, sąrašą.",
         "example": "retinolis su AHA abiejuose žingsniuose rodo žymą „Konfliktas“."
       },
       "groups": {
@@ -302,7 +303,7 @@
       },
       "addAsNew": {
         "title": "Pridėti kaip naują produktą",
-        "text": "Pažymėkite nupirktą prekę, ir Jx-Care nukopijuos jos duomenis į naują produktą su šiandienos data.",
+        "text": "Pažymėkite nupirktą prekę, ir Jx Care nukopijuos jos duomenis į naują produktą su šiandienos data.",
         "example": "pavadinimas, prekės ženklas, dydis ir ingredientai, paruošti išsaugoti."
       },
       "share": {
@@ -310,11 +311,12 @@
         "text": "Nusiųskite sąrašą paprastu tekstu ir pasiimkite į parduotuvę.",
         "example": "sau pačiam pokalbių programėlėje."
       }
-    }
+    },
+    "seeAll": "Visos funkcijos"
   },
   "privacy": {
     "title": "Privatu iš esmės",
-    "lead": "Jx-Care skirta vienam žmogui viename telefone. Nėra paskyros, kurią galėtumėte prarasti, ir nėra ką sinchronizuoti.",
+    "lead": "Jx Care skirta vienam žmogui viename telefone. Nėra paskyros, kurią galėtumėte prarasti, ir nėra ką sinchronizuoti.",
     "items": {
       "pin": {
         "title": "PIN kodas, Face ID arba piršto atspaudas",
@@ -336,16 +338,23 @@
   },
   "close": {
     "getTitle": "Norite jos savo telefone?",
-    "getText": "Jx-Care parduotuvėse dar nėra. Sekite kodą GitHub ir sužinosite, kada atsiras.",
+    "getText": "Jx Care parduotuvėse dar nėra. Sekite kodą GitHub ir sužinosite, kada atsiras.",
     "getAction": "Sekti GitHub",
     "buildTitle": "Susikurkite patys",
-    "buildText": "Jx-Care nemokama ir atviro kodo. GitHub vadove parašyta, kaip ją sukompiliuoti iOS arba Android.",
+    "buildText": "Jx Care nemokama ir atviro kodo. GitHub vadove parašyta, kaip ją sukompiliuoti iOS arba Android.",
     "buildAction": "Skaityti vadovą",
     "suggestTitle": "Trūksta funkcijos?",
-    "suggestText": "Parašykite man, ką norėtumėte, kad Jx-Care darytų, ir kaip tai naudotumėte.",
+    "suggestText": "Parašykite man, ką norėtumėte, kad Jx Care darytų, ir kaip tai naudotumėte.",
     "suggestAction": "Pasiūlyti funkciją",
-    "suggestSubject": "Jx-Care funkcijos pasiūlymas"
+    "suggestSubject": "Jx Care funkcijos pasiūlymas",
+    "supportTitle": "Paremkite Jx Care",
+    "supportText": "Jx Care kuria ir prižiūri vienas programuotojas. Iš Ko-fi niekas neįkeliama, kol neatidarote nuorodos.",
+    "supportAction": "Paremti mane Ko-fi"
   },
   "footer": "Odos ir plaukų priežiūra jūsų telefone · Nemokama ir atviro kodo",
-  "sourceLabel": "Jx-Care GitHub"
+  "sourceLabel": "Jx Care GitHub",
+  "featuresPage": {
+    "title": "Viskas, ką moka Jx Care",
+    "lead": "Produktai, rutinos, plaukai, ingredientai, progresas ir pirkiniai, prie kiekvieno pavyzdys, kaip tai veikia."
+  }
 }

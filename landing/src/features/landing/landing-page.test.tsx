@@ -1,35 +1,24 @@
-import { render, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { I18nextProvider } from 'react-i18next';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { i18n } from '@/lib/i18n';
 import { preferencesStorageKey, preferencesStore } from '@/stores/preferences';
-
-import { LandingPage } from './landing-page';
-
-function renderPage() {
-  return render(
-    <I18nextProvider i18n={i18n}>
-      <LandingPage />
-    </I18nextProvider>,
-  );
-}
+import { renderAt } from '@/test/render';
 
 describe('LandingPage', () => {
   beforeEach(() => {
     preferencesStore.setState(() => ({ locale: 'en', theme: null }));
   });
 
-  it('leads with the headline, the features link and the source link', () => {
-    renderPage();
+  it('leads with the headline, the features link and the source link', async () => {
+    renderAt('/');
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Know what to put on today' }),
+      await screen.findByRole('heading', { level: 1, name: 'Know what to put on today' }),
     ).toBeVisible();
-    expect(screen.getByRole('link', { name: "See what's inside" })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /See what's inside/ })).toHaveAttribute(
       'href',
-      '#features',
+      '/features',
     );
     const source = screen.getByRole('link', { name: /^See it on GitHub/ });
     expect(source).toHaveAccessibleName(/opens in a new tab/);
@@ -37,36 +26,50 @@ describe('LandingPage', () => {
     expect(source).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('lists every feature group with its features', () => {
-    renderPage();
-    const features = screen.getByRole('region', { name: "What you'll find inside" });
+  it('shows a short overview of every feature group and links to the features page', async () => {
+    renderAt('/');
+    const overview = await screen.findByRole('region', { name: "What you'll find inside" });
 
     for (const group of ['Products', 'Routines', 'Hair', 'Ingredients', 'Progress', 'Shopping']) {
-      expect(within(features).getByRole('heading', { level: 3, name: group })).toBeVisible();
+      expect(within(overview).getByRole('heading', { level: 3, name: group })).toBeVisible();
     }
-    expect(
-      within(features).getByRole('heading', { level: 4, name: 'Conflicts across the day' }),
-    ).toBeVisible();
+    expect(within(overview).getByText('Conflicts across the day')).toBeVisible();
+    expect(within(overview).queryByText(/For example/)).not.toBeInTheDocument();
+    expect(within(overview).getByRole('link', { name: /See all features/ })).toHaveAttribute(
+      'href',
+      '/features',
+    );
   });
 
-  it('marks the phone and cards as sample data', () => {
-    renderPage();
+  it('marks the phone and cards as sample data', async () => {
+    renderAt('/');
 
-    expect(screen.getByRole('figure', { name: 'Today screen with sample data' })).toBeVisible();
+    expect(
+      await screen.findByRole('figure', { name: 'Today screen with sample data' }),
+    ).toBeVisible();
     expect(screen.getByRole('group', { name: 'My products' })).toHaveTextContent('Sample data');
+  });
+
+  it('links to Ko-fi', async () => {
+    renderAt('/');
+    const support = await screen.findByRole('region', { name: 'Support Jx Care' });
+
+    expect(within(support).getByRole('link', { name: /Support me on Ko-fi/ })).toHaveAttribute(
+      'href',
+      'https://ko-fi.com/justxs',
+    );
   });
 
   it('switches to Lithuanian and remembers it', async () => {
     const user = userEvent.setup();
-    renderPage();
+    renderAt('/');
 
-    await user.click(screen.getByRole('button', { name: 'EN, switch to Lithuanian' }));
+    await user.click(await screen.findByRole('button', { name: 'EN, switch to Lithuanian' }));
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Žinokite, ką naudoti šiandien' }),
     ).toBeVisible();
     expect(document.documentElement.lang).toBe('lt');
-    expect(document.title).toBe('Jx-Care: odos ir plaukų priežiūra jūsų telefone');
     expect(JSON.parse(localStorage.getItem(preferencesStorageKey) ?? '{}')).toMatchObject({
       locale: 'lt',
     });
@@ -74,10 +77,10 @@ describe('LandingPage', () => {
 
   it('switches to the dark theme and back', async () => {
     const user = userEvent.setup();
-    renderPage();
+    renderAt('/');
     const root = document.documentElement;
 
-    await user.click(screen.getByRole('button', { name: /switch to dark theme/i }));
+    await user.click(await screen.findByRole('button', { name: /switch to dark theme/i }));
     expect(root).toHaveClass('dark');
     expect(root).not.toHaveClass('light');
 

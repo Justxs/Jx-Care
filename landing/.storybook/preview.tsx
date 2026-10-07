@@ -1,6 +1,13 @@
 import '../src/global.css';
 
 import { withThemeByClassName } from '@storybook/addon-themes';
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router';
 import type { Preview } from '@storybook/react-vite';
 import { I18nextProvider } from 'react-i18next';
 
@@ -37,11 +44,22 @@ const preview: Preview = {
   },
   decorators: [
     withThemeByClassName({ themes: { light: 'light', dark: 'dark' }, defaultTheme: 'light' }),
-    (Story) => (
-      <I18nextProvider i18n={i18n}>
-        <Story />
-      </I18nextProvider>
-    ),
+    // Links need a router: every story renders inside one whose / and /features both show it.
+    (Story) => {
+      const rootRoute = createRootRoute({ component: () => <Story /> });
+      const router = createRouter({
+        routeTree: rootRoute.addChildren([
+          createRoute({ getParentRoute: () => rootRoute, path: '/' }),
+          createRoute({ getParentRoute: () => rootRoute, path: '/features' }),
+        ]),
+        history: createMemoryHistory(),
+      });
+      return (
+        <I18nextProvider i18n={i18n}>
+          <RouterProvider router={router} />
+        </I18nextProvider>
+      );
+    },
   ],
 };
 

@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { ArrowUpRight, Mail } from 'lucide-react';
 import { type ReactNode, useId } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -5,17 +6,18 @@ import { useTranslation } from 'react-i18next';
 import { Brand, BrandMark } from '@/components/brand';
 import { buttonClasses } from '@/components/button';
 import { ExternalLink } from '@/components/external-link';
+import { KofiCup } from '@/components/kofi-cup';
 import { LanguageToggle } from '@/components/language-toggle';
 import { ScallopEdge } from '@/components/scallop-edge';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { cn } from '@/lib/cn';
 
-import { BUILD_GUIDE_URL, SOURCE_URL, SUGGESTION_EMAIL } from './links';
+import { BUILD_GUIDE_URL, SOURCE_URL, SUGGESTION_EMAIL, SUPPORT_URL } from './links';
 
-export const landingColumn = 'mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-10';
+export const landingColumn = 'mx-auto w-full max-w-[96rem] px-4 sm:px-8 lg:px-12 2xl:px-16';
 
 const navLink =
-  'inline-flex min-h-11 items-center rounded-full px-3 text-body font-medium text-ink-muted transition-colors duration-200 hover:text-ink max-sm:hidden';
+  'inline-flex min-h-11 items-center rounded-full px-3 text-body font-medium text-ink-muted transition-colors duration-200 hover:text-ink aria-[current=page]:text-ink';
 
 function SignOff() {
   return (
@@ -53,7 +55,7 @@ function LandingDoors() {
       <div
         className={cn(
           landingColumn,
-          'grid gap-x-12 gap-y-10 py-12 sm:grid-cols-2 sm:py-16 lg:grid-cols-3',
+          'grid gap-x-12 gap-y-10 py-12 sm:grid-cols-2 sm:py-16 lg:grid-cols-4',
         )}
       >
         <Door title={t('close.getTitle')} text={t('close.getText')}>
@@ -73,6 +75,12 @@ function LandingDoors() {
             <Mail aria-hidden="true" />
             {t('close.suggestAction')}
           </a>
+        </Door>
+        <Door title={t('close.supportTitle')} text={t('close.supportText')}>
+          <ExternalLink href={SUPPORT_URL} className={outline}>
+            <KofiCup className="-m-0.5 size-5" />
+            {t('close.supportAction')}
+          </ExternalLink>
         </Door>
       </div>
     </div>
@@ -104,20 +112,25 @@ export function LandingShell({
             'flex items-center justify-between gap-4 pt-4 on-hero sm:pt-6',
           )}
         >
-          <a
-            href="#top"
+          <Link
+            to="/"
             aria-label={t('nav.home')}
             className="flex min-h-11 items-center rounded-full"
           >
             <Brand markClassName="text-hero-ink" />
-          </a>
+          </Link>
           <nav aria-label={t('nav.label')} className="flex shrink-0 items-center gap-0.5">
-            <a href="#features" className={navLink}>
+            <Link to="/features" className={navLink}>
               {t('nav.features')}
-            </a>
-            <a href="#privacy" className={navLink}>
+            </Link>
+            <Link
+              to="/"
+              hash="privacy"
+              activeOptions={{ exact: true, includeHash: true }}
+              className={cn(navLink, 'max-sm:hidden')}
+            >
               {t('nav.privacy')}
-            </a>
+            </Link>
             <LanguageToggle />
             <ThemeToggle />
           </nav>
@@ -145,12 +158,21 @@ export function LandingShell({
             <BrandMark className="h-4" />
             {t('footer')}
           </span>
-          <ExternalLink
-            href={SOURCE_URL}
-            className="inline-flex min-h-11 items-center rounded-sm underline-offset-4 hover:text-ink hover:underline"
-          >
-            {t('sourceLabel')}
-          </ExternalLink>
+          <span className="flex flex-wrap items-center gap-x-6">
+            <ExternalLink
+              href={SUPPORT_URL}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-sm underline-offset-4 hover:text-ink hover:underline"
+            >
+              <KofiCup className="size-4" />
+              {t('close.supportAction')}
+            </ExternalLink>
+            <ExternalLink
+              href={SOURCE_URL}
+              className="inline-flex min-h-11 items-center rounded-sm underline-offset-4 hover:text-ink hover:underline"
+            >
+              {t('sourceLabel')}
+            </ExternalLink>
+          </span>
         </div>
       </footer>
     </div>

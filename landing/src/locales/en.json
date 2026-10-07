@@ -1,13 +1,14 @@
 {
   "meta": {
-    "title": "Jx-Care: skin and hair care, kept on your phone",
-    "description": "Jx-Care keeps track of your skin and hair care products, when each one expires, what to use morning and evening, and how your skin changes week to week. Free, private, in Lithuanian and English."
+    "title": "Jx Care: skin and hair care, kept on your phone",
+    "description": "Jx Care keeps track of your skin and hair care products, when each one expires, what to use morning and evening, and how your skin changes week to week. Free, private, in Lithuanian and English.",
+    "featuresTitle": "Features · Jx Care"
   },
   "skip": "Skip to content",
   "opensInNewTab": "opens in a new tab",
   "nav": {
     "label": "Main",
-    "home": "Jx-Care home",
+    "home": "Jx Care home",
     "features": "Features",
     "privacy": "Privacy"
   },
@@ -21,7 +22,7 @@
   },
   "hero": {
     "title": "Know what to put on today",
-    "lead": "Jx-Care keeps track of your skin and hair care products: when each one expires, what to use in the morning and evening, when to wash your hair, and how your skin changes week to week. Everything stays on your phone, behind a PIN.",
+    "lead": "Jx Care keeps track of your skin and hair care products: when each one expires, what to use in the morning and evening, when to wash your hair, and how your skin changes week to week. Everything stays on your phone, behind a PIN.",
     "primary": "See what's inside",
     "source": "See it on GitHub",
     "soon": "Coming to iOS and Android. It is not in the App Store or Google Play yet."
@@ -194,7 +195,7 @@
   },
   "features": {
     "title": "What you'll find inside",
-    "lead": "Six areas, one Today screen. Jx-Care shows only what is due, so a routine takes a minute at the bathroom shelf.",
+    "lead": "Six areas, one Today screen. Jx Care shows only what is due, so a routine takes a minute at the bathroom shelf.",
     "example": "For example:",
     "groups": {
       "products": "Products",
@@ -212,7 +213,7 @@
       },
       "expiry": {
         "title": "Expiry dates",
-        "text": "Jx-Care works out when each product expires from the printed date, the day you opened it and how long it lasts after opening.",
+        "text": "Jx Care works out when each product expires from the printed date, the day you opened it and how long it lasts after opening.",
         "example": "a reminder 30 days before, and an OK, Expiring soon or Expired badge on every row."
       },
       "notes": {
@@ -222,7 +223,7 @@
       },
       "costPerDay": {
         "title": "Cost per day",
-        "text": "When a product is finished, Jx-Care divides its price by the days you used it.",
+        "text": "When a product is finished, Jx Care divides its price by the days you used it.",
         "example": "€18.90 over 92 days is €0.21 a day."
       },
       "timeOfDay": {
@@ -267,7 +268,7 @@
       },
       "conflicts": {
         "title": "Conflicts across the day",
-        "text": "Jx-Care checks every product you use on the same day, morning and evening, against your list of pairs that should not meet.",
+        "text": "Jx Care checks every product you use on the same day, morning and evening, against your list of pairs that should not meet.",
         "example": "retinol with AHA shows a Conflict tag on both steps."
       },
       "groups": {
@@ -302,7 +303,7 @@
       },
       "addAsNew": {
         "title": "Add as new product",
-        "text": "Tick an item when bought and Jx-Care copies its details into a new product with today's date.",
+        "text": "Tick an item when bought and Jx Care copies its details into a new product with today's date.",
         "example": "name, brand, size and ingredients, ready to save."
       },
       "share": {
@@ -310,11 +311,12 @@
         "text": "Send the list as plain text to take to the shop.",
         "example": "to yourself in a messaging app."
       }
-    }
+    },
+    "seeAll": "See all features"
   },
   "privacy": {
     "title": "Private by design",
-    "lead": "Jx-Care is for one person on one phone. There is no account to lose and nothing to sync.",
+    "lead": "Jx Care is for one person on one phone. There is no account to lose and nothing to sync.",
     "items": {
       "pin": {
         "title": "PIN, Face ID or fingerprint",
@@ -336,16 +338,23 @@
   },
   "close": {
     "getTitle": "Want it on your phone?",
-    "getText": "Jx-Care is not in the stores yet. Watch the code on GitHub to see when it is.",
+    "getText": "Jx Care is not in the stores yet. Watch the code on GitHub to see when it is.",
     "getAction": "Follow on GitHub",
     "buildTitle": "Build it yourself",
-    "buildText": "Jx-Care is free and open source. The guide on GitHub shows how to build it for iOS or Android.",
+    "buildText": "Jx Care is free and open source. The guide on GitHub shows how to build it for iOS or Android.",
     "buildAction": "Read the build guide",
     "suggestTitle": "Missing a feature?",
-    "suggestText": "Write to me about what you would like Jx-Care to do and how you would use it.",
+    "suggestText": "Write to me about what you would like Jx Care to do and how you would use it.",
     "suggestAction": "Suggest a feature",
-    "suggestSubject": "Jx-Care feature suggestion"
+    "suggestSubject": "Jx Care feature suggestion",
+    "supportTitle": "Support Jx Care",
+    "supportText": "Jx Care is built and kept up by one developer. Nothing is loaded from Ko-fi until you open the link.",
+    "supportAction": "Support me on Ko-fi"
   },
   "footer": "Skin and hair care, kept on your phone · Free and open source",
-  "sourceLabel": "Jx-Care on GitHub"
+  "sourceLabel": "Jx Care on GitHub",
+  "featuresPage": {
+    "title": "Everything Jx Care does",
+    "lead": "Products, routines, hair, ingredients, progress and shopping, each with an example of how it works."
+  }
 }

@@ -23,5 +23,5 @@ export const OnTheBand: Story = {
 };
 
 export const MarkOnly: Story = {
-  render: () => <BrandMark title="Jx-Care" className="h-24" />,
+  render: () => <BrandMark title="Jx Care" className="h-24" />,
 };

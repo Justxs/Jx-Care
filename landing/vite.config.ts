@@ -2,6 +2,8 @@
 import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import { copyFile } from 'node:fs/promises';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type Plugin, defineConfig } from 'vite';
 
@@ -26,7 +28,7 @@ function preloadFonts(files: readonly string[]): Plugin {
             tag: 'link',
             attrs: {
               rel: 'preload',
-              href: `./${built.fileName}`,
+              href: `/${built.fileName}`,
               as: 'font',
               type: 'font/woff2',
               crossorigin: '',
@@ -39,14 +41,33 @@ function preloadFonts(files: readonly string[]): Plugin {
   };
 }
 
+/**
+ * Static hosts answer an unknown path such as /features with 404.html; a copy of index.html there
+ * lets the router show the right page (GitHub Pages and most static hosts).
+ */
+function spaFallback(): Plugin {
+  let outDir = 'dist';
+  return {
+    name: 'spa-fallback',
+    apply: 'build',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    async writeBundle() {
+      await copyFile(path.join(outDir, 'index.html'), path.join(outDir, '404.html'));
+    },
+  };
+}
+
 export default defineConfig({
-  // Relative asset paths, so the built site works from any folder or GitHub Pages path.
-  base: './',
+  // Pages live at real paths (/features), so assets load from the site root.
+  base: '/',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()], exclude: /[/\\]node_modules[/\\]/ }),
     tailwindcss(),
     preloadFonts(preloadedFonts),
+    spaFallback(),
   ],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },

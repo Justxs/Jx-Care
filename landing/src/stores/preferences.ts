@@ -33,14 +33,13 @@ function initialPreferences(): Preferences {
 
 export const preferencesStore = createStore<Preferences>(initialPreferences());
 
-/** Applies the preferences to the page: html lang and theme class, i18next, title, description. */
+/** Applies the preferences to the page: html lang and theme class, i18next and the description. */
 function apply({ locale, theme }: Preferences) {
   const root = document.documentElement;
   root.lang = locale;
   root.classList.toggle('dark', theme === 'dark');
   root.classList.toggle('light', theme === 'light');
   if (i18n.language !== locale) void i18n.changeLanguage(locale);
-  document.title = i18n.t('meta.title');
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute('content', i18n.t('meta.description'));

@@ -1,4 +1,5 @@
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,9 +7,10 @@ import { buttonClasses } from '@/components/button';
 import { ExternalLink } from '@/components/external-link';
 import { cn } from '@/lib/cn';
 import { intlLocale } from '@/lib/format';
+import { useDocumentTitle } from '@/lib/use-document-title';
 import { useLocale } from '@/stores/preferences';
 
-import { type FeatureGroup, featureGroups } from './feature-groups';
+import { featureGroups } from './feature-groups';
 import { LandingShell, landingColumn } from './landing-shell';
 import { SOURCE_URL } from './links';
 import { ConflictCard, ProductsCard } from './showcase/sample-cards';
@@ -42,10 +44,10 @@ function Hero() {
           {t('hero.lead')}
         </p>
         <div className="mt-9 flex flex-wrap gap-3">
-          <a href="#features" className={buttonClasses({ size: 'lg' })}>
+          <Link to="/features" className={buttonClasses({ size: 'lg' })}>
             {t('hero.primary')}
-            <ArrowDown aria-hidden="true" />
-          </a>
+            <ArrowRight aria-hidden="true" />
+          </Link>
           <ExternalLink
             href={SOURCE_URL}
             className={buttonClasses({ variant: 'outline', size: 'lg' })}
@@ -63,7 +65,7 @@ function Hero() {
 
 function ShowcaseStage() {
   return (
-    <div className="flex justify-center gap-5 lg:-mb-40 lg:justify-start">
+    <div className="flex justify-center gap-5 lg:-mb-40 lg:justify-end">
       <TodayPhone />
       <div className="hidden w-84 shrink-0 flex-col gap-5 pt-14 md:flex lg:hidden xl:flex">
         <ProductsCard delay={240} />
@@ -114,61 +116,35 @@ function Statement() {
   );
 }
 
-function GroupSection({ group }: Readonly<{ group: FeatureGroup }>) {
+function FeatureOverview() {
   const { t } = useTranslation();
   const titleId = useId();
 
   return (
-    <section
-      aria-labelledby={titleId}
-      className="grid gap-x-16 gap-y-6 py-12 lg:grid-cols-[5fr_7fr] lg:py-16"
-    >
-      <div className="lg:sticky lg:top-8 lg:self-start">
-        <h3 id={titleId} className="text-title-l font-bold tracking-tight">
-          {t(`features.groups.${group.key}`)}
-        </h3>
-        <div className="mt-5 grid max-w-sm gap-4">
-          {group.visuals.map((Visual) => (
-            <Visual key={Visual.name} />
+    <section aria-labelledby={titleId} className="border-t border-border">
+      <div className={cn(landingColumn, 'py-14 sm:py-20')}>
+        <h2 id={titleId} className="text-display font-bold tracking-tight">
+          {t('features.title')}
+        </h2>
+        <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
+        <div className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          {featureGroups.map((group) => (
+            <div key={group.key} className="border-t-2 border-accent pt-3">
+              <h3 className="text-title-s font-semibold">{t(`features.groups.${group.key}`)}</h3>
+              <ul className="mt-2 space-y-1 text-body text-ink-muted">
+                {group.features.map((feature) => (
+                  <li key={feature}>{t(`features.items.${feature}.title`)}</li>
+                ))}
+              </ul>
+            </div>
           ))}
+          <div className="border-t-2 border-border pt-4">
+            <Link to="/features" className={buttonClasses({ variant: 'outline' })}>
+              {t('features.seeAll')}
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </div>
         </div>
-      </div>
-      <ul className="divide-y divide-border lg:-mt-3">
-        {group.features.map((feature) => (
-          <li key={feature} className="py-4">
-            <h4 className="text-title-s font-semibold">{t(`features.items.${feature}.title`)}</h4>
-            <p className="mt-0.5 max-w-prose text-body text-ink-muted">
-              {t(`features.items.${feature}.text`)}
-            </p>
-            <p className="mt-1.5 max-w-prose text-body">
-              <span className="font-semibold">{t('features.example')}</span>{' '}
-              {t(`features.items.${feature}.example`)}
-            </p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function Features() {
-  const { t } = useTranslation();
-  const titleId = useId();
-
-  return (
-    <section
-      id="features"
-      aria-labelledby={titleId}
-      className={cn(landingColumn, 'border-t border-border pt-14 sm:pt-20')}
-    >
-      <h2 id={titleId} className="text-display font-bold tracking-tight">
-        {t('features.title')}
-      </h2>
-      <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
-      <div className="divide-y divide-border">
-        {featureGroups.map((group) => (
-          <GroupSection key={group.key} group={group} />
-        ))}
       </div>
     </section>
   );
@@ -199,10 +175,13 @@ function Privacy() {
 }
 
 export function LandingPage() {
+  const { t } = useTranslation();
+  useDocumentTitle(t('meta.title'));
+
   return (
     <LandingShell hero={<Hero />}>
       <Statement />
-      <Features />
+      <FeatureOverview />
       <Privacy />
     </LandingShell>
   );

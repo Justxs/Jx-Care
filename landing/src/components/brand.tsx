@@ -26,7 +26,7 @@ function Seeds({ cx }: Readonly<{ cx: number }>) {
 
 interface MarkProps {
   className?: string;
-  /** Spoken name; leave out when the mark sits next to the word Jx-Care. */
+  /** Spoken name; leave out when the mark sits next to the word Jx Care. */
   title?: string;
 }
 
@@ -97,7 +97,7 @@ interface BrandProps {
   markClassName?: string;
 }
 
-/** Mark and wordmark, read out once as "Jx-Care". */
+/** Mark and wordmark, read out once as "Jx Care". */
 export function Brand({
   stacked = false,
   size = 'md',
@@ -107,7 +107,7 @@ export function Brand({
   return (
     <span
       role="img"
-      aria-label="Jx-Care"
+      aria-label="Jx Care"
       className={cn(
         'inline-flex min-w-0 items-center',
         stacked ? 'flex-col gap-3 text-center' : 'gap-2.5',
@@ -118,7 +118,7 @@ export function Brand({
         className={cn(stacked ? sizes[size].stackedMark : sizes[size].mark, markClassName)}
       />
       <span aria-hidden="true" className={cn('font-bold tracking-tight', sizes[size].text)}>
-        Jx-Care
+        Jx Care
       </span>
     </span>
   );
