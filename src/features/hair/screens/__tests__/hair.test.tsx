@@ -254,11 +254,11 @@ describe('HairTaskEditorScreen', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Pick products' }));
     expect(screen.queryByRole('checkbox', { name: /Face cream/ })).toBeNull();
     expect(screen.getByText("Can't be picked")).toBeTruthy();
-    const expired = screen.getByRole('checkbox', { name: /^Old mask, expired/ });
+    const expired = screen.getByRole('checkbox', { name: /^Old mask/ });
     expect(expired.props.accessibilityState.disabled).toBe(true);
     await fireEvent.press(screen.getByRole('checkbox', { name: /^Shampoo/ }));
     await fireEvent.press(screen.getByRole('checkbox', { name: /^Conditioner/ }));
-    await fireEvent.press(sheetButton('Hair products', 'Done'));
+    await fireEvent.press(sheetButton('Choose products', 'Done'));
     expect(screen.getByRole('button', { name: 'Remove Shampoo' })).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Remove Conditioner' }));
 
