@@ -1,21 +1,21 @@
 import type { ProgressArea } from '@/db/enums';
 import { progressPhotoName } from '@/lib/photoCrop';
 
-import type { ProgressFiles, SavePhotoTarget, StoredPhotoFile } from './types';
+import type { ProgressFiles, SavePhotoTarget } from './types';
 
 const ROOT = 'file:///documents/progress';
 
 /**
  * An in-memory stand-in for `files.ts`, for repository and screen tests that must run without
- * native code. `files` maps a uri to its size in bytes.
+ * native code. `files` holds the uri of every saved photo.
  */
-export function createFakeFiles(bytesPerPhoto = 1000) {
-  const files = new Map<string, number>();
+export function createFakeFiles() {
+  const files = new Set<string>();
   const deleted: string[] = [];
   const deletedFolders: string[] = [];
 
   const fake: ProgressFiles & {
-    files: Map<string, number>;
+    files: Set<string>;
     deleted: string[];
     deletedFolders: string[];
     add(target: SavePhotoTarget, takenAt: number): string;
@@ -25,7 +25,7 @@ export function createFakeFiles(bytesPerPhoto = 1000) {
     deletedFolders,
     add({ area, weekStart, angle }, takenAt) {
       const uri = `${ROOT}/${area}/${weekStart}/${progressPhotoName(angle, takenAt)}`;
-      files.set(uri, bytesPerPhoto);
+      files.add(uri);
       return uri;
     },
     async savePhoto(_tempUri, target, takenAt = Date.now()) {
@@ -41,14 +41,6 @@ export function createFakeFiles(bytesPerPhoto = 1000) {
       deletedFolders.push(`${area}/${weekStart}`);
       for (const uri of files.keys()) if (uri.startsWith(prefix)) files.delete(uri);
     },
-    listAllPhotoFiles(): StoredPhotoFile[] {
-      return [...files.entries()].map(([uri, bytes]) => ({
-        uri,
-        path: uri.slice('file:///documents/'.length),
-        bytes,
-      }));
-    },
-    totalPhotoBytes: () => [...files.values()].reduce((sum, n) => sum + n, 0),
   };
   return fake;
 }

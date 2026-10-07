@@ -4,7 +4,7 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import type { ProgressArea } from '@/db/enums';
 import { portraitPlan, progressPhotoName } from '@/lib/photoCrop';
 
-import type { ProgressFiles, SavePhotoTarget, StoredPhotoFile } from './types';
+import type { ProgressFiles, SavePhotoTarget } from './types';
 
 /**
  * Progress photo files (task 035). Photos live in the app's private documents folder under
@@ -15,14 +15,13 @@ import type { ProgressFiles, SavePhotoTarget, StoredPhotoFile } from './types';
 const ROOT = 'progress';
 const JPEG_QUALITY = 0.85;
 
-const rootDir = () => new Directory(Paths.document, ROOT);
 const weekDir = (area: ProgressArea, weekStart: string) =>
   new Directory(Paths.document, ROOT, area, weekStart);
 
 const withSlash = (uri: string) => (uri.endsWith('/') ? uri : `${uri}/`);
 
 export function isProgressFile(uri: string): boolean {
-  return uri.startsWith(withSlash(rootDir().uri));
+  return uri.startsWith(withSlash(new Directory(Paths.document, ROOT).uri));
 }
 
 /**
@@ -69,39 +68,9 @@ export function deleteWeekFolder(area: ProgressArea, weekStart: string): void {
   if (dir.exists) dir.delete();
 }
 
-function walk(dir: Directory, out: File[]): void {
-  for (const item of dir.list()) {
-    if (item instanceof Directory) walk(item, out);
-    else out.push(item);
-  }
-}
-
-/** Every saved progress photo with its path under the documents folder (backup, task 040). */
-export function listAllPhotoFiles(): StoredPhotoFile[] {
-  const root = rootDir();
-  if (!root.exists) return [];
-  const files: File[] = [];
-  walk(root, files);
-  const base = withSlash(Paths.document.uri);
-  return files
-    .filter((f) => f.name.toLowerCase().endsWith('.jpg'))
-    .map((f) => ({
-      uri: f.uri,
-      path: f.uri.startsWith(base) ? f.uri.slice(base.length) : f.name,
-      bytes: f.size ?? 0,
-    }));
-}
-
-/** Size of every progress photo in bytes (S8). */
-export function totalPhotoBytes(): number {
-  return listAllPhotoFiles().reduce((sum, f) => sum + f.bytes, 0);
-}
-
 export const progressFiles: ProgressFiles = {
   savePhoto,
   isProgressFile,
   deletePhotoFile,
   deleteWeekFolder,
-  listAllPhotoFiles,
-  totalPhotoBytes,
 };

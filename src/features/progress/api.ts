@@ -52,7 +52,6 @@ const keys = {
   status: (area: ProgressArea, today: string) =>
     [...qk.progress.all, 'status', area, today] as const,
   day: (day: string) => [...qk.progress.all, 'day', day] as const,
-  bytes: [...qk.progress.all, 'bytes'] as const,
 };
 
 /** Progress photos (C3): one tile per week, newest first. */
@@ -107,11 +106,6 @@ export function useThisWeekStatus(area: ProgressArea) {
 /** Weekly photos taken on a day, for day detail (C2). */
 export function usePhotosForDay(day: string) {
   return useQuery({ queryKey: keys.day(day), queryFn: () => photoForDay(getDb(), day) });
-}
-
-/** Space the photos take, for Backup and restore (S8). */
-export function usePhotoStorageBytes() {
-  return useQuery({ queryKey: keys.bytes, queryFn: () => progressFiles.totalPhotoBytes() });
 }
 
 // ─── Mutations ──────────────────────────────────────────────────────────────
