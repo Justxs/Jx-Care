@@ -646,7 +646,9 @@
   "hair": {
     "defaultNames": {
       "wash": "Plovimas",
-      "trim": "Kirpimas"
+      "trim": "Kirpimas",
+      "colour": "Dažymas",
+      "mask": "Plaukų kaukė"
     },
     "errors": {
       "kindRequired": "Pasirinkite plovimą arba kitą priežiūrą.",
@@ -660,6 +662,110 @@
       "daysRequired": "Pasirinkite bent vieną dieną.",
       "time": "Pasirinkite laiką.",
       "noteLong": "Pastaba turi būti ne ilgesnė nei 280 simbolių."
+    },
+    "kinds": {
+      "trim": "Kirpimas",
+      "colour": "Dažymas",
+      "mask": "Kaukė",
+      "other": "Kita"
+    },
+    "list": {
+      "washes": "Plovimai",
+      "other": "Kita priežiūra",
+      "new": "Nauja plaukų užduotis",
+      "emptyTitle": "Plaukų priežiūra nenustatyta",
+      "emptyBody": "Nurodykite Jx-Care, kaip dažnai plaunate plaukus.",
+      "setUp": "Nustatyti plaukų priežiūrą"
+    },
+    "row": {
+      "next": "Kitą kartą {{date}}",
+      "dueToday": "Šiandien",
+      "overdue_one": "Vėluoja {{count}} dieną",
+      "overdue_few": "Vėluoja {{count}} dienas",
+      "overdue_many": "Vėluoja {{count}} dienos",
+      "overdue_other": "Vėluoja {{count}} dienų",
+      "last": "Paskutinį kartą {{date}}",
+      "never": "Dar neatlikta"
+    },
+    "frequency": {
+      "everyWeek": "Kas savaitę",
+      "everyNDays_one": "Kas {{count}} dieną",
+      "everyNDays_few": "Kas {{count}} dienas",
+      "everyNDays_many": "Kas {{count}} dienos",
+      "everyNDays_other": "Kas {{count}} dienų",
+      "everyNWeeks_one": "Kas {{count}} savaitę",
+      "everyNWeeks_few": "Kas {{count}} savaites",
+      "everyNWeeks_many": "Kas {{count}} savaitės",
+      "everyNWeeks_other": "Kas {{count}} savaičių"
+    },
+    "setup": {
+      "title": "Plaukų priežiūros nustatymas",
+      "frequency": "Kaip dažnai plaunate plaukus?",
+      "freq": {
+        "every_day": "Kasdien",
+        "every_2_days": "Kas 2 dienas",
+        "every_3_days": "Kas 3 dienas",
+        "twice_a_week": "Du kartus per savaitę",
+        "once_a_week": "Kartą per savaitę",
+        "other": "Kitaip"
+      },
+      "lastWash": "Paskutinis plovimas",
+      "last": {
+        "today": "Šiandien",
+        "yesterday": "Vakar",
+        "twoDaysAgo": "Prieš 2 dienas",
+        "pick": "Pasirinkti datą"
+      },
+      "lastWashDate": "Paskutinio plovimo data",
+      "nextWash": "Kitas plovimas: {{date}}",
+      "trims": "Sekti ir kirpimus",
+      "trimsHint": "Kas 8 savaites. Kirpimai į plaukų seriją neįskaičiuojami."
+    },
+    "editor": {
+      "newTitle": "Nauja plaukų užduotis",
+      "editTitle": "Plaukų užduoties redagavimas",
+      "type": "Tipas",
+      "wash": "Plovimas",
+      "washCaption": "Plovimai įskaičiuojami į plaukų seriją.",
+      "otherCaption": "Kita priežiūra į plaukų seriją neįskaičiuojama.",
+      "kind": "Rūšis",
+      "name": "Pavadinimas",
+      "products": "Produktai",
+      "noProducts": "Produktų dar nepasirinkta.",
+      "pickProducts": "Pasirinkti produktus",
+      "changeProducts": "Keisti produktus",
+      "removeProduct": "Pašalinti: {{name}}",
+      "frequency": "Kaip dažnai",
+      "everyFewDaysDetail": "Pavyzdžiui, kas 3 dienas",
+      "everyFewWeeks": "Kas kelias savaites",
+      "everyFewWeeksDetail": "Pavyzdžiui, kas 8 savaites",
+      "setDaysDetail": "Tik jūsų pasirinktomis dienomis",
+      "repeatEveryWeeks": "Kartoti kas (savaičių)",
+      "days": "Dienos",
+      "lastDone": "Paskutinį kartą atlikta",
+      "lastDoneHint": "Kita data skaičiuojama nuo šios dienos.",
+      "reminder": "Priminimas",
+      "reminderTime": "Priminimo laikas",
+      "nextDue": "Kitą kartą: {{date}}",
+      "overdueSince": "Vėluoja nuo {{date}}",
+      "save": "Išsaugoti užduotį",
+      "savedToast": "Išsaugota: {{name}}",
+      "addedToast": "Pridėta: {{name}}",
+      "delete": "Ištrinti užduotį",
+      "deleteTitle": "Ištrinti „{{name}}“?",
+      "deleteBodyWash": "Jos istorija dings iš kalendoriaus ir plaukų serijos. Atšaukti nebus galima.",
+      "deleteBodyOther": "Jos istorija dings iš kalendoriaus. Atšaukti nebus galima.",
+      "deletedToast": "Ištrinta: {{name}}",
+      "missing": "Šios plaukų užduoties nebėra."
+    },
+    "picker": {
+      "title": "Plaukų produktai",
+      "search": "Ieškoti produktų",
+      "none": "Plaukų produktų dar nėra. Pridėkite juos skiltyje „Produktai“ kaip plaukų arba abiem.",
+      "noMatch": "Pagal paiešką produktų nerasta.",
+      "cantPick": "Negalima pasirinkti",
+      "expiredNote": "Nebegaliojantys produktai į plaukų užduotis neįtraukiami. Nupirkite jį iš naujo skiltyje „Produktai“.",
+      "expiredLabel": "{{name}}, nebegalioja. Nebegaliojantys produktai į plaukų užduotis neįtraukiami. Nupirkite jį iš naujo skiltyje „Produktai“."
     }
   },
   "calendar": {

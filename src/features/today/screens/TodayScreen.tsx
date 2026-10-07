@@ -63,7 +63,7 @@ function openSetupStep(step: SetupStepKey): void {
       return;
     case 'hair':
       // Quick hair setup (task 032); until then the Routines Hair side.
-      router.push('/routines?segment=hair');
+      router.push('/routines?segment=hair&setup=1');
       return;
   }
 }

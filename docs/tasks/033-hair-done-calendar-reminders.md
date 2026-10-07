@@ -51,3 +51,5 @@ Out:
 ## Decisions
 
 (Write any choices you make here.)
+
+Note from task 032: the hair task editor's Reminder switch only sets `reminderTime` (default 19:00) and saves it; task 021's `askForReminders` did not exist yet, so switching a hair reminder on for the first time does not ask for permission. Wire that ask into the switch in `src/features/hair/screens/HairTaskEditorScreen.tsx` (the `reminderOn` field's `onCheckedChange`) when you add the hair reminders.

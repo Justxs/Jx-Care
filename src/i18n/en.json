@@ -600,7 +600,9 @@
   "hair": {
     "defaultNames": {
       "wash": "Wash",
-      "trim": "Trim"
+      "trim": "Trim",
+      "colour": "Colour",
+      "mask": "Hair mask"
     },
     "errors": {
       "kindRequired": "Choose wash or other care.",
@@ -614,6 +616,104 @@
       "daysRequired": "Choose at least one day.",
       "time": "Choose a time.",
       "noteLong": "Keep the note to 280 characters or fewer."
+    },
+    "kinds": {
+      "trim": "Trim",
+      "colour": "Colour",
+      "mask": "Mask",
+      "other": "Other"
+    },
+    "list": {
+      "washes": "Washes",
+      "other": "Other care",
+      "new": "New hair task",
+      "emptyTitle": "Hair care is not set up",
+      "emptyBody": "Tell Jx-Care how often you wash your hair.",
+      "setUp": "Set up hair care"
+    },
+    "row": {
+      "next": "Next {{date}}",
+      "dueToday": "Due today",
+      "overdue_one": "Overdue {{count}} day",
+      "overdue_other": "Overdue {{count}} days",
+      "last": "Last {{date}}",
+      "never": "Not done yet"
+    },
+    "frequency": {
+      "everyWeek": "Every week",
+      "everyNDays_one": "Every {{count}} day",
+      "everyNDays_other": "Every {{count}} days",
+      "everyNWeeks_one": "Every {{count}} week",
+      "everyNWeeks_other": "Every {{count}} weeks"
+    },
+    "setup": {
+      "title": "Set up hair care",
+      "frequency": "How often do you wash your hair?",
+      "freq": {
+        "every_day": "Every day",
+        "every_2_days": "Every 2 days",
+        "every_3_days": "Every 3 days",
+        "twice_a_week": "Twice a week",
+        "once_a_week": "Once a week",
+        "other": "Other"
+      },
+      "lastWash": "Last wash",
+      "last": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "twoDaysAgo": "2 days ago",
+        "pick": "Pick a date"
+      },
+      "lastWashDate": "Date of the last wash",
+      "nextWash": "Next wash: {{date}}",
+      "trims": "Also track trims",
+      "trimsHint": "Every 8 weeks. Trims don't count toward your hair streak."
+    },
+    "editor": {
+      "newTitle": "New hair task",
+      "editTitle": "Edit hair task",
+      "type": "Type",
+      "wash": "Wash",
+      "washCaption": "Washes count toward your hair streak.",
+      "otherCaption": "Other care doesn't count toward your hair streak.",
+      "kind": "Kind",
+      "name": "Name",
+      "products": "Products",
+      "noProducts": "No products picked yet.",
+      "pickProducts": "Pick products",
+      "changeProducts": "Change products",
+      "removeProduct": "Remove {{name}}",
+      "frequency": "How often",
+      "everyFewDaysDetail": "For example every 3 days",
+      "everyFewWeeks": "Every few weeks",
+      "everyFewWeeksDetail": "For example every 8 weeks",
+      "setDaysDetail": "Only on the days you pick",
+      "repeatEveryWeeks": "Repeat every (weeks)",
+      "days": "Days",
+      "lastDone": "Last done",
+      "lastDoneHint": "The next due date counts from this day.",
+      "reminder": "Reminder",
+      "reminderTime": "Reminder time",
+      "nextDue": "Next due: {{date}}",
+      "overdueSince": "Overdue since {{date}}",
+      "save": "Save task",
+      "savedToast": "{{name}} saved",
+      "addedToast": "{{name}} added",
+      "delete": "Delete task",
+      "deleteTitle": "Delete {{name}}?",
+      "deleteBodyWash": "Its history leaves the calendar and the hair streak. This can't be undone.",
+      "deleteBodyOther": "Its history leaves the calendar. This can't be undone.",
+      "deletedToast": "{{name}} deleted",
+      "missing": "This hair task no longer exists."
+    },
+    "picker": {
+      "title": "Hair products",
+      "search": "Search products",
+      "none": "No hair products yet. Add them in Products as Hair or Both.",
+      "noMatch": "No products match your search.",
+      "cantPick": "Can't be picked",
+      "expiredNote": "Expired products stay out of hair tasks. Buy it again from Products.",
+      "expiredLabel": "{{name}}, expired. Expired products stay out of hair tasks. Buy it again from Products."
     }
   },
   "calendar": {

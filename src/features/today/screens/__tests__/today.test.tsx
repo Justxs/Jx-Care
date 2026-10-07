@@ -329,7 +329,7 @@ describe('TodayScreen first run', () => {
     expect(screen.getByRole('button', { name: /Skin streak/ })).toBeTruthy();
     expect(sectionKeys()).toEqual(['setup', 'routines']);
     await fireEvent.press(screen.getByRole('button', { name: 'Set up hair care' }));
-    expect(router.push).toHaveBeenLastCalledWith('/routines?segment=hair');
+    expect(router.push).toHaveBeenLastCalledWith('/routines?segment=hair&setup=1');
   });
 
   it("becomes You're set, is gone the next app day, and See today removes it at once", async () => {

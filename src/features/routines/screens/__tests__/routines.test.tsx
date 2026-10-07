@@ -13,7 +13,10 @@ import { routineDraftStore } from '../../draft';
 import { getRoutine, listRoutines, saveRoutine, type SaveRoutineInput } from '../../repo';
 import { RoutinesScreen } from '../RoutinesScreen';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn(), setParams: jest.fn() },
+  useLocalSearchParams: () => ({}),
+}));
 
 const { router } = jest.requireMock<{ router: { push: jest.Mock } }>('expo-router');
 
