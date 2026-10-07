@@ -29,10 +29,15 @@ export function setBackupPlatform(next: Partial<BackupPlatform>): void {
 
 export type PhotoStats = { count: number; bytes: number };
 
-/** Product and progress photos on the phone: what a zip holds, and the storage line. */
+/**
+ * Product and progress photos on the phone: what a zip holds, and the storage line. Photos are
+ * added and deleted by other screens without touching this key, so it is read again every time
+ * the screen opens.
+ */
 export function usePhotoStats() {
   return useQuery({
     queryKey: [...qk.backup.all, 'photos'],
+    staleTime: 0,
     queryFn: (): PhotoStats => {
       const photos = platform.files.listPhotoFiles();
       return { count: photos.length, bytes: photos.reduce((sum, p) => sum + p.bytes, 0) };

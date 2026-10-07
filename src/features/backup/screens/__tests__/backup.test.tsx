@@ -177,6 +177,25 @@ describe('BackupScreen', () => {
     expect(screen.getByText('Storage used by photos')).toBeTruthy();
   });
 
+  it('counts the photos again when the screen opens again', async () => {
+    const app = await renderBackup();
+    expect(
+      screen.getByRole('radio', { name: 'Zip with photos. All data. There are no photos yet.' }),
+    ).toBeTruthy();
+    screen.unmount();
+    // A weekly photo taken elsewhere in the app, while the old count is still cached.
+    files.addPhoto('progress/skin/2026-10-05/front-1.jpg', new Uint8Array(3000));
+    await app.render(
+      <>
+        <BackupScreen />
+        <PortalHost />
+      </>,
+    );
+    expect(
+      await screen.findByRole('radio', { name: 'Zip with photos. All data and 1 photo, 3 KB' }),
+    ).toBeTruthy();
+  });
+
   it('imports: preview counts, then Replace all data with a dialog, then Today', async () => {
     const exportedAt = new Date(2026, 8, 1, 12).getTime();
     const uri = await backupFromAnotherPhone(exportedAt);
