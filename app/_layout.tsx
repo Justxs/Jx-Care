@@ -5,6 +5,8 @@ import '@/features/hair/repo';
 import '@/features/routines/repo';
 // Registers Buy again (Products list, detail, archive, Today) with the shopping list.
 import '@/features/shopping/api';
+// Registers the routine player's conflict tags and lines.
+import '@/features/conflicts/hooks';
 
 import {
   Figtree_400Regular,

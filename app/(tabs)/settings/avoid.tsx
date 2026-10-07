@@ -1,3 +1,3 @@
-import { AvoidListScreen } from '@/features/ingredients/screens/AvoidListScreen';
+import { AvoidListScreen } from '@/features/conflicts/screens/AvoidListScreen';
 
 export default AvoidListScreen;

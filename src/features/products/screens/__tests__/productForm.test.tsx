@@ -2,6 +2,8 @@ import { PortalHost } from '@rn-primitives/portal';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 
 import { avoidItem, product } from '@/db/schema';
+import { addAvoidItem } from '@/features/conflicts/avoidRepo';
+import { saveGroup, saveRule } from '@/features/conflicts/repo';
 import { saveSettings } from '@/features/settings/repo';
 import { addBuyAgain, listShopping, prefillFromItem, setBought } from '@/features/shopping/repo';
 import { setI18nLanguage } from '@/i18n';
@@ -306,6 +308,31 @@ describe('Edit product (full form)', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Save anyway' }));
     await flush();
     expect(getProduct(app.db, 1, TODAY, 30)?.name).toBe('Perfumed cream');
+  });
+
+  it('asks before saving a member of an avoided group, and links chips in a rule', async () => {
+    const app = setup({ id: '1' });
+    createProduct(app.db, input({ name: 'Peel', ingredients: ['Aqua', 'Glycolic acid'] }));
+    createProduct(app.db, input({ name: 'Serum', ingredients: ['Retinol'] }));
+    const acids = saveGroup(app.db, { name: 'Acids', memberIds: [2] });
+    addAvoidItem(app.db, { kind: 'group', refId: acids });
+    saveRule(app.db, {
+      leftKind: 'group',
+      leftId: acids,
+      rightKind: 'ingredient',
+      rightId: 3,
+      note: null,
+    });
+    await app.show();
+    expect(
+      await screen.findByText('Glycolic acid is on your avoid list. Saving asks you to confirm.'),
+    ).toBeTruthy();
+    expect(screen.getAllByLabelText('Glycolic acid, Avoid, Conflict').length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText('Aqua').length).toBeGreaterThan(0);
+    await fireEvent.press(screen.getByRole('button', { name: 'Save changes' }));
+    await flush();
+    expect(screen.getByText('Save with an avoided ingredient?')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Edit ingredients' })).toBeTruthy();
   });
 
   it('replaces the photo and deletes the old file after saving', async () => {

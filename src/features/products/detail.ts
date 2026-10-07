@@ -31,14 +31,19 @@ export function sizeText(p: Pick<ProductDetail, 'size' | 'unit'>, f: Formatter, 
   return p.unit ? `${n} ${t(`products.detail.units.${p.unit}`)}` : n;
 }
 
-/** Ingredient chips: avoided ones red (by ingredient or its group). Conflict marks come in 030. */
+/**
+ * Ingredient chips: avoided ones red (by ingredient or its group), ones in a conflict rule with a
+ * link icon (`inRule`, task 030).
+ */
 export function ingredientPills(
   p: Pick<ProductDetail, 'ingredients'>,
   avoidItems: readonly AvoidItemLite[],
+  inRule: (ingredientId: number) => boolean = () => false,
 ): IngredientPill[] {
   return p.ingredients.map((i) => ({
     name: i.name,
     avoided: avoidMatches([i.id], new Map([[i.id, i.groupId]]), avoidItems).length > 0,
+    conflict: inRule(i.id),
   }));
 }
 

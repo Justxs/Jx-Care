@@ -4,12 +4,12 @@ import { Pressable, View, type AccessibilityActionEvent } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
-import { ConflictTag } from '@/components/ui/conflict-tag';
 import { MenuPortal } from '@/components/ui/more-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import { Text } from '@/components/ui/text';
 import { WeekdayDots, useWeekdaysLabel } from '@/components/ui/weekday-dots';
+import { ConflictTagButton } from '@/features/conflicts/components/ConflictSheets';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
 
@@ -53,12 +53,6 @@ export function RoutineCard({
       : t('routines.card.noReminder'),
     t('routines.card.steps', { count: routine.stepCount }),
   ].join(' · ');
-  const conflictWord =
-    conflicts.length === 0
-      ? null
-      : conflicts.every((c) => c.mild)
-        ? t('common.mildConflict')
-        : t('common.conflict');
   const muted = !routine.active;
 
   const actions = [
@@ -69,7 +63,6 @@ export function RoutineCard({
     routine.name,
     daysLabel(routine.daysOfWeek),
     meta,
-    conflictWord,
     muted ? t('routines.card.off') : null,
   ]
     .filter(Boolean)
@@ -92,25 +85,28 @@ export function RoutineCard({
         className={cn(CARD, 'gap-3 p-4 active:bg-subtle')}
       >
         <View className="flex-row items-start gap-3">
-          <View
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={spoken}
-            accessibilityActions={[
-              { name: 'activate' },
-              ...actions.map((a) => ({ name: a.key, label: a.label })),
-            ]}
-            onAccessibilityAction={onAccessibilityAction}
-            className="flex-1 gap-2"
-          >
-            <Text className={cn('text-body-strong', muted ? 'text-ink-muted' : 'text-ink')}>
-              {routine.name}
-            </Text>
-            <WeekdayDots value={routine.daysOfWeek} />
-            <Text className={cn('text-caption', muted ? 'text-ink-muted' : 'text-ink')}>
-              {meta}
-            </Text>
-            {conflictWord ? <ConflictTag label={conflictWord} /> : null}
+          <View className="flex-1 gap-2">
+            <View
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={spoken}
+              accessibilityActions={[
+                { name: 'activate' },
+                ...actions.map((a) => ({ name: a.key, label: a.label })),
+              ]}
+              onAccessibilityAction={onAccessibilityAction}
+              className="gap-2"
+            >
+              <Text className={cn('text-body-strong', muted ? 'text-ink-muted' : 'text-ink')}>
+                {routine.name}
+              </Text>
+              <WeekdayDots value={routine.daysOfWeek} />
+              <Text className={cn('text-caption', muted ? 'text-ink-muted' : 'text-ink')}>
+                {meta}
+              </Text>
+            </View>
+            {/* Its own button (opens the conflict sheet), so it sits outside the info block. */}
+            <ConflictTagButton targets={conflicts} routineId={routine.id} />
           </View>
           <View className="min-h-[44px] justify-center">
             <Switch

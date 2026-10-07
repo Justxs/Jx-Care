@@ -1462,6 +1462,21 @@
       "group": "Grupė",
       "noMatch": "Nieko nerasta.",
       "more": "Rašykite, kad rastumėte daugiau."
+    },
+    "explainAction": "Kodėl šis įspėjimas",
+    "playerLine": "{{product}} nesiderina su {{other}} rutinoje {{routine}}. {{note}}",
+    "editor": {
+      "line": "{{own}} ({{step}} žingsnis) × {{other}} rutinoje {{routine}}, {{days}}",
+      "lineSame": "{{own}} ({{step}} žingsnis) × {{other}} ({{otherStep}} žingsnis), {{days}}",
+      "alternatives_one": "{{names}} yra kitas {{time}} pasirinkimas, todėl jie nelyginami.",
+      "alternatives_few": "{{names}} yra kiti {{time}} pasirinkimai, todėl jie nelyginami.",
+      "alternatives_many": "{{names}} yra kiti {{time}} pasirinkimai, todėl jie nelyginami.",
+      "alternatives_other": "{{names}} yra kiti {{time}} pasirinkimai, todėl jie nelyginami.",
+      "timeWord": {
+        "morning": "ryto",
+        "evening": "vakaro"
+      },
+      "thisRoutine": "Ši rutina"
     }
   },
   "player": {
@@ -1499,6 +1514,10 @@
       "expired": "{{name}}: nebegalioja",
       "backToToday": "Grįžti į Šiandien",
       "addNote": "Pridėti pastabą"
+    },
+    "picker": {
+      "title": "Pasirinkite produktą",
+      "empty": "Kol kas nėra odos produktų, kuriuos galima pasirinkti."
     }
   },
   "reminders": {
@@ -1575,6 +1594,34 @@
         "unopened_many": "{{count}} neatidaryto",
         "unopened_other": "{{count}} neatidarytų"
       }
+    }
+  },
+  "avoid": {
+    "emptyTitle": "Kol kas nieko nevengiate",
+    "emptyBody": "Pridėkite ingredientus, kurie jus dirgina. Juos turintys produktai gaus raudoną žymą Vengti.",
+    "add": "Pridėti ingredientą",
+    "inProducts_one": "Produktuose: {{count}}",
+    "inProducts_few": "Produktuose: {{count}}",
+    "inProducts_many": "Produktuose: {{count}}",
+    "inProducts_other": "Produktuose: {{count}}",
+    "inNoProducts": "Nė viename produkte",
+    "remove": "Pašalinti {{name}}",
+    "removed": "Pašalinta: {{name}}",
+    "productsTitle": "Produktai, kuriuose jų yra",
+    "noProducts": "Jūsų produktuose jų nėra.",
+    "sheet": {
+      "title": "Pridėti prie vengiamų",
+      "what": "Ingredientas arba grupė",
+      "search": "Ieškokite arba įrašykite naują",
+      "createNew": "Pridėti naują ingredientą „{{name}}“",
+      "new": "Naujas",
+      "change": "Keisti",
+      "noMatch": "Nieko nerasta.",
+      "empty": "Ingredientų dar nėra. Įrašykite pavadinimą, kad pridėtumėte.",
+      "note": "Pastaba",
+      "notePlaceholder": "Alergija",
+      "noteHint": "Neprivaloma. Iki 60 simbolių.",
+      "save": "Pridėti į sąrašą"
     }
   }
 }

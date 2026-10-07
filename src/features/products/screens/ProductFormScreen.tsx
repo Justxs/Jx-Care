@@ -22,6 +22,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import { Text } from '@/components/ui/text';
 import { productCategories, type Area } from '@/db/enums';
+import { useIngredientInRule } from '@/features/conflicts/hooks';
 import { useSettings } from '@/features/settings/api';
 import { useLinkBoughtItem } from '@/features/shopping/api';
 import { currencySymbol } from '@/features/settings/currencies';
@@ -190,6 +191,7 @@ function ProductForm({
   const hasAny = useHasAnyProduct().data;
   const known = useKnownIngredients().data ?? [];
   const avoid: AvoidContext = useAvoidContext().data ?? { items: [], groupOf: new Map() };
+  const inRule = useIngredientInRule();
   const create = useCreateProduct();
   const update = useUpdateProduct();
   const linkBoughtItem = useLinkBoughtItem();
@@ -357,6 +359,7 @@ function ProductForm({
                   name: c.name,
                   isNew: c.status === 'new',
                   avoided: avoided.has(c.name),
+                  conflict: c.status === 'existing' && inRule(c.id),
                 }))}
               />
             ) : (

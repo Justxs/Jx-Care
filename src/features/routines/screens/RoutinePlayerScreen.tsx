@@ -303,10 +303,12 @@ function ConflictLine({ item, onWhy }: { item: PlayerConflict; onWhy: () => void
       <View className="flex-row gap-2">
         <Icon name="alert-triangle" size={18} tone="warning" />
         <Text className="flex-1 text-body">
-          {t('player.conflictLine', {
+          {/* The rule's note names the risk; without one, the general line does. */}
+          {t(c.note ? 'conflicts.playerLine' : 'player.conflictLine', {
             product: c.first.product,
             other: c.second.product,
             routine: c.second.routine,
+            note: c.note,
           })}
         </Text>
       </View>

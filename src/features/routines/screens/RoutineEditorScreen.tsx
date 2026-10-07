@@ -25,6 +25,7 @@ import { Text } from '@/components/ui/text';
 import { TimeField } from '@/components/ui/date-field';
 import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import type { TimeOfDay } from '@/db/enums';
+import { useConflictSheets } from '@/features/conflicts/components/ConflictSheets';
 import { useProductsForPicker } from '@/features/products/api';
 import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
@@ -191,10 +192,15 @@ function RoutineForm({
   const values = useStore(form.store, (s) => s.values);
   const conflicts = useEditorConflicts({
     id: routineId,
+    name: values.name,
     timeOfDay: values.timeOfDay,
+    customName: values.customName,
+    sortTime: values.sortTime,
     daysOfWeek: values.daysOfWeek,
     steps: values.steps,
   });
+  // Already in the editor: the conflict sheet offers "See the rule" only.
+  const conflictSheets = useConflictSheets();
 
   const close = () => {
     leaving.current = true;
@@ -252,14 +258,14 @@ function RoutineForm({
     setSteps(index === null ? [...steps, step] : steps.map((s, i) => (i === index ? step : s)));
   };
 
-  const conflictByStep = new Map<number, { mild: boolean }>();
-  for (const hit of conflicts) {
-    const seen = conflictByStep.get(hit.stepIndex);
+  const stepConflict = (index: number): StepRowData['conflict'] => {
+    const targets = conflicts.steps.get(index);
+    if (!targets?.length) return null;
     // A step is only "mild" when every conflict it has is mild.
-    conflictByStep.set(hit.stepIndex, { mild: (seen?.mild ?? true) && hit.mild });
-  }
+    return { mild: targets.every((c) => c.mild), onPress: () => conflictSheets.open(targets) };
+  };
   const rows = values.steps.map((s, i) =>
-    stepRow(s, values.daysOfWeek, products, conflictByStep.get(i) ?? null, f, t),
+    stepRow(s, values.daysOfWeek, products, stepConflict(i), f, t),
   );
 
   return (
@@ -460,9 +466,13 @@ function RoutineForm({
         </form.Field>
 
         <EditorConflictPanel
-          hits={conflicts}
-          // Task 030 opens the Mild conflict sheet (ExplainSheets, task 025) here.
-          onExplainMild={() => {}}
+          hits={conflicts.hits}
+          alternatives={conflicts.alternatives}
+          onExplainMild={() =>
+            conflictSheets.openMild(
+              [...conflicts.steps.values()].flat().find((c) => c.mild)?.mildStep ?? null,
+            )
+          }
         />
 
         {routineId !== null ? (
@@ -499,6 +509,7 @@ function RoutineForm({
           setStepEditor((s) => ({ ...s, open: false }));
         }}
       />
+      {conflictSheets.element}
       <DiscardDialog
         open={guard.confirmOpen}
         onDiscard={guard.discard}
@@ -530,7 +541,7 @@ function stepRow(
   step: StepFormValues,
   routineDays: readonly number[],
   products: ReadonlyMap<number, EditorProduct>,
-  conflict: { mild: boolean } | null,
+  conflict: StepRowData['conflict'],
   f: ReturnType<typeof useFormat>,
   t: (key: string, opts?: Record<string, unknown>) => string,
 ): StepRowData {

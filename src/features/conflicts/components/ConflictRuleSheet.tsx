@@ -26,7 +26,7 @@ export type ConflictRuleSheetProps = {
 type Picking = 'left' | 'right' | null;
 
 /** Groups first, then ingredients, each with a short detail line. */
-function useSideOptions(): SideOption[] {
+export function useSideOptions(): SideOption[] {
   const { t } = useTranslation();
   const ingredients = useIngredients().data;
   const groups = useGroups().data;

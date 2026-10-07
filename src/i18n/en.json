@@ -1366,6 +1366,19 @@
       "group": "Group",
       "noMatch": "Nothing matches.",
       "more": "Type to find more."
+    },
+    "explainAction": "Why this warning",
+    "playerLine": "{{product}} conflicts with {{other}} in {{routine}}. {{note}}",
+    "editor": {
+      "line": "{{own}} (step {{step}}) × {{other}} in {{routine}}, {{days}}",
+      "lineSame": "{{own}} (step {{step}}) × {{other}} (step {{otherStep}}), {{days}}",
+      "alternatives_one": "{{names}} is the other {{time}} choice, so it is not compared.",
+      "alternatives_other": "{{names}} are the other {{time}} choices, so they are not compared.",
+      "timeWord": {
+        "morning": "morning",
+        "evening": "evening"
+      },
+      "thisRoutine": "This routine"
     }
   },
   "player": {
@@ -1401,6 +1414,10 @@
       "expired": "{{name}} has expired",
       "backToToday": "Back to Today",
       "addNote": "Add a note"
+    },
+    "picker": {
+      "title": "Pick a product",
+      "empty": "No skin products to pick yet."
     }
   },
   "reminders": {
@@ -1467,6 +1484,32 @@
         "unopened_one": "{{count}} unopened",
         "unopened_other": "{{count}} unopened"
       }
+    }
+  },
+  "avoid": {
+    "emptyTitle": "Nothing to avoid yet",
+    "emptyBody": "Add ingredients that irritate you. Products that contain them get a red Avoid badge.",
+    "add": "Add ingredient",
+    "inProducts_one": "In {{count}} product",
+    "inProducts_other": "In {{count}} products",
+    "inNoProducts": "In no products",
+    "remove": "Remove {{name}}",
+    "removed": "{{name}} removed",
+    "productsTitle": "Products that contain these",
+    "noProducts": "None of your products contain these.",
+    "sheet": {
+      "title": "Add to avoid list",
+      "what": "Ingredient or group",
+      "search": "Search or type a new ingredient",
+      "createNew": "Add “{{name}}” as a new ingredient",
+      "new": "New",
+      "change": "Change",
+      "noMatch": "Nothing matches.",
+      "empty": "No ingredients yet. Type a name to add one.",
+      "note": "Note",
+      "notePlaceholder": "Allergic",
+      "noteHint": "Optional. Up to 60 characters.",
+      "save": "Add to list"
     }
   }
 }

@@ -23,7 +23,8 @@ export type StepRowData = {
   schedule: string | null;
   /** "1 min"; null without a wait. */
   wait: string | null;
-  conflict: { mild: boolean } | null;
+  /** Tapping the tag opens the conflict sheet (or the Mild conflict sheet). */
+  conflict: { mild: boolean; onPress?: () => void } | null;
   /** A problem with the step (an error message), e.g. days the routine no longer runs on. */
   error: string | null;
 };
@@ -66,6 +67,7 @@ export function StepRow({ step, index, count, onPress, onDelete, onMove, handle 
     ...(index > 0 ? [{ name: 'moveUp', label: t('routines.editor.moveUp') }] : []),
     ...(index < count - 1 ? [{ name: 'moveDown', label: t('routines.editor.moveDown') }] : []),
     { name: 'delete', label: t('routines.editor.deleteStep') },
+    ...(step.conflict?.onPress ? [{ name: 'conflict', label: t('conflicts.explainAction') }] : []),
   ];
   const onAccessibilityAction = (e: AccessibilityActionEvent) => {
     switch (e.nativeEvent.actionName) {
@@ -77,6 +79,8 @@ export function StepRow({ step, index, count, onPress, onDelete, onMove, handle 
         return onMove(index + 1);
       case 'delete':
         return onDelete();
+      case 'conflict':
+        return step.conflict?.onPress?.();
     }
   };
 
@@ -108,7 +112,9 @@ export function StepRow({ step, index, count, onPress, onDelete, onMove, handle 
               ) : null}
               {step.schedule ? <MetaChip>{step.schedule}</MetaChip> : null}
               {step.wait ? <MetaChip>{step.wait}</MetaChip> : null}
-              {step.conflict ? <ConflictTag mild={step.conflict.mild} /> : null}
+              {step.conflict ? (
+                <ConflictTag mild={step.conflict.mild} onPress={step.conflict.onPress} />
+              ) : null}
             </View>
           ) : null}
           {step.error ? <Text className="text-caption text-danger">{step.error}</Text> : null}

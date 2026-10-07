@@ -21,6 +21,7 @@ import { ScreenHeader } from '@/components/ui/screen-header';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
+import { useIngredientInRule } from '@/features/conflicts/hooks';
 import { useBuyAgain } from '@/features/shopping/buyAgain';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
@@ -115,6 +116,7 @@ function Detail({ product: p }: { product: ProductDetail }) {
   const update = useUpdateProduct();
   const known = useKnownIngredients().data ?? [];
   const avoid = useAvoidContext().data;
+  const inRule = useIngredientInRule();
   const [viewerOpen, setViewerOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [ingredientsOpen, setIngredientsOpen] = useState(false);
@@ -233,8 +235,7 @@ function Detail({ product: p }: { product: ProductDetail }) {
                   </Pressable>
                 </View>
                 {p.ingredients.length > 0 ? (
-                  // TODO(030): mark ingredients that are in a conflict rule (link icon).
-                  <IngredientPills items={ingredientPills(p, avoid?.items ?? [])} />
+                  <IngredientPills items={ingredientPills(p, avoid?.items ?? [], inRule)} />
                 ) : (
                   <Text className="text-body text-ink-muted">
                     {t('products.detail.noIngredients')}

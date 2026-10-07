@@ -9,6 +9,8 @@ import type { EditorConflictHit } from '../useRoutineConflicts';
 
 export type EditorConflictPanelProps = {
   hits: readonly EditorConflictHit[];
+  /** "Evening A is the other evening choice, so it is not compared."; null without one. */
+  alternatives?: string | null;
   /** "What does mild mean?": the Mild conflict sheet (ExplainSheets), wired by task 030. */
   onExplainMild: () => void;
 };
@@ -17,7 +19,11 @@ export type EditorConflictPanelProps = {
  * The R2 conflict panel at the end of the form. It animates its height open when there are
  * conflicts; saving is still allowed. Task 030 supplies the lines.
  */
-export function EditorConflictPanel({ hits, onExplainMild }: EditorConflictPanelProps) {
+export function EditorConflictPanel({
+  hits,
+  alternatives = null,
+  onExplainMild,
+}: EditorConflictPanelProps) {
   const { t } = useTranslation();
   return (
     <Collapsible open={hits.length > 0}>
@@ -34,6 +40,7 @@ export function EditorConflictPanel({ hits, onExplainMild }: EditorConflictPanel
             {hit.mild ? <Text className="text-label text-warning">{t('common.mild')}</Text> : null}
           </View>
         ))}
+        {alternatives ? <Text className="text-caption text-ink">{alternatives}</Text> : null}
         <Text className="text-caption text-ink">{t('routines.editor.canStillSave')}</Text>
         <Pressable
           onPress={onExplainMild}

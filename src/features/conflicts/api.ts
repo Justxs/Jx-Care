@@ -14,7 +14,6 @@ import { languages } from '@/i18n';
 import type { CommonGroupKey, CommonRuleLabels } from './commonRules';
 import {
   addCommonRules,
-  conflictInput,
   deleteGroup,
   deleteIngredient,
   deleteRule,
@@ -68,22 +67,13 @@ export function useGroupImpact(id: number | null) {
   });
 }
 
-/**
- * S3 rules with "In N routines". Routine edits (task 022's hooks) don't invalidate conflict
- * keys yet, so the list re-reads whenever the screen mounts.
- */
+/** S3 rules with "In N routines"; routine changes invalidate `qk.conflicts.all` too. */
 export function useRules() {
   return useQuery({
     queryKey: qk.conflicts.rules,
     queryFn: () => listRulesWithCounts(getDb()),
     placeholderData: keepPreviousData,
-    refetchOnMount: 'always',
   });
-}
-
-/** Everything `weeklyConflicts` and `dayConflicts` need (task 030's warnings). */
-export function useConflictInput() {
-  return useQuery({ queryKey: qk.conflicts.input, queryFn: () => conflictInput(getDb()) });
 }
 
 // ─── Mutations ──────────────────────────────────────────────────────────────

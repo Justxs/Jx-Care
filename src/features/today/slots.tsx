@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 
 import { SkinCheckIn } from '@/features/condition/components/SkinCheckIn';
+import { ConflictTagButton } from '@/features/conflicts/components/ConflictSheets';
+import { useDayRoutineConflicts } from '@/features/conflicts/hooks';
 import { useHairDueToday, useHairStreakChip } from '@/features/hair/api';
 import { HairDueRows } from '@/features/hair/components/HairDueRows';
 import { useThisWeekStatus } from '@/features/progress/api';
@@ -33,9 +35,12 @@ export function useHairStreakSlot(): Streak | null {
   return hasRoutine && streak ? streak : null;
 }
 
-/** Conflict tag on a routine card (task 030). Opens the conflict sheet when tapped. */
-export function useCardConflictSlot(_routineId: number): ReactNode {
-  return null;
+/** Conflict tag on a routine card (task 030) for today's steps. Opens the conflict sheet. */
+export function useCardConflictSlot(routineId: number): ReactNode {
+  const day = useSelector(appStore, (s) => s.activeDay);
+  const targets = useDayRoutineConflicts(routineId, day);
+  if (targets.length === 0) return null;
+  return <ConflictTagButton targets={targets} routineId={routineId} />;
 }
 
 /** Hair due rows (task 033): the section is hidden while this is null. */

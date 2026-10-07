@@ -130,6 +130,8 @@ function invalidate(client: QueryClient, opts: { products?: boolean } = {}): voi
   client.invalidateQueries({ queryKey: qk.routines.all });
   client.invalidateQueries({ queryKey: ['today'] });
   client.invalidateQueries({ queryKey: qk.calendar.all });
+  // Conflict warnings (task 030) and S3's "In N routines" depend on routines and their steps.
+  client.invalidateQueries({ queryKey: qk.conflicts.all });
   // Product detail lists the routines a product is used in.
   if (opts.products) client.invalidateQueries({ queryKey: qk.products.all });
 }

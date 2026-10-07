@@ -8,6 +8,7 @@ import { Chip } from '@/components/ui/chip';
 import { Input } from '@/components/ui/input';
 import { Sheet } from '@/components/ui/sheet';
 import { Text } from '@/components/ui/text';
+import { useIngredientInRule } from '@/features/conflicts/hooks';
 import { parsedLinesAvoidMatches } from '@/lib/avoid';
 import {
   classifyIngredients,
@@ -51,6 +52,7 @@ export function IngredientEntrySheet({
 
   const parsed = useMemo(() => parseIngredientLines(text), [text]);
   const classified = useMemo(() => classifyIngredients(parsed, known), [parsed, known]);
+  const inRule = useIngredientInRule();
   const avoided = useMemo(
     () =>
       new Set(
@@ -153,6 +155,7 @@ export function IngredientEntrySheet({
             name: c.name,
             isNew: c.status === 'new',
             avoided: avoided.has(c.name),
+            conflict: c.status === 'existing' && inRule(c.id),
           }))}
         />
       </Animated.View>

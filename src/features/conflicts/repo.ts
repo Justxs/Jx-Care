@@ -16,6 +16,7 @@ import { appDay } from '@/lib/appDay';
 import {
   routinesPerRule,
   weeklyConflicts,
+  type ConflictHit,
   type ConflictInput,
   type RuleLite,
 } from '@/lib/conflicts';
@@ -518,7 +519,7 @@ export function deleteRule(db: DbOrTx, id: number): void {
 // ─── Common rules ───────────────────────────────────────────────────────────
 
 /** Finds an ingredient by normalised name or creates it; returns its id and group. */
-function ensureIngredient(tx: DbOrTx, name: string): { id: number; groupId: number | null } {
+export function ensureIngredient(tx: DbOrTx, name: string): { id: number; groupId: number | null } {
   const normalizedName = normalizeName(name);
   return (
     findIngredientByNormalized(tx, normalizedName) ??
@@ -655,4 +656,43 @@ export function conflictInput(db: DbOrTx): ConflictInput {
     .from(conflict)
     .all();
   return { routines, steps, productIngredients, ingredientGroup: ingredientGroupMap, rules };
+}
+
+// ─── Warnings (task 030) ────────────────────────────────────────────────────
+
+/** Names the warnings show: products, ingredients and groups by id, and each rule's note. */
+export type ConflictNames = {
+  products: Map<number, string>;
+  ingredients: Map<number, string>;
+  groups: Map<number, string>;
+  notes: Map<number, string | null>;
+};
+
+/** Everything the conflict warnings need, with this week's hits worked out once. */
+export type ConflictData = { input: ConflictInput; names: ConflictNames; weekly: ConflictHit[] };
+
+const byId = (rows: { id: number; name: string }[]) => new Map(rows.map((r) => [r.id, r.name]));
+
+export function conflictNames(db: DbOrTx): ConflictNames {
+  return {
+    products: byId(db.select({ id: product.id, name: product.name }).from(product).all()),
+    ingredients: byId(
+      db.select({ id: ingredient.id, name: ingredient.name }).from(ingredient).all(),
+    ),
+    groups: byId(
+      db.select({ id: ingredientGroup.id, name: ingredientGroup.name }).from(ingredientGroup).all(),
+    ),
+    notes: new Map(
+      db
+        .select({ id: conflict.id, note: conflict.note })
+        .from(conflict)
+        .all()
+        .map((r) => [r.id, r.note]),
+    ),
+  };
+}
+
+export function conflictData(db: DbOrTx): ConflictData {
+  const input = conflictInput(db);
+  return { input, names: conflictNames(db), weekly: weeklyConflicts(input) };
 }

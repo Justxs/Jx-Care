@@ -275,3 +275,38 @@ export function routinesPerRule(hits: readonly ConflictHit[]): Map<number, Set<n
   }
   return out;
 }
+
+/**
+ * The input with one routine and its steps swapped for an unsaved draft (the R2 editor's live
+ * panel). A routine id not in the input adds the draft as a new routine.
+ */
+export function withDraftRoutine(
+  input: ConflictInput,
+  draft: RoutineLite,
+  steps: readonly StepLite[],
+): ConflictInput {
+  return {
+    ...input,
+    routines: [...input.routines.filter((r) => r.id !== draft.id), draft],
+    steps: [...input.steps.filter((s) => s.routineId !== draft.id), ...steps],
+  };
+}
+
+/** Every ingredient and group token named on either side of a rule. */
+export function ruleTokens(rules: readonly RuleLite[]): Set<Token> {
+  const tokens = new Set<Token>();
+  for (const r of rules) {
+    tokens.add(tokenOf(r.leftKind, r.leftId));
+    tokens.add(tokenOf(r.rightKind, r.rightId));
+  }
+  return tokens;
+}
+
+/** An ingredient appears in a rule, by itself or through its group (the chips' link icon). */
+export function ingredientInRules(
+  tokens: ReadonlySet<Token>,
+  ingredientId: number,
+  groupId: number | null | undefined,
+): boolean {
+  return tokens.has(`i:${ingredientId}`) || (groupId != null && tokens.has(`g:${groupId}`));
+}

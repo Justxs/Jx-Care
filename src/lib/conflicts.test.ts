@@ -1,5 +1,6 @@
 import {
   dayConflicts,
+  ingredientInRules,
   parseToken,
   productsInConflict,
   productTokens,
@@ -7,7 +8,9 @@ import {
   routinesPerRule,
   routinesWithConflicts,
   ruleMatches,
+  ruleTokens,
   weeklyConflicts,
+  withDraftRoutine,
   type ConflictInput,
   type RuleLite,
 } from './conflicts';
@@ -261,5 +264,40 @@ describe('routinesPerRule', () => {
     expect([...(perRule.get(2) ?? [])].sort()).toEqual([1, 2, 3]);
     // Rule 3 names an ingredient no product has.
     expect(perRule.get(3)).toBeUndefined();
+  });
+});
+
+describe('withDraftRoutine', () => {
+  const eveA = routine({ id: 1, name: 'Evening A', daysOfWeek: [1] });
+  const morning = routine({ id: 2, timeOfDay: 'morning', sortTime: '07:00', daysOfWeek: [1] });
+
+  it('checks the unsaved steps in place of the saved ones', () => {
+    const saved = input({ routines: [eveA, morning], steps: [step(1, 1, 400), step(2, 2, 200)] });
+    expect(weeklyConflicts(saved)).toHaveLength(0);
+    const draft = withDraftRoutine(saved, { ...eveA, daysOfWeek: [1, 2] }, [step(-1, 1, 100)]);
+    expect(draft.steps.map((s) => s.id)).toEqual([2, -1]);
+    const hits = weeklyConflicts(draft);
+    expect(hits).toHaveLength(1);
+    expect([hits[0]!.a.stepId, hits[0]!.b.stepId]).toEqual([2, -1]);
+  });
+
+  it('adds a new routine', () => {
+    const saved = input({ routines: [morning], steps: [step(2, 2, 200)] });
+    const draft = withDraftRoutine(saved, routine({ id: -1, daysOfWeek: [1] }), [
+      step(-1, -1, 100),
+    ]);
+    expect(draft.routines.map((r) => r.id)).toEqual([2, -1]);
+    expect(weeklyConflicts(draft)).toHaveLength(1);
+  });
+});
+
+describe('ruleTokens', () => {
+  it('marks ingredients named by a rule directly or through their group', () => {
+    const tokens = ruleTokens([retinoidsVsAcids, { ...retinolVsGlycolic, id: 3, rightId: 3 }]);
+    expect(ingredientInRules(tokens, 1, 10)).toBe(true);
+    expect(ingredientInRules(tokens, 4, 20)).toBe(true);
+    expect(ingredientInRules(tokens, 3, null)).toBe(true);
+    expect(ingredientInRules(tokens, 5, null)).toBe(false);
+    expect(ingredientInRules(tokens, 5, 30)).toBe(false);
   });
 });
