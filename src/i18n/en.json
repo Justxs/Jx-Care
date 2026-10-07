@@ -1260,8 +1260,7 @@
     "progress": "{{value}} of {{max}} done",
     "photoAdd": "Add photo",
     "conflictOpen": "{{label}}. Tap for details.",
-    "noDays": "No days",
-    "scale": "{{value}} of {{max}}"
+    "noDays": "No days"
   },
   "streak": {
     "chip": "{{count}} {{area}}",

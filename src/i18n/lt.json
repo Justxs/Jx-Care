@@ -1346,8 +1346,7 @@
     "progress": "Atlikta {{value}} iš {{max}}",
     "photoAdd": "Pridėti nuotrauką",
     "conflictOpen": "{{label}}. Bakstelėkite, kad pamatytumėte daugiau.",
-    "noDays": "Jokių dienų",
-    "scale": "{{value}} iš {{max}}"
+    "noDays": "Jokių dienų"
   },
   "streak": {
     "chip": "{{count}} {{area}}",

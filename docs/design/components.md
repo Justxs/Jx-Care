@@ -223,7 +223,7 @@ A vertical single choice: one row per option, a label with an optional one-line 
 
 ## Rating
 
-A 1–5 picker. `kind="stars"` for product ratings, `kind="scale"` (numbered pills) for daily skin and hair condition.
+A 1–5 star picker for product ratings. Daily skin and hair condition use `ConditionChips` instead.
 
 **Built on:** rn-primitives `ToggleGroup` type single, one item per value.
 
@@ -248,10 +248,9 @@ Header for pushed screens and full-screen modals: a back (or close) button, a ce
 
 **Built on:** RN `View` + `Pressable`; replaces the native stack header (`headerShown: false`) so it can share the screen's background.
 
-**Consumer provides:** `title`, `onBack`, `close` (shows X for modals), optional `action` `{icon, label, onPress, primary, text}`, optional `subtitle` (shown under the title, never above it).
+**Consumer provides:** `title`, `onBack`, `close` (shows X for modals), optional `action`: one word `{text, onPress, disabled}` or the overflow `{menu}`.
 
 - Back and close are bare 44px icon buttons with no circle behind them. Forms save with a text action (`text: true`, "Save") in `accent`; a filled check circle reads as decoration, a word reads as an action.
-- An icon action with `primary` gets a soft `accent-soft` circle, never a filled one: the filled accent is saved for the screen's one main button.
 
 - Always 56px tall, and the right side keeps a 44px spacer when there is no action, so the title never moves between screens.
 - Long titles wrap to two lines at most, then truncate.

@@ -21,11 +21,10 @@ function StatefulRating(props: RatingProps) {
 const meta = {
   title: 'UI/Rating',
   component: Rating,
-  args: { value: 3, max: 5, kind: 'stars', clearable: false, disabled: false },
+  args: { value: 3, max: 5, clearable: false, disabled: false },
   argTypes: {
     value: { control: { type: 'number', min: 0, max: 5, step: 1 } },
     max: { control: { type: 'number', min: 1, max: 10, step: 1 } },
-    kind: { control: 'radio', options: ['stars', 'scale'] },
     clearable: { control: 'boolean' },
     disabled: { control: 'boolean' },
     onValueChange: { action: 'changed' },
@@ -45,9 +44,6 @@ export const Unrated: Story = { args: { value: 0 } };
 
 /** Tapping the picked star again clears the rating. */
 export const Clearable: Story = { args: { clearable: true } };
-
-/** Daily condition: numbered pills, only the picked one is marked. */
-export const Scale: Story = { args: { kind: 'scale', value: 4 } };
 
 /** Shown, not editable (a finished product's rating in a list). */
 export const Disabled: Story = { args: { disabled: true, value: 4 } };

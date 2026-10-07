@@ -280,12 +280,6 @@ describe('Rating', () => {
     await fireEvent.press(screen.getByRole('radio', { name: '5 stars' }));
     expect(onChange).toHaveBeenCalledWith(5);
   });
-
-  it('scale kind shows numbers', async () => {
-    await render(<Rating kind="scale" value={4} onValueChange={() => {}} />);
-    expect(screen.getByRole('radio', { name: '4 of 5' })).toBeChecked();
-    expect(screen.getByText('4')).toBeTruthy();
-  });
 });
 
 describe('WeekdayDots and WeekdayPicker', () => {
