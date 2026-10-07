@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react-native';
 
-import { useMarkFinished } from '@/features/products/api';
+import { useMarkFinishedMany } from '@/features/products/api';
 import { createProduct } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
 import { appStore } from '@/state/app';
@@ -35,13 +35,13 @@ describe('useIngredientProducts', () => {
     const retinol = listIngredients(app.db)[0]!.id;
     const { result } = await app.renderHook(() => ({
       products: useIngredientProducts(retinol),
-      finish: useMarkFinished(),
+      finish: useMarkFinishedMany(),
     }));
     await waitFor(() =>
       expect(result.current.products.data).toMatchObject([{ id: serum, archivedAt: null }]),
     );
 
-    await result.current.finish.mutateAsync(serum);
+    await result.current.finish.mutateAsync([serum]);
     await waitFor(() =>
       expect(result.current.products.data).toMatchObject([{ id: serum, archivedAt: '2026-10-05' }]),
     );
