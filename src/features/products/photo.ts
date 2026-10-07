@@ -19,7 +19,7 @@ function newName(): string {
 }
 
 /**
- * Takes or chooses a photo cropped square, shrinks it to 1200 px and saves it as a JPEG in the
+ * Takes or chooses a photo cropped square, shrinks it to at most 1200 px and saves it as a JPEG in the
  * app's own storage (`documents/products/`). Nothing is saved to the phone's gallery.
  */
 export async function pickProductPhoto(source: PhotoSource): Promise<PickResult> {
@@ -43,9 +43,14 @@ export async function pickProductPhoto(source: PhotoSource): Promise<PickResult>
   const asset = result.canceled ? undefined : result.assets[0];
   if (!asset) return { status: 'cancelled' };
 
-  const resized = await ImageManipulator.manipulate(asset.uri)
-    .resize(asset.width >= asset.height ? { width: PHOTO_SIZE } : { height: PHOTO_SIZE })
-    .renderAsync();
+  let image = ImageManipulator.manipulate(asset.uri);
+  // Only shrinks: a photo already smaller than PHOTO_SIZE keeps its size.
+  if (Math.max(asset.width, asset.height) > PHOTO_SIZE) {
+    image = image.resize(
+      asset.width >= asset.height ? { width: PHOTO_SIZE } : { height: PHOTO_SIZE },
+    );
+  }
+  const resized = await image.renderAsync();
   const saved = await resized.saveAsync({ format: SaveFormat.JPEG, compress: 0.85 });
 
   const dir = new Directory(Paths.document, 'products');
