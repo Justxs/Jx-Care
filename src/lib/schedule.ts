@@ -79,8 +79,11 @@ export function timeOfDayKey(routine: Pick<RoutineLite, 'timeOfDay' | 'customNam
   return routine.timeOfDay === 'custom' ? `custom:${routine.customName ?? ''}` : routine.timeOfDay;
 }
 
-const byTimeThenId = (a: RoutineLite, b: RoutineLite) =>
-  a.sortTime === b.sortTime ? a.id - b.id : a.sortTime < b.sortTime ? -1 : 1;
+/** Routines in `sortTime` order, then by id. */
+export const byTimeThenId = (
+  a: Pick<RoutineLite, 'sortTime' | 'id'>,
+  b: Pick<RoutineLite, 'sortTime' | 'id'>,
+) => (a.sortTime === b.sortTime ? a.id - b.id : a.sortTime < b.sortTime ? -1 : 1);
 
 /**
  * Today's routine cards (spec T1, refinement 3): one group per time of day with at least one

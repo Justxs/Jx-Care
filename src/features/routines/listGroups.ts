@@ -1,4 +1,5 @@
 import type { TimeOfDay } from '@/db/enums';
+import { byTimeThenId } from '@/lib/schedule';
 
 /** What grouping needs to know about a routine. */
 export type ListRoutine = {
@@ -18,9 +19,6 @@ export type RoutineListGroup<R extends ListRoutine = ListRoutine> = {
   kind: 'single' | 'alternatives' | 'custom';
   routines: R[];
 };
-
-const byTimeThenId = (a: ListRoutine, b: ListRoutine) =>
-  a.sortTime === b.sortTime ? a.id - b.id : a.sortTime < b.sortTime ? -1 : 1;
 
 /** Morning, then Evening, then Custom; each in `sortTime` order. Empty groups are left out. */
 export function groupRoutinesForList<R extends ListRoutine>(
