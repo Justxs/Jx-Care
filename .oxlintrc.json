@@ -41,5 +41,13 @@
     "import/namespace": "off",
     "jsx-a11y/prefer-tag-over-role": "off"
   },
-  "ignorePatterns": ["node_modules", ".expo", "dist", "docs", "assets", "src/db/migrations"]
+  "ignorePatterns": [
+    ".claude",
+    "node_modules",
+    ".expo",
+    "dist",
+    "docs",
+    "assets",
+    "src/db/migrations"
+  ]
 }

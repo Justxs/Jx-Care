@@ -243,7 +243,9 @@
       "choosePhoto": "Choose from library",
       "removePhoto": "Remove photo",
       "cameraDenied": "Allow camera access in your phone's settings to take a photo.",
-      "photoFailed": "The photo couldn't be saved. Try again."
+      "photoFailed": "The photo couldn't be saved. Try again.",
+      "monthsUnit": "months",
+      "pcs": "pcs"
     },
     "ingredientsSheet": {
       "title": "Ingredients",

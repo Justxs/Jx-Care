@@ -32,3 +32,11 @@ jest.mock('@tanstack/devtools-event-client', () => {
   }
   return { ...actual, EventClient };
 });
+
+// Host views in Jest never measure, so menus anchored to a trigger (rn-primitives DropdownMenu)
+// would never open. Give every view a fixed frame instead.
+{
+  const nativeMethods = require('@react-native/jest-preset/jest/MockNativeMethods').default;
+  nativeMethods.measure = jest.fn((callback) => callback?.(0, 0, 100, 44, 16, 100));
+  nativeMethods.measureInWindow = jest.fn((callback) => callback?.(16, 100, 100, 44));
+}

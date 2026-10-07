@@ -263,7 +263,9 @@
       "choosePhoto": "Pasirinkti iš galerijos",
       "removePhoto": "Pašalinti nuotrauką",
       "cameraDenied": "Kad galėtumėte fotografuoti, leiskite naudoti kamerą telefono nustatymuose.",
-      "photoFailed": "Nuotraukos išsaugoti nepavyko. Bandykite dar kartą."
+      "photoFailed": "Nuotraukos išsaugoti nepavyko. Bandykite dar kartą.",
+      "monthsUnit": "mėn.",
+      "pcs": "vnt."
     },
     "ingredientsSheet": {
       "title": "Sudėtis",

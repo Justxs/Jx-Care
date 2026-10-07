@@ -31,10 +31,9 @@ export function ToggleGroup({
 }: ToggleGroupProps) {
   const m = useMotion();
   const [width, setWidth] = useState(0);
-  const index = Math.max(
-    0,
-    items.findIndex((i) => i.value === value),
-  );
+  const found = items.findIndex((i) => i.value === value);
+  // Nothing chosen yet (a required choice with no default): no indicator.
+  const index = Math.max(0, found);
   const itemWidth = items.length > 0 ? width / items.length : 0;
   const x = useSharedValue(0);
 
@@ -71,7 +70,7 @@ export function ToggleGroup({
         className,
       )}
     >
-      {width > 0 ? (
+      {width > 0 && found >= 0 ? (
         <Animated.View
           pointerEvents="none"
           style={indicator}

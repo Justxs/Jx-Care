@@ -102,7 +102,12 @@
     },
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/.expo/"
+      "/.expo/",
+      "<rootDir>/.claude/"
+    ],
+    "testTimeout": 20000,
+    "modulePathIgnorePatterns": [
+      "<rootDir>/.claude/"
     ],
     "setupFiles": [
       "./jest.setup.js"

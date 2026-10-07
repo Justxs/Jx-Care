@@ -43,3 +43,6 @@ yarn-error.*
 # Jx-Care
 /tmp
 *.db
+
+# Parallel task worktrees
+.claude/worktrees/
