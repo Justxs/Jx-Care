@@ -13,6 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
+import '@/i18n';
 import { useThemeColors } from '@/theme/colors';
 
 SplashScreen.preventAutoHideAsync().catch(() => {

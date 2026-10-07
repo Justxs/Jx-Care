@@ -40,7 +40,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | --- | --- | --- | --- | --- |
 | 001 | [Project scaffold](001-project-scaffold.md) | none | Global UI rules | done |
 | 002 | [Theme, fonts and motion](002-theme-fonts-motion.md) | 001 | Styling, Motion | done |
-| 003 | [Translations and formatting](003-i18n-formatting.md) | 001 | Global UI rules, Words and copy | todo |
+| 003 | [Translations and formatting](003-i18n-formatting.md) | 001 | Global UI rules, Words and copy | done |
 | 004 | [Database schema and migrations](004-database.md) | 001 | Data model | todo |
 | 005 | [Data access and app state](005-data-access-app-state.md) | 003, 004 | Sequence diagrams (Data) | todo |
 | 006 | [Logic: app day, expiry, cost, ingredients](006-logic-dates-expiry.md) | 001 | Refinements 1, 4; P1, P4 | todo |

@@ -49,4 +49,10 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Dates are built by hand, not with `Intl.DateTimeFormat`.** EN uses a fixed month table ("15 Oct", "1 Mar 2027") because ICU's en-GB gives "Sept" and Hermes' ICU differs by Android version; LT dates are the stored `YYYY-MM-DD` string itself. Weekday names come from `weekdays.long.*` in the translation files. Money and plain numbers do use `Intl.NumberFormat` with the phone's locale.
+- **Time:** LT is always 24-hour. EN follows the phone's `uses24hourClock` from `expo-localization` (12-hour shows "7:30 AM"); if the phone doesn't say, 24-hour.
+- **Durations:** `formatDuration` gives wait chips ("30 s", "1 min"); the countdown is a separate `formatCountdown` ("0:42") because it needs no language.
+- **Extra helpers:** `formatWeekday`, `formatWeekdayList` ("Mon, Thu"), `formatNumber`, `isoWeekdayOf`. Weekday names live under `weekdays.letter|short|long.1…7` (ISO).
+- **Lithuanian wording:** relative expiry reads "Galioja dar 12 dienų" / "Galioja iki šiandien" / "Nebegalioja 3 dienas". Lithuanian plural keys carry `_one`, `_few`, `_many` and `_other`; the parity test ignores plural suffixes and checks that every LT plural has `one`, `few` and `other`.
+- **i18next** runs as its own instance (`createInstance`) initialised synchronously from the bundled JSON. `setI18nLanguage(lang)` switches at once; the store and the `settings` row are wired in task 005.
+- `useFormat(today, currency)` takes the current app day and currency for now; task 005 moves both into the hook (settings + app day).
