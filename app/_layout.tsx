@@ -1,4 +1,5 @@
 import '../global.css';
+import '@/i18n';
 
 import {
   Figtree_400Regular,
@@ -10,10 +11,10 @@ import {
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 
-import '@/i18n';
+import { MigrationGate } from '@/db/MigrationGate';
 import { useThemeColors } from '@/theme/colors';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -28,21 +29,22 @@ export default function RootLayout() {
     Figtree_700Bold,
   });
   const colors = useThemeColors();
-  const ready = fontsLoaded || fontError !== null;
+  const hideSplash = useCallback(() => {
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
 
-  useEffect(() => {
-    if (ready) SplashScreen.hideAsync().catch(() => {});
-  }, [ready]);
-
-  // Keep the splash up until the fonts load, so there is no flash of the system font.
-  if (!ready) return null;
+  // Keep the splash up until the fonts load (no flash of the system font) and the database is
+  // migrated.
+  if (!fontsLoaded && fontError === null) return null;
 
   return (
     <View className="flex-1 bg-canvas font-sans">
       <StatusBar style={colors.scheme === 'dark' ? 'light' : 'dark'} />
-      <Stack
-        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.canvas } }}
-      />
+      <MigrationGate onReady={hideSplash}>
+        <Stack
+          screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.canvas } }}
+        />
+      </MigrationGate>
     </View>
   );
 }

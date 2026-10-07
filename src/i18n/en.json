@@ -101,6 +101,10 @@
   "condition": {},
   "settings": {},
   "notifications": {},
-  "errors": {},
+  "errors": {
+    "dataTitle": "Jx-Care couldn't open its data",
+    "dataBody": "Nothing was deleted. Try again, and if it keeps happening, restart the phone.",
+    "tryAgain": "Try again"
+  },
   "a11y": {}
 }

@@ -107,6 +107,10 @@
   "condition": {},
   "settings": {},
   "notifications": {},
-  "errors": {},
+  "errors": {
+    "dataTitle": "Jx-Care nepavyko atidaryti duomenų",
+    "dataBody": "Niekas neištrinta. Bandykite dar kartą, o jei kartojasi, perkraukite telefoną.",
+    "tryAgain": "Bandyti dar kartą"
+  },
   "a11y": {}
 }
