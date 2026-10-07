@@ -103,4 +103,12 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Day status for future days:** a day after today with something due is `pending` (like today); the calendar shows no mark for it.
+- **Snapshots in history:** a routine counts as due on a day when it runs and has due steps, or when that day's log has a `dueStepIds` snapshot, so editing a routine never rewrites a finished day; days before `createdDay` are skipped unless a log says otherwise.
+- **Streak in one pass:** `skinStreak` walks forward once from the earliest `createdDay` with a `routineId|day` map; the run at the end is `current` (today adds only once it succeeded and never resets the run), the longest run is `best`. 3 routines over 3 years take a few milliseconds.
+- `skinDayStatuses(days, input)` evaluates a whole month with one index (for the calendar).
+- **Hair:** `nextScheduledAfter(task, day)` is exported for projections; a `days` task with no days falls back to weekly; a log with no `dueDay` counts as on time. In `hairMonthMarks`, an overdue task marks its due day `overdue` and today `washDue`, then projects from today.
+- `quickSetupToTask` takes `'every_day' | 'every_2_days' | 'every_3_days' | 'twice_a_week' | 'once_a_week'`; the "other" chip opens the full editor instead (task 032).
+- **Conflicts:** `routineConflictSummary(hits, routineId, routines)` takes the routines as a third argument to find the A/B alternatives. A pair of steps that matches several rules gives one hit per rule. Extra helpers: `routinesWithConflicts`, `productsInConflict`, `tokenOf`, `parseToken`.
+- `parsedLinesAvoidMatches` returns `{ line, item }[]` so the P3 warning can name the ingredient.
+- Coverage of these files: 100% of lines.
