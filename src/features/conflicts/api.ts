@@ -11,7 +11,7 @@ import { getDb } from '@/db';
 import { qk } from '@/db/queryKeys';
 import { languages } from '@/i18n';
 
-import type { CommonGroupKey, CommonRuleLabels } from './commonRules';
+import { commonRuleLabels } from './commonRules';
 import {
   addCommonRules,
   deleteGroup,
@@ -147,32 +147,10 @@ export function useDeleteRule() {
   return useCareMutation((id: number) => deleteRule(getDb(), id));
 }
 
-const groupKeys: Record<CommonGroupKey, string> = {
-  retinoids: 'conflicts.common.retinoids',
-  ahaBha: 'conflicts.common.ahaBha',
-  vitaminC: 'conflicts.common.vitaminC',
-};
-
 /** "Add common rules", named in the app language (and matched in every language). */
 export function useAddCommonRules() {
   const { t, i18n } = useTranslation();
-  return useCareMutation(() => {
-    const current = i18n.language;
-    const names = (key: string): [string, ...string[]] => [
-      t(key),
-      ...languages.filter((l) => l !== current).map((lng) => t(key, { lng })),
-    ];
-    const labels: CommonRuleLabels = {
-      groups: {
-        retinoids: names(groupKeys.retinoids),
-        ahaBha: names(groupKeys.ahaBha),
-        vitaminC: names(groupKeys.vitaminC),
-      },
-      notes: {
-        irritate: t('conflicts.common.irritate'),
-        bpRetinoids: t('conflicts.common.bpRetinoids'),
-      },
-    };
-    return addCommonRules(getDb(), labels);
-  });
+  return useCareMutation(() =>
+    addCommonRules(getDb(), commonRuleLabels(t, i18n.language, languages)),
+  );
 }

@@ -33,7 +33,8 @@ export type IngredientEntrySheetProps = {
 };
 
 /**
- * P4 ingredient entry: one ingredient per line, suggestions for the current line, pasted lists
+ * P4 ingredient entry: one ingredient per line, suggestions for the current line (the person's
+ * ingredients first, then the built-in catalogue, also found by aliases like "Vitamin C"), pasted lists
  * split at commas (with Undo), and a live chip preview. Mount with a new `key` each time it
  * opens so the draft starts from `value`.
  */
@@ -90,7 +91,7 @@ export function IngredientEntrySheet({
               >
                 {suggestions.map((s) => (
                   <Chip
-                    key={s.id}
+                    key={s.key}
                     onPressedChange={() => {
                       const next = replaceLine(text, cursor, s.name);
                       setText(next.value);
@@ -98,7 +99,12 @@ export function IngredientEntrySheet({
                       setSplit(null);
                     }}
                   >
-                    {s.name}
+                    {s.alias
+                      ? t('products.ingredientsSheet.suggestionAlias', {
+                          name: s.name,
+                          alias: s.alias,
+                        })
+                      : s.name}
                   </Chip>
                 ))}
               </ScrollView>

@@ -67,14 +67,57 @@ describe('classifyIngredients', () => {
   });
 });
 
+const names = (list: { name: string }[]) => list.map((s) => s.name);
+
 describe('suggestIngredients', () => {
   it('returns prefix matches before substring matches', () => {
-    expect(suggestIngredients('gly', known).map((k) => k.id)).toEqual([2, 3]);
-    expect(suggestIngredients('acid', known).map((k) => k.id)).toEqual([5, 3, 4]);
-    expect(suggestIngredients('ACID', known, 2).map((k) => k.id)).toEqual([5, 3]);
+    expect(names(suggestIngredients('gly', known, 5, []))).toEqual(['Glycerin', 'Glycolic acid']);
+    expect(names(suggestIngredients('acid', known, 5, []))).toEqual([
+      'Ascorbic acid',
+      'Glycolic acid',
+      'Salicylic acid',
+    ]);
+    expect(names(suggestIngredients('ACID', known, 2, []))).toEqual([
+      'Ascorbic acid',
+      'Glycolic acid',
+    ]);
   });
   it('ignores empty input and exact matches', () => {
-    expect(suggestIngredients('  ', known)).toEqual([]);
-    expect(suggestIngredients('glycerin', known)).toEqual([]);
+    expect(suggestIngredients('  ', known, 5, [])).toEqual([]);
+    expect(suggestIngredients('glycerin', known, 5, [])).toEqual([]);
+  });
+
+  const catalog = [
+    { name: 'Glycerin', aliases: ['Glycerol'] },
+    { name: 'Glyceryl stearate', aliases: [] },
+    { name: 'Ascorbic acid', aliases: ['Vitamin C', 'Vitaminas C'] },
+    { name: 'Tocopherol', aliases: ['Vitamin E'] },
+    { name: 'Tocopheryl acetate', aliases: ['Vitamin E acetate'] },
+    { name: 'Aqua', aliases: ['Water', 'Vanduo'] },
+  ];
+
+  it("adds catalogue entries after the person's own, without repeating theirs", () => {
+    expect(suggestIngredients('glyc', known, 5, catalog)).toEqual([
+      { key: 'glycerin', name: 'Glycerin', alias: null },
+      { key: 'glycolic acid', name: 'Glycolic acid', alias: null },
+      { key: 'glyceryl stearate', name: 'Glyceryl stearate', alias: null },
+    ]);
+  });
+  it('matches aliases and names the alias that matched', () => {
+    expect(suggestIngredients('vitamin e', [], 5, catalog)).toEqual([
+      { key: 'tocopherol', name: 'Tocopherol', alias: 'Vitamin E' },
+      { key: 'tocopheryl acetate', name: 'Tocopheryl acetate', alias: 'Vitamin E acetate' },
+    ]);
+    // A full alias comes first, even before names that start with the text.
+    expect(names(suggestIngredients('vitamin c', known, 5, catalog))).toEqual(['Ascorbic acid']);
+    expect(suggestIngredients('vanduo', [], 5, catalog)[0]).toMatchObject({
+      name: 'Aqua',
+      alias: 'Vanduo',
+    });
+    // Accents don't matter: "vitaminas c" also finds "Vitaminas C".
+    expect(suggestIngredients('VITAMINAS', [], 5, catalog)[0]?.alias).toBe('Vitaminas C');
+  });
+  it('shows no alias when the name itself matches', () => {
+    expect(suggestIngredients('toco', [], 5, catalog).map((s) => s.alias)).toEqual([null, null]);
   });
 });

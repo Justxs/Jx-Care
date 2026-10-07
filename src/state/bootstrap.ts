@@ -1,6 +1,7 @@
 import { getDb } from '@/db';
 import { queryClient } from '@/db/queryClient';
 import { qk } from '@/db/queryKeys';
+import { seedDefaultRules } from '@/features/conflicts/seed';
 import { checkOnboarding } from '@/features/onboarding/gate';
 import { getSettings, hasSettingsRow } from '@/features/settings/repo';
 import { purgeOldBought } from '@/features/shopping/repo';
@@ -21,6 +22,12 @@ export async function bootstrapAfterMigrations(): Promise<void> {
   purgeOldBought(db, Date.now());
   if (hasSettingsRow(db)) {
     await setLanguage(settings.language, { persist: false });
+    // Installs from before the default conflict rules get them once (a no-op afterwards).
+    try {
+      seedDefaultRules(db, settings.language);
+    } catch {
+      // Never blocks the launch; the next launch tries again.
+    }
     await prefetchToday(queryClient, appStore.state.activeDay).catch(() => {});
   }
   // First launch or a missing PIN: onboarding (wipes secure keys left by an old install).

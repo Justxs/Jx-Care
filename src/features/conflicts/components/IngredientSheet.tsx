@@ -12,6 +12,7 @@ import { SelectField } from '@/components/ui/select-field';
 import { Separator } from '@/components/ui/separator';
 import { Sheet } from '@/components/ui/sheet';
 import { Text } from '@/components/ui/text';
+import { catalogEntry } from '@/lib/ingredientCatalog';
 import { normalizeName, tidy } from '@/lib/text';
 import { showToast } from '@/state/ui';
 
@@ -33,7 +34,8 @@ export type IngredientSheetProps = {
 const NO_GROUP = 'none';
 
 /**
- * S2 ingredient sheet: rename (into an existing name merges), set the group, see the products
+ * S2 ingredient sheet: rename (into an existing name merges), what it does (for catalogue
+ * ingredients, see `src/lib/ingredientCatalog.ts`), set the group, see the products
  * (each opens P2), and delete when nothing uses it. Mount with a new `key` each time it opens.
  */
 export function IngredientSheet({ open, onClose, ingredient, groups }: IngredientSheetProps) {
@@ -46,6 +48,7 @@ export function IngredientSheet({ open, onClose, ingredient, groups }: Ingredien
   const rename = useRenameIngredient();
   const setGroup = useSetIngredientGroup();
   const remove = useDeleteIngredient();
+  const about = catalogEntry(ingredient.normalizedName);
   const unused = ingredient.productCount + ingredient.ruleCount + ingredient.avoidCount === 0;
 
   const nameChanged = tidy(name) !== ingredient.name;
@@ -96,6 +99,16 @@ export function IngredientSheet({ open, onClose, ingredient, groups }: Ingredien
           }}
           autoCorrect={false}
         />
+        {about ? (
+          <Field label={t('ingredients.sheet.whatItDoes')} noHelper>
+            <Text className="text-body">{t(`ingredients.category.${about.category}`)}</Text>
+            {about.aliases.length > 0 ? (
+              <Text className="text-caption text-ink-muted">
+                {t('ingredients.sheet.alsoCalled', { names: about.aliases.join(', ') })}
+              </Text>
+            ) : null}
+          </Field>
+        ) : null}
         <SelectField
           label={t('ingredients.sheet.group')}
           mode="menu"

@@ -11,6 +11,7 @@ import {
   productIngredient,
   routine,
   routineStep,
+  settings,
 } from '@/db/schema';
 import { appDay } from '@/lib/appDay';
 import {
@@ -23,7 +24,13 @@ import {
 import type { RoutineLite, StepLite } from '@/lib/schedule';
 import { normalizeName, tidy } from '@/lib/text';
 
-import { commonGroups, commonRules, type CommonRuleLabels, type CommonSide } from './commonRules';
+import {
+  COMMON_RULES_VERSION,
+  commonGroups,
+  commonRules,
+  type CommonRuleLabels,
+  type CommonSide,
+} from './commonRules';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -589,6 +596,19 @@ export function addCommonRules(db: Db, labels: CommonRuleLabels): CommonRulesRes
     }
     return { groupsAdded, rulesAdded };
   });
+}
+
+/**
+ * The default rules, added once: on first launch (after onboarding creates the settings row) and,
+ * for installs from before they existed, on the next launch. Does nothing without a settings row
+ * or when this version of the pack was already added; returns what it added, or null.
+ */
+export function seedCommonRules(db: Db, labels: CommonRuleLabels): CommonRulesResult | null {
+  const row = db.select({ version: settings.commonRulesVersion }).from(settings).get();
+  if (!row || row.version >= COMMON_RULES_VERSION) return null;
+  const result = addCommonRules(db, labels);
+  db.update(settings).set({ commonRulesVersion: COMMON_RULES_VERSION }).run();
+  return result;
 }
 
 // ─── Conflict input ─────────────────────────────────────────────────────────

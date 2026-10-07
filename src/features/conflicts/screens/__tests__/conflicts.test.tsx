@@ -115,9 +115,9 @@ describe('ConflictsScreen', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Add common rules' }));
     expect(await screen.findByText(/Mild means one of the steps runs every few days/)).toBeTruthy();
-    expect(screen.getAllByText('No conflicts')).toHaveLength(3);
+    expect(screen.getAllByText('No conflicts')).toHaveLength(8);
     expect(screen.getAllByText('Can irritate when used on the same day')).toHaveLength(2);
-    expect(uiStore.state.toasts.at(-1)?.message).toBe('Added 3 common rules');
+    expect(uiStore.state.toasts.at(-1)?.message).toBe('Added 8 common rules');
     // A group side says so when spoken.
     expect(
       screen.getByLabelText(
@@ -128,7 +128,7 @@ describe('ConflictsScreen', () => {
 
     await act(() => setI18nLanguage('lt'));
     expect(await screen.findByRole('button', { name: 'Nauja taisyklė' })).toBeTruthy();
-    expect(screen.getAllByText('Konfliktų nėra')).toHaveLength(3);
+    expect(screen.getAllByText('Konfliktų nėra')).toHaveLength(8);
   });
 
   it('shows In N routines or No conflicts for seeded routines, never counting A against B', async () => {
@@ -344,6 +344,9 @@ describe('IngredientsScreen', () => {
       await screen.findByTestId(`ingredient-row-${idOf(app.db, 'Niacinamide')}`),
     );
     expect(await screen.findByText('Serum')).toBeTruthy();
+    // A catalogue ingredient says what it does and what else it is called.
+    expect(screen.getByText('Brightening')).toBeTruthy();
+    expect(screen.getByText('Also called Vitamin B3, Nicotinamide, Vitaminas B3')).toBeTruthy();
     await fireEvent.press(screen.getByRole('link', { name: 'Serum' }));
     expect(router.push).toHaveBeenCalledWith(`/products/${serum}`);
 

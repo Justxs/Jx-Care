@@ -73,3 +73,12 @@ export const LongNames: Story = {
   },
   decorators: [withAppData({ seed: seedDemo })],
 };
+
+/**
+ * The last line is an everyday name: the built-in catalogue suggests the INCI name with the alias
+ * that matched ("Ascorbic acid (Vitamin C)"), even on an empty install.
+ */
+export const CatalogueSuggestions: Story = {
+  args: { value: 'Aqua\nVitamin C' },
+  decorators: [withAppData({ seed: seedEmpty })],
+};

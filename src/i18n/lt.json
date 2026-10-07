@@ -536,7 +536,8 @@
       "save_few": "Išsaugoti {{count}} medžiagas",
       "save_many": "Išsaugoti {{count}} medžiagos",
       "save_other": "Išsaugoti {{count}} medžiagų",
-      "suggestions": "Pasiūlymai"
+      "suggestions": "Pasiūlymai",
+      "suggestionAlias": "{{name}} ({{alias}})"
     },
     "detail": {
       "title": "Produktas",
@@ -1478,7 +1479,9 @@
       "delete": "Ištrinti ingredientą",
       "inUse": "Naudojamas produkte, konflikto taisyklėje arba vengiamų sąraše, todėl ištrinti negalima.",
       "deleteTitle": "Ištrinti {{name}}?",
-      "deleteBody": "Jis niekur nenaudojamas. To atšaukti negalima."
+      "deleteBody": "Jis niekur nenaudojamas. To atšaukti negalima.",
+      "whatItDoes": "Kam skirta",
+      "alsoCalled": "Dar vadinama: {{names}}"
     },
     "groupSheet": {
       "titleNew": "Nauja grupė",
@@ -1505,6 +1508,35 @@
       "deleteRules_other": "Kartu bus ištrinta {{count}} ją naudojančių konflikto taisyklių.",
       "deleteAvoid": "Ji taip pat bus pašalinta iš vengiamų sąrašo.",
       "deleteFinal": "To atšaukti negalima."
+    },
+    "category": {
+      "humectant": "Drėkiklis",
+      "emollient": "Minkštiklis",
+      "oil": "Augalinis aliejus",
+      "barrier": "Odos barjero palaikymas",
+      "silicone": "Silikonas",
+      "cleanser": "Valiklis",
+      "emulsifier": "Emulsiklis",
+      "thickener": "Tirštiklis ar tekstūra",
+      "solvent": "Tirpiklis",
+      "preservative": "Konservantas",
+      "fragrance": "Kvapioji medžiaga",
+      "phAdjuster": "pH reguliatorius",
+      "chelator": "Chelatinė medžiaga",
+      "antioxidant": "Antioksidantas",
+      "vitaminC": "Vitaminas C",
+      "retinoid": "Retinoidas",
+      "exfoliant": "Šveičiamoji rūgštis",
+      "peptide": "Peptidas",
+      "antiAgeing": "Nuo senėjimo",
+      "soothing": "Raminanti",
+      "brightening": "Šviesinanti",
+      "acne": "Nuo spuogų",
+      "antiDandruff": "Nuo pleiskanų",
+      "sunscreen": "UV filtras",
+      "colourant": "Dažiklis",
+      "hair": "Plaukų priežiūra",
+      "plantExtract": "Augalų ekstraktas"
     }
   },
   "conflicts": {
@@ -1532,7 +1564,12 @@
       "ahaBha": "AHA/BHA",
       "vitaminC": "Vitaminas C",
       "irritate": "Naudojant tą pačią dieną gali dirginti",
-      "bpRetinoids": "Benzoilo peroksidas gali susilpninti retinoidų poveikį"
+      "bpRetinoids": "Benzoilo peroksidas gali susilpninti retinoidų poveikį",
+      "dryIrritate": "Kartu gali sausinti ir dirginti odą",
+      "bpVitaminC": "Benzoilo peroksidas gali oksiduoti vitaminą C ir susilpninti jo poveikį",
+      "bpHydroquinone": "Kartu gali palikti laikinų tamsių dėmių ant odos",
+      "copperVitaminC": "Vitaminas C gali skaidyti vario peptidus",
+      "copperAcids": "Rūgštys gali skaidyti vario peptidus"
     },
     "sheet": {
       "titleNew": "Nauja taisyklė",

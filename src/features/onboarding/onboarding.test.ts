@@ -1,5 +1,6 @@
 import { setDb } from '@/db';
 import { createTestDb } from '@/db/test-db';
+import { listRules } from '@/features/conflicts/repo';
 import { createMemoryKV } from '@/features/security/secureStore';
 import { createPinService } from '@/features/security/pin';
 import { getSettings, hasSettingsRow, saveSettings } from '@/features/settings/repo';
@@ -151,6 +152,14 @@ describe('saveOnboarding', () => {
     expect(needsOnboarding(db)).toBe(false);
     expect(draftStore.state).toMatchObject({ saved: true, biometricKind: 'face' });
     expect(lockStore.state.locked).toBe(false);
+    // The default conflict rules, named in the chosen language.
+    const rules = listRules(db);
+    expect(rules).toHaveLength(8);
+    expect(rules[0]).toMatchObject({
+      left: { name: 'Retinoidai' },
+      note: 'Naudojant tą pačią dieną gali dirginti',
+    });
+    expect(getSettings(db).commonRulesVersion).toBe(1);
   });
 
   it('saves nothing when secure storage refuses', async () => {

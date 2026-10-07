@@ -128,3 +128,5 @@ Choices the spec left open, made here so every task agrees. Change them here if 
 | Hair "twice a week" in quick setup | Set days Monday and Thursday |
 | Hair "every few weeks" | Stored as a number of days with a weeks unit for display |
 | Tests for repositories | Run in Node on better-sqlite3 with the same Drizzle schema and migrations |
+| Default conflict rules | Seeded once as ordinary, editable rows: by `saveOnboarding` in the chosen language, and at boot for older installs (`settings.common_rules_version`, migration 0002). Bump `COMMON_RULES_VERSION` in `commonRules.ts` when the pack grows (Justas, 2026-10-07) |
+| Ingredient catalogue | `src/lib/ingredientCatalog.ts`: about 420 INCI names with aliases (EN and some LT) and a translated category; bundled reference data for autocomplete and the S2 sheet, not rows in the `ingredient` table (Justas, 2026-10-07) |

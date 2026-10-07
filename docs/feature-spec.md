@@ -127,7 +127,20 @@ Every list has a title, one line of body text and at most one action.
 | Avoid list | Nothing to avoid yet | Add ingredients that irritate you. Products that contain them get a red Avoid badge. | Add ingredient |
 | Conflicts | No conflict rules | Start with common pairs, like retinol with AHA, or write your own. | Add common rules (secondary: Add a rule) |
 
-"Add common rules" adds editable rules: retinoids × AHA/BHA, retinoids × benzoyl peroxide, vitamin C × AHA/BHA.
+The app starts with these default rules, added on first launch (in the language chosen in onboarding) and once for installs from before they existed. They are ordinary rules the person can edit or delete; "Add common rules" (here, when every rule was deleted) puts back any that are missing:
+
+| Rule | Note |
+| --- | --- |
+| Retinoids × AHA/BHA | Can irritate when used on the same day |
+| Retinoids × benzoyl peroxide | Benzoyl peroxide can make retinoids less effective |
+| Vitamin C × AHA/BHA | Can irritate when used on the same day |
+| AHA/BHA × benzoyl peroxide | Together they can dry out and irritate the skin |
+| Vitamin C × benzoyl peroxide | Benzoyl peroxide can oxidise vitamin C and make it less effective |
+| Hydroquinone × benzoyl peroxide | Together they can leave temporary dark stains on the skin |
+| Copper tripeptide-1 × vitamin C | Vitamin C can break down copper peptides |
+| Copper tripeptide-1 × AHA/BHA | Acids can break down copper peptides |
+
+The groups are Retinoids (retinol, retinal, retinyl palmitate, acetate and propionate, hydroxypinacolone retinoate, adapalene, tretinoin, tazarotene, trifarotene), AHA/BHA (glycolic, lactic, mandelic, malic and salicylic acid, betaine salicylate, capryloyl salicylic acid) and Vitamin C (ascorbic acid, sodium and magnesium ascorbyl phosphate, ascorbyl glucoside, ethyl and 3-O-ethyl ascorbic acid, tetrahexyldecyl ascorbate). Conflicts are checked across the whole day, so pairs that are fine morning and evening (retinoids with vitamin C, niacinamide with vitamin C) are not defaults. Group names and notes are translated when they are added; ingredient names are INCI names in both languages.
 
 ## Navigation map
 
@@ -347,7 +360,7 @@ Live preview at the bottom: "Expires on 6 Apr 2027 (in 182 days)". An avoided in
 
 ### P4 Ingredient entry
 
-Ingredients are entered one per line in a multi-line field, not separated by commas: each line is one ingredient and Enter starts the next. While typing a line, matching ingredients from the user's list are suggested above the keyboard; tapping one fills the line. Pasting a list with one ingredient per line works the same way. Blank lines are ignored, extra spaces are trimmed and duplicates are merged. Below the field, a live preview shows the parsed ingredients as chips: chips in a conflict show a small link icon, avoided ones show red, and ones not yet in the user's list show a "New" tag. Done saves the list and adds new ingredients to the user's list. Product detail links here with "Edit list".
+Ingredients are entered one per line in a multi-line field, not separated by commas: each line is one ingredient and Enter starts the next. While typing a line, matching ingredients are suggested above the keyboard: first from the user's list, then from the built-in catalogue of about 400 common ingredients by INCI name. The catalogue also matches everyday names and some Lithuanian ones ("Vitamin C", "Shea butter", "Vanduo"); such a suggestion shows the name that matched in brackets ("Ascorbic acid (Vitamin C)") and tapping it fills the line with the INCI name. Catalogue ingredients only join the user's list once a product uses them. Pasting a list with one ingredient per line works the same way. Blank lines are ignored, extra spaces are trimmed and duplicates are merged. Below the field, a live preview shows the parsed ingredients as chips: chips in a conflict show a small link icon, avoided ones show red, and ones not yet in the user's list show a "New" tag. Done saves the list and adds new ingredients to the user's list. Product detail links here with "Edit list".
 
 Pasted lists: when pasted text contains a line with two or more commas (a list copied from a pack or a shop), that line is split at the commas and the hint reads "Pasted list split at commas into 5 lines." with Undo. Typed text is never split. The chip preview and the button ("Save 5 ingredients") always match the parsed lines.
 
@@ -468,7 +481,7 @@ Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), 
 
 ### S2 Ingredients + groups
 
-- Tabs: Ingredients / Groups. Ingredient row: name, group chip, "in 4 products". Tap: rename, set group, see products. Merge duplicates ("Niacinamide" + "niacinamide") via the header word Select.
+- Tabs: Ingredients / Groups. Ingredient row: name, group chip, "in 4 products". Tap: rename, set group, see products. For ingredients in the built-in catalogue the sheet also says what it does ("Humectant", translated) and its other names ("Also called Vitamin B3, Nicotinamide"). Merge duplicates ("Niacinamide" + "niacinamide") via the header word Select.
 - Group row: name, member count; editor lists members with add/remove.
 
 ### S3 Conflicts + editor
@@ -476,6 +489,7 @@ Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), 
 - List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note ("Can cause flushing"), number of routines it currently fires in, or "No conflicts" when its two sides never fall on the same day.
 - Intro line explains mild: "Mild means one of the steps runs every few days, so they only meet on some days." Rules have no strength of their own. New rule is the Fab.
 - Editor sheet: left side picker, right side picker, note. Saving re-checks all routines and shows "Affects 2 routines".
+- The list starts with the default rules (see Empty states); the empty state only shows once all of them are deleted.
 
 ### S4 Avoid list
 

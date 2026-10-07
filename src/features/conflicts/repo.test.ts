@@ -7,8 +7,9 @@ import { createProduct, productIngredients } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
 import { saveRoutine, type SaveRoutineInput } from '@/features/routines/repo';
 import type { StepInput } from '@/features/routines/schema';
+import { getSettings, saveSettings } from '@/features/settings/repo';
 
-import type { CommonRuleLabels } from './commonRules';
+import { COMMON_RULES_VERSION, type CommonRuleLabels } from './commonRules';
 import {
   addCommonRules,
   conflictInput,
@@ -30,6 +31,7 @@ import {
   SameSidesError,
   saveGroup,
   saveRule,
+  seedCommonRules,
   setIngredientGroup,
 } from './repo';
 
@@ -83,6 +85,11 @@ const labels: CommonRuleLabels = {
   notes: {
     irritate: 'Can irritate when used on the same day',
     bpRetinoids: 'Benzoyl peroxide can make retinoids less effective',
+    dryIrritate: 'Together they can dry out and irritate the skin',
+    bpVitaminC: 'Benzoyl peroxide can oxidise vitamin C and make it less effective',
+    bpHydroquinone: 'Together they can leave temporary dark stains on the skin',
+    copperVitaminC: 'Vitamin C can break down copper peptides',
+    copperAcids: 'Acids can break down copper peptides',
   },
 };
 
@@ -451,7 +458,7 @@ describe('rules', () => {
     addCommonRules(lonely, labels);
     saveRoutine(lonely, routineInput({ name: 'Evening A', steps: [step({ productId: r })] }));
     saveRoutine(lonely, routineInput({ name: 'Evening B', steps: [step({ productId: a })] }));
-    expect(listRulesWithCounts(lonely).map((x) => x.routineCount)).toEqual([0, 0, 0]);
+    expect(listRulesWithCounts(lonely).map((x) => x.routineCount)).toEqual(Array(8).fill(0));
   });
 });
 
@@ -459,7 +466,7 @@ describe('addCommonRules', () => {
   it('links existing ingredients by normalized name and creates the missing ones', () => {
     const p = createProduct(db, productInput({ ingredients: ['RETINOL', 'Salicylic  Acid'] }));
     const before = listIngredients(db).length;
-    expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 3, rulesAdded: 3 });
+    expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 3, rulesAdded: 8 });
 
     // The product's own spellings are kept and now sit in the new groups.
     expect(productIngredients(db, p)).toMatchObject([
@@ -468,16 +475,22 @@ describe('addCommonRules', () => {
     ]);
     const groups = listGroups(db);
     expect(groups.map((g) => [g.name, g.memberCount])).toEqual([
-      ['AHA/BHA', 5],
-      ['Retinoids', 6],
-      ['Vitamin C', 6],
+      ['AHA/BHA', 7],
+      ['Retinoids', 10],
+      ['Vitamin C', 7],
     ]);
-    // 17 group members plus benzoyl peroxide, two of which existed.
-    expect(listIngredients(db).length).toBe(before + 16);
+    // 24 group members plus benzoyl peroxide, hydroquinone and copper tripeptide-1, two of
+    // which existed.
+    expect(listIngredients(db).length).toBe(before + 25);
     expect(listRules(db).map((r) => `${r.left.name} × ${r.right.name}: ${r.note}`)).toEqual([
       'Retinoids × AHA/BHA: Can irritate when used on the same day',
       'Retinoids × Benzoyl peroxide: Benzoyl peroxide can make retinoids less effective',
       'Vitamin C × AHA/BHA: Can irritate when used on the same day',
+      'AHA/BHA × Benzoyl peroxide: Together they can dry out and irritate the skin',
+      'Vitamin C × Benzoyl peroxide: Benzoyl peroxide can oxidise vitamin C and make it less effective',
+      'Hydroquinone × Benzoyl peroxide: Together they can leave temporary dark stains on the skin',
+      'Copper tripeptide-1 × Vitamin C: Vitamin C can break down copper peptides',
+      'Copper tripeptide-1 × AHA/BHA: Acids can break down copper peptides',
     ]);
     expect(listIngredients(db).find((i) => i.name === '3-O-ethyl ascorbic acid')?.groupName).toBe(
       'Vitamin C',
@@ -499,7 +512,9 @@ describe('addCommonRules', () => {
         ahaBha: ['AHA/BHA'],
         vitaminC: ['Vitaminas C', 'Vitamin C'],
       },
-      notes: { irritate: 'LT', bpRetinoids: 'LT' },
+      notes: Object.fromEntries(
+        Object.keys(labels.notes).map((k) => [k, 'LT']),
+      ) as CommonRuleLabels['notes'],
     };
     expect(addCommonRules(db, lt)).toEqual({ groupsAdded: 0, rulesAdded: 0 });
     expect(snapshot()).toEqual(first);
@@ -515,6 +530,37 @@ describe('addCommonRules', () => {
     const rule = listRules(db).find((r) => r.right.name === 'Benzoyl peroxide')!;
     deleteRule(db, rule.id);
     expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 0, rulesAdded: 1 });
+  });
+});
+
+describe('seedCommonRules', () => {
+  it('needs the settings row, adds the pack once and records the version', () => {
+    expect(seedCommonRules(db, labels)).toBeNull();
+    expect(listRules(db)).toEqual([]);
+
+    saveSettings(db, { language: 'en' });
+    expect(seedCommonRules(db, labels)).toEqual({ groupsAdded: 3, rulesAdded: 8 });
+    expect(getSettings(db).commonRulesVersion).toBe(COMMON_RULES_VERSION);
+
+    // Deleted defaults stay deleted: seeding runs once per version.
+    deleteRule(db, listRules(db)[0]!.id);
+    expect(seedCommonRules(db, labels)).toBeNull();
+    expect(listRules(db)).toHaveLength(7);
+  });
+
+  it('adds the pack to an install that already has its own rules and ingredients', () => {
+    createProduct(db, productInput({ ingredients: ['Retinol', 'Niacinamide'] }));
+    saveRule(db, {
+      leftKind: 'ingredient',
+      leftId: idOf(db, 'Retinol'),
+      rightKind: 'ingredient',
+      rightId: idOf(db, 'Niacinamide'),
+      note: 'Mine',
+    });
+    saveSettings(db, { language: 'lt' });
+    expect(seedCommonRules(db, labels)?.rulesAdded).toBe(8);
+    expect(listRules(db)).toHaveLength(9);
+    expect(listRules(db)[0]?.note).toBe('Mine');
   });
 });
 
