@@ -22,9 +22,16 @@
   "hero": {
     "title": "Know what to put on today",
     "lead": "Jx Care keeps track of your skin and hair care products: when each one expires, what to use in the morning and evening, when to wash your hair, and how your skin changes week to week. Everything stays on your phone, behind a PIN.",
+    "demo": "View demo",
     "primary": "See what's inside",
     "source": "See it on GitHub",
     "soon": "Coming to iOS and Android. It is not in the App Store or Google Play yet."
+  },
+  "demo": {
+    "title": "Jx Care demo",
+    "note": "Sample data. Nothing you do here is saved.",
+    "close": "Close demo",
+    "loading": "Loading the demo…"
   },
   "sample": {
     "tag": "Sample data",

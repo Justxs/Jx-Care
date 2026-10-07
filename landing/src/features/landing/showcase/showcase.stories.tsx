@@ -11,6 +11,7 @@ import {
   ShoppingCard,
   StreakCard,
 } from './sample-cards';
+import { DemoDialog } from './demo-dialog';
 import { TodayPhone } from './today-phone';
 
 const meta = {
@@ -41,4 +42,10 @@ export const Shopping: Story = { render: () => <ShoppingCard /> };
 export const Phone: Story = {
   decorators: [(Story) => <Story />],
   render: () => <TodayPhone />,
+};
+
+/** Opened by "View demo". Storybook has no demo build, so it stays on its loading line. */
+export const Demo: Story = {
+  decorators: [(Story) => <Story />],
+  render: () => <DemoDialog open onClose={() => {}} />,
 };

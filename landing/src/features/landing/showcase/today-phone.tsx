@@ -8,7 +8,7 @@ import {
   Pipette,
   Settings,
 } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { StatusBadge } from '@/components/badges';
@@ -17,7 +17,6 @@ import { cn } from '@/lib/cn';
 import { longDate } from '@/lib/format';
 import { useLocale } from '@/stores/preferences';
 
-import { LiveDemo } from './live-demo';
 import { ProductThumb } from './sample-cards';
 import { Meter } from './showcase-card';
 
@@ -133,8 +132,8 @@ function SideButton({ className }: Readonly<{ className: string }>) {
 
 /**
  * The app's Today screen in a phone frame, at a fixed size so the page never shifts while it
- * animates. The rows settle in one after another once the phone has risen in; then the live demo
- * of the real app, when it is built, fades in over the drawing.
+ * animates. The rows settle in one after another once the phone has risen in. The real app opens
+ * from the hero's "View demo" button (DemoDialog), not in here.
  */
 export function TodayPhone({ className }: Readonly<{ className?: string }>) {
   const { t } = useTranslation();
@@ -142,8 +141,6 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
   const morningId = useId();
   const hairId = useId();
   const expiringId = useId();
-  // Once the real app shows, the drawing under it leaves the accessibility tree and tab order.
-  const [live, setLive] = useState(false);
 
   return (
     <figure
@@ -179,7 +176,7 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
             >
               <StatusBar />
 
-              <div inert={live} className="flex min-h-0 flex-1 flex-col px-4 pt-2">
+              <div className="flex min-h-0 flex-1 flex-col px-4 pt-2">
                 <div className="px-1">
                   <p className="text-display font-bold tracking-tight">{t('sample.greeting')}</p>
                   <p className="text-body text-ink-muted first-letter:uppercase">
@@ -296,12 +293,6 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
                   <span className="h-[5px] w-[134px] rounded-full bg-ink" />
                 </div>
               </div>
-
-              {/* The real app between the status bar and the home indicator, once it has loaded. */}
-              <LiveDemo
-                className="absolute top-[54px] left-0 h-[756px] w-full"
-                onReady={() => setLive(true)}
-              />
             </div>
           </div>
         </div>

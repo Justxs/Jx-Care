@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import { useId } from 'react';
+import { ArrowRight, ArrowUpRight, Play } from 'lucide-react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { buttonClasses } from '@/components/button';
@@ -19,6 +19,7 @@ import {
   ProductsCard,
   RoutineCard,
 } from './showcase/sample-cards';
+import { DemoDialog } from './showcase/demo-dialog';
 import { TodayPhone } from './showcase/today-phone';
 
 const facts = [
@@ -40,6 +41,7 @@ const privacyItems = ['pin', 'tracking', 'switcher', 'photos', 'backup'] as cons
 
 function Hero() {
   const { t } = useTranslation();
+  const [demoOpen, setDemoOpen] = useState(false);
 
   return (
     <div
@@ -56,7 +58,16 @@ function Hero() {
           {t('hero.lead')}
         </p>
         <div className="mt-9 flex flex-wrap gap-3">
-          <Link to="/features" className={buttonClasses({ size: 'lg' })}>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            onClick={() => setDemoOpen(true)}
+            className={buttonClasses({ size: 'lg' })}
+          >
+            <Play aria-hidden="true" />
+            {t('hero.demo')}
+          </button>
+          <Link to="/features" className={buttonClasses({ variant: 'outline', size: 'lg' })}>
             {t('hero.primary')}
             <ArrowRight aria-hidden="true" />
           </Link>
@@ -71,6 +82,7 @@ function Hero() {
         <p className="mt-6 max-w-[46ch] text-label text-ink-muted">{t('hero.soon')}</p>
       </div>
       <ShowcaseStage />
+      <DemoDialog open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
 }

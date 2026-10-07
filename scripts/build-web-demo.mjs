@@ -1,5 +1,5 @@
 // Builds the website's live demo: the app's real tab screens on the story data, exported for the
-// web into landing/public/demo, where the landing page frames it inside its drawn phone.
+// web into landing/public/demo, which the landing page opens from its View demo button.
 // Run with `pnpm web-demo` (or `pnpm demo` in landing/). Routes come from src/web-demo/routes
 // (app.config.js), the database is sql.js in memory, and nothing is stored in the browser.
 //
@@ -7,7 +7,7 @@
 // JX_WEB_DEMO_BASE_URL, e.g. JX_WEB_DEMO_BASE_URL=/Jx-Care/demo pnpm web-demo.
 //
 // With --if-missing (landing's `pnpm dev`), an existing build is kept, and a failed build only
-// warns: the page then shows its drawn phone instead of stopping the dev server.
+// warns, so the dev server still starts (View demo then stays on its loading line).
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -35,7 +35,7 @@ const result = spawnSync('pnpm', ['expo', 'export', '--platform', 'web', '--outp
 if (result.status !== 0) {
   if (ifMissing) {
     console.warn(
-      'Web demo build failed; the phone shows its drawing. Run `pnpm install` at the repo root, then `pnpm demo`.',
+      'Web demo build failed, so View demo has nothing to show. Run `pnpm install` at the repo root, then `pnpm demo`.',
     );
     process.exit(0);
   }

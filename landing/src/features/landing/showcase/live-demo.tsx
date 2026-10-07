@@ -6,9 +6,8 @@ import { type Theme, useLocale, useTheme } from '@/stores/preferences';
 
 /**
  * The app itself, running in the page: its real tab screens on sample data, built from the app's
- * code by `pnpm demo` (../scripts/build-web-demo.mjs) into public/demo. It sits over the drawn
- * screen at the same size and fades in only once it has drawn, so nothing moves; without a demo
- * build (local dev, tests) the drawing simply stays.
+ * code by `pnpm demo` (../scripts/build-web-demo.mjs) into public/demo. DemoDialog shows it when
+ * the visitor presses View demo; it fades in only once it has drawn, so nothing moves.
  */
 const DEMO_URL = 'demo/index.html';
 
