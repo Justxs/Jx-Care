@@ -3,6 +3,8 @@ import {
   routineRunsOn,
   stepScheduleAllows,
   timeOfDayKey,
+  todayGroups,
+  type RoutineChoiceLite,
   type RoutineLite,
   type StepLite,
 } from './schedule';
@@ -172,11 +174,27 @@ export function weeklyConflicts(input: ConflictInput): ConflictHit[] {
   return hits;
 }
 
-/** Conflicts among steps actually due on a date (player and Today); never mild. */
-export function dayConflicts(input: ConflictInput, day: string): ConflictHit[] {
+/**
+ * Conflicts among steps actually due on a date (player and Today); never mild. Of the A/B options
+ * at one time of day only the one picked for that day counts, as Today shows it: the weekday's
+ * remembered choice, else the first. `shownId`, the routine a card or the player shows, counts as
+ * picked at its own time of day.
+ */
+export function dayConflicts(
+  input: ConflictInput,
+  day: string,
+  choices: readonly RoutineChoiceLite[] = [],
+  shownId?: number,
+): ConflictHit[] {
+  const picked = new Set(
+    todayGroups(input.routines, input.steps, day, choices).map(
+      (g) => g.routines.find((r) => r.id === shownId)?.id ?? g.chosenId,
+    ),
+  );
   const candidates = sortedCandidates(
     input,
-    (step, routine) => routineRunsOn(routine, day) && stepScheduleAllows(step, day),
+    (step, routine) =>
+      picked.has(routine.id) && routineRunsOn(routine, day) && stepScheduleAllows(step, day),
   );
   return pairHits(candidates, input, weekdayOf(day), true);
 }

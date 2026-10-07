@@ -31,7 +31,7 @@ import {
  * Conflict warnings everywhere they show (task 030): R1 cards, R2 step rows and panel, Today's
  * cards and the player. One cached read of routines, steps, ingredients and rules, with this
  * week's hits worked out once; routine, product, ingredient and rule changes invalidate
- * `qk.conflicts.all`, which refreshes it.
+ * `qk.conflicts.all`, and an A/B pick on Today `qk.conflicts.input`, which refreshes it.
  */
 
 export type { ConflictTarget, DraftRoutine } from './warnings';
@@ -57,11 +57,17 @@ export function useRoutineConflicts(routineId: number): readonly ConflictTarget[
   );
 }
 
-/** A routine's conflicts among the steps due on an app day (T1 card tag, T2 steps); never mild. */
+/**
+ * A routine's conflicts among the steps due on an app day (T1 card tag, T2 steps); never mild.
+ * Other times of day count only their option picked for that day, never the A/B alternative.
+ */
 export function useDayRoutineConflicts(routineId: number, day: string): readonly ConflictTarget[] {
   const data = useConflictData().data;
   return useMemo(
-    () => (data ? targetsFor(data, dayConflicts(data.input, day), routineId) : NO_TARGETS),
+    () =>
+      data
+        ? targetsFor(data, dayConflicts(data.input, day, data.choices, routineId), routineId)
+        : NO_TARGETS,
     [data, day, routineId],
   );
 }

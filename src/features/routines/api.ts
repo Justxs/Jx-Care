@@ -176,6 +176,8 @@ export function useSetChoice() {
       setChoice(getDb(), v.timeOfDayKey, v.weekday, v.routineId),
     onSuccess: () => {
       client.invalidateQueries({ queryKey: qk.today.all });
+      // Today's and the player's conflict checks compare only the picked option.
+      client.invalidateQueries({ queryKey: qk.conflicts.input });
       // The pick decides which routine that weekday's reminder names and opens.
       void resyncRoutineReminders();
     },

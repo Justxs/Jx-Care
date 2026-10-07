@@ -9,6 +9,7 @@ import {
   ruleTokens,
   weeklyConflicts,
   withDraftRoutine,
+  type ConflictHit,
   type ConflictInput,
   type RuleLite,
 } from './conflicts';
@@ -223,6 +224,9 @@ describe('weeklyConflicts', () => {
   });
 });
 
+const routinesIn = (hits: readonly ConflictHit[]) =>
+  hits.map((h) => [h.a.routineId, h.b.routineId]);
+
 describe('dayConflicts', () => {
   it('uses exact interval maths and is never mild', () => {
     const r = routine({ id: 1 });
@@ -243,6 +247,34 @@ describe('dayConflicts', () => {
         '2026-10-05',
       ),
     ).toEqual([]);
+  });
+
+  describe('with A/B options', () => {
+    // 2026-10-05 is a Monday. Retinol in the morning, glycolic in evening A, water in evening B.
+    const MON = '2026-10-05';
+    const morning = routine({ id: 1, timeOfDay: 'morning', sortTime: '07:00' });
+    const eveA = routine({ id: 2 });
+    const eveB = routine({ id: 3 });
+    const day = input({
+      routines: [morning, eveA, eveB],
+      steps: [step(1, 1, 100), step(2, 2, 200), step(3, 3, 400)],
+    });
+    const pickB = [{ timeOfDayKey: 'evening', weekday: 1, routineId: 3 }];
+
+    it('compares the first option when nothing is picked', () => {
+      expect(routinesIn(dayConflicts(day, MON))).toEqual([[1, 2]]);
+    });
+    it('compares only the option picked for that weekday', () => {
+      expect(dayConflicts(day, MON, pickB)).toEqual([]);
+      // A pick for another weekday does not apply.
+      expect(routinesIn(dayConflicts(day, MON, [{ ...pickB[0]!, weekday: 2 }]))).toEqual([[1, 2]]);
+    });
+    it('counts the shown routine as picked at its own time of day', () => {
+      expect(routinesIn(dayConflicts(day, MON, pickB, 2))).toEqual([[1, 2]]);
+      expect(dayConflicts(day, MON, [], 3)).toEqual([]);
+      // Showing the morning routine leaves the evening pick as it is.
+      expect(dayConflicts(day, MON, pickB, 1)).toEqual([]);
+    });
   });
 });
 

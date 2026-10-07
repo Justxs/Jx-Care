@@ -10,6 +10,7 @@ import {
   product,
   productIngredient,
   routine,
+  routineChoice,
   routineStep,
   settings,
 } from '@/db/schema';
@@ -21,7 +22,7 @@ import {
   type ConflictInput,
   type RuleLite,
 } from '@/lib/conflicts';
-import type { RoutineLite, StepLite } from '@/lib/schedule';
+import type { RoutineChoiceLite, RoutineLite, StepLite } from '@/lib/schedule';
 import { normalizeName, tidy } from '@/lib/text';
 
 import {
@@ -688,8 +689,16 @@ export type ConflictNames = {
   notes: Map<number, string | null>;
 };
 
-/** Everything the conflict warnings need, with this week's hits worked out once. */
-export type ConflictData = { input: ConflictInput; names: ConflictNames; weekly: ConflictHit[] };
+/**
+ * Everything the conflict warnings need, with this week's hits worked out once. `choices` are the
+ * remembered A/B picks per weekday, which decide the option a day's checks compare.
+ */
+export type ConflictData = {
+  input: ConflictInput;
+  names: ConflictNames;
+  weekly: ConflictHit[];
+  choices: RoutineChoiceLite[];
+};
 
 const byId = (rows: { id: number; name: string }[]) => new Map(rows.map((r) => [r.id, r.name]));
 
@@ -714,5 +723,10 @@ export function conflictNames(db: DbOrTx): ConflictNames {
 
 export function conflictData(db: DbOrTx): ConflictData {
   const input = conflictInput(db);
-  return { input, names: conflictNames(db), weekly: weeklyConflicts(input) };
+  return {
+    input,
+    names: conflictNames(db),
+    weekly: weeklyConflicts(input),
+    choices: db.select().from(routineChoice).all(),
+  };
 }
