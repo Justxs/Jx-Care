@@ -41,7 +41,7 @@ export const New: Story = { decorators: [withAppData({ seed: seedDemo })] };
 /** A new rule with nothing to pick from yet. */
 export const NothingToPick: Story = { decorators: [withAppData({ seed: seedEmpty })] };
 
-/** Editing "Retinoids × AHA/BHA", with Delete rule. */
+/** Editing "Prescription retinoids × Salicylic acid", with Delete rule. */
 export const Edit: Story = {
   decorators: [withAppData({ seed: seedDemo })],
   render: (args) => <EditRule {...args} which="first" />,

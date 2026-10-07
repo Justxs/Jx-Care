@@ -15,7 +15,7 @@ const fullConflict: ConflictTarget = {
     first: { product: 'Vitamin C 15% Serum', routine: 'Morning' },
     second: { product: 'Glycolic Acid 7% Toner', routine: 'Exfoliating night' },
     weekdays: [1, 3, 5],
-    note: 'Can irritate when used on the same day.',
+    note: 'Stings on the same day',
     mild: false,
   },
   mildStep: null,

@@ -17,7 +17,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** The common rules; vitamin C × AHA/BHA fires in two routines. */
+/** The default rules plus the person's own Ascorbic acid × Glycolic acid (in two routines). */
 export const Demo: Story = { decorators: [withAppData({ seed: seedDemo })] };
 
 /** No rules: Add common rules or Add a rule. */

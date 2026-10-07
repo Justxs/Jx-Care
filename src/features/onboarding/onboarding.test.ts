@@ -154,10 +154,10 @@ describe('saveOnboarding', () => {
     expect(lockStore.state.locked).toBe(false);
     // The default conflict rules, named in the chosen language.
     const rules = listRules(db);
-    expect(rules).toHaveLength(8);
+    expect(rules).toHaveLength(9);
     expect(rules[0]).toMatchObject({
-      left: { name: 'Retinoidai' },
-      note: 'Naudojant tą pačią dieną gali dirginti',
+      left: { name: 'Receptiniai retinoidai' },
+      note: 'Vaistų lapeliai įspėja, kad kartu jie gali dirginti ir sausinti odą',
     });
     expect(getSettings(db).commonRulesVersion).toBe(1);
   });

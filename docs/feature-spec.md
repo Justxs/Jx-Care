@@ -125,22 +125,25 @@ Every list has a title, one line of body text and at most one action.
 | Progress | No photos yet | Take one a week in the same light to see your skin change. | Take first photo |
 | Archive | Nothing finished yet | Products you mark finished move here with their cost per day. | None |
 | Avoid list | Nothing to avoid yet | Add ingredients that irritate you. Products that contain them get a red Avoid badge. | Add ingredient |
-| Conflicts | No conflict rules | Start with common pairs, like retinol with AHA, or write your own. | Add common rules (secondary: Add a rule) |
+| Conflicts | No conflict rules | Start with pairs that drug labels warn about, like tretinoin with benzoyl peroxide, or write your own. | Add common rules (secondary: Add a rule) |
 
 The app starts with these default rules, added on first launch (in the language chosen in onboarding) and once for installs from before they existed. They are ordinary rules the person can edit or delete; "Add common rules" (here, when every rule was deleted) puts back any that are missing:
 
-| Rule | Note |
-| --- | --- |
-| Retinoids × AHA/BHA | Can irritate when used on the same day |
-| Retinoids × benzoyl peroxide | Benzoyl peroxide can make retinoids less effective |
-| Vitamin C × AHA/BHA | Can irritate when used on the same day |
-| AHA/BHA × benzoyl peroxide | Together they can dry out and irritate the skin |
-| Vitamin C × benzoyl peroxide | Benzoyl peroxide can oxidise vitamin C and make it less effective |
-| Hydroquinone × benzoyl peroxide | Together they can leave temporary dark stains on the skin |
-| Copper tripeptide-1 × vitamin C | Vitamin C can break down copper peptides |
-| Copper tripeptide-1 × AHA/BHA | Acids can break down copper peptides |
+Every default rule is backed by a published source; pairings that are popular online but lack evidence (vitamin C with acids, copper peptides with vitamin C, retinol with AHAs, niacinamide with vitamin C) are not defaults, and people can add them as their own rules.
 
-The groups are Retinoids (retinol, retinal, retinyl palmitate, acetate and propionate, hydroxypinacolone retinoate, adapalene, tretinoin, tazarotene, trifarotene), AHA/BHA (glycolic, lactic, mandelic, malic and salicylic acid, betaine salicylate, capryloyl salicylic acid) and Vitamin C (ascorbic acid, sodium and magnesium ascorbyl phosphate, ascorbyl glucoside, ethyl and 3-O-ethyl ascorbic acid, tetrahexyldecyl ascorbate). Conflicts are checked across the whole day, so pairs that are fine morning and evening (retinoids with vitamin C, niacinamide with vitamin C) are not defaults. Group names and notes are translated when they are added; ingredient names are INCI names in both languages.
+| Rule | Note | Source |
+| --- | --- | --- |
+| Prescription retinoids × salicylic acid | Drug labels warn they can irritate and dry the skin together | [Tretinoin gel label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/202567Orig1s000lbl.pdf), [Differin gel label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2007/020380s004lbl.pdf), [Differin lotion label](https://www.accessdata.fda.gov/drugsatfda_docs/nda/2010/022502s000Lbl.pdf) ("particular caution … sulfur, resorcinol, or salicylic acid") |
+| Prescription retinoids × sulfur | Same | Same |
+| Prescription retinoids × resorcinol | Same | Same |
+| Tretinoin × benzoyl peroxide | Benzoyl peroxide breaks down tretinoin | Tretinoin gel label (caution with benzoyl peroxide); [Nighland et al., Cutis 2006](https://www.mdedge.com/dermatology/article/67367/acne/effect-simulated-solar-uv-irradiation-tretinoin-tretinoin-gel): tretinoin gel mixed with a benzoyl peroxide gel kept 7% of its tretinoin after 2 hours and 0% after 6 |
+| Benzoyl peroxide × salicylic acid | Drug labels warn they can irritate and dry the skin together | [21 CFR 333.350](https://www.law.cornell.edu/cfr/text/21/333.350), the required OTC acne label: "skin irritation and dryness is more likely to occur if you use another topical acne medication at the same time" |
+| Benzoyl peroxide × sulfur | Same | Same |
+| Benzoyl peroxide × resorcinol | Same | Same |
+| Hydroquinone × benzoyl peroxide | Together they can stain the skin for a while | [Hydroquinone topical drug information](https://www.drugs.com/mtm/hydroquinone-topical.html): "together with benzoyl peroxide, hydrogen peroxide, or other peroxide products may stain your skin" |
+| Hydroquinone × hydrogen peroxide | Same | Same |
+
+The one group is Prescription retinoids (tretinoin, adapalene): only the retinoids whose labels carry that caution. Adapalene × benzoyl peroxide is not a conflict, since adapalene stays stable with it and the two are sold together as an approved combination. Group names and notes are translated when they are added; ingredient names are INCI names in both languages. The sources are also listed next to the rules in `src/features/conflicts/commonRules.ts`.
 
 ## Navigation map
 

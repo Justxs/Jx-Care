@@ -1412,7 +1412,7 @@
     "ruleLabel": "{{left}} with {{right}}",
     "newRule": "New rule",
     "emptyTitle": "No conflict rules",
-    "emptyBody": "Start with common pairs, like retinol with AHA, or write your own.",
+    "emptyBody": "Start with pairs that drug labels warn about, like tretinoin with benzoyl peroxide, or write your own.",
     "addCommon": "Add common rules",
     "addRule": "Add a rule",
     "commonAdded_one": "Added {{count}} common rule",
@@ -1420,16 +1420,10 @@
     "commonNone": "The common rules are already here",
     "deletedToast": "Rule deleted",
     "common": {
-      "retinoids": "Retinoids",
-      "ahaBha": "AHA/BHA",
-      "vitaminC": "Vitamin C",
-      "irritate": "Can irritate when used on the same day",
-      "bpRetinoids": "Benzoyl peroxide can make retinoids less effective",
-      "dryIrritate": "Together they can dry out and irritate the skin",
-      "bpVitaminC": "Benzoyl peroxide can oxidise vitamin C and make it less effective",
-      "bpHydroquinone": "Together they can leave temporary dark stains on the skin",
-      "copperVitaminC": "Vitamin C can break down copper peptides",
-      "copperAcids": "Acids can break down copper peptides"
+      "retinoids": "Prescription retinoids",
+      "labelIrritation": "Drug labels warn they can irritate and dry the skin together",
+      "bpTretinoin": "Benzoyl peroxide breaks down tretinoin",
+      "peroxideStain": "Together they can stain the skin for a while"
     },
     "sheet": {
       "titleNew": "New rule",

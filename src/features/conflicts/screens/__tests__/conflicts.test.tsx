@@ -108,50 +108,54 @@ describe('ConflictsScreen', () => {
     await show(app, <ConflictsScreen />);
     expect(await screen.findByText('No conflict rules')).toBeTruthy();
     expect(
-      screen.getByText('Start with common pairs, like retinol with AHA, or write your own.'),
+      screen.getByText(
+        'Start with pairs that drug labels warn about, like tretinoin with benzoyl peroxide, or write your own.',
+      ),
     ).toBeTruthy();
     // The empty state carries both actions; the Fab waits for the first rule.
     expect(screen.queryByRole('button', { name: 'New rule' })).toBeNull();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Add common rules' }));
     expect(await screen.findByText(/Mild means one of the steps runs every few days/)).toBeTruthy();
-    expect(screen.getAllByText('No conflicts')).toHaveLength(8);
-    expect(screen.getAllByText('Can irritate when used on the same day')).toHaveLength(2);
-    expect(uiStore.state.toasts.at(-1)?.message).toBe('Added 8 common rules');
+    expect(screen.getAllByText('No conflicts')).toHaveLength(9);
+    expect(
+      screen.getAllByText('Drug labels warn they can irritate and dry the skin together'),
+    ).toHaveLength(6);
+    expect(uiStore.state.toasts.at(-1)?.message).toBe('Added 9 common rules');
     // A group side says so when spoken.
     expect(
       screen.getByLabelText(
-        'Retinoids group with AHA/BHA group, Can irritate when used on the same day, No conflicts',
+        'Prescription retinoids group with Salicylic acid, Drug labels warn they can irritate and dry the skin together, No conflicts',
       ),
     ).toBeTruthy();
     expect(screen.getByRole('button', { name: 'New rule' })).toBeTruthy();
 
     await act(() => setI18nLanguage('lt'));
     expect(await screen.findByRole('button', { name: 'Nauja taisyklė' })).toBeTruthy();
-    expect(screen.getAllByText('Konfliktų nėra')).toHaveLength(8);
+    expect(screen.getAllByText('Konfliktų nėra')).toHaveLength(9);
   });
 
   it('shows In N routines or No conflicts for seeded routines, never counting A against B', async () => {
     const app = setup();
-    const p = seedProducts(app.db);
-    const bp = createProduct(
-      app.db,
-      productInput({ name: 'BP wash', ingredients: ['Benzoyl peroxide'] }),
-    );
-    // Evening A: retinol. Evening B: AHA. They are alternates, so never compared.
-    saveRoutine(app.db, routineInput({ name: 'Evening A', steps: [step(p.retinol)] }));
-    saveRoutine(app.db, routineInput({ name: 'Evening B', steps: [step(p.aha)] }));
-    // Morning vitamin C meets Evening B's AHA every day.
+    const product = (name: string, ingredient: string) =>
+      createProduct(app.db, productInput({ name, ingredients: [ingredient] }));
+    const tretinoin = product('Tretinoin cream', 'Tretinoin');
+    const bha = product('BHA toner', 'Salicylic acid');
+    const fade = product('Fade cream', 'Hydroquinone');
+    const bp = product('BP wash', 'Benzoyl peroxide');
+    // Evening A: tretinoin. Evening B: BHA. They are alternates, so never compared.
+    saveRoutine(app.db, routineInput({ name: 'Evening A', steps: [step(tretinoin)] }));
+    saveRoutine(app.db, routineInput({ name: 'Evening B', steps: [step(bha)] }));
     saveRoutine(
       app.db,
       routineInput({
         name: 'Morning',
         timeOfDay: 'morning',
         sortTime: '07:00',
-        steps: [step(p.vitC)],
+        steps: [step(fade)],
       }),
     );
-    // Benzoyl peroxide every three days in the morning: a mild meeting with Evening A.
+    // Benzoyl peroxide every three days at midday: mild meetings with the other routines.
     saveRoutine(
       app.db,
       routineInput({
@@ -173,10 +177,11 @@ describe('ConflictsScreen', () => {
         ),
       );
     await waitFor(() =>
-      expect(row('Vitamin C', 'AHA/BHA').getByText('In 2 routines')).toBeTruthy(),
+      expect(row('Tretinoin', 'Benzoyl peroxide').getByText('In 2 routines')).toBeTruthy(),
     );
-    expect(row('Retinoids', 'AHA/BHA').getByText('No conflicts')).toBeTruthy();
-    expect(row('Retinoids', 'Benzoyl peroxide').getByText('In 2 routines')).toBeTruthy();
+    expect(row('Prescription retinoids', 'Salicylic acid').getByText('No conflicts')).toBeTruthy();
+    expect(row('Hydroquinone', 'Benzoyl peroxide').getByText('In 2 routines')).toBeTruthy();
+    expect(row('Benzoyl peroxide', 'Salicylic acid').getByText('In 2 routines')).toBeTruthy();
   });
 
   it('creates a rule in the editor and shows how many routines it affects, then Done closes', async () => {

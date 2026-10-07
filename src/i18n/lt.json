@@ -1518,7 +1518,7 @@
     "ruleLabel": "{{left}} su {{right}}",
     "newRule": "Nauja taisyklė",
     "emptyTitle": "Konflikto taisyklių nėra",
-    "emptyBody": "Pradėkite nuo įprastų porų, pvz., retinolio su AHA, arba sukurkite savo.",
+    "emptyBody": "Pradėkite nuo porų, dėl kurių įspėja vaistų lapeliai, pvz., tretinoino su benzoilo peroksidu, arba sukurkite savo.",
     "addCommon": "Pridėti įprastas taisykles",
     "addRule": "Pridėti taisyklę",
     "commonAdded_one": "Pridėta įprastų taisyklių: {{count}}",
@@ -1528,16 +1528,10 @@
     "commonNone": "Įprastos taisyklės jau pridėtos",
     "deletedToast": "Taisyklė ištrinta",
     "common": {
-      "retinoids": "Retinoidai",
-      "ahaBha": "AHA/BHA",
-      "vitaminC": "Vitaminas C",
-      "irritate": "Naudojant tą pačią dieną gali dirginti",
-      "bpRetinoids": "Benzoilo peroksidas gali susilpninti retinoidų poveikį",
-      "dryIrritate": "Kartu gali sausinti ir dirginti odą",
-      "bpVitaminC": "Benzoilo peroksidas gali oksiduoti vitaminą C ir susilpninti jo poveikį",
-      "bpHydroquinone": "Kartu gali palikti laikinų tamsių dėmių ant odos",
-      "copperVitaminC": "Vitaminas C gali skaidyti vario peptidus",
-      "copperAcids": "Rūgštys gali skaidyti vario peptidus"
+      "retinoids": "Receptiniai retinoidai",
+      "labelIrritation": "Vaistų lapeliai įspėja, kad kartu jie gali dirginti ir sausinti odą",
+      "bpTretinoin": "Benzoilo peroksidas skaido tretinoiną",
+      "peroxideStain": "Kartu jie gali laikinai nudažyti odą"
     },
     "sheet": {
       "titleNew": "Nauja taisyklė",

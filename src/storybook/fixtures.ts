@@ -8,7 +8,7 @@
 import type { Db } from '@/db';
 import { addAvoidIngredientByName } from '@/features/conflicts/avoidRepo';
 import { commonRuleLabels } from '@/features/conflicts/commonRules';
-import { addCommonRules } from '@/features/conflicts/repo';
+import { addCommonRules, ensureIngredient, saveRule } from '@/features/conflicts/repo';
 import { saveConditionDay } from '@/features/condition/repo';
 import { markHairDone, saveHairTask } from '@/features/hair/repo';
 import { addNote, setRating, setWouldRebuy } from '@/features/products/notesRepo';
@@ -311,6 +311,15 @@ export function seedDemo(db: Db, today: string = FIXTURE_TODAY): typeof demoIds 
     db,
     commonRuleLabels((key, options) => i18n.t(key, options), 'en', languages),
   );
+  // The person's own rule on top of the defaults: vitamin C stings on glycolic acid days (the
+  // morning then conflicts with the exfoliating night).
+  saveRule(db, {
+    leftKind: 'ingredient',
+    leftId: ensureIngredient(db, 'Ascorbic acid').id,
+    rightKind: 'ingredient',
+    rightId: ensureIngredient(db, 'Glycolic acid').id,
+    note: 'Stings on the same day',
+  });
   addAvoidIngredientByName(db, 'Parfum', 'Makes my scalp itchy');
 
   // ─── Routines: morning, and an A/B evening (R1–R3) ────────────────────────

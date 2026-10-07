@@ -9,7 +9,7 @@ import { saveRoutine, type SaveRoutineInput } from '@/features/routines/repo';
 import type { StepInput } from '@/features/routines/schema';
 import { getSettings, saveSettings } from '@/features/settings/repo';
 
-import { COMMON_RULES_VERSION, type CommonRuleLabels } from './commonRules';
+import { COMMON_RULES_VERSION, commonRules, sources, type CommonRuleLabels } from './commonRules';
 import {
   addCommonRules,
   conflictInput,
@@ -77,19 +77,11 @@ const routineInput = (over: Partial<SaveRoutineInput> = {}): SaveRoutineInput =>
 });
 
 const labels: CommonRuleLabels = {
-  groups: {
-    retinoids: ['Retinoids', 'Retinoidai'],
-    ahaBha: ['AHA/BHA'],
-    vitaminC: ['Vitamin C', 'Vitaminas C'],
-  },
+  groups: { retinoids: ['Prescription retinoids', 'Receptiniai retinoidai'] },
   notes: {
-    irritate: 'Can irritate when used on the same day',
-    bpRetinoids: 'Benzoyl peroxide can make retinoids less effective',
-    dryIrritate: 'Together they can dry out and irritate the skin',
-    bpVitaminC: 'Benzoyl peroxide can oxidise vitamin C and make it less effective',
-    bpHydroquinone: 'Together they can leave temporary dark stains on the skin',
-    copperVitaminC: 'Vitamin C can break down copper peptides',
-    copperAcids: 'Acids can break down copper peptides',
+    labelIrritation: 'Drug labels warn they can irritate and dry the skin together',
+    bpTretinoin: 'Benzoyl peroxide breaks down tretinoin',
+    peroxideStain: 'Together they can stain the skin for a while',
   },
 };
 
@@ -334,17 +326,17 @@ describe('rules', () => {
   });
 
   it('counts the routines each rule fires in, never A/B alternates against each other', () => {
-    const retinolSerum = createProduct(
+    const tretinoinCream = createProduct(
       db,
-      productInput({ name: 'Retinol serum', ingredients: ['Retinol'] }),
+      productInput({ name: 'Tretinoin cream', ingredients: ['Tretinoin'] }),
     );
-    const ahaToner = createProduct(
+    const bhaToner = createProduct(
       db,
-      productInput({ name: 'AHA toner', ingredients: ['Glycolic acid'] }),
+      productInput({ name: 'BHA toner', ingredients: ['Salicylic acid'] }),
     );
-    const vitC = createProduct(
+    const fadeCream = createProduct(
       db,
-      productInput({ name: 'Vitamin C', ingredients: ['Ascorbic acid'] }),
+      productInput({ name: 'Fade cream', ingredients: ['Hydroquinone'] }),
     );
     const bp = createProduct(
       db,
@@ -352,25 +344,25 @@ describe('rules', () => {
     );
     addCommonRules(db, labels);
 
-    // Morning: vitamin C. Evening A: retinol + AHA. Evening B: AHA only.
+    // Morning: hydroquinone. Evening A: tretinoin + BHA. Evening B: BHA only.
     saveRoutine(
       db,
       routineInput({
         name: 'Morning',
         timeOfDay: 'morning',
         sortTime: '07:00',
-        steps: [step({ productId: vitC })],
+        steps: [step({ productId: fadeCream })],
       }),
     );
     saveRoutine(
       db,
       routineInput({
         name: 'Evening A',
-        steps: [step({ productId: retinolSerum }), step({ productId: ahaToner })],
+        steps: [step({ productId: tretinoinCream }), step({ productId: bhaToner })],
       }),
     );
-    saveRoutine(db, routineInput({ name: 'Evening B', steps: [step({ productId: ahaToner })] }));
-    // Benzoyl peroxide on Mondays only, retinol only in Evening A on Tuesdays: never one day.
+    saveRoutine(db, routineInput({ name: 'Evening B', steps: [step({ productId: bhaToner })] }));
+    // Benzoyl peroxide on Mondays only, tretinoin also on Tuesdays.
     saveRoutine(
       db,
       routineInput({
@@ -390,41 +382,43 @@ describe('rules', () => {
         customName: 'Late',
         sortTime: '23:00',
         daysOfWeek: [2],
-        steps: [step({ productId: retinolSerum })],
+        steps: [step({ productId: tretinoinCream })],
       }),
     );
 
     const rules = listRulesWithCounts(db);
     const count = (left: string, right: string) =>
       rules.find((r) => r.left.name === left && r.right.name === right)!.routineCount;
-    // Retinoids × AHA/BHA: inside Evening A, and Tuesday's retinol meets Evening A and B's AHA.
-    // Evening A's retinol never counts against Evening B's AHA (A/B alternates).
-    expect(count('Retinoids', 'AHA/BHA')).toBe(3);
-    // Benzoyl peroxide (Mondays) meets Evening A's daily retinol, never Tuesday's.
-    expect(count('Retinoids', 'Benzoyl peroxide')).toBe(2);
-    // Vitamin C × AHA/BHA: morning with both evenings.
-    expect(count('Vitamin C', 'AHA/BHA')).toBe(3);
-    const rule = rules.find((r) => r.left.name === 'Vitamin C')!;
-    expect(ruleRoutineCount(db, rule.id)).toBe(3);
+    // Retinoids × salicylic acid: inside Evening A, and Tuesday's tretinoin meets Evening A and
+    // B's toner. Evening A's tretinoin never counts against Evening B's toner (A/B alternates).
+    expect(count('Prescription retinoids', 'Salicylic acid')).toBe(3);
+    // Benzoyl peroxide (Mondays) meets Evening A's daily tretinoin, never Tuesday's.
+    expect(count('Tretinoin', 'Benzoyl peroxide')).toBe(2);
+    // ...and both evenings' salicylic acid.
+    expect(count('Benzoyl peroxide', 'Salicylic acid')).toBe(3);
+    // Hydroquinone every morning meets Monday's benzoyl peroxide.
+    expect(count('Hydroquinone', 'Benzoyl peroxide')).toBe(2);
+    const rule = rules.find((r) => r.left.name === 'Hydroquinone')!;
+    expect(ruleRoutineCount(db, rule.id)).toBe(2);
   });
 
   it('shows no conflicts when the sides never fall on the same day, and A/B are not counted', () => {
-    const retinolSerum = createProduct(
+    const tretinoinCream = createProduct(
       db,
-      productInput({ name: 'Retinol serum', ingredients: ['Retinol'] }),
+      productInput({ name: 'Tretinoin cream', ingredients: ['Tretinoin'] }),
     );
-    const ahaToner = createProduct(
+    const bhaToner = createProduct(
       db,
-      productInput({ name: 'AHA toner', ingredients: ['Glycolic acid'] }),
+      productInput({ name: 'BHA toner', ingredients: ['Salicylic acid'] }),
     );
     addCommonRules(db, labels);
     // Two evening routines (A/B alternates) on the same days: never compared.
     saveRoutine(
       db,
-      routineInput({ name: 'Evening A', steps: [step({ productId: retinolSerum })] }),
+      routineInput({ name: 'Evening A', steps: [step({ productId: tretinoinCream })] }),
     );
-    saveRoutine(db, routineInput({ name: 'Evening B', steps: [step({ productId: ahaToner })] }));
-    // A morning routine with retinol on Mondays and AHA on Fridays never meets itself.
+    saveRoutine(db, routineInput({ name: 'Evening B', steps: [step({ productId: bhaToner })] }));
+    // A morning routine with tretinoin on Mondays and BHA on Fridays never meets itself.
     saveRoutine(
       db,
       routineInput({
@@ -433,68 +427,65 @@ describe('rules', () => {
         sortTime: '07:00',
         daysOfWeek: [1, 5],
         steps: [
-          step({ productId: retinolSerum, scheduleKind: 'days', daysOfWeek: [1] }),
-          step({ productId: ahaToner, scheduleKind: 'days', daysOfWeek: [5] }),
+          step({ productId: tretinoinCream, scheduleKind: 'days', daysOfWeek: [1] }),
+          step({ productId: bhaToner, scheduleKind: 'days', daysOfWeek: [5] }),
         ],
       }),
     );
     const rule = listRulesWithCounts(db).find(
-      (r) => r.right.name === 'AHA/BHA' && r.left.name === 'Retinoids',
+      (r) => r.right.name === 'Salicylic acid' && r.left.name === 'Prescription retinoids',
     )!;
-    // Morning (Mon retinol) meets Evening B (AHA) on Monday, and Morning (Fri AHA) meets
-    // Evening A (retinol) on Friday; A and B never meet each other.
+    // Morning (Mon tretinoin) meets Evening B (BHA) on Monday, and Morning (Fri BHA) meets
+    // Evening A (tretinoin) on Friday; A and B never meet each other.
     expect(rule.routineCount).toBe(3);
 
     // Without the morning routine nothing meets.
     const lonely = createTestDb();
     const r = createProduct(
       lonely,
-      productInput({ name: 'Retinol serum', ingredients: ['Retinol'] }),
+      productInput({ name: 'Tretinoin cream', ingredients: ['Tretinoin'] }),
     );
     const a = createProduct(
       lonely,
-      productInput({ name: 'AHA toner', ingredients: ['Glycolic acid'] }),
+      productInput({ name: 'BHA toner', ingredients: ['Salicylic acid'] }),
     );
     addCommonRules(lonely, labels);
     saveRoutine(lonely, routineInput({ name: 'Evening A', steps: [step({ productId: r })] }));
     saveRoutine(lonely, routineInput({ name: 'Evening B', steps: [step({ productId: a })] }));
-    expect(listRulesWithCounts(lonely).map((x) => x.routineCount)).toEqual(Array(8).fill(0));
+    expect(listRulesWithCounts(lonely).map((x) => x.routineCount)).toEqual(Array(9).fill(0));
   });
 });
 
 describe('addCommonRules', () => {
   it('links existing ingredients by normalized name and creates the missing ones', () => {
-    const p = createProduct(db, productInput({ ingredients: ['RETINOL', 'Salicylic  Acid'] }));
+    const p = createProduct(db, productInput({ ingredients: ['TRETINOIN', 'Salicylic  Acid'] }));
     const before = listIngredients(db).length;
-    expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 3, rulesAdded: 8 });
+    expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 1, rulesAdded: 9 });
 
-    // The product's own spellings are kept and now sit in the new groups.
+    // The product's own spellings are kept; tretinoin now sits in the new group.
     expect(productIngredients(db, p)).toMatchObject([
-      { name: 'RETINOL', groupId: expect.any(Number) },
-      { name: 'Salicylic Acid', groupId: expect.any(Number) },
+      { name: 'TRETINOIN', groupId: expect.any(Number) },
+      { name: 'Salicylic Acid', groupId: null },
     ]);
-    const groups = listGroups(db);
-    expect(groups.map((g) => [g.name, g.memberCount])).toEqual([
-      ['AHA/BHA', 7],
-      ['Retinoids', 10],
-      ['Vitamin C', 7],
+    expect(listGroups(db).map((g) => [g.name, g.memberCount])).toEqual([
+      ['Prescription retinoids', 2],
     ]);
-    // 24 group members plus benzoyl peroxide, hydroquinone and copper tripeptide-1, two of
-    // which existed.
-    expect(listIngredients(db).length).toBe(before + 25);
+    // Tretinoin, adapalene, salicylic acid, sulfur, resorcinol, benzoyl peroxide, hydroquinone and
+    // hydrogen peroxide, two of which existed.
+    expect(listIngredients(db).length).toBe(before + 6);
+    const irritate = 'Drug labels warn they can irritate and dry the skin together';
+    const stain = 'Together they can stain the skin for a while';
     expect(listRules(db).map((r) => `${r.left.name} × ${r.right.name}: ${r.note}`)).toEqual([
-      'Retinoids × AHA/BHA: Can irritate when used on the same day',
-      'Retinoids × Benzoyl peroxide: Benzoyl peroxide can make retinoids less effective',
-      'Vitamin C × AHA/BHA: Can irritate when used on the same day',
-      'AHA/BHA × Benzoyl peroxide: Together they can dry out and irritate the skin',
-      'Vitamin C × Benzoyl peroxide: Benzoyl peroxide can oxidise vitamin C and make it less effective',
-      'Hydroquinone × Benzoyl peroxide: Together they can leave temporary dark stains on the skin',
-      'Copper tripeptide-1 × Vitamin C: Vitamin C can break down copper peptides',
-      'Copper tripeptide-1 × AHA/BHA: Acids can break down copper peptides',
+      `Prescription retinoids × Salicylic Acid: ${irritate}`,
+      `Prescription retinoids × Sulfur: ${irritate}`,
+      `Prescription retinoids × Resorcinol: ${irritate}`,
+      'TRETINOIN × Benzoyl peroxide: Benzoyl peroxide breaks down tretinoin',
+      `Benzoyl peroxide × Salicylic Acid: ${irritate}`,
+      `Benzoyl peroxide × Sulfur: ${irritate}`,
+      `Benzoyl peroxide × Resorcinol: ${irritate}`,
+      `Hydroquinone × Benzoyl peroxide: ${stain}`,
+      `Hydroquinone × Hydrogen peroxide: ${stain}`,
     ]);
-    expect(listIngredients(db).find((i) => i.name === '3-O-ethyl ascorbic acid')?.groupName).toBe(
-      'Vitamin C',
-    );
   });
 
   it('is idempotent, also after the language changed', () => {
@@ -507,29 +498,29 @@ describe('addCommonRules', () => {
     const first = snapshot();
     expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 0, rulesAdded: 0 });
     const lt: CommonRuleLabels = {
-      groups: {
-        retinoids: ['Retinoidai', 'Retinoids'],
-        ahaBha: ['AHA/BHA'],
-        vitaminC: ['Vitaminas C', 'Vitamin C'],
-      },
-      notes: Object.fromEntries(
-        Object.keys(labels.notes).map((k) => [k, 'LT']),
-      ) as CommonRuleLabels['notes'],
+      groups: { retinoids: ['Receptiniai retinoidai', 'Prescription retinoids'] },
+      notes: { labelIrritation: 'LT', bpTretinoin: 'LT', peroxideStain: 'LT' },
     };
     expect(addCommonRules(db, lt)).toEqual({ groupsAdded: 0, rulesAdded: 0 });
     expect(snapshot()).toEqual(first);
   });
 
   it('puts back a deleted rule and leaves members of other groups where they are', () => {
-    createProduct(db, productInput({ ingredients: ['Salicylic acid'] }));
-    const mine = saveGroup(db, { name: 'Exfoliants', memberIds: [idOf(db, 'Salicylic acid')] });
+    createProduct(db, productInput({ ingredients: ['Adapalene'] }));
+    const mine = saveGroup(db, { name: 'Retinoids', memberIds: [idOf(db, 'Adapalene')] });
     addCommonRules(db, labels);
-    expect(idOf(db, 'Salicylic acid')).toBeDefined();
-    expect(listIngredients(db).find((i) => i.name === 'Salicylic acid')?.groupId).toBe(mine);
+    expect(listIngredients(db).find((i) => i.name === 'Adapalene')?.groupId).toBe(mine);
 
     const rule = listRules(db).find((r) => r.right.name === 'Benzoyl peroxide')!;
     deleteRule(db, rule.id);
     expect(addCommonRules(db, labels)).toEqual({ groupsAdded: 0, rulesAdded: 1 });
+  });
+
+  it('cites a source for every rule', () => {
+    for (const rule of commonRules) {
+      expect(rule.sources.length).toBeGreaterThan(0);
+      for (const key of rule.sources) expect(sources[key]).toMatch(/^https:\/\//);
+    }
   });
 });
 
@@ -539,13 +530,13 @@ describe('seedCommonRules', () => {
     expect(listRules(db)).toEqual([]);
 
     saveSettings(db, { language: 'en' });
-    expect(seedCommonRules(db, labels)).toEqual({ groupsAdded: 3, rulesAdded: 8 });
+    expect(seedCommonRules(db, labels)).toEqual({ groupsAdded: 1, rulesAdded: 9 });
     expect(getSettings(db).commonRulesVersion).toBe(COMMON_RULES_VERSION);
 
     // Deleted defaults stay deleted: seeding runs once per version.
     deleteRule(db, listRules(db)[0]!.id);
     expect(seedCommonRules(db, labels)).toBeNull();
-    expect(listRules(db)).toHaveLength(7);
+    expect(listRules(db)).toHaveLength(8);
   });
 
   it('adds the pack to an install that already has its own rules and ingredients', () => {
@@ -558,8 +549,8 @@ describe('seedCommonRules', () => {
       note: 'Mine',
     });
     saveSettings(db, { language: 'lt' });
-    expect(seedCommonRules(db, labels)?.rulesAdded).toBe(8);
-    expect(listRules(db)).toHaveLength(9);
+    expect(seedCommonRules(db, labels)?.rulesAdded).toBe(9);
+    expect(listRules(db)).toHaveLength(10);
     expect(listRules(db)[0]?.note).toBe('Mine');
   });
 });
