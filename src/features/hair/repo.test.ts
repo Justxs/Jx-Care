@@ -144,6 +144,21 @@ describe('markHairDone', () => {
     expect(task(db, id)?.lastDoneAt).toBe(YESTERDAY);
   });
 
+  it('an older wash logged after a newer one takes over its due day, as if logged in order', () => {
+    const db = createTestDb();
+    // Last done 1 Oct, so due 4 Oct. Washed 4 Oct and 7 Oct, but 7 Oct was logged first.
+    const id = saveHairTask(db, washInput({ lastDoneAt: '2026-10-01' }));
+    done(db, id, TODAY);
+    expect(getHairTask(db, id, TODAY)?.logs[0]).toMatchObject({ dueDay: '2026-10-04' });
+    expect(done(db, id, '2026-10-04').nextDue).toBe('2026-10-10');
+    expect(getHairTask(db, id, TODAY)?.logs.map((l) => [l.day, l.dueDay, l.timing])).toEqual([
+      [TODAY, TODAY, 'on_time'],
+      ['2026-10-04', '2026-10-04', 'on_time'],
+    ]);
+    const input = hairStreakInput(db, TODAY);
+    expect(hairStreak(input.tasks, input.logs, TODAY)).toEqual({ current: 2, best: 2 });
+  });
+
   it('a second log on the same day replaces the first', () => {
     const db = createTestDb();
     const id = saveHairTask(db, washInput());
@@ -197,6 +212,18 @@ describe('deleteHairLog', () => {
     deleteHairLog(db, logId);
     expect(task(db, id)?.lastDoneAt).toBe('2026-10-05');
     expect(listHairTasks(db, TODAY).washes[0]?.nextDue).toBe('2026-10-08');
+  });
+
+  it('deleting an older log hands its due day to the next log', () => {
+    const db = createTestDb();
+    const id = saveHairTask(db, washInput({ lastDoneAt: '2026-10-01' }));
+    const { logId } = done(db, id, '2026-10-04');
+    done(db, id, TODAY);
+    deleteHairLog(db, logId);
+    expect(getHairTask(db, id, TODAY)?.logs.map((l) => [l.day, l.dueDay, l.timing])).toEqual([
+      [TODAY, '2026-10-04', 'late'],
+    ]);
+    expect(task(db, id)?.lastDoneAt).toBe(TODAY);
   });
 
   it('deleting an older log leaves the schedule alone', () => {

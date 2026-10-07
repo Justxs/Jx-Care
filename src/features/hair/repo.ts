@@ -13,6 +13,7 @@ import {
   hairTaskState,
   logTiming,
   nextDue,
+  nextScheduledAfter,
   previousScheduledBefore,
   quickSetupToTask,
   type HairDayMark,
@@ -393,11 +394,24 @@ export function quickSetup(
 
 export type MarkHairDone = { day: string; productIds: number[]; note: string | null };
 
+/** The task's first log after `day`, with the due day it answered. */
+function firstLogAfter(tx: DbOrTx, taskId: number, day: string) {
+  return tx
+    .select({ id: hairLog.id, dueDay: hairLog.dueDay })
+    .from(hairLog)
+    .where(and(eq(hairLog.hairTaskId, taskId), gt(hairLog.day, day)))
+    .orderBy(asc(hairLog.day))
+    .limit(1)
+    .get();
+}
+
 /**
  * Logs a task as done on `day` (T3). The log keeps the due day it answered, so the calendar and
  * streak can tell on time from late. `lastDoneAt` only moves forward, so logging an older wash
- * doesn't move the schedule back. A second log for the same task and day replaces the first's
- * products and note. Returns the log id and the new next due day.
+ * doesn't move the schedule back; it answers the due day the next later log answered, and that
+ * log now answers the one after it, as if they had been logged in order. A second log for the
+ * same task and day replaces the first's products and note. Returns the log id and the new next
+ * due day.
  */
 export function markHairDone(
   db: Db,
@@ -420,12 +434,19 @@ export function markHairDone(
         .run();
       logId = existing.id;
     } else {
+      const later = firstLogAfter(tx, taskId, done.day);
+      if (later) {
+        tx.update(hairLog)
+          .set({ dueDay: nextScheduledAfter(toHairLite(t), done.day) })
+          .where(eq(hairLog.id, later.id))
+          .run();
+      }
       logId = tx
         .insert(hairLog)
         .values({
           hairTaskId: taskId,
           day: done.day,
-          dueDay: nextDue(toHairLite(t)),
+          dueDay: later ? later.dueDay : nextDue(toHairLite(t)),
           productIds: done.productIds,
           note: done.note,
         })
@@ -442,15 +463,20 @@ export function markHairDone(
 }
 
 /**
- * Deletes a log (C2 edits). When it was the log that set `lastDoneAt`, the schedule goes back:
- * the latest remaining log, or the last done day that gave the deleted log its due day (the
- * "Last done" from setup, when no other log is left). Returns the task id, or null.
+ * Deletes a log (C2 edits). The next later log, if any, answers the due day the deleted one
+ * answered. When it was the log that set `lastDoneAt`, the schedule goes back: the latest
+ * remaining log, or the last done day that gave the deleted log its due day (the "Last done"
+ * from setup, when no other log is left). Returns the task id, or null.
  */
 export function deleteHairLog(db: Db, logId: number): number | null {
   return db.transaction((tx) => {
     const log = tx.select().from(hairLog).where(eq(hairLog.id, logId)).get();
     if (!log) return null;
     tx.delete(hairLog).where(eq(hairLog.id, logId)).run();
+    const later = firstLogAfter(tx, log.hairTaskId, log.day);
+    if (later) {
+      tx.update(hairLog).set({ dueDay: log.dueDay }).where(eq(hairLog.id, later.id)).run();
+    }
     const t = tx.select().from(hairTask).where(eq(hairTask.id, log.hairTaskId)).get();
     if (!t || t.lastDoneAt !== log.day) return log.hairTaskId;
 
