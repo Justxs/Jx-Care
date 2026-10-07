@@ -443,11 +443,9 @@ describe('round trip', () => {
     await restoreBackup(await prepareImport(uri, files2), { db: db2, files: files2 });
     const products = readAllData(db2).product!;
     expect(products.map((p) => p.photoUri)).toEqual([null, null]);
-    // Progress photo rows keep their paths (the weeks keep rating, tags and notes).
-    expect(readAllData(db2).progress_photo!.map((p) => p.fileUri)).toEqual([
-      `${FAKE_DOCUMENTS}progress/skin/2026-08-31/front-1.jpg`,
-      `${FAKE_DOCUMENTS}progress/skin/2026-08-31/left-1.jpg`,
-    ]);
+    // Progress photos without a file are left out; the week keeps its rating, tags and note.
+    expect(readAllData(db2).progress_photo).toEqual([]);
+    expect(readAllData(db2).progress_entry).toEqual(readAllData(db).progress_entry);
     expect(files2.photos().size).toBe(0);
   });
 });

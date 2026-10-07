@@ -65,15 +65,23 @@ export async function prepareImport(uri: string, files: BackupFiles): Promise<Pr
   };
 }
 
-/** A product photo that won't exist after the restore is dropped, so the product shows none. */
-function dropMissingProductPhotos(data: BackupData, available: (path: string) => boolean) {
-  const name = getTableName(schema.product);
+/**
+ * Photos that won't exist after the restore (a JSON backup on another phone, a zip missing a
+ * file): a product keeps its row and shows its placeholder; a progress photo row is left out, so
+ * the week has no photo instead of an empty box. The week's entry (rating, tags, note) stays.
+ */
+function dropMissingPhotos(data: BackupData, available: (path: string) => boolean): BackupData {
+  const product = getTableName(schema.product);
+  const progressPhoto = getTableName(schema.progressPhoto);
   return {
     ...data,
-    [name]: (data[name] ?? []).map((row) =>
+    [product]: (data[product] ?? []).map((row) =>
       typeof row.photoUri === 'string' && !available(row.photoUri)
         ? { ...row, photoUri: null }
         : row,
+    ),
+    [progressPhoto]: (data[progressPhoto] ?? []).filter(
+      (row) => typeof row.fileUri === 'string' && available(row.fileUri),
     ),
   };
 }
@@ -158,10 +166,7 @@ export async function restoreBackup(
     available = (path) => files.photoExists(path);
   }
 
-  const data = absolutisePhotos(
-    dropMissingProductPhotos(file.data, available),
-    files.documentUri(),
-  );
+  const data = absolutisePhotos(dropMissingPhotos(file.data, available), files.documentUri());
   try {
     if (source.kind === 'zip') undoSwap = swapInStaged(files);
     replaceAllData(db, data);
