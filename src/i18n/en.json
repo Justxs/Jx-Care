@@ -370,7 +370,6 @@
     "title": "Products",
     "mine": "My products",
     "shopping": "Shopping",
-    "shoppingSoon": "Your shopping list will show here.",
     "search": "Search products",
     "listView": "List view",
     "shelfView": "Shelf view",
@@ -673,7 +672,6 @@
     "new": "New routine",
     "emptyTitle": "No routines yet",
     "emptyBody": "Start from a template and swap in your products.",
-    "hairSoon": "Hair care tasks arrive in a later update.",
     "duplicate": "Duplicate as variant",
     "duplicatedToast": "{{name}} added",
     "deleteTitle": "Delete {{name}}?",
@@ -760,8 +758,7 @@
       "expiredNote": "Expired products stay out of new steps. Buy it again from Products.",
       "addNew": "Add new product",
       "empty": "No products yet. Add one to use it here.",
-      "noMatch": "Nothing matches your search.",
-      "selected": "Selected"
+      "noMatch": "Nothing matches your search."
     },
     "reminders": {
       "morning_one": "Morning routine: {{count}} step",
@@ -893,7 +890,6 @@
     "done": {
       "date": "Date",
       "products": "Products",
-      "noProducts": "No products for this one.",
       "addProduct": "Add a product",
       "note": "Note",
       "noteHint": "Optional, up to 280 characters.",
@@ -1234,11 +1230,8 @@
     "resetApp": "Reset app",
     "version": "Version",
     "licences": "Licences",
-    "resetSoonTitle": "Reset app",
-    "resetSoonBody": "Resetting the app arrives with the PIN screens (task 018). Nothing was deleted.",
     "currencyHint": "Prices everywhere use it.",
     "languageHint": "Changes the app at once.",
-    "progressSoon": "Angles, the hair album and the photo guide arrive in task 037.",
     "licencesIntro": "Jx-Care is built with these open-source packages."
   },
   "notifications": {
@@ -1323,43 +1316,22 @@
     "emptyTitle": "No products yet",
     "emptyBody": "Add what is on your shelf to see when it expires.",
     "addProduct": "Add product",
-    "importBackup": "Restore a backup",
-    "builtIn": "Built in task {{task}}."
+    "importBackup": "Restore a backup"
   },
   "forms": {
     "errors": {
       "nameRequired": "Enter a name.",
       "priceNumber": "Enter the price as a number, e.g. 12.99.",
       "priceMin": "The price can't be below 0.",
-      "monthsNumber": "Enter months as a number, e.g. 12.",
+      "pickOne": "Pick at least one.",
       "dateRequired": "Pick a date.",
-      "pickOne": "Pick at least one."
+      "monthsNumber": "Enter months as a number, e.g. 12."
     }
   },
   "screens": {
-    "welcome": "Welcome",
-    "createPin": "Create PIN",
-    "confirmPin": "Confirm PIN",
-    "recovery": "Recovery question",
-    "biometrics": "Face ID or fingerprint",
-    "lock": "Locked",
-    "forgotPin": "Forgot PIN",
-    "today": "Today",
-    "products": "Products",
-    "productDetail": "Product",
-    "archive": "Archive",
-    "productForm": "Add product",
-    "routines": "Routines",
-    "routineEditor": "Routine",
-    "hairTask": "Hair task",
-    "calendar": "Calendar",
     "day": "Day",
     "progress": "Progress photos",
-    "week": "Week",
-    "camera": "Progress photo",
-    "review": "Review photo",
     "compare": "Compare",
-    "settings": "Settings",
     "ingredients": "Ingredients",
     "conflicts": "Conflicts",
     "avoid": "Avoid list",
@@ -1367,10 +1339,7 @@
     "security": "PIN and security",
     "preferences": "Preferences",
     "backup": "Backup and restore",
-    "player": "Routine",
-    "playerDone": "Routine done",
     "hairDone": "Hair task done",
-    "productEdit": "Edit product",
     "licences": "Licences"
   },
   "ingredients": {
@@ -1539,10 +1508,6 @@
       "expired": "{{name}} has expired",
       "backToToday": "Back to Today",
       "addNote": "Add a note"
-    },
-    "picker": {
-      "title": "Pick a product",
-      "empty": "No skin products to pick yet."
     }
   },
   "reminders": {

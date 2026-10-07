@@ -394,7 +394,6 @@
     "title": "Produktai",
     "mine": "Mano produktai",
     "shopping": "Pirkiniai",
-    "shoppingSoon": "Čia bus jūsų pirkinių sąrašas.",
     "search": "Ieškoti produktų",
     "listView": "Sąrašas",
     "shelfView": "Lentyna",
@@ -725,7 +724,6 @@
     "new": "Nauja rutina",
     "emptyTitle": "Rutinų dar nėra",
     "emptyBody": "Pradėkite nuo šablono ir įsidėkite savo produktus.",
-    "hairSoon": "Plaukų priežiūros užduotys atsiras kitame atnaujinime.",
     "duplicate": "Kopijuoti kaip variantą",
     "duplicatedToast": "Pridėta: {{name}}",
     "deleteTitle": "Ištrinti „{{name}}“?",
@@ -818,8 +816,7 @@
       "expiredNote": "Nebegaliojantys produktai į naujus žingsnius nededami. Nupirkite jį dar kartą skiltyje Produktai.",
       "addNew": "Pridėti naują produktą",
       "empty": "Produktų dar nėra. Pridėkite, kad galėtumėte jį čia naudoti.",
-      "noMatch": "Nieko nerasta.",
-      "selected": "Pasirinkta"
+      "noMatch": "Nieko nerasta."
     },
     "reminders": {
       "morning_one": "Ryto rutina: {{count}} žingsnis",
@@ -963,7 +960,6 @@
     "done": {
       "date": "Data",
       "products": "Produktai",
-      "noProducts": "Produktų nepasirinkta.",
       "addProduct": "Pridėti produktą",
       "note": "Pastaba",
       "noteHint": "Nebūtina, iki 280 simbolių.",
@@ -1320,11 +1316,8 @@
     "resetApp": "Atkurti programėlę",
     "version": "Versija",
     "licences": "Licencijos",
-    "resetSoonTitle": "Atkurti programėlę",
-    "resetSoonBody": "Programėlės atkūrimas atsiras kartu su PIN ekranais (18 užduotis). Niekas neištrinta.",
     "currencyHint": "Visos kainos rodomos šia valiuta.",
     "languageHint": "Programėlė pasikeičia iš karto.",
-    "progressSoon": "Kampai, plaukų albumas ir nuotraukos gairė atsiras 37 užduotyje.",
     "licencesIntro": "Jx-Care sukurta naudojant šiuos atvirojo kodo paketus."
   },
   "notifications": {
@@ -1419,43 +1412,22 @@
     "emptyTitle": "Produktų dar nėra",
     "emptyBody": "Pridėkite, ką turite lentynoje, ir matysite, kada baigiasi galiojimas.",
     "addProduct": "Pridėti produktą",
-    "importBackup": "Atkurti atsarginę kopiją",
-    "builtIn": "Bus sukurta {{task}} užduotyje."
+    "importBackup": "Atkurti atsarginę kopiją"
   },
   "forms": {
     "errors": {
       "nameRequired": "Įveskite pavadinimą.",
       "priceNumber": "Įveskite kainą skaičiumi, pvz., 12,99.",
       "priceMin": "Kaina negali būti mažesnė nei 0.",
-      "monthsNumber": "Įveskite mėnesius skaičiumi, pvz., 12.",
+      "pickOne": "Pasirinkite bent vieną.",
       "dateRequired": "Pasirinkite datą.",
-      "pickOne": "Pasirinkite bent vieną."
+      "monthsNumber": "Įveskite mėnesius skaičiumi, pvz., 12."
     }
   },
   "screens": {
-    "welcome": "Sveiki",
-    "createPin": "PIN kūrimas",
-    "confirmPin": "PIN patvirtinimas",
-    "recovery": "Atkūrimo klausimas",
-    "biometrics": "Face ID arba piršto atspaudas",
-    "lock": "Užrakinta",
-    "forgotPin": "Pamirštas PIN",
-    "today": "Šiandien",
-    "products": "Produktai",
-    "productDetail": "Produktas",
-    "archive": "Archyvas",
-    "productForm": "Pridėti produktą",
-    "routines": "Rutinos",
-    "routineEditor": "Rutina",
-    "hairTask": "Plaukų užduotis",
-    "calendar": "Kalendorius",
     "day": "Diena",
     "progress": "Progreso nuotraukos",
-    "week": "Savaitė",
-    "camera": "Progreso nuotrauka",
-    "review": "Nuotraukos peržiūra",
     "compare": "Palyginimas",
-    "settings": "Nustatymai",
     "ingredients": "Ingredientai",
     "conflicts": "Konfliktai",
     "avoid": "Vengiamų sąrašas",
@@ -1463,10 +1435,7 @@
     "security": "PIN ir saugumas",
     "preferences": "Nuostatos",
     "backup": "Atsarginė kopija",
-    "player": "Rutina",
-    "playerDone": "Rutina atlikta",
     "hairDone": "Plaukų užduotis atlikta",
-    "productEdit": "Redaguoti produktą",
     "licences": "Licencijos"
   },
   "ingredients": {
@@ -1655,10 +1624,6 @@
       "expired": "{{name}}: nebegalioja",
       "backToToday": "Grįžti į Šiandien",
       "addNote": "Pridėti pastabą"
-    },
-    "picker": {
-      "title": "Pasirinkite produktą",
-      "empty": "Kol kas nėra odos produktų, kuriuos galima pasirinkti."
     }
   },
   "reminders": {
