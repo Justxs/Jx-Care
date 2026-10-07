@@ -417,7 +417,82 @@
       "noteLong": "Keep the note to 280 characters or fewer."
     }
   },
-  "calendar": {},
+  "calendar": {
+    "title": "Calendar",
+    "views": {
+      "skin": "Skin",
+      "hair": "Hair",
+      "condition": "Condition"
+    },
+    "viewSwitch": "Calendar view",
+    "months": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    },
+    "monthsOf": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    },
+    "monthTitle": "{{month}} {{year}}",
+    "dayLabel": "{{day}} {{month}}",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "today": "Today",
+    "todayLabel": "Go to this month",
+    "isToday": "today",
+    "status": {
+      "done": "done",
+      "partly": "partly done",
+      "missed": "not done",
+      "pending": "nothing done yet",
+      "none": "nothing due"
+    },
+    "empty": {
+      "title": "Your month fills in as you go",
+      "body": "Each day you tick a routine gets a dot here."
+    },
+    "progressRow": "Progress photos",
+    "day": {
+      "skinRoutines": "Skin routines",
+      "status": {
+        "done": "Done",
+        "partly": "Partly done",
+        "missed": "Not done",
+        "pending": "Not done yet"
+      },
+      "step": "Step {{index}}",
+      "stepState": {
+        "done": "{{name}}, ticked",
+        "notDone": "{{name}}, not ticked"
+      },
+      "nothingDone_one": "Nothing done · {{names}} was due",
+      "nothingDone_other": "Nothing done · {{names}} were due",
+      "nothingDue": "No skin routines were due this day.",
+      "readOnly": "Older days can't be changed",
+      "future": "You can tick these on the day.",
+      "invalid": "This day can't be shown."
+    }
+  },
   "progress": {},
   "condition": {},
   "settings": {

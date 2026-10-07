@@ -445,7 +445,84 @@
       "noteLong": "Pastaba turi būti ne ilgesnė nei 280 simbolių."
     }
   },
-  "calendar": {},
+  "calendar": {
+    "title": "Kalendorius",
+    "views": {
+      "skin": "Oda",
+      "hair": "Plaukai",
+      "condition": "Būklė"
+    },
+    "viewSwitch": "Kalendoriaus rodinys",
+    "months": {
+      "1": "sausis",
+      "2": "vasaris",
+      "3": "kovas",
+      "4": "balandis",
+      "5": "gegužė",
+      "6": "birželis",
+      "7": "liepa",
+      "8": "rugpjūtis",
+      "9": "rugsėjis",
+      "10": "spalis",
+      "11": "lapkritis",
+      "12": "gruodis"
+    },
+    "monthsOf": {
+      "1": "sausio",
+      "2": "vasario",
+      "3": "kovo",
+      "4": "balandžio",
+      "5": "gegužės",
+      "6": "birželio",
+      "7": "liepos",
+      "8": "rugpjūčio",
+      "9": "rugsėjo",
+      "10": "spalio",
+      "11": "lapkričio",
+      "12": "gruodžio"
+    },
+    "monthTitle": "{{year}} m. {{month}}",
+    "dayLabel": "{{month}} {{day}} d.",
+    "previousMonth": "Ankstesnis mėnuo",
+    "nextMonth": "Kitas mėnuo",
+    "today": "Šiandien",
+    "todayLabel": "Grįžti į šį mėnesį",
+    "isToday": "šiandien",
+    "status": {
+      "done": "atlikta",
+      "partly": "iš dalies atlikta",
+      "missed": "neatlikta",
+      "pending": "dar nieko neatlikta",
+      "none": "nieko nenumatyta"
+    },
+    "empty": {
+      "title": "Mėnuo prisipildys pamažu",
+      "body": "Kiekviena diena, kai pažymite rutiną, čia gaus tašką."
+    },
+    "progressRow": "Progreso nuotraukos",
+    "day": {
+      "skinRoutines": "Odos rutinos",
+      "status": {
+        "done": "Atlikta",
+        "partly": "Iš dalies atlikta",
+        "missed": "Neatlikta",
+        "pending": "Dar neatlikta"
+      },
+      "step": "{{index}} žingsnis",
+      "stepState": {
+        "done": "{{name}}, pažymėta",
+        "notDone": "{{name}}, nepažymėta"
+      },
+      "nothingDone_one": "Nieko neatlikta · buvo numatyta: {{names}}",
+      "nothingDone_few": "Nieko neatlikta · buvo numatyta: {{names}}",
+      "nothingDone_many": "Nieko neatlikta · buvo numatyta: {{names}}",
+      "nothingDone_other": "Nieko neatlikta · buvo numatyta: {{names}}",
+      "nothingDue": "Šią dieną odos rutinų nebuvo numatyta.",
+      "readOnly": "Senesnių dienų keisti negalima",
+      "future": "Pažymėti galėsite tą dieną.",
+      "invalid": "Šios dienos parodyti negalima."
+    }
+  },
   "progress": {},
   "condition": {},
   "settings": {

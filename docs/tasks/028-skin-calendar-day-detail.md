@@ -47,4 +47,25 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Files.** Besides the files in Scope: `repo.ts` (`getSkinMonth`, `getSkinDay`, the edit window), `month.ts` ('YYYY-MM' months, like the hair hooks of task 031), `labels.ts` (month title and spoken day labels), and `components/DayMark.tsx`, `SkinCalendar.tsx`, `SkinDaySection.tsx`, `ProgressPhotosRow.tsx`.
+- **Data.** `useSkinMonth(month)` (key `[...qk.calendar.month('skin', month), today]`) loads routines, steps and the logs of the 42 grid days once through the new `skinRangeInput` in the routines repo and runs `skinDayStatuses` (task 007); it prefetches the months either side. `useSkinDay(day)` uses `[...qk.calendar.day(day), 'skin', today, warnDays]`, next to the hair day key. Everything sits under `qk.calendar`, so routine and tick mutations refresh it.
+- **Deleted steps.** `skinRangeInput` (and so `streakInput`) drops steps deleted since a day's snapshot, as Today does (task 022 "Day snapshot"), so the calendar, the streak and C2 agree.
+- **Marks.** Done: filled `accent` dot. Partly done: `accent` ring with the left half filled. Not done: `ink-muted` ring (`border-strong` is too faint on the dark selected background). Pending, none and future days keep the 12 pt space with no mark. Spoken labels say "5 October, partly done" (LT "spalio 5 d., iš dalies atlikta"), add "today" on today, and leave the status out for days with nothing due and days still to come.
+- **Selected day.** Nothing is selected on first open (today only has its outline); tapping a day selects it (`accent-soft`, `ink` text) and pushes C2, and stays selected on return.
+- **Swipe.** RNGH `Gesture.Pan` (48 pt or 400 pt/s). The new month slides in from the side it came from in 200 ms (ease-out) while the old one fades out (150 ms); under Reduce Motion both are 100 ms fades. The first month paints in place (`LayoutAnimationConfig skipEntering`). The grid box is a fixed 312 pt (6 × 52 pt cells). "Today" sits beside the month arrows, invisible and hidden from screen readers on the current month so its space stays.
+- **Streak card.** `restarted` when best > current (a longer run ended before this one). With no routines at all the card is hidden and the empty line shows under the grid. The hair card slot is marked for task 033.
+- **Loading.** The grid numbers never wait for data; marks appear with the month's single query (SQLite answers before the first frame in practice). The streak card and the C2 section show a skeleton until their query has data.
+- **Edit window.** Today and the six days before it (7 days, `EDIT_WINDOW_DAYS`); older days show static ticks and "Older days can't be changed". Future days are read-only too, with "You can tick these on the day.".
+- **C2 routines.** A routine shows when it counts for the calendar mark (a snapshot that day, or created by then with steps due). Of A/B options at one time of day only the started one shows, so the other never reads "Not done"; when none was started, all show. Each routine card shows its name, its time of day, its status (Done, Partly done, Not done, or "Not done yet" for today) and its due steps; a step is labelled by its product, else its note, else "Step 2". A past day with nothing done shows "Nothing done · Morning, Evening were due".
+- **Ticks on C2** go through `useTickStep` (Today's mutation) with the routine's due step ids as the snapshot; `useTickDayStep` also updates the C2 cache at once and rolls it back on error. The mutation invalidates `qk.calendar`, so marks and the streak follow.
+- **Hair and Condition** show a "Built in task 033/038" placeholder with the Progress photos row until those tasks replace them with views built on `MonthGrid` (it takes `renderMark` and `dayLabel`). The Progress photos row has no detail line yet (task 037).
+- **LT copy.** Month titles "2026 m. spalis"; spoken dates use the genitive ("spalio 5 d."). Condition is "Būklė".
+
+Check on a real device:
+
+- The month slide feels right in both directions and the grid height never jumps (including after the Today button appears).
+- A horizontal swipe on the grid doesn't fight the vertical scroll of the screen.
+- The partly-done half dot and the not-done ring are readable at 12 pt in light and dark, also on the selected (`accent-soft`) day.
+- VoiceOver and TalkBack read "5 October, partly done" per day, and skip the hidden Today button.
+- 360 pt width: day cells stay at least 44 pt wide; Lithuanian month title and C2 status labels wrap without clipping.
+- A native Lithuanian read of the `calendar.*` strings.

@@ -243,8 +243,22 @@ export function logsInRange(db: DbOrTx, fromDay: string, toDay: string): Routine
     .all();
 }
 
-/** Everything `skinStreak()` and the calendar statuses need, loaded once. */
+/** Everything `skinStreak()` needs, loaded once. */
 export function streakInput(db: DbOrTx, today: string): SkinStreakInput {
+  return skinRangeInput(db, today, null, today);
+}
+
+/**
+ * Routines, steps and the logs from `fromDay` (null: the first) to `toDay`, inclusive, for the
+ * skin streak and the calendar statuses (task 028). As on Today, steps deleted since a day's
+ * snapshot are dropped from it, so a removed step can never block a day.
+ */
+export function skinRangeInput(
+  db: DbOrTx,
+  today: string,
+  fromDay: string | null,
+  toDay: string,
+): SkinStreakInput {
   const routines: RoutineLite[] = db
     .select()
     .from(routine)
@@ -272,6 +286,7 @@ export function streakInput(db: DbOrTx, today: string): SkinStreakInput {
     })
     .from(routineStep)
     .all();
+  const live = new Set(steps.map((s) => s.id));
   const logs: RoutineLogLite[] = db
     .select({
       routineId: routineLog.routineId,
@@ -280,8 +295,13 @@ export function streakInput(db: DbOrTx, today: string): SkinStreakInput {
       doneStepIds: routineLog.doneStepIds,
     })
     .from(routineLog)
-    .where(lte(routineLog.day, today))
-    .all();
+    .where(
+      fromDay === null
+        ? lte(routineLog.day, toDay)
+        : and(gte(routineLog.day, fromDay), lte(routineLog.day, toDay)),
+    )
+    .all()
+    .map((l) => ({ ...l, dueStepIds: l.dueStepIds.filter((id) => live.has(id)) }));
   return { routines, steps, logs, today };
 }
 
