@@ -14,6 +14,7 @@ import {
   weeklyConflicts,
   type ConflictHit,
 } from '@/lib/conflicts';
+import { joinNames } from '@/lib/text';
 import { appStore } from '@/state/app';
 
 import { conflictData, type ConflictData } from './repo';
@@ -176,12 +177,6 @@ export function useEditorConflicts(draft: DraftRoutine): EditorConflicts {
         : null;
     return { hits, steps: analysis.steps, alternatives };
   }, [analysis, t, f, timeOfDay, customName]);
-}
-
-/** "A, B and C". */
-function joinNames(names: readonly string[], and: string): string {
-  if (names.length <= 1) return names.join('');
-  return `${names.slice(0, -1).join(', ')} ${and} ${names.at(-1)}`;
 }
 
 // ─── Ingredient chips (P2, P3, P4) ──────────────────────────────────────────
