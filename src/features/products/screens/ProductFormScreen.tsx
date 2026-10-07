@@ -23,6 +23,7 @@ import { Switch } from '@/components/ui/switch';
 import { Text } from '@/components/ui/text';
 import { productCategories, type Area } from '@/db/enums';
 import { useSettings } from '@/features/settings/api';
+import { useLinkBoughtItem } from '@/features/shopping/api';
 import { currencySymbol } from '@/features/settings/currencies';
 import { parsedLinesAvoidMatches } from '@/lib/avoid';
 import { classifyIngredients, parseIngredientLines } from '@/lib/ingredients';
@@ -67,13 +68,24 @@ type Mode = 'add' | 'edit';
 /**
  * P3 product form. Without `id`: Add product, the short form (every new product), optionally
  * prefilled from a bought shopping item (`prefill`, JSON of form values, task 034). With `id`:
- * Edit product, the full form.
+ * Edit product, the full form. `fromShoppingItem` (with `prefill`) links that bought shopping item
+ * to the saved product, so its "Add it to your products" line goes away.
  */
 export function ProductFormScreen() {
-  const params = useLocalSearchParams<{ id?: string; prefill?: string }>();
+  const params = useLocalSearchParams<{
+    id?: string;
+    prefill?: string;
+    fromShoppingItem?: string;
+  }>();
   const id = params.id ? Number(params.id) : null;
   if (id !== null && Number.isFinite(id)) return <EditProduct id={id} />;
-  return <AddProduct prefill={parsePrefill(params.prefill)} />;
+  const fromItem = params.fromShoppingItem ? Number(params.fromShoppingItem) : null;
+  return (
+    <AddProduct
+      prefill={parsePrefill(params.prefill)}
+      fromShoppingItem={fromItem !== null && Number.isFinite(fromItem) ? fromItem : undefined}
+    />
+  );
 }
 
 function parsePrefill(raw: string | undefined): Partial<ProductFormValues> {
@@ -115,10 +127,16 @@ function toFormValues(p: ProductDetail): ProductFormValues {
   };
 }
 
-function AddProduct({ prefill }: { prefill: Partial<ProductFormValues> }) {
+function AddProduct({
+  prefill,
+  fromShoppingItem,
+}: {
+  prefill: Partial<ProductFormValues>;
+  fromShoppingItem?: number;
+}) {
   const today = useSelector(appStore, (s) => s.activeDay);
   const initial = useMemo(() => newProductValues(today, prefill), [today, prefill]);
-  return <ProductForm mode="add" initial={initial} />;
+  return <ProductForm mode="add" initial={initial} fromShoppingItem={fromShoppingItem} />;
 }
 
 function EditProduct({ id }: { id: number }) {
@@ -156,10 +174,12 @@ function ProductForm({
   mode,
   productId,
   initial,
+  fromShoppingItem,
 }: {
   mode: Mode;
   productId?: number;
   initial: ProductFormValues;
+  fromShoppingItem?: number;
 }) {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
@@ -171,11 +191,13 @@ function ProductForm({
   const avoid: AvoidContext = useAvoidContext().data ?? { items: [], groupOf: new Map() };
   const create = useCreateProduct();
   const update = useUpdateProduct();
+  const linkBoughtItem = useLinkBoughtItem();
 
   const scroll = useRef<React.ComponentRef<typeof KeyboardAwareScrollView>>(null);
   /** Photos picked in this form; the ones not saved are deleted on save or discard. */
   const picked = useRef<string[]>([]);
   const leaving = useRef(false);
+  const linked = useRef(false);
   const afterSave = useRef<'close' | 'another'>('close');
   const [savingAs, setSavingAs] = useState<'close' | 'another'>('close');
   const [moreOpen, setMoreOpen] = useState(mode === 'edit');
@@ -205,6 +227,12 @@ function ProductForm({
     }
     const { id, isFirstWithExpiry } = await create.mutateAsync(value);
     cleanUp();
+    // Only the first product saved from a bought item replaces it ("Save and add another" then
+    // continues with a plain form).
+    if (fromShoppingItem !== undefined && !linked.current) {
+      linked.current = true;
+      linkBoughtItem.mutate({ itemId: fromShoppingItem, productId: id });
+    }
     showToast({ message: t('products.form.addedToast', { name: value.name }) });
     onProductSaved({ id, name: value.name }, { isFirstWithExpiry });
     if (afterSave.current === 'another') {

@@ -4,7 +4,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { dismissToast, runToastAction, uiStore } from '@/state/ui';
+import { dismissToast, runToastAction, runToastSecondary, uiStore } from '@/state/ui';
 import { motion } from '@/theme/motion';
 
 import { Icon } from './icon';
@@ -36,6 +36,15 @@ export function ToastHost() {
           className="min-h-[52px] flex-row items-center gap-2 rounded-md bg-surface pl-4 shadow-raised dark:border dark:border-border"
         >
           <Text className="flex-1 py-3 text-body">{toast.message}</Text>
+          {toast.secondaryLabel && toast.onSecondary ? (
+            <Pressable
+              onPress={() => runToastSecondary(toast.id)}
+              accessibilityRole="button"
+              className="min-h-[44px] justify-center px-2 active:opacity-85"
+            >
+              <Text className="text-body-strong text-accent">{toast.secondaryLabel}</Text>
+            </Pressable>
+          ) : null}
           {toast.actionLabel && toast.onAction ? (
             <Pressable
               onPress={() => runToastAction(toast.id)}

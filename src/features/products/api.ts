@@ -136,6 +136,8 @@ function invalidate(client: QueryClient, opts: { ingredients?: boolean } = {}): 
   client.invalidateQueries({ queryKey: qk.products.all });
   // Today shows expiring products and routine steps by product.
   client.invalidateQueries({ queryKey: ['today'] });
+  // Shopping rows show the product's price and size; Suggested lists finished and expiring ones.
+  client.invalidateQueries({ queryKey: qk.shopping.all });
   if (opts.ingredients) {
     client.invalidateQueries({ queryKey: qk.ingredients.all });
     client.invalidateQueries({ queryKey: qk.conflicts.all });

@@ -6,6 +6,9 @@ export type Toast = {
   message: string;
   actionLabel?: string;
   onAction?: () => void;
+  /** A second action before the main one ("Buy again" next to Undo). */
+  secondaryLabel?: string;
+  onSecondary?: () => void;
   durationMs: number;
 };
 
@@ -41,6 +44,8 @@ export function showToast(input: {
   message: string;
   actionLabel?: string;
   onAction?: () => void;
+  secondaryLabel?: string;
+  onSecondary?: () => void;
   durationMs?: number;
 }): number {
   const toast: Toast = { durationMs: TOAST_DURATION_MS, ...input, id: nextId++ };
@@ -60,6 +65,13 @@ export function runToastAction(id: number): void {
   const toast = uiStore.state.toasts.find((t) => t.id === id);
   dismissToast(id);
   toast?.onAction?.();
+}
+
+/** Runs the toast's second action (Buy again) and removes it. */
+export function runToastSecondary(id: number): void {
+  const toast = uiStore.state.toasts.find((t) => t.id === id);
+  dismissToast(id);
+  toast?.onSecondary?.();
 }
 
 /** Screens with a bar at the bottom (tab bar, timer bar) set its height; 0 when it goes away. */

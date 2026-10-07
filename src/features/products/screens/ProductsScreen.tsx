@@ -18,7 +18,9 @@ import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import type { ProductView } from '@/db/enums';
 import { useSettings, useUpdateSettings } from '@/features/settings/api';
+import { useToBuyCount } from '@/features/shopping/api';
 import { useBuyAgain, type BuyAgain } from '@/features/shopping/buyAgain';
+import { ShoppingScreen, ShoppingShareButton } from '@/features/shopping/screens/ShoppingScreen';
 import { cn } from '@/lib/cn';
 import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
@@ -39,20 +41,22 @@ import { ProductTile } from '../components/ProductTile';
 import {
   activeFilterCount,
   productListStore,
+  productsSegmentStore,
   resetProductFilters,
   setProductFilters,
+  setProductsSegment,
+  type ProductsSegment,
 } from '../listState';
 import type { ProductListItem } from '../types';
-
-type Segment = 'mine' | 'shopping';
 
 const SEARCH_DEBOUNCE_MS = 150;
 const SELECTION_BAR_SPACE = 88;
 
-/** P1 Products: My products (list or shelf) and, from task 034, Shopping. */
+/** P1 Products: My products (list or shelf) and Shopping (P6). */
 export function ProductsScreen() {
   const { t } = useTranslation();
-  const [segment, setSegment] = useState<Segment>('mine');
+  const segment = useSelector(productsSegmentStore, (s) => s.segment);
+  const toBuy = useToBuyCount().data ?? 0;
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<ReadonlySet<number>>(new Set());
   const count = useProductsCount();
@@ -84,18 +88,24 @@ export function ProductsScreen() {
               {selecting ? t('common.done') : t('products.select')}
             </Text>
           </Pressable>
-        ) : null}
+        ) : (
+          <ShoppingShareButton />
+        )}
       </View>
       <View className="px-4 pb-2">
         <ToggleGroup
           value={segment}
           onValueChange={(v) => {
             stopSelecting();
-            setSegment(v as Segment);
+            setProductsSegment(v as ProductsSegment);
           }}
           items={[
             { value: 'mine', label: t('products.mine') },
-            { value: 'shopping', label: t('products.shopping') },
+            {
+              value: 'shopping',
+              label: t('products.shopping'),
+              count: toBuy > 0 ? toBuy : undefined,
+            },
           ]}
         />
       </View>
@@ -118,9 +128,7 @@ export function ProductsScreen() {
               onSelectDone={stopSelecting}
             />
           ) : (
-            <EmptyState icon="shopping-cart" title={t('products.shopping')}>
-              {t('products.shoppingSoon')}
-            </EmptyState>
+            <ShoppingScreen />
           )}
         </Animated.View>
       </View>
@@ -185,12 +193,16 @@ function MyProducts({
   const selectedItems = items.filter((p) => selected.has(p.id));
 
   const finishSelected = async () => {
-    const previous = await finishMany.mutateAsync(selectedItems.map((p) => p.id));
+    const finished = selectedItems.map((p) => ({ id: p.id, name: p.name }));
+    const previous = await finishMany.mutateAsync(finished.map((p) => p.id));
     onSelectDone();
     showToast({
       message: t('products.finishedManyToast', { count: previous.length }),
       actionLabel: t('common.undo'),
       onAction: () => undo.mutate(previous),
+      ...(buyAgain
+        ? { secondaryLabel: t('common.buyAgain'), onSecondary: () => buyAgain(finished) }
+        : {}),
     });
   };
 
@@ -405,6 +417,12 @@ function useRowActions(buyAgain: BuyAgain | null) {
           message: t('products.finishedToast', { name: item.name }),
           actionLabel: t('common.undo'),
           onAction: () => undo.mutate([{ id: item.id, archivedAt: previous }]),
+          ...(buyAgain
+            ? {
+                secondaryLabel: t('common.buyAgain'),
+                onSecondary: () => buyAgain([{ id: item.id, name: item.name }]),
+              }
+            : {}),
         });
       },
     });

@@ -192,11 +192,12 @@ describe('ProductsScreen', () => {
     expect(row.props.accessibilityActions.map((a: { name: string }) => a.name)).toEqual([
       'markOpened',
       'markFinished',
+      'buyAgain',
       'duplicate',
     ]);
     await fireEvent(row, 'accessibilityAction', { nativeEvent: { actionName: 'markOpened' } });
     await wait(0);
-    expect(screen.getByTestId('product-row-1').props.accessibilityActions).toHaveLength(2);
+    expect(screen.getByTestId('product-row-1').props.accessibilityActions).toHaveLength(3);
     await fireEvent(screen.getByTestId('product-row-1'), 'accessibilityAction', {
       nativeEvent: { actionName: 'duplicate' },
     });

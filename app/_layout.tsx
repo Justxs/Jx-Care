@@ -3,6 +3,8 @@ import '@/i18n';
 // Register the routines and hair sources of product detail's "Used in" list before it opens.
 import '@/features/hair/repo';
 import '@/features/routines/repo';
+// Registers Buy again (Products list, detail, archive, Today) with the shopping list.
+import '@/features/shopping/api';
 
 import {
   Figtree_400Regular,

@@ -1,14 +1,15 @@
 import { PortalHost } from '@rn-primitives/portal';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 
-import { avoidItem } from '@/db/schema';
+import { avoidItem, product } from '@/db/schema';
 import { saveSettings } from '@/features/settings/repo';
+import { addBuyAgain, listShopping, prefillFromItem, setBought } from '@/features/shopping/repo';
 import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
 import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
-import { createProduct, getProduct, listKnownIngredients } from '../../repo';
+import { createProduct, getProduct, listKnownIngredients, markFinished } from '../../repo';
 import type { ProductInput } from '../../schema';
 import { ProductFormScreen } from '../ProductFormScreen';
 
@@ -180,6 +181,49 @@ describe('Add product (short form)', () => {
       brand: 'La Roche-Posay',
       priceCents: 1250,
     });
+  });
+});
+
+describe('Add product from a bought shopping item', () => {
+  it('saves the prefilled fields with today as purchase date and links the item', async () => {
+    const app = setupTestApp();
+    saveSettings(app.db, { language: 'en' });
+    const old = createProduct(
+      app.db,
+      input({ name: 'Body lotion', brand: 'Nivea', size: 400, unit: 'ml', ingredients: ['Aqua'] }),
+    );
+    app.db
+      .update(product)
+      .set({ createdAt: Date.now() - 60_000 })
+      .run();
+    markFinished(app.db, old, '2026-10-01');
+    const item = addBuyAgain(app.db, old)!.id;
+    setBought(app.db, item, Date.now() - 30_000);
+    const prefill = prefillFromItem(app.db, item, TODAY);
+    mockParams.current = { prefill: JSON.stringify(prefill), fromShoppingItem: String(item) };
+
+    await app.render(
+      <>
+        <ProductFormScreen />
+        <PortalHost />
+      </>,
+    );
+    expect(await screen.findByDisplayValue('Body lotion')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Save product' }));
+    await flush();
+
+    const saved = getProduct(app.db, 2, TODAY, 30);
+    expect(saved).toMatchObject({
+      name: 'Body lotion',
+      brand: 'Nivea',
+      size: 400,
+      unit: 'ml',
+      purchasedAt: TODAY,
+      openedAt: null,
+      expiresAt: null,
+    });
+    expect(saved?.ingredients.map((i) => i.name)).toEqual(['Aqua']);
+    expect(listShopping(app.db).bought[0]).toMatchObject({ productId: 2, needsProduct: false });
   });
 });
 

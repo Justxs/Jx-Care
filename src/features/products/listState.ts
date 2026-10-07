@@ -24,3 +24,12 @@ export function activeFilterCount(f: ProductFilters): number {
     (f.area === 'all' ? 0 : 1) + f.categories.length + f.statuses.length + (f.avoidOnly ? 1 : 0)
   );
 }
+
+export type ProductsSegment = 'mine' | 'shopping';
+
+/** The Products tab's My products / Shopping switch, so Today can open the shopping list. */
+export const productsSegmentStore = createStore<{ segment: ProductsSegment }>({ segment: 'mine' });
+
+export function setProductsSegment(segment: ProductsSegment): void {
+  productsSegmentStore.setState(() => ({ segment }));
+}

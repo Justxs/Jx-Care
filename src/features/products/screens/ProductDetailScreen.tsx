@@ -162,6 +162,12 @@ function Detail({ product: p }: { product: ProductDetail }) {
       message: t('products.finishedToast', { name: p.name }),
       actionLabel: t('common.undo'),
       onAction: () => undoFinished.mutate([{ id: p.id, archivedAt: previous }]),
+      ...(buyAgain
+        ? {
+            secondaryLabel: t('common.buyAgain'),
+            onSecondary: () => buyAgain([{ id: p.id, name: p.name }]),
+          }
+        : {}),
     });
     goBack();
   };

@@ -476,7 +476,55 @@
       "deleteBody": "Its notes and dates are deleted for good. This can't be undone."
     }
   },
-  "shopping": {},
+  "shopping": {
+    "title": "Shopping list",
+    "suggested": "Suggested",
+    "finishedOn": "Finished {{date}}",
+    "expiredOn": "Expired {{date}}",
+    "dismiss": "Dismiss suggestion",
+    "toBuy": "To buy",
+    "wantToTry": "Want to try",
+    "bought": "Bought",
+    "boughtOn": "Bought {{date}} · leaves the list after 30 days",
+    "clearBought": "Clear bought",
+    "clearedToast_one": "{{count}} bought item cleared",
+    "clearedToast_other": "{{count}} bought items cleared",
+    "moveToBuy": "Move to To buy",
+    "moveToTry": "Move to Want to try",
+    "addToProducts": "Add it to your products to track when it expires.",
+    "addProduct": "Add",
+    "addProductLabel": "Add {{name}} to your products",
+    "share": "Share",
+    "emptyTitle": "Nothing to buy",
+    "emptyBody": "Finished and expiring products show up here as suggestions.",
+    "addItem": "Add item",
+    "toBuyEmpty": "Nothing to buy here.",
+    "addedToast": "{{name}} added to your shopping list",
+    "addedManyToast_one": "{{count}} product added to your shopping list",
+    "addedManyToast_other": "{{count}} products added to your shopping list",
+    "alreadyListedToast": "{{name}} is already on your shopping list",
+    "allListedToast": "Already on your shopping list",
+    "removedToast": "{{name}} removed",
+    "todayRow_one": "Shopping list · {{count}} to buy",
+    "todayRow_other": "Shopping list · {{count}} to buy",
+    "areaFilter": "Show items for",
+    "sheet": {
+      "title": "Add to shopping list",
+      "editTitle": "Edit item",
+      "newItem": "New item",
+      "mode": "What to add",
+      "products": "Products",
+      "noProducts": "No products yet. Add a new item instead.",
+      "noMatch": "No products match.",
+      "list": "List",
+      "note": "Note",
+      "noteHint": "Size, shade or where to buy it.",
+      "save": "Save changes"
+    },
+    "errors": {
+      "noteLong": "Keep the note under 200 characters."
+    }
+  },
   "routines": {
     "copyName": "{{name}} (copy)",
     "errors": {
