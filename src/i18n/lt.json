@@ -712,7 +712,27 @@
     "progressSoon": "Kampai, plaukų albumas ir nuotraukos gairė atsiras 37 užduotyje.",
     "licencesIntro": "Jx-Care sukurta naudojant šiuos atvirojo kodo paketus."
   },
-  "notifications": {},
+  "notifications": {
+    "channels": {
+      "expiry": "Galiojimas",
+      "routines": "Rutinos",
+      "hair": "Plaukų priežiūra",
+      "photos": "Savaitės nuotrauka",
+      "digest": "Savaitės suvestinė ir atsarginė kopija"
+    },
+    "actions": {
+      "buyAgain": "Pirkti dar kartą",
+      "markFinished": "Pažymėti kaip baigtą",
+      "snooze": "Atidėti",
+      "done": "Atlikta",
+      "skipWeek": "Praleisti šią savaitę"
+    },
+    "permissionOff": {
+      "title": "Pranešimai išjungti telefono nustatymuose",
+      "body": "Jūsų pasirinkimai išlieka, bet pranešimai nebus siunčiami, kol jų neįjungsite.",
+      "openSettings": "Atidaryti telefono nustatymus"
+    }
+  },
   "errors": {
     "dataTitle": "Jx-Care nepavyko atidaryti duomenų",
     "dataBody": "Niekas neištrinta. Bandykite dar kartą, o jei kartojasi, perkraukite telefoną.",

@@ -40,3 +40,14 @@ jest.mock('@tanstack/devtools-event-client', () => {
   nativeMethods.measure = jest.fn((callback) => callback?.(0, 0, 100, 44, 16, 100));
   nativeMethods.measureInWindow = jest.fn((callback) => callback?.(16, 100, 100, 44));
 }
+
+// Local notifications and background tasks (task 020): native modules replaced by jest.fn stand-ins.
+jest.mock('expo-notifications', () =>
+  require('./src/test/nativeNotificationMocks').expoNotificationsMock(),
+);
+jest.mock('expo-task-manager', () =>
+  require('./src/test/nativeNotificationMocks').expoTaskManagerMock(),
+);
+jest.mock('expo-background-task', () =>
+  require('./src/test/nativeNotificationMocks').expoBackgroundTaskMock(),
+);

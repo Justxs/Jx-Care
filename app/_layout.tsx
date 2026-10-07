@@ -29,6 +29,8 @@ import { MigrationGate } from '@/db/MigrationGate';
 import { queryClient } from '@/db/queryClient';
 import { useFullScreenModalOptions, useStackOptions } from '@/navigation/stackOptions';
 import { navigationTheme } from '@/navigation/theme';
+// Also defines the background tasks, which must exist at module scope.
+import { startAppNotifications } from '@/notifications/app';
 import { startDayClock } from '@/state/app';
 import { bootstrapAfterMigrations } from '@/state/bootstrap';
 import { watchScreenReader } from '@/state/ui';
@@ -55,6 +57,8 @@ export default function RootLayout() {
 
   useEffect(() => startDayClock(), []);
   useEffect(() => watchScreenReader(), []);
+  // Notifications start once the database is ready and the navigator is mounted (taps navigate).
+  useEffect(() => (booted ? startAppNotifications() : undefined), [booted]);
 
   const onMigrated = useCallback(() => {
     bootstrapAfterMigrations()

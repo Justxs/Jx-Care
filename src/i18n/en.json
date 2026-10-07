@@ -670,7 +670,27 @@
     "progressSoon": "Angles, the hair album and the photo guide arrive in task 037.",
     "licencesIntro": "Jx-Care is built with these open-source packages."
   },
-  "notifications": {},
+  "notifications": {
+    "channels": {
+      "expiry": "Expiry",
+      "routines": "Routines",
+      "hair": "Hair care",
+      "photos": "Weekly photo",
+      "digest": "Weekly digest and backup"
+    },
+    "actions": {
+      "buyAgain": "Buy again",
+      "markFinished": "Mark finished",
+      "snooze": "Snooze",
+      "done": "Done",
+      "skipWeek": "Skip this week"
+    },
+    "permissionOff": {
+      "title": "Notifications are off in phone settings",
+      "body": "Your choices below are kept, but nothing is sent until notifications are on.",
+      "openSettings": "Open phone settings"
+    }
+  },
   "errors": {
     "dataTitle": "Jx-Care couldn't open its data",
     "dataBody": "Nothing was deleted. Try again, and if it keeps happening, restart the phone.",
