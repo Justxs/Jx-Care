@@ -85,3 +85,9 @@ Out:
 - The Group select (menu) inside the ingredient sheet opens above the sheet, and the Delete dialogs (rule, ingredient, group) show above their sheets.
 - Tapping a product in the ingredient sheet closes the sheet and opens P2 in the Products tab.
 - Light and dark, 360 pt wide, and Lithuanian: rule rows with long group names wrap ("Retinoidai × AHA/BHA"), the group chip on ingredient rows truncates, the selection bar with Merge sits above the tab bar, and the last rule clears the New rule Fab.
+
+### Default rules and the catalogue (added 2026-10-07)
+
+- **Default rules.** Justas asked for typical conflicts out of the box. The pack in `commonRules.ts` grew to 8 rules (spec, Empty states): the original three plus AHA/BHA × benzoyl peroxide, vitamin C × benzoyl peroxide, hydroquinone × benzoyl peroxide, copper tripeptide-1 × vitamin C and copper tripeptide-1 × AHA/BHA; the groups gained retinyl acetate and propionate, tazarotene, trifarotene, betaine salicylate, capryloyl salicylic acid and tetrahexyldecyl ascorbate. Pairs that are fine morning and evening (retinoids with vitamin C) are left out because conflicts are checked across the whole day.
+- **Seeding.** `seedCommonRules(db, labels)` runs `addCommonRules` once per `COMMON_RULES_VERSION` and records it in `settings.common_rules_version` (migration 0002). `saveOnboarding` calls it right after creating the settings row, named in the chosen language; `bootstrapAfterMigrations` calls it for existing installs (a no-op afterwards, never blocks the launch). Deleted defaults stay deleted until "Add common rules" or a version bump. `commonRuleLabels(t, language, languages)` builds the translated names for the hook, the seed and the story fixtures.
+- **Catalogue in the ingredient sheet.** For an ingredient in `src/lib/ingredientCatalog.ts`, `IngredientSheet` shows "What it does" with the translated category and "Also called …" with its aliases.

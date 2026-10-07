@@ -44,6 +44,7 @@ export const defaultSettings: AppSettings = {
   setupHiddenAt: null,
   lastBackupAt: null,
   productView: 'list',
+  commonRulesVersion: 0,
 };
 
 function strip(row: Settings): AppSettings {

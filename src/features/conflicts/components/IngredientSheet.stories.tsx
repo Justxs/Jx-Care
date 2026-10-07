@@ -49,7 +49,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** "Retinol": in Retinoids and in a product, so it can't be deleted. */
+/** "Retinol": in Retinoids and in a product, so it can't be deleted; the catalogue says what it does. */
 export const InUse: Story = {
   render: (args) => <StoryIngredientSheet {...args} name="Retinol" />,
 };

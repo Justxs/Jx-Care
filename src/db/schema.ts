@@ -73,6 +73,8 @@ export const settings = sqliteTable('settings', {
   lastBackupAt: integer('last_backup_at'),
   /** Products tab: list or shelf view (P1 remembers the choice). */
   productView: text('product_view').$type<ProductView>().notNull().default('list'),
+  /** Which version of the default conflict rules has been added (0: none yet). */
+  commonRulesVersion: integer('common_rules_version').notNull().default(0),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

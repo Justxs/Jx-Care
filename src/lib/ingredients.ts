@@ -1,3 +1,4 @@
+import { ingredientCatalog } from './ingredientCatalog';
 import { normalizeName, tidy } from './text';
 
 /** Ingredient entry: one ingredient per line (spec P4). */
@@ -77,21 +78,79 @@ export function classifyIngredients(
   });
 }
 
-/** Prefix matches first, then substring matches; case- and accent-insensitive. */
+/** A suggestion for the current line (P4): the person's own ingredient or one from the catalogue. */
+export type IngredientSuggestion = {
+  /** The normalised name, unique among suggestions. */
+  key: string;
+  /** What tapping it puts on the line. */
+  name: string;
+  /** The other name that matched when the name itself didn't ("Vitamin C" for Ascorbic acid). */
+  alias: string | null;
+};
+
+/** A catalogue entry as suggestions need it (see `src/lib/ingredientCatalog.ts`). */
+export type SuggestibleEntry = { name: string; aliases: readonly string[] };
+
+type Candidate = { name: string; norm: string; aliases: { text: string; norm: string }[] };
+
+const catalogCandidates = new WeakMap<readonly SuggestibleEntry[], Candidate[]>();
+
+/** Normalised once per catalogue array. */
+function candidatesOf(catalog: readonly SuggestibleEntry[]): Candidate[] {
+  let list = catalogCandidates.get(catalog);
+  if (!list) {
+    list = catalog.map((c) => ({
+      name: c.name,
+      norm: normalizeName(c.name),
+      aliases: c.aliases.map((a) => ({ text: a, norm: normalizeName(a) })),
+    }));
+    catalogCandidates.set(catalog, list);
+  }
+  return list;
+}
+
+/**
+ * Suggestions for what is typed on a line, case- and accent-insensitive. Order: an alias typed in
+ * full, then names starting with the text, aliases starting with it, names containing it and
+ * aliases containing it; within each, the person's own ingredients come before the catalogue's.
+ * A name the line already spells exactly is left out, and catalogue entries the person already
+ * has are shown once, with their spelling (and still found by the catalogue's aliases).
+ */
 export function suggestIngredients(
-  prefix: string,
+  query: string,
   known: readonly KnownIngredient[],
   limit = 5,
-): KnownIngredient[] {
-  const q = normalizeName(prefix);
+  catalog: readonly SuggestibleEntry[] = ingredientCatalog,
+): IngredientSuggestion[] {
+  const q = normalizeName(query);
   if (!q) return [];
-  const starts: KnownIngredient[] = [];
-  const contains: KnownIngredient[] = [];
+  const own = new Set(known.map((k) => k.normalizedName));
+  const ranked: { s: IngredientSuggestion; rank: number; own: boolean }[] = [];
+  const consider = (c: Candidate, isOwn: boolean) => {
+    if (c.norm === q) return;
+    let rank = -1;
+    let alias: string | null = null;
+    if (c.norm.startsWith(q)) rank = 1;
+    else if (c.norm.includes(q)) rank = 3;
+    for (const a of c.aliases) {
+      const r = a.norm === q ? 0 : a.norm.startsWith(q) ? 2 : a.norm.includes(q) ? 4 : -1;
+      if (r >= 0 && (rank < 0 || r < rank)) {
+        rank = r;
+        alias = a.text;
+      }
+    }
+    if (rank < 0) return;
+    ranked.push({ s: { key: c.norm, name: c.name, alias }, rank, own: isOwn });
+  };
+  const fromCatalog = candidatesOf(catalog);
+  const catalogAliases = new Map(fromCatalog.map((c) => [c.norm, c.aliases]));
   for (const k of known) {
-    if (k.normalizedName === q) continue;
-    if (k.normalizedName.startsWith(q)) starts.push(k);
-    else if (k.normalizedName.includes(q)) contains.push(k);
+    const aliases = catalogAliases.get(k.normalizedName) ?? [];
+    consider({ name: k.name, norm: k.normalizedName, aliases }, true);
   }
-  const byName = (a: KnownIngredient, b: KnownIngredient) => a.name.localeCompare(b.name);
-  return [...starts.sort(byName), ...contains.sort(byName)].slice(0, limit);
+  for (const c of fromCatalog) if (!own.has(c.norm)) consider(c, false);
+  ranked.sort(
+    (a, b) => a.rank - b.rank || Number(b.own) - Number(a.own) || a.s.name.localeCompare(b.s.name),
+  );
+  return ranked.slice(0, limit).map((r) => r.s);
 }

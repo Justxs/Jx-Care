@@ -23,7 +23,7 @@ Defaults picked where the ask was open:
 - **Expiry rule:** a product's effective expiry is the earlier of its printed expiry date and opened date + period-after-opening (PAO, the "12M" jar icon).
 - **Expiry warning:** 30 days before by default, adjustable per user in Settings.
 - **Streak:** a day counts when every step of at least one skin routine scheduled that day is done (skin streak). Hair has its own separate streak, counting hair tasks done on their due day.
-- **Ingredient conflicts:** fully user-defined, no built-in ingredient database, checked across the whole day. Products track dates only, no "how much is left" counter.
+- **Ingredient conflicts:** user-editable, starting from a set of default rules (see the spec, Empty states), checked across the whole day. A built-in catalogue of common ingredients (INCI names with aliases) feeds autocomplete only. Products track dates only, no "how much is left" counter.
 
 ## Features
 

@@ -1,4 +1,5 @@
 import type { Db } from '@/db';
+import { seedDefaultRules } from '@/features/conflicts/seed';
 import type { BiometricKind } from '@/features/security/biometrics';
 import { pinService, type PinService, type RecoveryQuestion } from '@/features/security/pin';
 import { saveSettings, type AppSettings } from '@/features/settings/repo';
@@ -17,7 +18,8 @@ export type OnboardingInput = {
 
 /**
  * The end of O4 and the first moment anything is saved: the PIN and the recovery answer go to
- * secure storage, then the settings row is created with the language and EUR. The app counts as
+ * secure storage, then the settings row is created with the language and EUR, and the default
+ * conflict rules are added in that language. The app counts as
  * unlocked for the rest of this session (the lock starts from the next background, task 018).
  */
 export async function saveOnboarding(
@@ -36,6 +38,8 @@ export async function saveOnboarding(
     answer: input.answer,
   });
   const settings = saveSettings(db, { language: input.language, currency: 'EUR' });
+  // The default conflict rules, named in the language just chosen.
+  seedDefaultRules(db, input.language);
   markOnboarded();
   markDraftSaved(opts.biometricKind ?? null);
   setLocked(false);

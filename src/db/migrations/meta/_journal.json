@@ -15,6 +15,13 @@
       "when": 1791359580843,
       "tag": "0001_tired_echo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791376585565,
+      "tag": "0002_conscious_photon",
+      "breakpoints": true
     }
   ]
 }

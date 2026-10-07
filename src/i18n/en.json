@@ -489,7 +489,8 @@
       "save_zero": "Save without ingredients",
       "save_one": "Save {{count}} ingredient",
       "save_other": "Save {{count}} ingredients",
-      "suggestions": "Suggestions"
+      "suggestions": "Suggestions",
+      "suggestionAlias": "{{name}} ({{alias}})"
     },
     "detail": {
       "title": "Product",
@@ -1346,7 +1347,9 @@
       "delete": "Delete ingredient",
       "inUse": "Used in a product, a conflict rule or the avoid list, so it can't be deleted.",
       "deleteTitle": "Delete {{name}}?",
-      "deleteBody": "It isn't used anywhere. This can't be undone."
+      "deleteBody": "It isn't used anywhere. This can't be undone.",
+      "whatItDoes": "What it does",
+      "alsoCalled": "Also called {{names}}"
     },
     "groupSheet": {
       "titleNew": "New group",
@@ -1369,6 +1372,35 @@
       "deleteRules_other": "{{count}} conflict rules that use it are deleted too.",
       "deleteAvoid": "It also leaves the avoid list.",
       "deleteFinal": "This can't be undone."
+    },
+    "category": {
+      "humectant": "Humectant",
+      "emollient": "Emollient",
+      "oil": "Plant oil",
+      "barrier": "Skin barrier support",
+      "silicone": "Silicone",
+      "cleanser": "Cleansing agent",
+      "emulsifier": "Emulsifier",
+      "thickener": "Thickener or texture",
+      "solvent": "Solvent",
+      "preservative": "Preservative",
+      "fragrance": "Fragrance",
+      "phAdjuster": "pH adjuster",
+      "chelator": "Chelating agent",
+      "antioxidant": "Antioxidant",
+      "vitaminC": "Vitamin C",
+      "retinoid": "Retinoid",
+      "exfoliant": "Exfoliating acid",
+      "peptide": "Peptide",
+      "antiAgeing": "Anti-ageing",
+      "soothing": "Soothing",
+      "brightening": "Brightening",
+      "acne": "Acne care",
+      "antiDandruff": "Anti-dandruff",
+      "sunscreen": "UV filter",
+      "colourant": "Colourant",
+      "hair": "Hair care",
+      "plantExtract": "Plant extract"
     }
   },
   "conflicts": {
@@ -1392,7 +1424,12 @@
       "ahaBha": "AHA/BHA",
       "vitaminC": "Vitamin C",
       "irritate": "Can irritate when used on the same day",
-      "bpRetinoids": "Benzoyl peroxide can make retinoids less effective"
+      "bpRetinoids": "Benzoyl peroxide can make retinoids less effective",
+      "dryIrritate": "Together they can dry out and irritate the skin",
+      "bpVitaminC": "Benzoyl peroxide can oxidise vitamin C and make it less effective",
+      "bpHydroquinone": "Together they can leave temporary dark stains on the skin",
+      "copperVitaminC": "Vitamin C can break down copper peptides",
+      "copperAcids": "Acids can break down copper peptides"
     },
     "sheet": {
       "titleNew": "New rule",

@@ -1,0 +1,1 @@
+ALTER TABLE `settings` ADD `common_rules_version` integer DEFAULT 0 NOT NULL;

@@ -7,6 +7,7 @@
  */
 import type { Db } from '@/db';
 import { addAvoidIngredientByName } from '@/features/conflicts/avoidRepo';
+import { commonRuleLabels } from '@/features/conflicts/commonRules';
 import { addCommonRules } from '@/features/conflicts/repo';
 import { saveConditionDay } from '@/features/condition/repo';
 import { markHairDone, saveHairTask } from '@/features/hair/repo';
@@ -17,6 +18,7 @@ import { getRoutine, saveRoutine, setChoice, tickSteps } from '@/features/routin
 import type { StepInput } from '@/features/routines/schema';
 import { saveSettings } from '@/features/settings/repo';
 import { addBuyAgain, addItem, setBought } from '@/features/shopping/repo';
+import { i18n, languages } from '@/i18n';
 import { addDays, momentOf, weekdayOf } from '@/lib/appDay';
 
 /** The app day every story runs on unless it says otherwise (a Wednesday). */
@@ -305,17 +307,10 @@ export function seedDemo(db: Db, today: string = FIXTURE_TODAY): typeof demoIds 
   setWouldRebuy(db, p.clayMask, false);
 
   // ─── Conflict rules and the avoid list (S3, S4) ───────────────────────────
-  addCommonRules(db, {
-    groups: {
-      retinoids: ['Retinoids', 'Retinoidai'],
-      ahaBha: ['AHA/BHA'],
-      vitaminC: ['Vitamin C', 'Vitaminas C'],
-    },
-    notes: {
-      irritate: 'Can irritate when used on the same day',
-      bpRetinoids: 'Benzoyl peroxide can make retinoids less effective',
-    },
-  });
+  addCommonRules(
+    db,
+    commonRuleLabels((key, options) => i18n.t(key, options), 'en', languages),
+  );
   addAvoidIngredientByName(db, 'Parfum', 'Makes my scalp itchy');
 
   // ─── Routines: morning, and an A/B evening (R1–R3) ────────────────────────
