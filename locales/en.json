@@ -1,0 +1,6 @@
+{
+  "CFBundleDisplayName": "Jx-Care",
+  "NSCameraUsageDescription": "Jx-Care uses the camera for product pictures and your weekly progress photos. They stay in the app.",
+  "NSPhotoLibraryUsageDescription": "Jx-Care uses your photos so you can add a picture of a product.",
+  "NSFaceIDUsageDescription": "Unlock Jx-Care with Face ID."
+}

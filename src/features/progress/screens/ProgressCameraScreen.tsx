@@ -21,6 +21,7 @@ import { sessionAngles } from '@/lib/weeklyPhoto';
 import { appStore } from '@/state/app';
 import { showToast } from '@/state/ui';
 import { cameraColors } from '@/theme/colors';
+import { withAutoLockPaused } from '@/features/security/lock';
 
 import { useLastPhoto } from '../api';
 import {
@@ -70,7 +71,7 @@ export function ProgressCameraScreen() {
   const canAsk = permission?.canAskAgain ?? false;
   // Asked in context: the first time the camera opens.
   useEffect(() => {
-    if (status === 'undetermined' && canAsk) void requestPermission();
+    if (status === 'undetermined' && canAsk) void withAutoLockPaused(requestPermission);
   }, [status, canAsk, requestPermission]);
 
   return (
@@ -79,7 +80,10 @@ export function ProgressCameraScreen() {
       {!permission || !ready ? null : permission.granted ? (
         <CameraBody area={area} session={session} settings={settings} />
       ) : (
-        <PermissionView canAsk={permission.canAskAgain} onAllow={() => void requestPermission()} />
+        <PermissionView
+          canAsk={permission.canAskAgain}
+          onAllow={() => void withAutoLockPaused(requestPermission)}
+        />
       )}
     </View>
   );

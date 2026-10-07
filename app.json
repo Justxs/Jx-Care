@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "eu.jxcare.app"
+      "bundleIdentifier": "eu.jxcare.app",
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
     },
     "android": {
       "package": "eu.jxcare.app",
@@ -47,7 +50,7 @@
         "expo-image-picker",
         {
           "photosPermission": "Jx-Care uses your photos so you can add a picture of a product.",
-          "cameraPermission": "Jx-Care uses the camera so you can photograph a product.",
+          "cameraPermission": "Jx-Care uses the camera for product pictures and your weekly progress photos. They stay in the app.",
           "microphonePermission": false
         }
       ],
@@ -69,7 +72,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Jx-Care uses the camera for your weekly progress photos. They stay in the app.",
+          "cameraPermission": "Jx-Care uses the camera for product pictures and your weekly progress photos. They stay in the app.",
           "microphonePermission": false,
           "recordAudioAndroid": false
         }
@@ -77,6 +80,10 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "lt": "./locales/lt.json"
     }
   }
 }

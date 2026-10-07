@@ -19,6 +19,7 @@ import { createStore } from '@tanstack/react-store';
 import { getDb } from '@/db';
 import { queryClient as appQueryClient } from '@/db/queryClient';
 import { qk } from '@/db/queryKeys';
+import { withAutoLockPaused } from '@/features/security/lock';
 import { saveSettings, type SettingsPatch } from '@/features/settings/repo';
 import { i18n } from '@/i18n';
 import { showToast } from '@/state/ui';
@@ -49,7 +50,11 @@ export type PermissionAdapter = {
   request(): Promise<PermissionState>;
 };
 
-const systemPermission: PermissionAdapter = { get: getPermission, request: requestPermission };
+// The system prompt can send the app to the background (Android); don't lock on its return.
+const systemPermission: PermissionAdapter = {
+  get: getPermission,
+  request: () => withAutoLockPaused(requestPermission),
+};
 let permission: PermissionAdapter = systemPermission;
 
 export function setPermissionAdapter(next: PermissionAdapter | null): void {
