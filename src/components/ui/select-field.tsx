@@ -27,6 +27,8 @@ export type SelectFieldProps = {
   disabled?: boolean;
   /** `menu` drops a short list under the field; `sheet` opens a radio list in a sheet. */
   mode?: 'menu' | 'sheet';
+  /** Lines the chosen value may wrap to in the field (default 1). */
+  valueLines?: number;
   className?: string;
 };
 
@@ -42,6 +44,7 @@ export function SelectField({
   noHelper,
   disabled,
   mode = options.length > 6 ? 'sheet' : 'menu',
+  valueLines = 1,
   className,
 }: SelectFieldProps) {
   const selected = options.find((o) => o.value === value);
@@ -56,6 +59,7 @@ export function SelectField({
           placeholder={placeholder}
           invalid={!!error}
           disabled={disabled}
+          valueLines={valueLines}
           onPress={() => setSheetOpen(true)}
         />
         <Sheet title={label} open={sheetOpen} onClose={() => setSheetOpen(false)}>
@@ -88,8 +92,8 @@ export function SelectField({
           className={cn(fieldBoxClass({ invalid: !!error, disabled }), 'gap-2 active:opacity-85')}
         >
           <Text
-            numberOfLines={1}
-            className={cn('flex-1 text-body', selected ? 'text-ink' : 'text-ink-muted')}
+            numberOfLines={valueLines}
+            className={cn('flex-1 py-2 text-body', selected ? 'text-ink' : 'text-ink-muted')}
           >
             {selected?.label ?? placeholder}
           </Text>

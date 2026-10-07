@@ -116,7 +116,35 @@
     "calendar": "Kalendorius",
     "settings": "Nustatymai"
   },
-  "onboarding": {},
+  "onboarding": {
+    "pitch": "Sekite odos ir plaukų priežiūrą vienoje vietoje",
+    "language": "Kalba",
+    "privacy": "Viskas lieka šiame telefone. Paskyros nereikia.",
+    "createPinTitle": "Sukurkite 4 skaitmenų PIN",
+    "createPinBody": "Jį įvesite kaskart atidarę Jx-Care.",
+    "confirmPinTitle": "Įveskite jį dar kartą",
+    "pinMismatch": "PIN kodai nesutampa",
+    "recoveryTitle": "Pasirinkite atkūrimo klausimą",
+    "recoveryBody": "Jo prireiks, jei pamiršite PIN.",
+    "question": "Klausimas",
+    "questionPlaceholder": "Pasirinkite klausimą",
+    "writeOwn": "Parašysiu savo",
+    "customQuestion": "Jūsų klausimas",
+    "answer": "Atsakymas",
+    "answerHint": "Rašant slepiamas. Bakstelėkite akį, kad patikrintumėte.",
+    "saveFailed": "Nepavyko išsaugoti. Bandykite dar kartą.",
+    "biometricsTitleFace": "Atrakinti su Face ID?",
+    "biometricsTitleFingerprint": "Atrakinti piršto atspaudu?",
+    "biometricsTitleIris": "Atrakinti akies rainele?",
+    "biometricsBody": "Greičiau nei rašyti PIN. PIN veiks ir toliau.",
+    "biometricsPrompt": "Patvirtinkite, kad tai jūs",
+    "biometricsFailed": "Neįjungta. Bandykite dar kartą arba bakstelėkite „Ne dabar“.",
+    "turnOn": "Įjungti",
+    "errors": {
+      "questionRequired": "Pasirinkite klausimą.",
+      "customRequired": "Parašykite klausimą."
+    }
+  },
   "lock": {},
   "security": {
     "errors": {

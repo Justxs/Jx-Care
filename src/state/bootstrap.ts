@@ -1,6 +1,7 @@
 import { getDb } from '@/db';
 import { queryClient } from '@/db/queryClient';
 import { qk } from '@/db/queryKeys';
+import { checkOnboarding } from '@/features/onboarding/gate';
 import { getSettings, hasSettingsRow } from '@/features/settings/repo';
 import { prefetchToday } from '@/features/today/prefetch';
 import { phoneLanguage } from '@/i18n';
@@ -19,5 +20,7 @@ export async function bootstrapAfterMigrations(): Promise<void> {
     await setLanguage(settings.language, { persist: false });
     await prefetchToday(queryClient, appStore.state.activeDay).catch(() => {});
   }
+  // First launch or a missing PIN: onboarding (wipes secure keys left by an old install).
+  await checkOnboarding(db);
   setReady(true);
 }

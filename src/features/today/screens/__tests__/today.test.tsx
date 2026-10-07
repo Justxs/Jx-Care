@@ -144,7 +144,8 @@ describe('TodayScreen routine cards', () => {
 
     await act(async () => appStore.setState((s) => ({ ...s, activeDay: TUE })));
     expect(await screen.findByText('Tuesday, 6 Oct')).toBeTruthy();
-    expect(screen.getByTestId('routine-card-evening')).toBeTruthy();
+    // The new day's routines load after the header changes.
+    expect(await screen.findByTestId('routine-card-evening')).toBeTruthy();
     expect(screen.getByTestId('routine-card-morning')).toBeTruthy();
   });
 
@@ -343,7 +344,7 @@ describe('TodayScreen first run', () => {
 
     await act(async () => appStore.setState((s) => ({ ...s, activeDay: TUE })));
     await waitFor(() => expect(screen.queryByText("You're set")).toBeNull());
-    expect(sectionKeys()).toEqual(['routines']);
+    await waitFor(() => expect(sectionKeys()).toEqual(['routines']));
 
     // A fresh start on the same day: See today hides it at once.
     saveSettings(app.db, { setupDoneAt: null });

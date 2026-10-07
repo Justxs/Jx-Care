@@ -142,7 +142,7 @@ describe('ProductDetailScreen', () => {
     expect(screen.getByLabelText('Size, 30 ml')).toBeTruthy();
     expect(screen.getByLabelText(/^Price, .*24.90/)).toBeTruthy();
     expect(screen.getByLabelText('Ascorbic acid')).toBeTruthy();
-    expect(screen.getByLabelText('Parfum, Avoid')).toBeTruthy();
+    expect(await screen.findByLabelText('Parfum, Avoid')).toBeTruthy();
     expect(screen.getByText('Keep in the fridge.')).toBeTruthy();
 
     // Not finished: no cost per day, and the bar has Edit and Mark finished (Buy again: 034).

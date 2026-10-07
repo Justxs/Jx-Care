@@ -110,7 +110,35 @@
     "calendar": "Calendar",
     "settings": "Settings"
   },
-  "onboarding": {},
+  "onboarding": {
+    "pitch": "Track your skin and hair care in one place",
+    "language": "Language",
+    "privacy": "Everything stays on this phone. No account needed.",
+    "createPinTitle": "Create a 4-digit PIN",
+    "createPinBody": "You'll enter it each time you open Jx-Care.",
+    "confirmPinTitle": "Enter it again",
+    "pinMismatch": "PINs don't match",
+    "recoveryTitle": "Pick a recovery question",
+    "recoveryBody": "You'll need this if you forget your PIN.",
+    "question": "Question",
+    "questionPlaceholder": "Choose a question",
+    "writeOwn": "Write my own",
+    "customQuestion": "Your question",
+    "answer": "Answer",
+    "answerHint": "Hidden as you type. Tap the eye to check it.",
+    "saveFailed": "Couldn't save. Try again.",
+    "biometricsTitleFace": "Unlock with Face ID?",
+    "biometricsTitleFingerprint": "Unlock with fingerprint?",
+    "biometricsTitleIris": "Unlock with iris scan?",
+    "biometricsBody": "Quicker than typing your PIN. Your PIN still works.",
+    "biometricsPrompt": "Confirm it's you",
+    "biometricsFailed": "Not turned on. Try again, or tap Not now.",
+    "turnOn": "Turn on",
+    "errors": {
+      "questionRequired": "Choose a question.",
+      "customRequired": "Write your question."
+    }
+  },
   "lock": {},
   "security": {
     "errors": {

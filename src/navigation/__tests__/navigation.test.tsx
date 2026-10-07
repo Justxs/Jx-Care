@@ -35,7 +35,7 @@ describe('routes', () => {
   it('sends a first launch to onboarding', async () => {
     setupTestApp();
     await renderRouter(routes, { initialUrl: '/' });
-    expect(await screen.findByText('O1 · Welcome')).toBeTruthy();
+    expect(await screen.findByText('Track your skin and hair care in one place')).toBeTruthy();
   });
 
   it('opens a product from a deep link once set up', async () => {

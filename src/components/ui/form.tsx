@@ -156,6 +156,14 @@ export function useAppForm<TSchema extends z.ZodType>(opts: {
   return app.useAppForm({
     defaultValues,
     validators: { onBlur: validate, onSubmit: validate },
+    listeners: {
+      // Leaving one field checks the whole form, which can mark a field nobody has edited yet.
+      // A field with an error re-checks as it is edited, so fixing it clears the error (and the
+      // form can submit) without leaving the field first.
+      onChange: ({ formApi, fieldApi }) => {
+        if (fieldApi.state.meta.errors.length > 0) void formApi.validate('blur');
+      },
+    },
     onSubmit: async ({ value }) => {
       await onSubmit(schema.parse(value));
     },

@@ -54,8 +54,8 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 014 | [Product form and ingredient entry](014-product-form-ingredients.md) | 010, 012 | P3, P4 | done |
 | 015 | [Product detail and archive](015-product-detail-archive.md) | 010, 012 | P2, P5 | done |
 | 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | done |
-| 017 | [Onboarding](017-onboarding.md) | 010, 016 | O1–O5 | todo |
-| 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | todo |
+| 017 | [Onboarding](017-onboarding.md) | 010, 016 | O1–O5 | done |
+| 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | done |
 | 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | todo |
 | 020 | [Notification service](020-notification-service.md) | 005 | Notifications | todo |
 | 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | todo |

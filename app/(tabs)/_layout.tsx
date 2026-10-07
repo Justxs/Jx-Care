@@ -3,7 +3,7 @@ import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
 import { TabBar } from '@/components/TabBar';
 import { getDb } from '@/db';
-import { hasSettingsRow } from '@/features/settings/repo';
+import { useNeedsOnboarding } from '@/features/onboarding/gate';
 import { useThemeColors } from '@/theme/colors';
 import { motion } from '@/theme/motion';
 import { useMotion } from '@/theme/useMotion';
@@ -13,8 +13,9 @@ const renderTabBar = (props: BottomTabBarProps) => <TabBar {...props} />;
 export default function TabsLayout() {
   const colors = useThemeColors();
   const m = useMotion();
-  // Onboarding writes the settings row when it finishes; until then there is no app to show.
-  if (!hasSettingsRow(getDb())) return <Redirect href="/welcome" />;
+  // No settings row, or no PIN (checked at boot): onboarding first. O4 writes both.
+  const onboarding = useNeedsOnboarding(getDb());
+  if (onboarding) return <Redirect href="/welcome" />;
   // TODO(018): send to /lock while the lock store says locked.
   return (
     <Tabs
