@@ -156,11 +156,16 @@
     },
     "photos": {
       "title": "Progreso nuotraukos",
-      "front": "Iš priekio",
-      "label": "Dvi savaitės odos nuotraukos greta, 09-08 ir 10-06",
+      "span": "Prieš 4 savaites ir dabar",
+      "label": "Dvi odos nuotraukos greta, 09-08 ir 10-06",
       "before": "09-08",
       "after": "10-06",
-      "rating": "10-06 · Oda 4 iš 5 · Rami, Švytinti"
+      "changed": "Kas pasikeitė per tą laiką",
+      "changes": {
+        "started": "Pradėta naudoti: Retinolio serumas",
+        "finished": "Baigta: AHA toneris",
+        "mostly": "Dažniausiai: rami"
+      }
     },
     "shopping": {
       "title": "Pirkinių sąrašas",

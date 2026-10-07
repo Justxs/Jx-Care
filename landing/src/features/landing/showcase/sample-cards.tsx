@@ -382,43 +382,48 @@ export function IngredientsCard({ className, delay }: Readonly<CardProps>) {
   );
 }
 
+const photoChanges = ['started', 'finished', 'mostly'] as const;
+
+/**
+ * Two weekly photos side by side, as on the app's Compare screen, and the "What changed" lines
+ * from the week in between. Photos are plain 3:4 boxes like the app's PhotoTile placeholder.
+ */
 export function PhotoCard({ className, delay }: Readonly<CardProps>) {
   const { t } = useTranslation();
   const titleId = useId();
-  const photos = [
-    { key: 'before', tone: 'from-skin-soft to-subtle' },
-    { key: 'after', tone: 'from-accent-soft to-skin-soft' },
-  ] as const;
 
   return (
     <ShowcaseCard aria-labelledby={titleId} className={className} delay={delay}>
       <div className="flex items-center justify-between gap-3">
         <CardTitle id={titleId}>{t('showcase.photos.title')}</CardTitle>
-        <Tag>{t('showcase.photos.front')}</Tag>
+        <span className="text-label text-ink-muted">{t('showcase.photos.span')}</span>
       </div>
       <div
         role="img"
         aria-label={t('showcase.photos.label')}
         className="mt-3 grid grid-cols-2 gap-2"
       >
-        {photos.map((photo) => (
-          <figure key={photo.key} className="m-0">
-            <div
-              aria-hidden="true"
-              className={cn('aspect-3/4 rounded-md bg-linear-to-b', photo.tone)}
-            >
-              <svg viewBox="0 0 60 80" className="size-full text-ink/10">
-                <ellipse cx="30" cy="34" rx="15" ry="19" fill="currentColor" />
-                <path d="M 8 80 C 10 62 20 56 30 56 C 40 56 50 62 52 80 Z" fill="currentColor" />
-              </svg>
-            </div>
-            <figcaption aria-hidden="true" className="mt-1.5 text-label font-medium text-ink-muted">
-              {t(`showcase.photos.${photo.key}`)}
-            </figcaption>
-          </figure>
+        {(['before', 'after'] as const).map((side) => (
+          <div key={side} aria-hidden="true">
+            <span className="block text-label font-medium tabular-nums">
+              {t(`showcase.photos.${side}`)}
+            </span>
+            <span className="mt-1 block aspect-3/4 rounded-md bg-neutral-soft" />
+          </div>
         ))}
       </div>
-      <p className="mt-3 text-label text-ink-muted">{t('showcase.photos.rating')}</p>
+      <p className="mt-4 text-label text-ink-muted">{t('showcase.photos.changed')}</p>
+      <ul className="mt-1 divide-y divide-border">
+        {photoChanges.map((change, index) => (
+          <li
+            key={change}
+            style={{ '--row': index }}
+            className="py-2.5 text-body motion-safe:animate-settle-in"
+          >
+            {t(`showcase.photos.changes.${change}`)}
+          </li>
+        ))}
+      </ul>
     </ShowcaseCard>
   );
 }

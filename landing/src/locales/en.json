@@ -156,11 +156,16 @@
     },
     "photos": {
       "title": "Progress photos",
-      "front": "Front",
-      "label": "Two weekly skin photos side by side, 8 Sep and 6 Oct",
+      "span": "4 weeks ago vs now",
+      "label": "Two skin photos side by side, 8 Sep and 6 Oct",
       "before": "8 Sep",
       "after": "6 Oct",
-      "rating": "6 Oct · Skin 4 of 5 · Calm, Glow"
+      "changed": "What changed in between",
+      "changes": {
+        "started": "Started Retinol serum",
+        "finished": "Finished AHA toner",
+        "mostly": "Mostly Calm"
+      }
     },
     "shopping": {
       "title": "Shopping list",
