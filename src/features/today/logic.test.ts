@@ -1,13 +1,12 @@
 import { createTestDb } from '@/db/test-db';
-import { getTodayRoutines, tickSteps } from '@/features/routines/repo';
+import { remainingIds } from '@/features/routines/playerLogic';
+import { chosenRoutine, getTodayRoutines, tickSteps } from '@/features/routines/repo';
 
 import {
-  chosenRoutine,
   doneTransition,
   expiredProducts,
   firstUnfinishedKey,
   greetingFor,
-  remainingStepIds,
   sectionOrder,
   setupView,
 } from './logic';
@@ -51,9 +50,9 @@ describe('routine card helpers', () => {
 
     tickSteps(db, morning, [r.steps[0]!.id], MON, true, r.progress.dueStepIds);
     groups = getTodayRoutines(db, MON, 30);
-    expect(remainingStepIds(chosenRoutine(groups[0]!))).toEqual([r.steps[1]!.id, r.steps[2]!.id]);
+    expect(remainingIds(chosenRoutine(groups[0]!))).toEqual([r.steps[1]!.id, r.steps[2]!.id]);
 
-    tickSteps(db, morning, remainingStepIds(chosenRoutine(groups[0]!)), MON, true, []);
+    tickSteps(db, morning, remainingIds(chosenRoutine(groups[0]!)), MON, true, []);
     groups = getTodayRoutines(db, MON, 30);
     expect(groups[0]!.complete).toBe(true);
     expect(firstUnfinishedKey(groups)).toBe('evening');

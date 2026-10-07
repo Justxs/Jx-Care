@@ -186,6 +186,14 @@ function logsOn(db: DbOrTx, day: string): Map<number, RoutineLog> {
   return new Map(rows.map((l) => [l.routineId, l]));
 }
 
+/** The option a time of day shows and opens: `chosenId`, else the first. */
+export function chosenRoutine<R extends { id: number }>(group: {
+  routines: readonly R[];
+  chosenId: number;
+}): R {
+  return group.routines.find((r) => r.id === group.chosenId) ?? group.routines[0]!;
+}
+
 /** Builds the Today groups from routines already loaded for `day`. Exported for the optimistic tick. */
 export function groupDayRoutines(
   groups: readonly { key: string; routines: readonly DayRoutine[]; chosenId: number }[],

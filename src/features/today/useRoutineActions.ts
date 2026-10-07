@@ -2,12 +2,12 @@ import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 
 import { useSetChoice, useTickStep } from '@/features/routines/api';
-import type { TodayRoutineGroup } from '@/features/routines/repo';
+import { remainingIds } from '@/features/routines/playerLogic';
+import { chosenRoutine, type TodayRoutineGroup } from '@/features/routines/repo';
 import { weekdayOf } from '@/lib/appDay';
 import { showToast } from '@/state/ui';
 
 import { timeOfDayName } from './cardText';
-import { chosenRoutine, remainingStepIds } from './logic';
 
 /** All done and the A/B pick for Today's routine cards. */
 export function useRoutineActions(day: string) {
@@ -21,7 +21,7 @@ export function useRoutineActions(day: string) {
    */
   const allDone = (group: TodayRoutineGroup) => {
     const r = chosenRoutine(group);
-    const stepIds = remainingStepIds(r);
+    const stepIds = remainingIds(r);
     if (stepIds.length === 0) return;
     const vars = {
       routineId: r.id,
