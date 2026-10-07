@@ -17,7 +17,7 @@ If something you need is in none of them, pick the simplest option that fits the
 
 ## Stack (fixed)
 
-The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-06 for reference:
+The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-06 for reference:
 
 | Need | Package | Version seen |
 | --- | --- | --- |

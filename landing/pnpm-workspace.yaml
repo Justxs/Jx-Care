@@ -2,3 +2,13 @@
 
 allowBuilds:
   esbuild: true
+
+# pnpm holds back versions published less than a day ago (supply-chain protection). These exact
+# versions are already in the lockfile and were published on 2026-10-07; drop them once they
+# are older than a day. New versions are still held back.
+minimumReleaseAgeExclude:
+  - '@babel/core@8.0.7'
+  - '@babel/helper-compilation-targets@8.0.7'
+  - '@babel/helpers@8.0.7'
+  - '@babel/parser@8.0.7'
+  - '@babel/traverse@8.0.7'
