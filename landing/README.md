@@ -9,7 +9,7 @@ It is its own package, separate from the app: Vite 8, React 19 with the React Co
 ```sh
 cd landing
 pnpm install
-pnpm dev        # http://localhost:5173
+pnpm dev        # http://localhost:5173 (builds the live demo first if it isn't there)
 pnpm storybook  # http://localhost:6006
 ```
 
@@ -25,7 +25,7 @@ pnpm check      # typecheck, oxlint, oxfmt and vitest
 pnpm demo       # the app's tab screens for the web, into public/demo (gitignored)
 ```
 
-`pnpm demo` runs [`../scripts/build-web-demo.mjs`](../scripts/build-web-demo.mjs), which needs the app's own `pnpm install` at the repo root. It exports the app's real Today, Products, Routines, Calendar and Settings screens with Expo for the web, on the same sample data as the app's Storybook, with SQLite in memory (sql.js), so nothing is saved. The source is in [`../src/web-demo`](../src/web-demo). `src/features/landing/showcase/live-demo.tsx` frames it over the drawn screen at the same size and fades it in once it has drawn; it follows the page's theme and language. Without a demo build (`pnpm dev` before `pnpm demo`, tests, Storybook) the drawing stays.
+`pnpm demo` runs [`../scripts/build-web-demo.mjs`](../scripts/build-web-demo.mjs), which needs the app's own `pnpm install` at the repo root. It exports the app's real Today, Products, Routines, Calendar and Settings screens with Expo for the web, on the same sample data as the app's Storybook, with SQLite in memory (sql.js), so nothing is saved. The source is in [`../src/web-demo`](../src/web-demo). `src/features/landing/showcase/live-demo.tsx` frames it over the drawn screen at the same size and fades it in once it has drawn; it follows the page's theme and language. `pnpm dev` builds it once when public/demo is missing (run `pnpm demo` to rebuild it after app changes). Without a demo build (a failed build, tests, Storybook) the drawing stays.
 
 ## Build it
 

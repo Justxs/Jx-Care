@@ -5,8 +5,11 @@
 //
 // The page is served from /demo/ by default. For a website hosted under a sub-path, set
 // JX_WEB_DEMO_BASE_URL, e.g. JX_WEB_DEMO_BASE_URL=/Jx-Care/demo pnpm web-demo.
+//
+// With --if-missing (landing's `pnpm dev`), an existing build is kept, and a failed build only
+// warns: the page then shows its drawn phone instead of stopping the dev server.
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +17,12 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'landing', 'public', 'demo');
 const require = createRequire(import.meta.url);
+const ifMissing = process.argv.includes('--if-missing');
+
+if (ifMissing && existsSync(path.join(out, 'index.html'))) {
+  console.log('Web demo already built; run `pnpm demo` to rebuild it after app changes.');
+  process.exit(0);
+}
 
 rmSync(out, { recursive: true, force: true });
 
@@ -23,7 +32,15 @@ const result = spawnSync('pnpm', ['expo', 'export', '--platform', 'web', '--outp
   shell: process.platform === 'win32',
   env: { ...process.env, JX_WEB_DEMO: '1', CI: '1' },
 });
-if (result.status !== 0) process.exit(result.status ?? 1);
+if (result.status !== 0) {
+  if (ifMissing) {
+    console.warn(
+      'Web demo build failed; the phone shows its drawing. Run `pnpm install` at the repo root, then `pnpm demo`.',
+    );
+    process.exit(0);
+  }
+  process.exit(result.status ?? 1);
+}
 
 // sql.js loads its WebAssembly from next to the page (src/web-demo/sqlJsDb.ts).
 const wasm = path.join(path.dirname(require.resolve('sql.js')), 'sql-wasm-browser.wasm');
