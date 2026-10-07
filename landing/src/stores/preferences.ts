@@ -59,11 +59,13 @@ preferencesStore.subscribe((next) => {
 /** Changes the page with a cross-fade where the browser supports view transitions. */
 function withTransition(change: () => void) {
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-  if (!document.startViewTransition || reduced) {
+  if (!document.startViewTransition || reduced || document.hidden) {
     change();
     return;
   }
-  document.startViewTransition(change);
+  // The browser can still skip the transition (the tab hides mid-way); `ready` then rejects,
+  // but the change itself has already run.
+  document.startViewTransition(change).ready.catch(() => {});
 }
 
 export function setLocale(locale: Locale) {

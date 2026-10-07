@@ -30,7 +30,11 @@ export function createAppRouter(history?: RouterHistory) {
   return createRouter({
     routeTree,
     history,
-    defaultViewTransition: true,
+    // No cross-fade on the first load or in a hidden tab: the browser would abort it there and
+    // leave an unhandled rejection behind.
+    defaultViewTransition: {
+      types: ({ fromLocation }) => (fromLocation && !document.hidden ? ['page'] : false),
+    },
     scrollRestoration: true,
   });
 }
