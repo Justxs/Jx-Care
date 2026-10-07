@@ -109,7 +109,13 @@
       "7": "sekmadienis"
     }
   },
-  "tabs": {},
+  "tabs": {
+    "today": "Šiandien",
+    "products": "Produktai",
+    "routines": "Rutinos",
+    "calendar": "Kalendorius",
+    "settings": "Nustatymai"
+  },
   "onboarding": {},
   "lock": {},
   "today": {},
@@ -193,7 +199,8 @@
     "emptyTitle": "Produktų dar nėra",
     "emptyBody": "Pridėkite, ką turite lentynoje, ir matysite, kada baigiasi galiojimas.",
     "addProduct": "Pridėti produktą",
-    "importBackup": "Atkurti atsarginę kopiją"
+    "importBackup": "Atkurti atsarginę kopiją",
+    "builtIn": "Bus sukurta {{task}} užduotyje."
   },
   "forms": {
     "errors": {
@@ -204,5 +211,41 @@
       "dateRequired": "Pasirinkite datą.",
       "pickOne": "Pasirinkite bent vieną."
     }
+  },
+  "screens": {
+    "welcome": "Sveiki",
+    "createPin": "PIN kūrimas",
+    "confirmPin": "PIN patvirtinimas",
+    "recovery": "Atkūrimo klausimas",
+    "biometrics": "Face ID arba piršto atspaudas",
+    "lock": "Užrakinta",
+    "forgotPin": "Pamirštas PIN",
+    "today": "Šiandien",
+    "products": "Produktai",
+    "productDetail": "Produktas",
+    "archive": "Archyvas",
+    "productForm": "Pridėti produktą",
+    "routines": "Rutinos",
+    "routineEditor": "Rutina",
+    "hairTask": "Plaukų užduotis",
+    "calendar": "Kalendorius",
+    "day": "Diena",
+    "progress": "Progreso nuotraukos",
+    "week": "Savaitė",
+    "camera": "Progreso nuotrauka",
+    "review": "Nuotraukos peržiūra",
+    "compare": "Palyginimas",
+    "settings": "Nustatymai",
+    "ingredients": "Ingredientai",
+    "conflicts": "Konfliktai",
+    "avoid": "Vengiamų sąrašas",
+    "reminders": "Priminimai",
+    "security": "PIN ir saugumas",
+    "preferences": "Nuostatos",
+    "backup": "Atsarginė kopija",
+    "player": "Rutina",
+    "playerDone": "Rutina atlikta",
+    "hairDone": "Plaukų užduotis atlikta",
+    "productEdit": "Redaguoti produktą"
   }
 }

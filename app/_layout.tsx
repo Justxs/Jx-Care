@@ -11,10 +11,10 @@ import {
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
+import { Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
@@ -24,6 +24,8 @@ import { setDb } from '@/db';
 import { appDb } from '@/db/client';
 import { MigrationGate } from '@/db/MigrationGate';
 import { queryClient } from '@/db/queryClient';
+import { useFullScreenModalOptions, useStackOptions } from '@/navigation/stackOptions';
+import { navigationTheme } from '@/navigation/theme';
 import { startDayClock } from '@/state/app';
 import { bootstrapAfterMigrations } from '@/state/bootstrap';
 import { watchScreenReader } from '@/state/ui';
@@ -43,6 +45,9 @@ export default function RootLayout() {
     Figtree_700Bold,
   });
   const colors = useThemeColors();
+  const stackOptions = useStackOptions();
+  const fullScreen = useFullScreenModalOptions();
+  const theme = useMemo(() => navigationTheme(colors), [colors]);
   const [booted, setBooted] = useState(false);
 
   useEffect(() => startDayClock(), []);
@@ -71,12 +76,32 @@ export default function RootLayout() {
               <StatusBar style={colors.scheme === 'dark' ? 'light' : 'dark'} />
               <MigrationGate onReady={onMigrated}>
                 {booted ? (
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
-                      contentStyle: { backgroundColor: colors.canvas },
-                    }}
-                  />
+                  <ThemeProvider value={theme}>
+                    <Stack screenOptions={stackOptions}>
+                      <Stack.Screen name="(tabs)" />
+                      <Stack.Screen name="(onboarding)" />
+                      {/* Arriving at the lock screen never animates. */}
+                      <Stack.Screen
+                        name="lock"
+                        options={{ animation: 'none', gestureEnabled: false }}
+                      />
+                      <Stack.Screen name="forgot-pin" />
+                      <Stack.Screen name="product-form" options={fullScreen} />
+                      <Stack.Screen
+                        name="player"
+                        options={{ ...fullScreen, gestureEnabled: false }}
+                      />
+                      <Stack.Screen name="progress" options={fullScreen} />
+                      <Stack.Screen
+                        name="hair/done/[taskId]"
+                        options={{
+                          presentation: 'transparentModal',
+                          animation: 'none',
+                          contentStyle: { backgroundColor: 'transparent' },
+                        }}
+                      />
+                    </Stack>
+                  </ThemeProvider>
                 ) : null}
               </MigrationGate>
               <ToastHost />

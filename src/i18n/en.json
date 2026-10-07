@@ -103,7 +103,13 @@
       "7": "Sunday"
     }
   },
-  "tabs": {},
+  "tabs": {
+    "today": "Today",
+    "products": "Products",
+    "routines": "Routines",
+    "calendar": "Calendar",
+    "settings": "Settings"
+  },
   "onboarding": {},
   "lock": {},
   "today": {},
@@ -177,7 +183,8 @@
     "emptyTitle": "No products yet",
     "emptyBody": "Add what is on your shelf to see when it expires.",
     "addProduct": "Add product",
-    "importBackup": "Restore a backup"
+    "importBackup": "Restore a backup",
+    "builtIn": "Built in task {{task}}."
   },
   "forms": {
     "errors": {
@@ -188,5 +195,41 @@
       "dateRequired": "Pick a date.",
       "pickOne": "Pick at least one."
     }
+  },
+  "screens": {
+    "welcome": "Welcome",
+    "createPin": "Create PIN",
+    "confirmPin": "Confirm PIN",
+    "recovery": "Recovery question",
+    "biometrics": "Face ID or fingerprint",
+    "lock": "Locked",
+    "forgotPin": "Forgot PIN",
+    "today": "Today",
+    "products": "Products",
+    "productDetail": "Product",
+    "archive": "Archive",
+    "productForm": "Add product",
+    "routines": "Routines",
+    "routineEditor": "Routine",
+    "hairTask": "Hair task",
+    "calendar": "Calendar",
+    "day": "Day",
+    "progress": "Progress photos",
+    "week": "Week",
+    "camera": "Progress photo",
+    "review": "Review photo",
+    "compare": "Compare",
+    "settings": "Settings",
+    "ingredients": "Ingredients",
+    "conflicts": "Conflicts",
+    "avoid": "Avoid list",
+    "reminders": "Reminders",
+    "security": "PIN and security",
+    "preferences": "Preferences",
+    "backup": "Backup and restore",
+    "player": "Routine",
+    "playerDone": "Routine done",
+    "hairDone": "Hair task done",
+    "productEdit": "Edit product"
   }
 }

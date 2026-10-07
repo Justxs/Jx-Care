@@ -30,16 +30,24 @@ export type SheetFrameProps = {
   /** Pinned under the scrolling body: usually one primary Button. */
   footer?: ReactNode;
   children: ReactNode;
+  className?: string;
 };
 
 /** Grabber, Cancel, centred title, scrolling body and a pinned footer. */
-export function SheetFrame({ title, onCancel, cancelLabel, footer, children }: SheetFrameProps) {
+export function SheetFrame({
+  title,
+  onCancel,
+  cancelLabel,
+  footer,
+  children,
+  className,
+}: SheetFrameProps) {
   const { t } = useTranslation();
   const inSheet = useContext(InSheetContext);
   const insets = useSafeAreaInsets();
   const Scroll = inSheet ? BottomSheetScrollView : KeyboardAwareScrollView;
   return (
-    <View className={cn('bg-surface', inSheet ? 'max-h-full' : 'flex-1')}>
+    <View className={cn('bg-surface', inSheet ? 'max-h-full' : 'flex-1', className)}>
       <View className="items-center pt-2">
         <View className="h-[5px] w-[36px] rounded-full bg-border-strong" />
       </View>

@@ -14,6 +14,7 @@ const typeScale = [
   'caption',
   'overline',
   'tiny',
+  'tiny-strong',
 ];
 
 const twMerge = extendTailwindMerge({

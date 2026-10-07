@@ -19,6 +19,8 @@ const typeScale = {
   overline: { size: 13, line: 18, family: 'Figtree_600SemiBold' },
   // Tab bar labels and single-letter weekday dots only (DESIGN.md exception).
   tiny: { size: 12, line: 16, family: 'Figtree_500Medium' },
+  // The active tab label.
+  'tiny-strong': { size: 12, line: 16, family: 'Figtree_600SemiBold' },
 };
 
 const typePlugin = plugin(({ addUtilities }) => {

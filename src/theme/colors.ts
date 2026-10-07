@@ -78,9 +78,15 @@ export function colorsFor(scheme: ColorSchemeName): ThemeColors {
   return palette[scheme];
 }
 
+const themed = {
+  light: { ...palette.light, scheme: 'light' as const },
+  dark: { ...palette.dark, scheme: 'dark' as const },
+};
+
 /** The current theme's token values, switching with the phone theme. */
 export function useThemeColors(): ThemeColors & { scheme: ColorSchemeName } {
   const { colorScheme } = useColorScheme();
   const scheme: ColorSchemeName = colorScheme === 'dark' ? 'dark' : 'light';
-  return { ...palette[scheme], scheme };
+  // Stable per scheme so memos and effects that depend on it don't rerun every render.
+  return themed[scheme];
 }
