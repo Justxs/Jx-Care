@@ -175,11 +175,6 @@ function run(task: () => Promise<unknown>): Promise<void> {
   return next;
 }
 
-/** Resolves when reminder work started so far has finished (tests). */
-export function remindersSettled(): Promise<void> {
-  return settled;
-}
-
 /**
  * After a routine is created, edited, switched on or off, duplicated or deleted, or an A/B pick
  * changes. A full `sync` rather than `syncEntity`: a change to one routine can move its time of

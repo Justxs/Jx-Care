@@ -509,19 +509,9 @@ export function deleteRoutine(db: Db, id: number): void {
   db.delete(routine).where(eq(routine.id, id)).run();
 }
 
-/** "Pick another" (T2) and replacing missing steps (sequence 7). Returns the routine id. */
-export function replaceStepProduct(
-  db: Db,
-  stepId: number,
-  productId: number | null,
-): number | null {
-  const row = db
-    .update(routineStep)
-    .set({ productId })
-    .where(eq(routineStep.id, stepId))
-    .returning({ routineId: routineStep.routineId })
-    .get();
-  return row?.routineId ?? null;
+/** "Pick another" (T2) and replacing missing steps (sequence 7). */
+export function replaceStepProduct(db: Db, stepId: number, productId: number | null): void {
+  db.update(routineStep).set({ productId }).where(eq(routineStep.id, stepId)).run();
 }
 
 /** The ticked step ids after ticking (`done`) or unticking `stepIds`, in tick order. */

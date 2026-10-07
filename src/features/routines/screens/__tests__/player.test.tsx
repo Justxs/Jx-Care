@@ -15,7 +15,7 @@ import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 import { addBuyAgain } from '@/features/shopping/repo';
 
-import * as events from '../../events';
+import * as reminders from '../../reminders';
 import { registerPlayerConflicts } from '../../playerSlots';
 import { getDayLog, getRoutineDay, tickSteps } from '../../repo';
 import { RoutineDoneScreen } from '../RoutineDoneScreen';
@@ -156,7 +156,7 @@ describe('RoutinePlayerScreen', () => {
 
   it('keeps ticks when left mid-way, and the last tick hands over to the done screen', async () => {
     const app = setup();
-    const completed = jest.spyOn(events, 'onRoutineCompleted');
+    const completed = jest.spyOn(reminders, 'cancelTodaysRoutineReminders');
     const id = seedRoutine(app.db, { name: 'Evening', steps: [null, null] });
     const [s1, s2] = stepIds(app.db, id);
     // Ticked earlier, then the player was closed.
@@ -176,7 +176,7 @@ describe('RoutinePlayerScreen', () => {
       params: { routineId: String(id), from: '0' },
     });
     await waitFor(() => expect(getDayLog(app.db, id, MON)?.completedAt).not.toBeNull());
-    expect(completed).toHaveBeenCalledWith(id, MON);
+    expect(completed).toHaveBeenCalledWith(id);
   });
 
   it('All done ticks every remaining step and opens the done screen', async () => {

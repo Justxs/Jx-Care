@@ -31,7 +31,7 @@ import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
 import { showToast } from '@/state/ui';
 
-import { onRoutineReminderSwitchedOn, useDeleteRoutine, useRoutine, useSaveRoutine } from '../api';
+import { useDeleteRoutine, useRoutine, useSaveRoutine } from '../api';
 import { EditorConflictPanel } from '../components/EditorConflictPanel';
 import { editorProductMap, type EditorProduct } from '../components/editorProducts';
 import { StepEditorSheet } from '../components/StepEditorSheet';
@@ -48,6 +48,7 @@ import {
   withStepKeys,
 } from '../editor';
 import type { StepProduct } from '../repo';
+import { askForRoutineReminders } from '../reminders';
 import { moveItem } from '../reorder';
 import {
   emptyRoutineForm,
@@ -400,7 +401,8 @@ function RoutineForm({
                       accessibilityLabel={t('routines.editor.reminder')}
                       onCheckedChange={(on) => {
                         field.handleChange(on ? defaultReminderTime(form.state.values) : null);
-                        if (on) onRoutineReminderSwitchedOn();
+                        // Asks for notifications in context (refinement 8).
+                        if (on) void askForRoutineReminders();
                       }}
                     />
                   </View>

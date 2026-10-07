@@ -15,6 +15,7 @@ import {
   useTickStep,
   todayRoutinesQuery,
 } from './api';
+import * as reminders from './reminders';
 import * as repo from './repo';
 import type { SaveRoutineInput } from './repo';
 
@@ -124,6 +125,38 @@ describe('useTickStep', () => {
   });
 });
 
+describe('completing a routine', () => {
+  it('cancels today’s reminder each time a tick (player or All done) makes it complete', async () => {
+    const cancel = jest.spyOn(reminders, 'cancelTodaysRoutineReminders');
+    const app = setup();
+    const due = repo.getRoutineDay(app.db, app.id, MON, 30)!.progress.dueStepIds;
+    const { result } = await app.renderHook(() => useTickStep());
+    const tick = (stepIds: number[], done: boolean) =>
+      act(async () => {
+        await result.current.mutateAsync({
+          routineId: app.id,
+          stepIds,
+          day: MON,
+          done,
+          dueStepIds: due,
+        });
+      });
+
+    await tick([due[0]!], true);
+    expect(cancel).not.toHaveBeenCalled();
+    await tick([due[1]!], true);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(cancel).toHaveBeenLastCalledWith(app.id);
+
+    // Ticking again while complete changes nothing; unticking and finishing again counts again.
+    await tick([due[1]!], true);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    await tick([due[1]!], false);
+    await tick([due[1]!], true);
+    expect(cancel).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe('applyTickToGroups', () => {
   it('ticks, fixes the A/B choice to the started routine and unticks again', () => {
     const app = setup();
@@ -160,7 +193,8 @@ describe('applyTickToGroups', () => {
 });
 
 describe('routine mutations', () => {
-  it('saves and duplicates, refreshing the list', async () => {
+  it('saves and duplicates, refreshing the list and the reminders', async () => {
+    const resync = jest.spyOn(reminders, 'resyncRoutineReminders');
     const app = setup();
     const { result } = await app.renderHook(() => ({
       list: useRoutines(),
@@ -172,11 +206,13 @@ describe('routine mutations', () => {
       await result.current.save.mutateAsync(input({ name: 'Morning', timeOfDay: 'morning' }));
     });
     await waitFor(() => expect(result.current.list.data).toHaveLength(2));
+    expect(resync).toHaveBeenCalledTimes(1);
     await act(async () => {
       await result.current.duplicate.mutateAsync(app.id);
     });
     await waitFor(() =>
       expect(result.current.list.data?.map((r) => r.name)).toContain('Evening (copy)'),
     );
+    expect(resync).toHaveBeenCalledTimes(2);
   });
 });

@@ -194,9 +194,8 @@ describe('listRoutines and step products', () => {
     const fresh = createProduct(db, productInput({ name: 'Fresh' }));
     const id = addRoutine(db, { steps: [step({ productId: gone })] });
     const [s] = stepIds(db, id);
-    expect(replaceStepProduct(db, s!, fresh)).toBe(id);
+    replaceStepProduct(db, s!, fresh);
     expect(getRoutine(db, id, MON, WARN)!.steps[0]!.product?.name).toBe('Fresh');
-    expect(replaceStepProduct(db, 999, fresh)).toBeNull();
   });
 });
 

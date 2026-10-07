@@ -17,13 +17,9 @@ import { scheduleSnooze, setNotificationOS, snoozeIdFor } from '@/notifications/
 import type { PlannedNotification } from '@/notifications/types';
 import { dismissToast, uiStore } from '@/state/ui';
 
-import { onRoutineChanged } from './api';
-import * as events from './events';
-import * as reminders from './reminders';
 import {
   askForRoutineReminders,
   cancelTodaysRoutineReminders,
-  remindersSettled,
   resyncRoutineReminders,
   routineReminderPlanner,
 } from './reminders';
@@ -264,14 +260,6 @@ describe('with the notification layer', () => {
     expect(pendingRoutineDays()).toHaveLength(13);
   });
 
-  it('onRoutineCompleted runs the cancel', async () => {
-    const id = addRoutine(db);
-    const spy = jest.spyOn(reminders, 'cancelTodaysRoutineReminders');
-    events.onRoutineCompleted(id, MON);
-    await remindersSettled();
-    expect(spy).toHaveBeenCalledWith(id);
-  });
-
   it('an edit reschedules the routine’s reminders', async () => {
     const id = addRoutine(db, { daysOfWeek: [1] });
     await sync(NOW);
@@ -283,13 +271,6 @@ describe('with the notification layer', () => {
     expect(pending.map((r) => r.fireAt).sort()).toEqual(
       [TUE, '2026-10-13'].map((d) => momentOf(d, '22:00')),
     );
-  });
-
-  it('onRoutineChanged syncs', async () => {
-    addRoutine(db);
-    onRoutineChanged(1);
-    await remindersSettled();
-    expect(os.schedule).toHaveBeenCalled();
   });
 
   it('turning off the master switch cancels routine reminders on the next sync', async () => {
