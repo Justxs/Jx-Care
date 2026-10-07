@@ -115,9 +115,9 @@ export function LandingShell({
           <Link
             to="/"
             aria-label={t('nav.home')}
-            className="flex min-h-11 items-center rounded-full"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-full"
           >
-            {/* On the narrowest phones the mark stands alone so the nav keeps Privacy. */}
+            {/* On narrow phones the mark stands alone so the nav keeps Privacy. */}
             <Brand markClassName="text-hero-ink" wordmarkClassName="max-[419px]:hidden" />
           </Link>
           <nav aria-label={t('nav.label')} className="flex shrink-0 items-center gap-0.5">
@@ -128,7 +128,8 @@ export function LandingShell({
               to="/"
               hash="privacy"
               activeOptions={{ exact: true, includeHash: true }}
-              className={navLink}
+              // Below 360px "Funkcijos Privatumas" no longer fits beside the two toggles.
+              className={cn(navLink, 'max-[359px]:hidden')}
             >
               {t('nav.privacy')}
             </Link>

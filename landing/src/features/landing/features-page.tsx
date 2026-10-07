@@ -17,9 +17,10 @@ function GroupSection({ group }: Readonly<{ group: FeatureGroup }>) {
     <section
       id={group.key}
       aria-labelledby={titleId}
-      className="grid scroll-mt-20 gap-x-16 lg:scroll-mt-6 gap-y-6 py-12 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:py-16 xl:gap-x-24"
+      className="grid scroll-mt-20 gap-x-10 gap-y-6 py-12 md:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:scroll-mt-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-x-16 lg:py-16 xl:gap-x-24"
     >
-      <div className="lg:sticky lg:top-8 lg:self-start">
+      {/* Below lg the sticky group bar sits at the top, so the card sticks just under it. */}
+      <div className="md:sticky md:top-20 md:self-start lg:top-8">
         <h2 id={titleId} className="text-display font-bold tracking-tight">
           {t(`features.groups.${group.key}`)}
         </h2>
@@ -29,7 +30,7 @@ function GroupSection({ group }: Readonly<{ group: FeatureGroup }>) {
           ))}
         </div>
       </div>
-      <ul className="divide-y divide-border lg:-mt-3">
+      <ul className="divide-y divide-border md:-mt-3">
         {group.features.map((feature) => (
           <li key={feature} className="py-4">
             <h3 className="text-title-s font-semibold">{t(`features.items.${feature}.title`)}</h3>
@@ -80,7 +81,9 @@ function GroupIndex({ variant }: Readonly<{ variant: 'band' | 'bar' }>) {
       aria-label={t('featuresPage.index')}
       className="sticky top-0 z-20 border-b border-border bg-canvas lg:hidden"
     >
-      <ul className="flex gap-1 overflow-x-auto px-4 py-1.5 [scrollbar-width:none] sm:px-8">
+      {/* The right edge fades so a cut-off group reads as "scroll for more"; the end padding lets
+          the last one scroll clear of the fade. */}
+      <ul className="flex gap-1 overflow-x-auto py-1.5 pr-10 pl-4 [mask-image:linear-gradient(to_right,black_calc(100%-2.5rem),transparent)] [scrollbar-width:none] sm:pl-8">
         {featureGroups.map((group) => (
           <li key={group.key} className="shrink-0">
             <Link

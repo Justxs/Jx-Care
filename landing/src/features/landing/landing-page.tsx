@@ -145,10 +145,12 @@ function FeatureOverview() {
         <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
         <ul className="mt-10 grid items-start gap-x-10 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
           {vignettes.map(({ key, Card }) => (
-            // From xl the three share rows (subgrid), so headings, links and cards line up.
+            // From xl the three share rows (subgrid), so headings, links and cards line up. In the
+            // two columns before that, the last one spans both with its card beside the text, so
+            // no row is left half empty.
             <li
               key={key}
-              className="flex max-w-md flex-col xl:row-span-4 xl:grid xl:grid-rows-subgrid xl:content-start xl:gap-y-0"
+              className="group/vignette flex max-w-md flex-col xl:row-span-4 xl:grid xl:grid-rows-subgrid xl:content-start xl:gap-y-0 md:max-xl:last:col-span-2 md:max-xl:last:grid md:max-xl:last:max-w-none md:max-xl:last:grid-cols-2 md:max-xl:last:grid-rows-[auto_auto_auto_1fr] md:max-xl:last:gap-x-10"
             >
               <h3 className="text-title-m font-bold tracking-tight">
                 {t(`features.groups.${key}`)}
@@ -165,7 +167,7 @@ function FeatureOverview() {
                   className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
                 />
               </Link>
-              <Card className="mt-4 self-start" />
+              <Card className="mt-4 w-full self-start md:max-xl:group-last/vignette:col-start-2 md:max-xl:group-last/vignette:row-span-4 md:max-xl:group-last/vignette:row-start-1 md:max-xl:group-last/vignette:mt-0" />
             </li>
           ))}
         </ul>
@@ -177,7 +179,7 @@ function FeatureOverview() {
                 <Link
                   to="/features"
                   hash={key}
-                  className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-ink underline decoration-border-strong underline-offset-4 hover:text-accent hover:decoration-current"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm px-1 font-semibold text-ink underline decoration-border-strong underline-offset-4 hover:text-accent hover:decoration-current"
                 >
                   {t(`features.groups.${key}`)}
                 </Link>
