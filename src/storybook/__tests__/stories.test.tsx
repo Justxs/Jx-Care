@@ -37,6 +37,16 @@ jest.mock('expo-crypto', () => {
   };
 });
 
+// No camera in Jest: the Progress camera stories show the permission-refused screen.
+jest.mock('expo-camera', () => {
+  const { View } = jest.requireActual<typeof import('react-native')>('react-native');
+  const permission = { granted: false, status: 'denied', canAskAgain: false, expires: 'never' };
+  return {
+    CameraView: View,
+    useCameraPermissions: () => [permission, jest.fn(() => Promise.resolve(permission))],
+  };
+});
+
 const SRC = path.resolve(__dirname, '../..');
 
 function findStoryFiles(dir: string): string[] {
