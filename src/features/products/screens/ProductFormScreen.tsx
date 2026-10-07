@@ -1,8 +1,7 @@
-import type { AnyFieldApi } from '@tanstack/react-form';
 import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,7 +14,7 @@ import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DateField } from '@/components/ui/date-field';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
-import { useAppForm, useFieldError, useFormDirty } from '@/components/ui/form';
+import { useAppForm, useFormDirty, WithFieldError } from '@/components/ui/form';
 import { Icon } from '@/components/ui/icon';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -166,17 +165,6 @@ function EditProduct({ id }: { id: number }) {
   return <ProductForm mode="edit" productId={id} initial={toFormValues(product.data)} />;
 }
 
-/** Gives a custom field its error the same way the built-in fields do. */
-function WithError({
-  field,
-  children,
-}: {
-  field: AnyFieldApi;
-  children: (error: string | undefined) => ReactNode;
-}) {
-  return children(useFieldError(field));
-}
-
 function ProductForm({
   mode,
   productId,
@@ -299,7 +287,7 @@ function ProductForm({
   const brand = (
     <form.Field name="brand">
       {(field) => (
-        <WithError field={field}>
+        <WithFieldError field={field}>
           {(error) => (
             <BrandField
               value={field.state.value}
@@ -308,7 +296,7 @@ function ProductForm({
               error={error}
             />
           )}
-        </WithError>
+        </WithFieldError>
       )}
     </form.Field>
   );
@@ -425,7 +413,7 @@ function ProductForm({
         {mode === 'edit' ? brand : null}
         <form.Field name="area">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <AreaField
                   value={field.state.value as Area | undefined}
@@ -436,7 +424,7 @@ function ProductForm({
                   error={error}
                 />
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 
@@ -550,7 +538,7 @@ function ProductForm({
             </form.AppField>
             <form.Field name="openedAt">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <View>
                       <View className="min-h-[48px] flex-row items-center justify-between">
@@ -575,12 +563,12 @@ function ProductForm({
                       </Collapsible>
                     </View>
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
             <form.Field name="paoMonths">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <MonthsField
                       label={t('products.form.pao')}
@@ -595,7 +583,7 @@ function ProductForm({
                       error={error}
                     />
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
             {ingredients}

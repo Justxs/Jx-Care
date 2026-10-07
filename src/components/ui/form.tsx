@@ -5,6 +5,7 @@ import {
   type AnyFieldApi,
   type AnyFormApi,
 } from '@tanstack/react-form';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
 
@@ -33,6 +34,17 @@ export function useFieldError(field: AnyFieldApi): string | undefined {
         ? first.message
         : undefined;
   return message ? t(message, { defaultValue: message }) : undefined;
+}
+
+/** `useFieldError` for fields drawn by hand inside `form.Field`: renders `children(error)`. */
+export function WithFieldError({
+  field,
+  children,
+}: {
+  field: AnyFieldApi;
+  children: (error: string | undefined) => ReactNode;
+}) {
+  return children(useFieldError(field));
 }
 
 function TextField(props: Omit<InputProps, 'value' | 'onChangeText' | 'error'>) {

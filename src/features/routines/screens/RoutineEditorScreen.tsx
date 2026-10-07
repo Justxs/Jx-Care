@@ -1,7 +1,6 @@
-import type { AnyFieldApi } from '@tanstack/react-form';
 import { useStore } from '@tanstack/react-form';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,7 +14,7 @@ import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
 import { Field } from '@/components/ui/field';
-import { useAppForm, useFieldError, useFormDirty } from '@/components/ui/form';
+import { useAppForm, useFormDirty, WithFieldError } from '@/components/ui/form';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { ScreenHeader } from '@/components/ui/screen-header';
@@ -119,17 +118,6 @@ function EditRoutine({ id }: { id: number }) {
       )}
     </SafeAreaView>
   );
-}
-
-/** Gives a custom field its error the same way the built-in fields do. */
-function WithError({
-  field,
-  children,
-}: {
-  field: AnyFieldApi;
-  children: (error: string | undefined) => ReactNode;
-}) {
-  return children(useFieldError(field));
 }
 
 type StepEditorState = {
@@ -302,7 +290,7 @@ function RoutineForm({
           <View className="pt-4">
             <form.Field name="customName">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <Input
                       label={t('routines.editor.customName')}
@@ -315,12 +303,12 @@ function RoutineForm({
                       autoCapitalize="sentences"
                     />
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
             <form.Field name="sortTime">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <TimeField
                       label={t('routines.editor.customTime')}
@@ -333,7 +321,7 @@ function RoutineForm({
                       error={error}
                     />
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
           </View>
@@ -342,7 +330,7 @@ function RoutineForm({
 
         <form.Field name="daysOfWeek">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => {
                 const all = everyDay.every((d) => field.state.value.includes(d));
                 return (
@@ -368,13 +356,13 @@ function RoutineForm({
                   </Field>
                 );
               }}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 
         <form.Field name="reminderTime">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <View>
                   <View className="min-h-[48px] flex-row items-center justify-between gap-3">
@@ -402,14 +390,14 @@ function RoutineForm({
                   </Collapsible>
                 </View>
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
         <View className="h-4" />
 
         <form.Field name="steps">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <View className="gap-2">
                   <Text accessibilityRole="header" className="text-title-s">
@@ -446,7 +434,7 @@ function RoutineForm({
                   </View>
                 </View>
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 

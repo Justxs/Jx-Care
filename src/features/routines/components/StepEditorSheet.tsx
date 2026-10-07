@@ -1,14 +1,13 @@
-import type { AnyFieldApi } from '@tanstack/react-form';
 import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
-import { useAppForm, useFieldError, useFormDirty } from '@/components/ui/form';
+import { useAppForm, useFormDirty, WithFieldError } from '@/components/ui/form';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { ProductThumb } from '@/components/ui/product-thumb';
@@ -127,7 +126,7 @@ export function StepEditorSheet({
 
         <form.Field name="note">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <Input
                   label={t('routines.step.note')}
@@ -140,7 +139,7 @@ export function StepEditorSheet({
                   error={error}
                 />
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 
@@ -180,7 +179,7 @@ export function StepEditorSheet({
             {values.scheduleKind === 'days' ? (
               <form.Field name="daysOfWeek">
                 {(field) => (
-                  <WithError field={field}>
+                  <WithFieldError field={field}>
                     {(error) => (
                       <Field
                         label={t('routines.step.days')}
@@ -198,14 +197,14 @@ export function StepEditorSheet({
                         />
                       </Field>
                     )}
-                  </WithError>
+                  </WithFieldError>
                 )}
               </form.Field>
             ) : values.scheduleKind === 'interval' ? (
               <View className="flex-row items-start gap-3">
                 <form.Field name="everyNDays">
                   {(field) => (
-                    <WithError field={field}>
+                    <WithFieldError field={field}>
                       {(error) => (
                         <Input
                           label={t('common.repeatEveryDays')}
@@ -219,7 +218,7 @@ export function StepEditorSheet({
                           className="flex-1"
                         />
                       )}
-                    </WithError>
+                    </WithFieldError>
                   )}
                 </form.Field>
                 <form.AppField name="startDate">
@@ -234,7 +233,7 @@ export function StepEditorSheet({
 
         <form.Field name="waitSeconds">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 // Eight options: it opens its own sheet, stacked over this one.
                 <SelectField
@@ -248,7 +247,7 @@ export function StepEditorSheet({
                   }}
                 />
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
       </Sheet>
@@ -265,14 +264,4 @@ export function StepEditorSheet({
       />
     </>
   );
-}
-
-function WithError({
-  field,
-  children,
-}: {
-  field: AnyFieldApi;
-  children: (error: string | undefined) => ReactNode;
-}) {
-  return children(useFieldError(field));
 }
