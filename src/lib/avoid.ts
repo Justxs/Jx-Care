@@ -1,3 +1,4 @@
+import type { KnownIngredient } from './ingredients';
 import { normalizeName } from './text';
 
 /** The personal avoid list (spec S4): which avoid items a product hits. */
@@ -20,15 +21,13 @@ export function avoidMatches<A extends AvoidItemLite>(
   );
 }
 
-export type KnownIngredientWithGroup = { id: number; name: string; normalizedName: string };
-
 /**
  * The same for ingredient lines typed in the form before saving. Lines match known ingredients
  * by normalised name; new ingredients can't be on the list yet.
  */
 export function parsedLinesAvoidMatches<A extends AvoidItemLite>(
   lines: readonly string[],
-  known: readonly KnownIngredientWithGroup[],
+  known: readonly KnownIngredient[],
   ingredientGroup: ReadonlyMap<number, number | null>,
   avoidItems: readonly A[],
 ): { line: string; item: A }[] {
