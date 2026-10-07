@@ -17,6 +17,7 @@ A minimal frog with cucumber slices over its eyes: a frog on a spa day. Frogs al
 | `assets/images/adaptive-icon.png` | Android adaptive icon foreground, 1024×1024, transparent; background colour `#d94f87` |
 | `assets/images/splash-icon.png` | Splash screen image, pink frog on transparent |
 | `assets/images/favicon.png` | Web favicon, 48×48 |
+| `assets/brand/social-preview.png` | README banner and GitHub social preview, 1200×630: white frog and "Jx Care" in Figtree on the landing page's pink band (`#b83a6e`) with its scalloped edge |
 
 The PNGs are generated from the logo geometry. To regenerate them after a change, run:
 
