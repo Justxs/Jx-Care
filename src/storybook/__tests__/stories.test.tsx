@@ -25,6 +25,18 @@ jest.mock('expo-haptics', () => ({
   NotificationFeedbackType: { Success: 'success', Warning: 'warning', Error: 'error' },
 }));
 
+// PIN hashing for the in-memory secure storage of the lock and onboarding stories
+// (src/storybook/seeds/settings.tsx): the same node crypto stand-in the security tests use.
+jest.mock('expo-crypto', () => {
+  const nodeCrypto = jest.requireActual<typeof import('crypto')>('crypto');
+  return {
+    CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+    getRandomBytes: (n: number) => new Uint8Array(nodeCrypto.randomBytes(n)),
+    digestStringAsync: async (_algorithm: string, data: string) =>
+      nodeCrypto.createHash('sha256').update(data).digest('hex'),
+  };
+});
+
 const SRC = path.resolve(__dirname, '../..');
 
 function findStoryFiles(dir: string): string[] {
