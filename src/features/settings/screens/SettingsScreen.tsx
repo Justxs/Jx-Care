@@ -5,11 +5,11 @@ import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { AlertDialog } from '@/components/ui/alert-dialog';
 import { Card } from '@/components/ui/card';
 import { ListRow } from '@/components/ui/list-row';
 import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
+import { ResetDialog } from '@/features/security/components/ResetDialog';
 import { useFormat } from '@/i18n/useFormat';
 import { localDate } from '@/lib/appDay';
 
@@ -125,15 +125,15 @@ export function SettingsScreen() {
         </Card>
       </ScrollView>
 
-      {/* TODO(018): the real reset flow (PIN, then typing RESET). */}
-      <AlertDialog
+      {/* Reset app (spec S1, S8): the PIN, then the real counts with Export backup, then RESET. */}
+      <ResetDialog
         open={resetOpen}
         onOpenChange={setResetOpen}
-        title={t('settings.resetSoonTitle')}
-        description={t('settings.resetSoonBody')}
-        actionLabel={t('common.close')}
-        cancelLabel={t('common.cancel')}
-        onAction={() => setResetOpen(false)}
+        fromSettings
+        onExport={() => {
+          setResetOpen(false);
+          router.push('/settings/backup');
+        }}
       />
     </SafeAreaView>
   );

@@ -1764,5 +1764,74 @@
       "noteHint": "Neprivaloma. Iki 60 simbolių.",
       "save": "Pridėti į sąrašą"
     }
+  },
+  "backup": {
+    "lastBackup": "Paskutinė atsarginė kopija {{date}}",
+    "noBackup": "Atsarginės kopijos dar nėra",
+    "callout": {
+      "title": "Pasidarykite Jx-Care duomenų atsarginę kopiją",
+      "last": "Paskutinė atsarginė kopija padaryta {{date}}.",
+      "never": "Atsarginės kopijos dar nesate padarę."
+    },
+    "export": {
+      "title": "Eksportas",
+      "format": "Failo tipas",
+      "json": "JSON failas",
+      "jsonDetail": "Visi duomenys. Nuotraukos neįtraukiamos.",
+      "zip": "Zip su nuotraukomis",
+      "zipDetail_one": "Visi duomenys ir {{count}} nuotrauka, {{size}}",
+      "zipDetail_few": "Visi duomenys ir {{count}} nuotraukos, {{size}}",
+      "zipDetail_many": "Visi duomenys ir {{count}} nuotraukos, {{size}}",
+      "zipDetail_other": "Visi duomenys ir {{count}} nuotraukų, {{size}}",
+      "zipDetailNone": "Visi duomenys. Nuotraukų dar nėra.",
+      "action": "Eksportuoti atsarginę kopiją",
+      "progress": "Pridedamos nuotraukos: {{done}} iš {{total}}",
+      "shareTitle": "Išsaugokite Jx-Care atsarginę kopiją",
+      "failed": "Nepavyko eksportuoti atsarginės kopijos. Bandykite dar kartą."
+    },
+    "import": {
+      "title": "Importas",
+      "body": "Atkurkite atsarginę kopiją iš šio ar kito telefono. Ji pakeičia visus duomenis šiame telefone; niekas nesujungiama.",
+      "action": "Importuoti atsarginę kopiją",
+      "from": "Atsarginė kopija iš {{date}}",
+      "counts": "{{products}}, {{routines}}, {{photos}}",
+      "products_one": "{{count}} produktas",
+      "products_few": "{{count}} produktai",
+      "products_many": "{{count}} produkto",
+      "products_other": "{{count}} produktų",
+      "routines_one": "{{count}} rutina",
+      "routines_few": "{{count}} rutinos",
+      "routines_many": "{{count}} rutinos",
+      "routines_other": "{{count}} rutinų",
+      "photos_one": "{{count}} nuotrauka",
+      "photos_few": "{{count}} nuotraukos",
+      "photos_many": "{{count}} nuotraukos",
+      "photos_other": "{{count}} nuotraukų",
+      "noPhotos": "Šiame faile nuotraukų nėra.",
+      "replace": "Pakeisti visus duomenis",
+      "confirmTitle": "Pakeisti visus duomenis?",
+      "confirmBody": "Viskas šiame telefone bus pakeista atsargine kopija iš {{date}}. To atšaukti negalima.",
+      "progress": "Atkuriamos nuotraukos: {{done}} iš {{total}}",
+      "restored": "Atsarginė kopija atkurta"
+    },
+    "errors": {
+      "notBackup": "Šis failas nėra Jx-Care atsarginė kopija. Pasirinkite eksportuotą JSON arba zip failą.",
+      "damaged": "Šis atsarginės kopijos failas sugadintas ir jo nepavyksta perskaityti. Jūsų duomenys nepakeisti.",
+      "newer": "Ši atsarginė kopija iš naujesnės Jx-Care versijos. Pirmiausia atnaujinkite programėlę.",
+      "readFailed": "Nepavyko atidaryti šio failo. Bandykite dar kartą arba pasirinkite kitą.",
+      "failed": "Nepavyko atkurti atsarginės kopijos. Jūsų duomenys nepakeisti."
+    },
+    "storage": {
+      "title": "Šiame telefone",
+      "photos": "Nuotraukų užimama vieta"
+    },
+    "size": {
+      "kb": "{{value}} KB",
+      "mb": "{{value}} MB",
+      "gb": "{{value}} GB"
+    },
+    "reminder": {
+      "title": "Pasidarykite Jx-Care duomenų atsarginę kopiją"
+    }
   }
 }

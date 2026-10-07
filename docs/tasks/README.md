@@ -77,7 +77,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 037 | [Progress photos, week detail and compare](037-progress-timeline-compare.md) | 036 | C3, C6, C7, S7 photos | done |
 | 038 | [Condition log](038-condition-log.md) | 025, 028 | T4, C1 condition, C2 | done |
 | 039 | [Product notes and rating](039-product-notes-rating.md) | 015, 034 | P2 rating, P8 | done |
-| 040 | [Backup and restore](040-backup-restore.md) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | todo |
+| 040 | [Backup and restore](040-backup-restore.md) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | done |
 | 041 | [Final quality pass and release builds](041-final-quality-release.md) | all | Global UI rules | todo |
 
 ## Dependency graph

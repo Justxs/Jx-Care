@@ -1636,5 +1636,66 @@
       "noteHint": "Optional. Up to 60 characters.",
       "save": "Add to list"
     }
+  },
+  "backup": {
+    "lastBackup": "Last backup {{date}}",
+    "noBackup": "No backup yet",
+    "callout": {
+      "title": "Back up your Jx-Care data",
+      "last": "Your last backup is from {{date}}.",
+      "never": "You haven't made a backup yet."
+    },
+    "export": {
+      "title": "Export",
+      "format": "File type",
+      "json": "JSON file",
+      "jsonDetail": "All data. Photos are not included.",
+      "zip": "Zip with photos",
+      "zipDetail_one": "All data and {{count}} photo, {{size}}",
+      "zipDetail_other": "All data and {{count}} photos, {{size}}",
+      "zipDetailNone": "All data. There are no photos yet.",
+      "action": "Export backup",
+      "progress": "Adding photos: {{done}} of {{total}}",
+      "shareTitle": "Save your Jx-Care backup",
+      "failed": "Couldn't export the backup. Try again."
+    },
+    "import": {
+      "title": "Import",
+      "body": "Restore a backup from this phone or another one. It replaces all data on this phone; nothing is merged.",
+      "action": "Import backup",
+      "from": "Backup from {{date}}",
+      "counts": "{{products}}, {{routines}}, {{photos}}",
+      "products_one": "{{count}} product",
+      "products_other": "{{count}} products",
+      "routines_one": "{{count}} routine",
+      "routines_other": "{{count}} routines",
+      "photos_one": "{{count}} photo",
+      "photos_other": "{{count}} photos",
+      "noPhotos": "Photos are not included in this file.",
+      "replace": "Replace all data",
+      "confirmTitle": "Replace all data?",
+      "confirmBody": "This replaces everything on this phone with the backup from {{date}}. This can't be undone.",
+      "progress": "Restoring photos: {{done}} of {{total}}",
+      "restored": "Backup restored"
+    },
+    "errors": {
+      "notBackup": "This file isn't a Jx-Care backup. Pick the JSON or zip file you exported.",
+      "damaged": "This backup file is damaged and can't be read. Your data is unchanged.",
+      "newer": "This backup is from a newer version of Jx-Care. Update the app first.",
+      "readFailed": "Couldn't open this file. Try again or pick another one.",
+      "failed": "Couldn't restore the backup. Your data is unchanged."
+    },
+    "storage": {
+      "title": "On this phone",
+      "photos": "Storage used by photos"
+    },
+    "size": {
+      "kb": "{{value}} KB",
+      "mb": "{{value}} MB",
+      "gb": "{{value}} GB"
+    },
+    "reminder": {
+      "title": "Back up your Jx-Care data"
+    }
   }
 }
