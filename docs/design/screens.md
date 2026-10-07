@@ -323,9 +323,9 @@ A pushed screen (no longer a Calendar segment). Skin / Hair switch (Hair only wh
 
 ## ProgressCameraScreen
 
-**Spec:** C4 · **Opens from:** Timeline, Today's weekly card, or the weekly reminder.
+**Spec:** C4 · **Opens from:** Progress photos, the Check-in card on Today, or the weekly photo reminder.
 
-Full-screen camera with last week's photo at 30% overlay, a face oval guide, angle label and the tips row "Same light · no makeup · hair back".
+Full-screen camera with last week's photo at 30% as a guide ("Show last photo as a guide"), a face oval guide, angle label and the tips row "Same light · no makeup · hair back".
 
 - Slide up 300ms. After each angle, the next; after the last, review.
 - Colours come from the `camera-*` tokens (always dark): `camera-bg`, `camera-control`, `camera-guide` (the last photo), `camera-frame` (the face outline). No hard-coded colours.
@@ -341,14 +341,14 @@ All angles, rating 1 to 5, tags, note. Save shows "Saved privately in Jx-Care".
 
 ## WeekDetailScreen
 
-**Spec:** C6 · **Opens from:** A week tile on the timeline.
+**Spec:** C6 · **Opens from:** A photo tile on Progress photos.
 
 Angles full width, rating, tags, note and "What changed this week". Compare with…, Retake, Delete.
 - Titled by the date taken ("Skin photo, 6 Oct"), never a week number.
 
 ## PhotoCompareScreen
 
-**Spec:** C7 · **Opens from:** Week detail or the timeline.
+**Spec:** C7 · **Opens from:** Week detail or Progress photos (header word Compare).
 
 Side by side or slider modes, week pickers, the "4 weeks ago vs now" chip and an angle switcher. Pinch zooms both in sync.
 
@@ -379,7 +379,7 @@ Ingredients / Groups segments. Ingredient rows show the group chip and "in 4 pro
 Rules like "Retinol × AHA" (a group side shows a group icon), the note and how many routines it affects. The editor is a sheet with two side pickers and a note.
 
 - Saving re-checks every routine and shows "Affects 2 routines" in a callout that animates its height open.
-- Each rule shows how many routines it currently fires in, or "No clashes" when its two sides never fall on the same day.
+- Each rule shows how many routines it currently fires in, or "No conflicts" when its two sides never fall on the same day.
 - The intro explains mild: "Mild means one of the steps runs every few days, so they only meet on some days." Rules themselves have no strength; mild comes from the step schedules. New rule is a Fab at the bottom right.
 
 ## AvoidListScreen
@@ -410,7 +410,7 @@ Change PIN (old, new, confirm), recovery question (needs PIN), biometrics switch
 
 **Spec:** S7 · **Opens from:** Settings.
 
-Language (applies at once), currency (EUR, USD, GBP, PLN, others), tracked skin angles, hair album, hair angles and overlay opacity.
+Language (applies at once), currency (EUR, USD, GBP, PLN, others), tracked skin angles, hair album, hair angles, and last photo as a guide (on/off and opacity).
 
 - Hair angles keep a reserved row so switching the album never jumps the card.
 

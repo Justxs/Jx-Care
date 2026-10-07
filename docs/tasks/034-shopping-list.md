@@ -41,7 +41,7 @@ In: `src/features/shopping/repo.ts`, `repo.test.ts`, `api.ts`, `screens/Shopping
 
 ### P7 Shopping item (sheet)
 
-Opened by the Add item Fab. `ToggleGroup` Buy again / New item. Buy again: the product picker (task 024, any area, archived products included). New item: name (required), brand, area, list (To buy / Want to try), note. Footer "Add to list".
+Opened by the Add item Fab. `ToggleGroup` Buy again / New item. Buy again: the product picker (task 024, any area, archived products included). New item: name (required), brand, area, list (To buy / Want to try), note. Title "Add to shopping list", footer "Add item".
 
 ### Buy again everywhere (`buyAgain.ts`, `useBuyAgain()`)
 

@@ -1,6 +1,6 @@
 # 029 Ingredients, groups and conflict rules
 
-**Phase:** H. Conflicts · **Depends on:** 011, 012, 022 · **Spec:** S2, S3 (list, "No clashes", mild intro, New rule Fab, editor), Empty states (Conflicts, "Add common rules"), feature plan 7 · **Design:** [screens.md](../design/screens.md) IngredientsScreen, ConflictsScreen; [components.md](../design/components.md) Fab
+**Phase:** H. Conflicts · **Depends on:** 011, 012, 022 · **Spec:** S2, S3 (list, "No conflicts", mild intro, New rule Fab, editor), Empty states (Conflicts, "Add common rules"), feature plan 7 · **Design:** [screens.md](../design/screens.md) IngredientsScreen, ConflictsScreen; [components.md](../design/components.md) Fab
 
 ## Goal
 
@@ -44,7 +44,7 @@ In: `src/features/conflicts/repo.ts`, `repo.test.ts`, `api.ts`, `commonRules.ts`
 
 ### S3 Conflicts
 
-- Rule rows: "Retinol × AHA/BHA" (a group side shows a small group icon and the word "group" in its spoken label), the note ("Can cause flushing"), and either "In 2 routines" (the number of routines where the rule currently fires, from `weeklyConflicts`) or **"No clashes"** when its two sides never fall on the same day.
+- Rule rows: "Retinol × AHA/BHA" (a group side shows a small group icon and the word "group" in its spoken label), the note ("Can cause flushing"), and either "In 2 routines" (the number of routines where the rule currently fires, from `weeklyConflicts`) or **"No conflicts"** when its two sides never fall on the same day.
 - Intro line above the rules: "Mild means one of the steps runs every few days, so they only meet on some days." Rules have no strength of their own.
 - New rule is the `Fab` "New rule" (task 008), opening the editor sheet. The list keeps 96 pt at its end so the last rule scrolls clear of it.
 - **Empty:** "No conflict rules" / "Start with common pairs, like retinol with AHA, or write your own." / "Add common rules" (primary) and "Add a rule" (ghost).
@@ -57,7 +57,7 @@ Out:
 ## Acceptance criteria
 
 - [ ] Repository tests: merge moves product links, rules and avoid references and removes duplicates; rename into an existing name merges; deleting a group cleans up members and rules; `addCommonRules` is idempotent and links existing ingredients by normalized name.
-- [ ] S3 shows "In N routines" or "No clashes" correctly for a seeded set of routines (A/B alternates not counted against each other).
+- [ ] S3 shows "In N routines" or "No conflicts" correctly for a seeded set of routines (A/B alternates not counted against each other).
 - [ ] Editor saves and shows the affected count callout without jumping the sheet.
 - [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
 

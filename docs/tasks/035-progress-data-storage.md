@@ -4,7 +4,7 @@
 
 ## Goal
 
-Private file storage for progress photos and the repository and hooks for weekly entries, so the camera, timeline, week detail and compare screens (tasks 036–037) only deal with UI.
+Private file storage for progress photos and the repository and hooks for weekly entries, so the camera, Progress photos, week detail and compare screens (tasks 036–037) only deal with UI.
 
 ## Scope
 

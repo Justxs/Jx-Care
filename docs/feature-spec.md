@@ -1,6 +1,6 @@
 # Jx-Care Feature Spec
 
-Written 2026-10-06. Living version: [Claude Doc](https://claude.ai/code/artifact/f898c0ac-edef-4786-bbd1-bebf1fa6c8fd).
+Written 2026-10-06, kept in line with design system v18 (2026-10-07). This file is the current version; the [Claude Doc](https://claude.ai/code/artifact/f898c0ac-edef-4786-bbd1-bebf1fa6c8fd) is an earlier copy.
 
 ## Overview
 
@@ -221,10 +221,10 @@ flowchart TD
 | C1 | Calendar (Skin / Hair / Condition views) | Tab | Tab bar |
 | C2 | Day detail | Screen | Calendar |
 | C3 | Progress photos (Skin / Hair) | Screen | Calendar row, Today check-in, weekly reminder |
-| C4 | Progress camera | Full screen | Timeline, Today, weekly reminder |
+| C4 | Progress camera | Full screen | Progress photos, Today's check-in, weekly reminder |
 | C5 | Photo review + rating | Screen | Camera |
-| C6 | Week detail | Screen | Timeline |
-| C7 | Compare | Full screen | Week detail, timeline |
+| C6 | Week detail | Screen | Progress photos |
+| C7 | Compare | Full screen | Week detail, Progress photos |
 | S1 | Settings | Tab | Tab bar |
 | S2 | Ingredients + groups | Screen | Settings |
 | S3 | Conflicts + editor | Screen + sheet | Settings |
@@ -473,7 +473,7 @@ Grouped rows with chevrons: **Care data** (Ingredients, Conflicts, Avoid list), 
 
 ### S3 Conflicts + editor
 
-- List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note ("Can cause flushing"), number of routines it currently fires in, or "No clashes" when its two sides never fall on the same day.
+- List of rules: "Retinol × AHA" (either side can be an ingredient or a group, shown with a group icon), note ("Can cause flushing"), number of routines it currently fires in, or "No conflicts" when its two sides never fall on the same day.
 - Intro line explains mild: "Mild means one of the steps runs every few days, so they only meet on some days." Rules have no strength of their own. New rule is the Fab.
 - Editor sheet: left side picker, right side picker, note. Saving re-checks all routines and shows "Affects 2 routines".
 
@@ -721,7 +721,7 @@ sequenceDiagram
   U->>A: Save
   A->>F: Write photos to app-private folder
   A->>D: Insert progress_entry + progress_photo rows
-  A->>U: Timeline with new week, offer Compare
+  A->>U: Progress photos with the new photo, offer Compare
 ```
 
 ### 9. Backup and restore

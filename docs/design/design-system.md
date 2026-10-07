@@ -1,6 +1,6 @@
 # Design system
 
-Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v16) on 2026-10-07 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
+Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v18) on 2026-10-07 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
 
 Jx-Care is a calm, private companion, fronted by a pink spa-day frog, for one person's skin and hair care: products with their dates, daily routines, streaks and reminders, all kept on the phone. The UI should feel like a tidy bathroom shelf: soft blush neutrals, one pink accent that matches the logo, and two area colours that tell skin from hair at a glance.
 

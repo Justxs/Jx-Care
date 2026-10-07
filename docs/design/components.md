@@ -236,11 +236,11 @@ A 1–5 picker. `kind="stars"` for product ratings, `kind="scale"` (numbered pil
 
 A step in a skin routine, ticked off on Today.
 
-**Built on:** rn-primitives `Checkbox` plus text; the conflict pill is a Badge in the `warning` tone.
+**Built on:** rn-primitives `Checkbox` plus text; the conflict marker is a ConflictTag.
 
-**Consumer provides:** `index`, `name` (the product), `note` ("2 drops · wait 5 min"), `checked`, `onCheckedChange`, `conflict` (the reason, when another product used the same day clashes).
+**Consumer provides:** `index`, `name` (the product), `note` ("2 drops · wait 5 min"), `checked`, `onCheckedChange`, `conflict` (the reason, when another product used the same day conflicts with it).
 
-- Conflicts are checked across the whole day, morning and evening. The pill says "Conflict"; the full reason shows in a `warning-soft` callout under the routine.
+- Conflicts are checked across the whole day, morning and evening. The ConflictTag says "Conflict" or "Mild conflict" and opens the details when tapped; the full reason shows in a `warning-soft` callout under the routine.
 
 ## ScreenHeader
 

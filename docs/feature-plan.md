@@ -1,6 +1,6 @@
 # Jx-Care Feature Plan
 
-Written 2026-10-06. Living version: [Claude Doc](https://claude.ai/code/artifact/965d4890-47d1-44a7-a629-985c83b64dd4).
+Written 2026-10-06, wording brought in line with design system v18 on 2026-10-07. This file is the current version; the [Claude Doc](https://claude.ai/code/artifact/965d4890-47d1-44a7-a629-985c83b64dd4) is an earlier copy.
 
 Screen-by-screen detail for design, the navigation map and sequence diagrams are in [feature-spec.md](feature-spec.md); where the two differ, the spec wins.
 
@@ -57,13 +57,13 @@ Eleven features, grouped as the app's main areas. Each lists what the user can d
 
 ### 4. Skin care routines
 
-- A routine has a name, a time slot (Morning, Evening, or custom), the days of the week it applies, and an ordered list of steps.
+- A routine has a name, a time of day (Morning, Evening, or Custom), the days of the week it applies, and an ordered list of steps.
 - Each step links to a product from the list, with an optional note ("2 drops").
-- Per-step schedule: a step runs every time the routine runs (default), only on chosen weekdays, or every N days. Example: one Evening routine where the exfoliant step is only on Tue/Fri. Today hides steps that aren't due, so fewer routine variants are needed.
+- Per-step schedule: Every time the routine runs (default), Set days, or Every few days. Example: one Evening routine where the exfoliant step is only on Tue/Fri. Today hides steps that aren't due, so fewer routine variants are needed.
 - Wait timer: a step can have an optional wait (e.g. 60 seconds for an acid to absorb). After ticking it, a countdown runs before the next step; it can be skipped.
-- Several routines can share a time slot, e.g. **Evening A: retinol** on Mon/Wed/Fri and **Evening B: exfoliation** on Tue/Thu. Today's screen shows only the routines scheduled today; if two land in the same slot, the user picks one.
+- Several routines can share a time of day, e.g. **Evening A: retinol** on Mon/Wed/Fri and **Evening B: exfoliation** on Tue/Thu. Today's screen shows only the routines scheduled today; if two land at the same time of day, the user picks one ("About A and B" explains it).
 - Steps are reordered by drag; a routine can be duplicated to make a variant.
-- Doing a routine: tick steps off; when all are ticked the routine is done for the day.
+- Doing a routine: tick steps off (or All done); when all are ticked the routine is done for the day and a Routine done screen shows the streak.
 
 ### 5. Routine alarms
 
@@ -73,8 +73,8 @@ Eleven features, grouped as the app's main areas. Each lists what the user can d
 
 ### 6. Calendar and streak
 
-- Month calendar: each day coloured done, partly done, missed, or no routine scheduled.
-- Separate skin and hair streaks, each with current and best, on the home screen and calendar.
+- Month calendar: each day marked done, partly done, not done (shown as "Not done", never "Missed"), or no routine scheduled.
+- Separate skin and hair streaks, each with current and best, on the home screen and calendar. Streaks use a calendar-check icon, never a flame; after a break: "Started again. Your best is still 21 days."
 - A day with nothing scheduled neither breaks nor extends a streak.
 - Tapping a day shows which routines and products were used.
 
@@ -82,9 +82,9 @@ Eleven features, grouped as the app's main areas. Each lists what the user can d
 
 - The user keeps a conflict list: pairs of ingredients that shouldn't be combined (e.g. retinol and AHA), each with an optional note.
 - Conflicts can also be set between ingredient groups (e.g. "acids") the user defines, to avoid entering every pair.
-- Conflicts are checked across the whole day: when any two products used in routines scheduled on the same day (morning and evening included) conflict, both steps get a warning mark with the reason, and the affected routine cards show a warning icon.
+- Conflicts are checked across the whole day: when any two products used in routines scheduled on the same day (morning and evening included) conflict, both steps get a Conflict tag (or Mild conflict when an every-few-days step only meets the other on some days) that opens the reason, and the affected routine cards show the same tag.
 - Shown as a warning only; saving the routine is still allowed.
-- The routine editor shows which other routine on which weekday causes the clash.
+- The routine editor shows which other routine on which weekday causes the conflict.
 - Personal avoid list: ingredients or ingredient groups the user never wants (e.g. fragrance, a known allergen). Adding or editing a product that contains one shows a warning, and the product gets an "avoid" badge in the list.
 
 ### 8. Hair care calendar
@@ -93,7 +93,7 @@ Eleven features, grouped as the app's main areas. Each lists what the user can d
 - The app calculates the next due date from the last time it was done, not from a fixed start, so a late wash shifts the next one.
 - Hair calendar shows past and upcoming wash days; a reminder fires on due days at a chosen time.
 - Marking "washed today" logs which products were used.
-- Hair events beyond washing: tasks without products, such as a trim every 8 weeks or colour every 6 weeks. The hair view shows how long ago each happened ("last trim 7 weeks ago") and reminds when the next is due. Events don't count toward the hair streak.
+- Other care beyond washing: tasks without products, such as a trim every 8 weeks or colour every 6 weeks. The hair view shows how long ago each happened ("last trim 7 weeks ago") and reminds when the next is due. Other care doesn't count toward the hair streak.
 - Hair care has its own streak: each hair task done on its due day extends it, a missed due day breaks it. Days shown as on time / late.
 
 ### 9. Shopping list
@@ -109,20 +109,20 @@ Eleven features, grouped as the app's main areas. Each lists what the user can d
 
 ### 10. Skin and hair progress photos
 
-- Weekly check-in: a reminder on a chosen weekday and time (default Sunday 10:00) says it's time for this week's skin photo. Today shows a "Weekly photo" card until it's taken; a missed week gets no extra nagging.
-- Guided capture with the in-app camera: last week's photo shows as a faint overlay so face position, angle and distance line up. A short hint reminds the user to use the same light and no makeup.
-- Angles: the user picks which to track (front, left side, right side); front only by default. One check-in holds one photo per tracked angle.
-- Each week can also get a 1–5 skin rating, tags (breakout, redness, dryness, oiliness) and a note.
-- Timeline: a grid of weekly check-ins, newest first, with the rating shown on each.
+- Weekly photo: a reminder on a chosen weekday and time (default Sunday 10:00) says it's time for this week's skin photo. Today's Check-in card shows a photo row until it's taken (with "Skip this week"); a missed week gets no extra nagging.
+- Guided capture with the in-app camera: last week's photo shows faintly as a guide ("Last photo as a guide") so face position, angle and distance line up. A short hint reminds the user to use the same light and no makeup.
+- Angles: the user picks which to track (front, left side, right side); front only by default. One weekly photo entry holds one photo per tracked angle.
+- Each week can also get a 1–5 skin rating, tags (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy) and a note.
+- Progress photos: a pushed screen (opened from Calendar, Today's Check-in card and the reminder) with one tile per week, newest first, labelled with the date taken ("6 Oct", never a week number); ratings show on the week's own screen.
 - Compare: pick any two weeks side by side, or drag a slider across them; a quick "4 weeks ago vs now" button.
 - Context: each week shows which routines were done that week and which products started or stopped, so changes in the skin can be linked to changes in the routine.
 - Privacy: photos are saved in the app's private storage, never in the phone gallery, and are only visible after the PIN. The JSON backup leaves them out by default; "Include photos" exports a zip instead.
 - Delete a single photo or a whole week.
-- Hair album: the same weekly check-in for hair, with front, back and top angles. It's off by default and turned on in Settings; skin and hair have separate timelines.
+- Hair album: the same weekly photo for hair, with front, back and top angles. It's off by default and turned on in Settings; skin and hair have separate albums.
 
 ### 11. Condition log and product notes
 
-- Daily condition log: one tap on the calendar day or Today for skin (calm, oily, dry, breakout, redness) and hair (oily, dry, frizzy, shiny), plus an optional note. Several states can be picked.
+- Daily condition log: one tap on Today's Check-in card or the calendar day for skin (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy) and hair (Shiny, Frizzy, Oily roots, Dry ends, Flaky scalp), plus an optional note. Several states can be picked.
 - The day detail shows the condition next to the routines and products used, and the month calendar can switch to a condition view, so patterns are easy to spot.
 - Product notes: dated reaction notes on any product ("small breakout on chin", "skin felt calm"), plus a personal 1–5 rating and a "would buy again" yes/no.
 - Rating and "would buy again" show on the shopping list when suggesting a re-buy; a "no" product isn't suggested.
@@ -142,7 +142,7 @@ Seventeen tables in a local SQLite database; expiry status and streaks are compu
 | routine | id, name, slot (morning/evening/custom), daysOfWeek, reminderTime, active | Several per slot allowed |
 | routine_step | id, routineId, productId, position, note, daysOfWeek, everyNDays, waitSeconds | Ordered steps; empty schedule = every time |
 | routine_log | id, routineId, date, completedStepIds, completedAt | Feeds the calendar and skin streak |
-| hair_task | id, name, kind (wash/event), productIds, everyNDays or daysOfWeek, reminderTime, lastDoneAt | Next due = lastDoneAt + N; events have no products |
+| hair_task | id, name, kind (wash/other), productIds, everyNDays or daysOfWeek, reminderTime, lastDoneAt | Next due = lastDoneAt + N; other care has no products |
 | hair_log | id, hairTaskId, date, productIds | Wash history, feeds hair streak |
 | shopping_item | id, productId (nullable), name, brand, area, note, addedAt, boughtAt | productId set for "buy again", null for free-text items |
 | progress_entry | id, area (skin/hair), weekStart, takenAt, rating, tags, note | One per weekly check-in per area |
@@ -167,9 +167,9 @@ First launch (language, PIN) → Lock screen (PIN / biometrics; every open, and 
 │ Tick off     │ Add / edit     │ Routine editor │ Month view   │ PIN, biometrics │
 │ Hair due     │ Product detail │ Hair schedule  │ Day detail   │ Ingredients     │
 │ Expiring soon│ Archive        │ Hair tasks     │ Streak stats │ Conflicts       │
-│ Streak       │ Shopping list  │                │ Progress     │ Expiry warning  │
-│ Weekly photo │                │                │ Daily log    │ Backup, reset   │
-│ Daily log    │                │                │              │ Avoid list      │
+│ Streak       │ Shopping list  │                │ Progress row │ Expiry warning  │
+│ Check-in     │                │                │ Condition    │ Backup, reset   │
+│              │                │                │              │ Avoid list      │
 └──────────────┴────────────────┴────────────────┴──────────────┴─────────────────┘
 ```
 
@@ -177,7 +177,7 @@ Routine reminders open straight into Today with that routine expanded; expiry re
 
 The shopping list sits inside the Products tab (a "Shopping" switch at the top of the list) to keep five tabs; Today shows a small "N to buy" chip linking to it.
 
-Skin progress photos sit inside the Calendar tab as a "Progress" view next to the skin and hair calendars; the weekly reminder opens the camera directly.
+Progress photos are a screen of their own, opened from a row under the Calendar grid and from Today's Check-in card; the weekly reminder opens the camera directly.
 
 ## Tech stack
 
@@ -219,9 +219,9 @@ Twelve milestones, each ending in something usable on the phone; later ones depe
 5. **Skin routines + alarms:** routines with days and slots, steps with per-step schedules and wait timers, variants, today's view with tick-off, reminder notifications.
 6. **Calendar + streak:** routine log, month calendar, current and best skin streak.
 7. **Conflicts:** ingredient groups, conflict editor, whole-day warnings in routines, personal avoid list.
-8. **Hair care calendar:** hair tasks with frequency, next-due logic, hair calendar, reminders, wash log, hair streak, hair events (trim, colour).
+8. **Hair care calendar:** hair tasks with frequency, next-due logic, hair calendar, reminders, wash log, hair streak, other care (trim, colour).
 9. **Shopping list:** list with linked and free-text items, add from product and expiring card, finished/expiring suggestions, tick bought and "Add as new product", share as text.
-10. **Progress photos:** weekly reminder, guided camera with overlay, angles, rating and tags, timeline, side-by-side and slider compare, routine context, private storage, optional hair album.
+10. **Progress photos:** weekly reminder, guided camera with the last photo as a guide, angles, rating and tags, Progress photos screen, side-by-side and slider compare, routine context, private storage, optional hair album.
 11. **Condition log and product notes:** daily skin/hair condition, condition calendar view, product reaction notes, rating and "would buy again".
 12. **Polish:** JSON backup export/import (photos optional as zip), empty states, full LT/EN copy review, app icon.
 
