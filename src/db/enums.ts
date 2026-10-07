@@ -24,6 +24,9 @@ export const productCategories = [
 ] as const;
 export type ProductCategory = (typeof productCategories)[number];
 
+export const productViews = ['list', 'shelf'] as const;
+export type ProductView = (typeof productViews)[number];
+
 export const units = ['ml', 'g', 'pcs'] as const;
 export type Unit = (typeof units)[number];
 

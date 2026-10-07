@@ -43,6 +43,7 @@ export const defaultSettings: AppSettings = {
   setupDoneAt: null,
   setupHiddenAt: null,
   lastBackupAt: null,
+  productView: 'list',
 };
 
 function strip(row: Settings): AppSettings {

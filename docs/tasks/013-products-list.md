@@ -40,4 +40,15 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **File name:** the screen stays `screens/ProductsScreen.tsx` (the name task 010's route already imports) instead of `ProductListScreen.tsx`.
+- **List or shelf is remembered in the settings row**, new column `settings.product_view` (`'list' | 'shelf'`, migration `0001`), so it survives restarts. Filters live in `productListStore` (`src/features/products/listState.ts`, TanStack Store) for the session only.
+- **ScrollView, not FlatList:** a person has tens of products, and a ScrollView keeps the flush Card (shadow, inset separators) and Reanimated layout animations simple. Switch to FlashList if lists ever get long.
+- **Date line vs badge:** the third line is "Expires 15 Oct" for OK, Expiring soon and Not opened. Expired puts the date in the badge ("Expired 2 Oct"), so its third line says "Opened 1 Mar" when known, else nothing; No date does the same. Helpers in `statusText.ts` (`statusBadge`, `dateLine`, `metaLine`) for reuse on Today and P2.
+- **Row actions:** swipe left shows buttons (80 pt each, Mark finished in accent). Long press opens the same actions in the DropdownMenu, anchored by an invisible Trigger in the row. Screen readers get them as accessibility actions (`markOpened`, `markFinished`, `buyAgain`, `duplicate`). Duplicate shows the toast "Copy of Mask added" and stays on the list.
+- **Shelf view long press** starts Select with that tile ticked (tiles have no swipe).
+- **Buy again** goes through `useBuyAgain()` in `src/features/shopping/buyAgain.ts`; it returns null until task 034 registers its hook, so every Buy again button is hidden for now.
+- **Filters sheet** edits a draft; "Show N products" applies it, N is a live query of the draft. "Reset filters" keeps the sort. The filter button shows a count bubble (area, each category, each status and avoid-only count as one; search and sort don't).
+- **Search** is debounced 150 ms; search text is part of the session filters.
+- **Shopping segment** shows a placeholder empty state until task 034; the count badge comes with it. The Fab and Select only show on My products.
+- `Input` gained `leadingIcon`; `more-menu.tsx` exports `MenuPortal` for menus opened without the ellipsis trigger. Jest's Reanimated mock gained `LayoutAnimationConfig`.
+- **Device checks needed:** swipe feel and that a swipe doesn't fight the tab's vertical scroll; long-press menu position near the bottom of the screen; row removal (fade and collapse) inside the card; shelf tiles at 360 pt in Lithuanian; the selection bar above the tab bar with the toast; light and dark.

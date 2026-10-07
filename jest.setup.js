@@ -8,6 +8,7 @@ jest.mock('react-native-reanimated/mock', () => {
     ...mock,
     createAnimatedComponent: mock.default.createAnimatedComponent,
     useReducedMotion: () => false,
+    LayoutAnimationConfig: ({ children }) => children,
   };
 });
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));

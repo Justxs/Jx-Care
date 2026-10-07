@@ -50,7 +50,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 010 | [App shell and navigation](010-app-shell-navigation.md) | 005, 009 | Navigation map | done |
 | 011 | [Settings list and preferences](011-settings-preferences.md) | 010 | S1, S7 | done |
 | 012 | [Products data](012-products-data.md) | 005, 006 | P1–P5 | done |
-| 013 | [Products list](013-products-list.md) | 010, 012 | P1 | todo |
+| 013 | [Products list](013-products-list.md) | 010, 012 | P1 | done |
 | 014 | [Product form and ingredient entry](014-product-form-ingredients.md) | 010, 012 | P3, P4 | todo |
 | 015 | [Product detail and archive](015-product-detail-archive.md) | 010, 012 | P2, P5 | todo |
 | 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | todo |

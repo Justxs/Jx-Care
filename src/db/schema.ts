@@ -28,6 +28,7 @@ import type {
   StepScheduleKind,
   TimeOfDay,
   Unit,
+  ProductView,
 } from './enums';
 
 /** Calendar days are 'YYYY-MM-DD' app days; moments are epoch ms. */
@@ -70,6 +71,8 @@ export const settings = sqliteTable('settings', {
   setupDoneAt: text('setup_done_at'),
   setupHiddenAt: text('setup_hidden_at'),
   lastBackupAt: integer('last_backup_at'),
+  /** Products tab: list or shelf view (P1 remembers the choice). */
+  productView: text('product_view').$type<ProductView>().notNull().default('list'),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

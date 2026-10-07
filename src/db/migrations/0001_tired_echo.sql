@@ -1,0 +1,1 @@
+ALTER TABLE `settings` ADD `product_view` text DEFAULT 'list' NOT NULL;

@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn';
 import { useThemeColors } from '@/theme/colors';
 
 import { Field, fieldBoxClass } from './field';
-import { Icon } from './icon';
+import { Icon, type IconName } from './icon';
 import { Text } from './text';
 
 export type InputProps = Omit<
@@ -21,6 +21,8 @@ export type InputProps = Omit<
   keyboard?: 'text' | 'numeric' | 'decimal';
   /** Unit shown inside the field on the right ("ml", "€"). */
   suffix?: string;
+  /** Icon drawn inside the field on the left (search). */
+  leadingIcon?: IconName;
   /** `password` hides the text with no way to show it. */
   type?: 'text' | 'password';
   /** Hidden as typed, with an eye button that shows it (the recovery answer). */
@@ -36,6 +38,7 @@ export function Input({
   noHelper,
   keyboard = 'text',
   suffix,
+  leadingIcon,
   type = 'text',
   secret,
   multiline,
@@ -70,6 +73,11 @@ export function Input({
           multiline && 'items-start py-2.5',
         )}
       >
+        {leadingIcon ? (
+          <View className="mr-2">
+            <Icon name={leadingIcon} size={20} tone="ink-muted" />
+          </View>
+        ) : null}
         <TextInput
           ref={input}
           editable={editable}
