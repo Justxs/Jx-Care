@@ -1,6 +1,6 @@
 import { act, waitFor } from '@testing-library/react-native';
 import * as Notifications from 'expo-notifications';
-import { AppState, Linking } from 'react-native';
+import { Linking } from 'react-native';
 
 import { qk } from '@/db/queryKeys';
 import { queryClient } from '@/db/queryClient';
@@ -69,12 +69,8 @@ describe('permission calls', () => {
 });
 
 describe('usePermission', () => {
-  it('re-checks when the app returns to the foreground', async () => {
-    let onChange: ((state: string) => void) | undefined;
-    const spy = jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, fn) => {
-      onChange = fn as (state: string) => void;
-      return { remove: jest.fn() } as unknown as ReturnType<typeof AppState.addEventListener>;
-    });
+  // The foreground re-check that writes the query is in start.test.ts.
+  it('reads the permission, then follows the query', async () => {
     jest
       .mocked(Notifications.getPermissionsAsync)
       .mockResolvedValueOnce(status({ status: 'denied' as Status['status'] }));
@@ -82,11 +78,9 @@ describe('usePermission', () => {
     const { result } = await app.renderHook(() => usePermission());
     await waitFor(() => expect(result.current).toBe('denied'));
 
-    jest
-      .mocked(Notifications.getPermissionsAsync)
-      .mockResolvedValueOnce(status({ status: 'granted' as Status['status'], granted: true }));
-    await act(async () => onChange?.('active'));
+    await act(async () => {
+      app.client.setQueryData(qk.notifications.permission, 'granted');
+    });
     await waitFor(() => expect(result.current).toBe('granted'));
-    spy.mockRestore();
   });
 });
