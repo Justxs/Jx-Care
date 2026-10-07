@@ -2,7 +2,6 @@ import {
   dueSteps,
   routineProgress,
   routineRunsOn,
-  stepDueOn,
   timeOfDayKey,
   todayGroups,
   type RoutineLite,
@@ -47,7 +46,9 @@ describe('routineRunsOn', () => {
   });
 });
 
-describe('stepDueOn', () => {
+const stepDueOn = (s: StepLite, r: RoutineLite, day: string) => dueSteps(r, [s], day).length > 0;
+
+describe('a step is due', () => {
   const r = routineFx({ id: 1 });
   it('a Tue/Fri step in a Mon–Sun routine is due only on Tue and Fri', () => {
     const s = stepFx({ id: 1, routineId: 1, scheduleKind: 'days', daysOfWeek: [2, 5] });

@@ -62,6 +62,7 @@ function statusOf(ev: DayEval, day: string, today: string): SkinDayStatus {
   return day < today ? 'missed' : 'pending';
 }
 
+/** Feature plan rule: a day succeeds when at least one routine due that day is complete. */
 function succeeded(ev: DayEval): boolean {
   for (const group of ev.groups.values()) if (group.some((r) => r.complete)) return true;
   return false;
@@ -69,11 +70,6 @@ function succeeded(ev: DayEval): boolean {
 
 export function skinDayStatus(day: string, input: SkinStreakInput): SkinDayStatus {
   return statusOf(createSkinIndex(input).evaluate(day), day, input.today);
-}
-
-/** Feature plan rule: a day succeeds when at least one routine due that day is complete. */
-export function skinDaySucceeded(day: string, input: SkinStreakInput): boolean {
-  return succeeded(createSkinIndex(input).evaluate(day));
 }
 
 /** Statuses for many days at once (calendar month), sharing one index. */

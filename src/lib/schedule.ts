@@ -63,10 +63,6 @@ export function stepScheduleAllows(step: StepLite, day: string): boolean {
   }
 }
 
-export function stepDueOn(step: StepLite, routine: RoutineLite, day: string): boolean {
-  return routineRunsOn(routine, day) && stepScheduleAllows(step, day);
-}
-
 /** Steps due on `day`, in order. Only these count toward done (refinement 2). */
 export function dueSteps<S extends StepLite>(
   routine: RoutineLite,

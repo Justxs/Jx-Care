@@ -1,4 +1,4 @@
-import { matchesAnswer, normalizeName, tidy } from './text';
+import { normalizeName, tidy } from './text';
 
 describe('normalizeName', () => {
   it('trims, collapses spaces, strips accents and lowercases', () => {
@@ -6,15 +6,8 @@ describe('normalizeName', () => {
     expect(normalizeName('Ąžuolas')).toBe('azuolas');
     expect(normalizeName('Hyaluronic   Acid')).toBe('hyaluronic acid');
     expect(normalizeName('Šarkė  Ėglė')).toBe('sarke egle');
-  });
-});
-
-describe('matchesAnswer', () => {
-  it('ignores case, accents and extra spaces', () => {
-    const stored = normalizeName('Šarūnas');
-    expect(matchesAnswer('  sarunas ', stored)).toBe(true);
-    expect(matchesAnswer('ŠARŪNAS', stored)).toBe(true);
-    expect(matchesAnswer('Sarunai', stored)).toBe(false);
+    // Recovery answers (spec L2): case, accents and extra spaces don't matter.
+    expect(normalizeName('  ŠARŪNAS ')).toBe(normalizeName('sarunas'));
   });
 });
 

@@ -1,4 +1,4 @@
-/** Text normalisation for matching names and recovery answers. */
+/** Text normalisation for matching names and recovery answers (the answer is hashed normalised). */
 
 /** Trim, collapse inner whitespace, strip diacritics, lowercase. "  Ąžuolas " → "azuolas". */
 export function normalizeName(s: string): string {
@@ -8,11 +8,6 @@ export function normalizeName(s: string): string {
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
-}
-
-/** Compares an answer ignoring case, accents and extra spaces (spec L2). */
-export function matchesAnswer(input: string, storedNormalized: string): boolean {
-  return normalizeName(input) === storedNormalized;
 }
 
 /** Collapse whitespace and trim, keeping case and accents (for display names). */

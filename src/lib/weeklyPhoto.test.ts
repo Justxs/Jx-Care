@@ -1,5 +1,4 @@
 import {
-  isPhotoAngle,
   isPhotoRowDay,
   nextPhotoDay,
   photoDayOfWeek,
@@ -75,13 +74,5 @@ describe('nextPhotoDay', () => {
   it('moves to next week once this week is taken or skipped', () => {
     expect(nextPhotoDay('2026-10-07', 7, true)).toBe('2026-10-18');
     expect(nextPhotoDay('2026-10-05', 1, true)).toBe('2026-10-12');
-  });
-});
-
-describe('isPhotoAngle', () => {
-  it('accepts only known angles', () => {
-    expect(isPhotoAngle('left')).toBe(true);
-    expect(isPhotoAngle('side')).toBe(false);
-    expect(isPhotoAngle(undefined)).toBe(false);
   });
 });

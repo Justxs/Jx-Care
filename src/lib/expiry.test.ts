@@ -3,7 +3,6 @@ import {
   effectiveExpiry,
   expiryProgress,
   expiryStatus,
-  needsBadge,
   sortBySoonestExpiry,
   warningDay,
 } from './expiry';
@@ -84,10 +83,6 @@ describe('daysLeft and progress', () => {
     expect(warningDay(p({ expiresAt: '2026-11-05' }), 30)).toBe('2026-10-06');
     expect(warningDay(p(), 30)).toBeNull();
   });
-  it('shows badges only when attention is needed', () => {
-    expect(needsBadge('ok')).toBe(false);
-    expect(needsBadge('nodate')).toBe(true);
-  });
 });
 
 describe('sortBySoonestExpiry', () => {
@@ -101,7 +96,7 @@ describe('sortBySoonestExpiry', () => {
       { name: 'A no date', ...p() },
       { name: 'Same B', ...p({ expiresAt: '2026-10-10' }) },
     ];
-    expect(sortBySoonestExpiry(list, today).map((x) => x.name)).toEqual([
+    expect(sortBySoonestExpiry(list).map((x) => x.name)).toEqual([
       'Expired long ago',
       'Expired',
       'Same B',
