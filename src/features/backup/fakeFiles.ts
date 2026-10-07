@@ -1,4 +1,5 @@
 import type { BackupFiles, PhotoFile } from './files';
+import { STAGING_FOLDER } from './format';
 
 export const FAKE_DOCUMENTS = 'file:///documents/';
 const FAKE_CACHE = 'file:///cache/';
@@ -10,27 +11,30 @@ const concat = (a: Uint8Array, b: Uint8Array) => {
   return out;
 };
 
+/** A folder under the fake documents folder, as a uri prefix. */
+const under = (path: string) => `${FAKE_DOCUMENTS}${path}/`;
+
 const isPhoto = (uri: string) =>
   uri.startsWith(`${FAKE_DOCUMENTS}products/`) || uri.startsWith(`${FAKE_DOCUMENTS}progress/`);
 
 /**
  * An in-memory file system for backup tests: `disk` maps a uri to its bytes. Photo paths live
- * under `file:///documents/`, exports under `file:///cache/`.
+ * under `file:///documents/`, exports under `file:///cache/`. A folder exists while a file is in
+ * it. `onMove` runs before each folder move, so a test can make one fail.
  */
 export function createFakeBackupFiles() {
   const disk = new Map<string, Uint8Array>();
-  const staged = new Map<string, Uint8Array>();
+  const urisUnder = (path: string) => [...disk.keys()].filter((uri) => uri.startsWith(under(path)));
 
   const fake: BackupFiles & {
     disk: Map<string, Uint8Array>;
-    staged: Map<string, Uint8Array>;
+    onMove?: (from: string, to: string) => void;
     /** Puts a photo on the fake disk and returns its uri. */
     addPhoto(path: string, bytes?: Uint8Array): string;
     /** The photo files as `path → bytes`. */
     photos(): Map<string, Uint8Array>;
   } = {
     disk,
-    staged,
     addPhoto(path, bytes = new TextEncoder().encode(`photo:${path}`)) {
       const uri = FAKE_DOCUMENTS + path;
       disk.set(uri, bytes);
@@ -78,15 +82,19 @@ export function createFakeBackupFiles() {
       }
     },
     writeStaged(path, bytes) {
-      staged.set(path, bytes);
+      disk.set(`${under(STAGING_FOLDER)}${path}`, bytes);
     },
-    clearStaged() {
-      staged.clear();
+    folderExists: (path) => urisUnder(path).length > 0,
+    moveFolder(from, to) {
+      fake.onMove?.(from, to);
+      if (urisUnder(to).length > 0) throw new Error(`Folder ${to} already exists`);
+      for (const uri of urisUnder(from)) {
+        disk.set(under(to) + uri.slice(under(from).length), disk.get(uri) ?? new Uint8Array());
+        disk.delete(uri);
+      }
     },
-    commitStaged() {
-      for (const uri of disk.keys()) if (isPhoto(uri)) disk.delete(uri);
-      for (const [path, bytes] of staged) disk.set(FAKE_DOCUMENTS + path, bytes);
-      staged.clear();
+    removeFolder(path) {
+      for (const uri of urisUnder(path)) disk.delete(uri);
     },
     prunePhotos(keep) {
       for (const uri of disk.keys()) {

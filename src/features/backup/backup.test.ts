@@ -460,6 +460,23 @@ async function currentAndBackup() {
   return { db, files, file };
 }
 
+/** A zip backup of the seeded phone, and another phone with its own rows and photos. */
+async function zipAndOtherPhone() {
+  const { db, files } = setUp();
+  const uri = await writeBackup('zip', { db, files, now: EXPORTED_AT, pause: noPause });
+  const db2 = createTestDb();
+  saveSettings(db2, { language: 'en' });
+  const files2 = createFakeBackupFiles();
+  db2
+    .insert(schema.product)
+    .values({ name: 'Old cream', area: 'skin', photoUri: files2.addPhoto('products/old.jpg') })
+    .run();
+  files2.addPhoto('progress/hair/2026-01-05/front-1.jpg');
+  files2.disk.set(uri, files.disk.get(uri)!);
+  const prepared = await prepareImport(uri, files2);
+  return { db2, files2, prepared, rows: readAllData(db2), photos: files2.photos() };
+}
+
 describe('failures leave the current data untouched', () => {
   it('a row that breaks a constraint mid-insert rolls everything back', async () => {
     const { db, files, file } = await currentAndBackup();
@@ -499,7 +516,49 @@ describe('failures leave the current data untouched', () => {
     );
     expect(readAllData(db)).toEqual(before);
     expect(files.photos()).toEqual(photos);
-    expect(files.staged.size).toBe(0);
+    expect(files.folderExists('restore-staging')).toBe(false);
+  });
+
+  it('zip: a photo folder that fails to move at any step leaves the current rows and photos', async () => {
+    const ok = await zipAndOtherPhone();
+    const moves: string[] = [];
+    ok.files2.onMove = (from, to) => moves.push(`${from} -> ${to}`);
+    await restoreBackup(ok.prepared, { db: ok.db2, files: ok.files2, pause: noPause });
+    expect(moves).toEqual([
+      'products -> restore-previous/products',
+      'progress -> restore-previous/progress',
+      'restore-staging/products -> products',
+      'restore-staging/progress -> progress',
+    ]);
+    expect(ok.files2.folderExists('restore-staging')).toBe(false);
+    expect(ok.files2.folderExists('restore-previous')).toBe(false);
+
+    for (const failAt of moves.keys()) {
+      const { db2, files2, prepared, rows, photos } = await zipAndOtherPhone();
+      let n = 0;
+      files2.onMove = () => {
+        if (n++ === failAt) throw new Error('disk full');
+      };
+      await expect(
+        restoreBackup(prepared, { db: db2, files: files2, pause: noPause }),
+      ).rejects.toThrow('disk full');
+      expect([failAt, readAllData(db2)]).toEqual([failAt, rows]);
+      expect([failAt, files2.photos()]).toEqual([failAt, photos]);
+      expect(files2.folderExists('restore-staging')).toBe(false);
+    }
+  });
+
+  it('zip: rows that fail to insert put the current photo folders back', async () => {
+    const { db2, files2, prepared, rows, photos } = await zipAndOtherPhone();
+    const products = prepared.file.data.product!;
+    prepared.file.data.product = [products[0]!, { ...products[1]!, id: products[0]!.id }];
+
+    await expect(
+      restoreBackup(prepared, { db: db2, files: files2, pause: noPause }),
+    ).rejects.toThrow(/UNIQUE constraint/);
+    expect(readAllData(db2)).toEqual(rows);
+    expect(files2.photos()).toEqual(photos);
+    expect(files2.folderExists('restore-staging')).toBe(false);
   });
 
   it('a damaged zip or a zip without backup.json is refused before anything', async () => {

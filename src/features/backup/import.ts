@@ -12,11 +12,14 @@ import {
   BackupError,
   isSafePhotoPath,
   parseBackupJson,
+  PHOTO_ROOTS,
   previewOf,
+  PREVIOUS_FOLDER,
   referencedPhotoPaths,
   type BackupData,
   type BackupFile,
   type BackupPreview,
+  STAGING_FOLDER,
 } from './format';
 import { replaceAllData } from './repo';
 import { isZip, listZipEntries, readZipEntry } from './zip';
@@ -75,6 +78,33 @@ function dropMissingProductPhotos(data: BackupData, available: (path: string) =>
   };
 }
 
+/**
+ * Puts a zip's staged photo folders in place of `products/` and `progress/`, with folder renames
+ * only: the current folders move into `PREVIOUS_FOLDER`, then the staged ones into their place.
+ * A failed move puts back what was moved and throws. Returns `undo`, which does the same once
+ * the folders are swapped (when the rows can't be replaced).
+ */
+function swapInStaged(files: BackupFiles): () => void {
+  files.removeFolder(PREVIOUS_FOLDER);
+  const done: [from: string, to: string][] = [];
+  const move = (from: string, to: string) => {
+    if (!files.folderExists(from)) return;
+    files.moveFolder(from, to);
+    done.push([from, to]);
+  };
+  const undo = () => {
+    for (const [from, to] of done.toReversed()) files.moveFolder(to, from);
+  };
+  try {
+    for (const root of PHOTO_ROOTS) move(root, `${PREVIOUS_FOLDER}/${root}`);
+    for (const root of PHOTO_ROOTS) move(`${STAGING_FOLDER}/${root}`, root);
+  } catch (error) {
+    undo();
+    throw error;
+  }
+  return undo;
+}
+
 export type RestoreDeps = {
   db: Db;
   files: BackupFiles;
@@ -83,13 +113,16 @@ export type RestoreDeps = {
 };
 
 /**
- * Replace all data (sequence 9). Never merges.
+ * Replace all data (sequence 9). Never merges. A failure at any step leaves the phone on its
+ * current rows and photos.
  *
  * 1. A zip's photos are unpacked into a staging folder first, so a broken zip stops here.
- * 2. One transaction deletes every row and inserts the backup's rows with their ids. An error
- *    rolls it back and the staged photos are thrown away: the current data stays untouched.
- * 3. A zip's photos replace the `products/` and `progress/` folders. A JSON backup has no photos:
- *    files the restored rows still point at stay (same phone), the rest are removed.
+ * 2. A zip's staged folders are swapped in for `products/` and `progress/`; the current folders
+ *    are kept aside until the rows are in.
+ * 3. One transaction deletes every row and inserts the backup's rows with their ids. An error
+ *    rolls it back and puts the current photo folders back.
+ * 4. A zip: the folders kept aside are deleted. A JSON backup has no photos: files the restored
+ *    rows still point at stay (same phone), the rest are removed.
  *
  * Clearing the query cache, the language and the notifications are the caller's (`api.ts`).
  */
@@ -98,8 +131,9 @@ export async function restoreBackup(
   { db, files, onProgress, pause = yieldToUi }: RestoreDeps,
 ): Promise<void> {
   const { file, source } = prepared;
-  files.clearStaged();
+  files.removeFolder(STAGING_FOLDER);
   let available: (path: string) => boolean;
+  let undoSwap: (() => void) | undefined;
 
   if (source.kind === 'zip') {
     const total = source.photoPaths.length;
@@ -116,7 +150,7 @@ export async function restoreBackup(
         onProgress?.({ done: i + 1, total });
       }
     } catch (error) {
-      files.clearStaged();
+      files.removeFolder(STAGING_FOLDER);
       throw error instanceof BackupError ? error : new BackupError('damaged');
     }
     available = (path) => staged.has(path);
@@ -129,17 +163,26 @@ export async function restoreBackup(
     files.documentUri(),
   );
   try {
+    if (source.kind === 'zip') undoSwap = swapInStaged(files);
     replaceAllData(db, data);
   } catch (error) {
-    files.clearStaged();
+    try {
+      undoSwap?.();
+    } finally {
+      files.removeFolder(STAGING_FOLDER);
+    }
     throw error;
   }
 
-  // The data is in; a photo file that can't be moved or removed must not undo that.
+  // The rows and photos are in; a file that can't be removed must not undo that.
   try {
-    if (source.kind === 'zip') files.commitStaged();
-    else files.prunePhotos(referencedPhotoPaths(file.data));
+    if (source.kind === 'zip') {
+      files.removeFolder(PREVIOUS_FOLDER);
+      files.removeFolder(STAGING_FOLDER);
+    } else {
+      files.prunePhotos(referencedPhotoPaths(file.data));
+    }
   } catch {
-    files.clearStaged();
+    // Leftover files at worst; the next restore clears both folders.
   }
 }

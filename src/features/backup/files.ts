@@ -1,6 +1,6 @@
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { PHOTO_ROOTS, toRelativePath, withSlash } from './format';
+import { PHOTO_ROOTS, STAGING_FOLDER, toRelativePath, withSlash } from './format';
 
 /**
  * Backup file work on the phone (expo-file-system), behind an interface so export and import run
@@ -27,17 +27,20 @@ export interface BackupFiles {
   writeCacheText(name: string, text: string): string;
   /** Removes earlier exports from the cache folder. */
   clearExports(prefix: string): void;
-  /** Restore: writes one photo into a staging folder until `commitStaged`. */
+  /** Restore: writes one photo into the staging folder (`STAGING_FOLDER/<path>`). */
   writeStaged(path: string, bytes: Uint8Array): void;
-  /** Removes the staging folder. */
-  clearStaged(): void;
-  /** Replaces `products/` and `progress/` with what was staged. */
-  commitStaged(): void;
+  /** Whether a folder exists under the documents folder (`products`, `restore-staging/progress`). */
+  folderExists(path: string): boolean;
+  /**
+   * Renames a folder under the documents folder to `to`, which must not exist yet (its parent
+   * folder is created if needed). Restore swaps the photo folders with these moves.
+   */
+  moveFolder(from: string, to: string): void;
+  /** Deletes a folder under the documents folder and everything in it, if it is there. */
+  removeFolder(path: string): void;
   /** Deletes photo files whose path is not in `keep`. */
   prunePhotos(keep: ReadonlySet<string>): void;
 }
-
-const STAGING = 'restore-staging';
 
 function walk(dir: Directory, out: File[]): void {
   for (const item of dir.list()) {
@@ -58,7 +61,7 @@ function ensureParent(file: File): void {
 }
 
 const documentUri = () => withSlash(Paths.document.uri);
-const stagingDir = () => new Directory(Paths.document, STAGING);
+const folder = (path: string) => new Directory(Paths.document, path);
 
 export const backupFiles: BackupFiles = {
   documentUri,
@@ -99,30 +102,26 @@ export const backupFiles: BackupFiles = {
   },
 
   writeStaged(path, bytes) {
-    const file = new File(stagingDir(), path);
+    const file = new File(folder(STAGING_FOLDER), path);
     ensureParent(file);
     if (file.exists) file.delete();
     file.write(bytes);
   },
 
-  clearStaged() {
-    const dir = stagingDir();
-    if (dir.exists) dir.delete();
+  folderExists: (path) => folder(path).exists,
+
+  moveFolder(from, to) {
+    const target = folder(to);
+    // A move onto an existing folder would land inside it (`to/<name>`), so refuse instead.
+    if (target.exists) throw new Error(`Folder ${to} already exists`);
+    const parent = target.parentDirectory;
+    if (!parent.exists) parent.create({ intermediates: true, idempotent: true });
+    folder(from).moveSync(target);
   },
 
-  commitStaged() {
-    for (const root of PHOTO_ROOTS) {
-      const dir = new Directory(Paths.document, root);
-      if (dir.exists) dir.delete();
-    }
-    const staging = stagingDir();
-    const base = withSlash(staging.uri);
-    for (const file of filesUnder(staging)) {
-      const target = new File(Paths.document, file.uri.slice(base.length));
-      ensureParent(target);
-      file.moveSync(target);
-    }
-    if (staging.exists) staging.delete();
+  removeFolder(path) {
+    const dir = folder(path);
+    if (dir.exists) dir.delete();
   },
 
   prunePhotos(keep) {

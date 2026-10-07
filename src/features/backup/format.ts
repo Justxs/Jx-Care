@@ -27,6 +27,10 @@ export const FORMAT_VERSION = 1;
 export const BACKUP_JSON_NAME = 'backup.json';
 /** Folders under the documents folder that hold photos (product photos, progress photos). */
 export const PHOTO_ROOTS = ['products', 'progress'] as const;
+/** Restore: a zip's photos are unpacked into this folder first (under the documents folder). */
+export const STAGING_FOLDER = 'restore-staging';
+/** Restore: the photo folders being replaced wait here until the backup's rows are in. */
+export const PREVIOUS_FOLDER = 'restore-previous';
 
 /** Tables a backup leaves out: what is scheduled on this phone is rebuilt after a restore. */
 const EXCLUDED_TABLES: readonly SQLiteTable[] = [schema.scheduledNotification];
