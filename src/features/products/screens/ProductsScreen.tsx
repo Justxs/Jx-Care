@@ -13,7 +13,6 @@ import { FAB_LIST_END_SPACE, Fab } from '@/components/ui/fab';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import type { ProductView } from '@/db/enums';
@@ -29,7 +28,7 @@ import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
 import { useArchiveCount, useDuplicateProduct, useMarkOpened, useProducts } from '../api';
 import { useFinishProducts } from '../archiveActions';
 import { ProductFiltersSheet } from '../components/ProductFiltersSheet';
-import { ProductRow, type RowAction } from '../components/ProductRow';
+import { ProductRow, ProductRowsSkeleton, type RowAction } from '../components/ProductRow';
 import { ProductTile } from '../components/ProductTile';
 import {
   activeFilterCount,
@@ -244,7 +243,7 @@ function MyProducts({
         }}
       >
         {products.isPending ? (
-          <SkeletonRows />
+          <ProductRowsSkeleton rows={5} />
         ) : (
           <Animated.View entering={FadeIn.duration(motion.duration.fast)} className="gap-4">
             {items.length === 0 ? (
@@ -456,25 +455,6 @@ function Shelf({
         </Animated.View>
       ))}
     </View>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <Card flush>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <View key={i}>
-          {i > 0 ? <Separator inset /> : null}
-          <View className="min-h-[72px] flex-row items-center gap-3 px-4 py-3">
-            <Skeleton width={48} height={48} radius={8} />
-            <View className="flex-1 gap-2">
-              <Skeleton width="60%" height={16} />
-              <Skeleton width="40%" height={12} />
-            </View>
-          </View>
-        </View>
-      ))}
-    </Card>
   );
 }
 

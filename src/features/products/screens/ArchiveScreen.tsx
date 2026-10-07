@@ -14,7 +14,6 @@ import { ProductThumb } from '@/components/ui/product-thumb';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { Separator } from '@/components/ui/separator';
 import { Sheet } from '@/components/ui/sheet';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import { useBuyAgain } from '@/features/shopping/buyAgain';
@@ -24,6 +23,7 @@ import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
 
 import { useArchivedProducts, useDeleteProduct } from '../api';
 import { useRestoreFromArchive } from '../archiveActions';
+import { ProductRowsSkeleton } from '../components/ProductRow';
 import type { ArchiveSort, ArchivedProduct } from '../types';
 
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/products'));
@@ -72,7 +72,7 @@ export function ArchiveScreen() {
           />
         ) : null}
         {archived.isPending ? (
-          <SkeletonRows />
+          <ProductRowsSkeleton rows={4} />
         ) : items.length === 0 ? (
           <Animated.View entering={FadeIn.duration(motion.duration.fast)}>
             <EmptyState icon="archive" title={t('products.archive.emptyTitle')}>
@@ -194,24 +194,5 @@ function ArchiveRow({ item, onMore }: { item: ArchivedProduct; onMore: () => voi
         <Icon name="ellipsis" size={22} tone="ink-muted" />
       </Pressable>
     </View>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <Card flush>
-      {[0, 1, 2, 3].map((i) => (
-        <View key={i}>
-          {i > 0 ? <Separator inset /> : null}
-          <View className="min-h-[72px] flex-row items-center gap-3 px-4 py-3">
-            <Skeleton width={48} height={48} radius={8} />
-            <View className="flex-1 gap-2">
-              <Skeleton width="60%" height={16} />
-              <Skeleton width="40%" height={12} />
-            </View>
-          </View>
-        </View>
-      ))}
-    </Card>
   );
 }

@@ -8,10 +8,13 @@ import { useTranslation } from 'react-i18next';
 
 import { AreaTag } from '@/components/ui/area-tag';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { MenuPortal } from '@/components/ui/more-menu';
 import { ProductThumb } from '@/components/ui/product-thumb';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
@@ -164,5 +167,25 @@ function SwipeActions({
         </Pressable>
       ))}
     </View>
+  );
+}
+
+/** Product rows at their final 72 pt height while a list loads (P1, P5). */
+export function ProductRowsSkeleton({ rows }: { rows: number }) {
+  return (
+    <Card flush>
+      {Array.from({ length: rows }, (_, i) => (
+        <View key={i}>
+          {i > 0 ? <Separator inset /> : null}
+          <View className="min-h-[72px] flex-row items-center gap-3 px-4 py-3">
+            <Skeleton width={48} height={48} radius={8} />
+            <View className="flex-1 gap-2">
+              <Skeleton width="60%" height={16} />
+              <Skeleton width="40%" height={12} />
+            </View>
+          </View>
+        </View>
+      ))}
+    </Card>
   );
 }
