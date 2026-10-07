@@ -3,7 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { buttonClasses } from '@/components/button';
 import { setLocale, useLocale } from '@/stores/preferences';
 
-/** Shows the current language; one tap switches to the other. */
+/**
+ * Shows the language it switches to ("LT" on the English page), named in that language for screen
+ * readers ("Lietuviškai"), so the label and its voice agree.
+ */
 export function LanguageToggle() {
   const { t } = useTranslation();
   const locale = useLocale();
@@ -14,12 +17,12 @@ export function LanguageToggle() {
       type="button"
       lang={next}
       onClick={() => setLocale(next)}
-      aria-label={t('language.label')}
+      aria-label={t('language.switchTo')}
       title={t('language.switchTo')}
       className={buttonClasses({ variant: 'ghost', size: 'icon' })}
     >
       <span aria-hidden="true" className="text-label font-semibold tracking-wide uppercase">
-        {locale}
+        {next}
       </span>
     </button>
   );

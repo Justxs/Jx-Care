@@ -20,20 +20,30 @@ describe('LandingPage', () => {
       'href',
       '/features',
     );
-    const source = screen.getByRole('link', { name: /^See it on GitHub/ });
+    const hero = screen.getByRole('heading', { level: 1 }).parentElement as HTMLElement;
+    const source = within(hero).getByRole('link', { name: /^See it on GitHub/ });
     expect(source).toHaveAccessibleName(/opens in a new tab/);
     expect(source).toHaveAttribute('href', 'https://github.com/Justxs/Jx-Care');
     expect(source).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('shows a short overview of every feature group and links to the features page', async () => {
+  it('shows three feature groups with their cards and links to the rest', async () => {
     renderAt('/');
     const overview = await screen.findByRole('region', { name: "What you'll find inside" });
 
-    for (const group of ['Products', 'Routines', 'Hair', 'Ingredients', 'Progress', 'Shopping']) {
+    for (const group of ['Routines', 'Ingredients', 'Progress']) {
       expect(within(overview).getByRole('heading', { level: 3, name: group })).toBeVisible();
     }
-    expect(within(overview).getByText('Conflicts across the day')).toBeVisible();
+    expect(within(overview).getByRole('link', { name: 'More about routines' })).toHaveAttribute(
+      'href',
+      '/features#routines',
+    );
+    for (const group of ['Products', 'Hair', 'Shopping']) {
+      expect(within(overview).getByRole('link', { name: group })).toHaveAttribute(
+        'href',
+        `/features#${group.toLowerCase()}`,
+      );
+    }
     expect(within(overview).queryByText(/For example/)).not.toBeInTheDocument();
     expect(within(overview).getByRole('link', { name: /See all features/ })).toHaveAttribute(
       'href',
@@ -64,7 +74,7 @@ describe('LandingPage', () => {
     const user = userEvent.setup();
     renderAt('/');
 
-    await user.click(await screen.findByRole('button', { name: 'EN, switch to Lithuanian' }));
+    await user.click(await screen.findByRole('button', { name: 'Lietuviškai' }));
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Žinokite, ką naudoti šiandien' }),
@@ -73,6 +83,13 @@ describe('LandingPage', () => {
     expect(JSON.parse(localStorage.getItem(preferencesStorageKey) ?? '{}')).toMatchObject({
       locale: 'lt',
     });
+  });
+
+  it('shows its own page for an unknown address', async () => {
+    renderAt('/nowhere');
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
+    expect(screen.getByRole('link', { name: /Go to the home page/ })).toHaveAttribute('href', '/');
   });
 
   it('switches to the dark theme and back', async () => {

@@ -8,7 +8,7 @@ import {
   Pipette,
   Settings,
 } from 'lucide-react';
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { StatusBadge } from '@/components/badges';
@@ -142,12 +142,17 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
   const morningId = useId();
   const hairId = useId();
   const expiringId = useId();
+  // Once the real app shows, the drawing under it leaves the accessibility tree and tab order.
+  const [live, setLive] = useState(false);
 
   return (
     <figure
       aria-label={t('sample.phoneLabel')}
       style={{ '--card-delay': '80ms' }}
-      className={cn('relative m-0 shrink-0 self-start motion-safe:animate-card-in', className)}
+      className={cn(
+        'relative m-0 shrink-0 motion-safe:animate-card-in max-[359px]:[zoom:0.9] md:self-start',
+        className,
+      )}
     >
       <SideButton className="top-[104px] -left-[2px] h-[22px]" />
       <SideButton className="top-[142px] -left-[2px] h-[44px]" />
@@ -155,7 +160,7 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
       <SideButton className="top-[160px] -right-[2px] h-[66px]" />
 
       <div
-        className="relative rounded-[50px] bg-linear-to-b from-[#3b3236] via-[#1e191b] to-[#2c2528] p-[7px] shadow-raised ring-1 ring-black/60 dark:from-[#4a4045] dark:via-[#211c1e] dark:to-[#3a3236] dark:ring-white/10"
+        className="relative rounded-[50px] bg-linear-to-b from-[#3b3236] via-[#1e191b] to-[#2c2528] p-[7px] shadow-raised ring-1 ring-black/60 dark:from-[#4a4045] dark:via-[#211c1e] dark:to-[#3a3236] dark:shadow-[0_2px_6px_rgb(0_0_0/0.4),0_24px_56px_rgb(0_0_0/0.5)] dark:ring-white/20"
         style={{ width: VIEW_WIDTH + 14 }}
       >
         <div className="rounded-[43px] bg-black p-[1px]">
@@ -174,7 +179,7 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
             >
               <StatusBar />
 
-              <div className="flex min-h-0 flex-1 flex-col px-4 pt-2">
+              <div inert={live} className="flex min-h-0 flex-1 flex-col px-4 pt-2">
                 <div className="px-1">
                   <p className="text-display font-bold tracking-tight">{t('sample.greeting')}</p>
                   <p className="text-body text-ink-muted first-letter:uppercase">
@@ -240,7 +245,7 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
 
                 <div role="group" aria-labelledby={hairId} className="mt-4">
                   <div className="flex items-center gap-3 rounded-lg bg-surface p-4 shadow-card">
-                    <ProductThumb icon={Droplets} area="hair" />
+                    <ProductThumb icon={Droplets} />
                     <span className="min-w-0">
                       <span id={hairId} className="block text-body font-semibold">
                         {t('sample.hairWash')}
@@ -255,7 +260,7 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
                 <div role="group" aria-labelledby={expiringId} className="mt-5">
                   <SectionTitle id={expiringId}>{t('sample.expiring')}</SectionTitle>
                   <div className="flex items-center gap-3 rounded-lg bg-surface p-4 shadow-card">
-                    <ProductThumb icon={Pipette} area="skin" />
+                    <ProductThumb icon={Pipette} />
                     <span className="min-w-0 flex-1">
                       <span className="block text-body font-semibold">{t('sample.vitaminC')}</span>
                       <span className="block text-label text-ink-muted">
@@ -281,7 +286,9 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
                         className="size-6"
                         strokeWidth={tab.key === 'today' ? 2.25 : 1.75}
                       />
-                      <span className="max-w-full truncate">{t(`sample.tabs.${tab.key}`)}</span>
+                      <span className="max-w-full truncate leading-4">
+                        {t(`sample.tabs.${tab.key}`)}
+                      </span>
                     </span>
                   ))}
                 </div>
@@ -291,7 +298,10 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
               </div>
 
               {/* The real app between the status bar and the home indicator, once it has loaded. */}
-              <LiveDemo className="absolute top-[54px] left-0 h-[756px] w-full" />
+              <LiveDemo
+                className="absolute top-[54px] left-0 h-[756px] w-full"
+                onReady={() => setLive(true)}
+              />
             </div>
           </div>
         </div>

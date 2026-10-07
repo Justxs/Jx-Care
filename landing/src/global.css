@@ -78,9 +78,10 @@
   --neutral-soft: #2a2e2c;
   --focus: #f28db5;
 
-  --hero: #3d2230;
+  /* A deep pink, so the band and its scalloped edge still stand out from the dark page (2:1). */
+  --hero: #7a2550;
   --hero-ink: #f4eff1;
-  --hero-muted: #d9b8c6;
+  --hero-muted: #ecc6d6;
 
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
   --shadow-raised: 0 2px 6px rgb(0 0 0 / 0.35), 0 16px 40px rgb(0 0 0 / 0.45);
@@ -115,9 +116,9 @@
     --neutral-soft: #2a2e2c;
     --focus: #f28db5;
 
-    --hero: #3d2230;
+    --hero: #7a2550;
     --hero-ink: #f4eff1;
-    --hero-muted: #d9b8c6;
+    --hero-muted: #ecc6d6;
 
     --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
     --shadow-raised: 0 2px 6px rgb(0 0 0 / 0.35), 0 16px 40px rgb(0 0 0 / 0.45);

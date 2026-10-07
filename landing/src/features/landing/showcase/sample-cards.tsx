@@ -13,15 +13,9 @@ import {
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  type Area,
-  AreaTag,
-  ConflictTag,
-  StatusBadge,
-  type Status,
-  Tag,
-} from '@/components/badges';
+import { AreaTag, ConflictTag, StatusBadge, type Status, Tag } from '@/components/badges';
 import { CheckMark } from '@/components/check-mark';
+import { WholeDates } from '@/components/whole-dates';
 import { cn } from '@/lib/cn';
 import { weekdayLetters, weekdayNames } from '@/lib/format';
 import { useLocale } from '@/stores/preferences';
@@ -33,18 +27,15 @@ interface CardProps {
   delay?: number;
 }
 
-const thumbTones: Record<Area, string> = {
-  skin: 'bg-skin-soft text-skin',
-  hair: 'bg-hair-soft text-hair',
-  both: 'bg-subtle text-ink-muted',
-};
-
-/** Product placeholder: a tinted square with the category glyph, 40px so rows never jump. */
-export function ProductThumb({ icon: Icon, area }: Readonly<{ icon: LucideIcon; area: Area }>) {
+/**
+ * Product placeholder, as in the app: a neutral square with the category glyph, 40px so rows never
+ * jump. The care area is a word (AreaTag), not a colour here.
+ */
+export function ProductThumb({ icon: Icon }: Readonly<{ icon: LucideIcon }>) {
   return (
     <span
       aria-hidden="true"
-      className={cn('grid size-10 shrink-0 place-items-center rounded-md', thumbTones[area])}
+      className="grid size-10 shrink-0 place-items-center rounded-md bg-subtle text-ink-muted"
     >
       <Icon className="size-5" />
     </span>
@@ -82,11 +73,11 @@ export function WeekdayDots({
 }
 
 const products = [
-  { key: 'vitaminC', icon: Pipette, area: 'skin', status: 'expiring' },
-  { key: 'shampoo', icon: Droplet, area: 'hair', status: 'ok' },
-  { key: 'argan', icon: FlaskRound, area: 'both', status: 'expired' },
-  { key: 'sunscreen', icon: Sun, area: 'skin', status: 'unopened' },
-] as const satisfies readonly { key: string; icon: LucideIcon; area: Area; status: Status }[];
+  { key: 'vitaminC', icon: Pipette, status: 'expiring' },
+  { key: 'shampoo', icon: Droplet, status: 'ok' },
+  { key: 'argan', icon: FlaskRound, status: 'expired' },
+  { key: 'sunscreen', icon: Sun, status: 'unopened' },
+] as const satisfies readonly { key: string; icon: LucideIcon; status: Status }[];
 
 export function ProductsCard({ className, delay }: Readonly<CardProps>) {
   const { t } = useTranslation();
@@ -105,13 +96,13 @@ export function ProductsCard({ className, delay }: Readonly<CardProps>) {
             style={{ '--row': index }}
             className="flex min-h-16 items-center gap-3 py-2.5 motion-safe:animate-settle-in"
           >
-            <ProductThumb icon={product.icon} area={product.area} />
+            <ProductThumb icon={product.icon} />
             <span className="min-w-0 flex-1">
               <span className="block text-body font-semibold">
                 {t(`showcase.products.${product.key}.name`)}
               </span>
               <span className="block text-label text-ink-muted">
-                {t(`showcase.products.${product.key}.meta`)}
+                <WholeDates>{t(`showcase.products.${product.key}.meta`)}</WholeDates>
               </span>
             </span>
             <StatusBadge status={product.status}>
@@ -218,7 +209,7 @@ export function ProductDetailCard({ className, delay }: Readonly<CardProps>) {
   return (
     <ShowcaseCard aria-labelledby={titleId} className={className} delay={delay}>
       <div className="flex items-start gap-3">
-        <ProductThumb icon={Pipette} area="skin" />
+        <ProductThumb icon={Pipette} />
         <div className="min-w-0 flex-1">
           <CardTitle id={titleId}>{t('showcase.products.vitaminC.name')}</CardTitle>
           <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -237,7 +228,7 @@ export function ProductDetailCard({ className, delay }: Readonly<CardProps>) {
           <div key={fact} className="flex min-h-10 items-center justify-between gap-3 py-2">
             <dt className="text-ink-muted">{t(`showcase.detail.${fact}.label`)}</dt>
             <dd className="text-right font-medium tabular-nums">
-              {t(`showcase.detail.${fact}.value`)}
+              <WholeDates>{t(`showcase.detail.${fact}.value`)}</WholeDates>
             </dd>
           </div>
         ))}
@@ -250,7 +241,7 @@ const routineSteps = [
   { key: 'cleanser', schedule: 'everyTime' },
   { key: 'acidToner', schedule: 'everyFewDays', wait: true },
   { key: 'vitaminC', schedule: 'everyTime' },
-  { key: 'mask', schedule: 'sundays' },
+  { key: 'mask', schedule: 'saturdays' },
 ] as const;
 
 export function RoutineCard({ className, delay }: Readonly<CardProps>) {
@@ -261,7 +252,7 @@ export function RoutineCard({ className, delay }: Readonly<CardProps>) {
     <ShowcaseCard aria-labelledby={titleId} className={className} delay={delay}>
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <CardTitle id={titleId}>{t('sample.morning')}</CardTitle>
-        <WeekdayDots days={[0, 1, 2, 3, 4, 5, 6]} />
+        <WeekdayDots days={[0, 1, 2, 3, 4, 5]} />
       </div>
       <ol className="mt-2 divide-y divide-border">
         {routineSteps.map((step, index) => (
@@ -307,10 +298,12 @@ export function HairCard({ className, delay }: Readonly<CardProps>) {
       <CardTitle id={titleId}>{t('showcase.hair.title')}</CardTitle>
       <ul className="mt-3 space-y-4">
         <li className="flex gap-3">
-          <ProductThumb icon={ShowerHead} area="hair" />
+          <ProductThumb icon={ShowerHead} />
           <div className="min-w-0 flex-1">
             <p className="flex flex-wrap items-baseline justify-between gap-x-3">
-              <span className="text-body font-semibold">{t('showcase.hair.nextWash')}</span>
+              <span className="text-body font-semibold">
+                <WholeDates>{t('showcase.hair.nextWash')}</WholeDates>
+              </span>
               <span className="text-label text-ink-muted">{t('showcase.hair.everyFewDays')}</span>
             </p>
             <p className="text-label text-ink-muted">{t('sample.hairWashWith')}</p>
@@ -323,7 +316,7 @@ export function HairCard({ className, delay }: Readonly<CardProps>) {
           </div>
         </li>
         <li className="flex gap-3">
-          <ProductThumb icon={Scissors} area="both" />
+          <ProductThumb icon={Scissors} />
           <div className="min-w-0 flex-1">
             <p className="flex flex-wrap items-baseline justify-between gap-x-3">
               <span className="text-body font-semibold">{t('showcase.hair.trim')}</span>
@@ -358,13 +351,13 @@ export function IngredientsCard({ className, delay }: Readonly<CardProps>) {
         <StatusBadge status="expired">{t('showcase.status.avoid')}</StatusBadge>
       </div>
       <p className="text-label text-ink-muted">{t('showcase.ingredients.product')}</p>
-      <ol className="mt-3 divide-y divide-border rounded-md ring-1 ring-border-strong ring-inset">
+      <ol className="mt-2 divide-y divide-border">
         {ingredients.map((ingredient, index) => (
           <li
             key={ingredient}
             style={{ '--row': index }}
             className={cn(
-              'flex min-h-10 items-center justify-between gap-3 px-3 py-2 text-body motion-safe:animate-settle-in',
+              'flex min-h-10 items-center justify-between gap-3 py-2 text-body motion-safe:animate-settle-in',
               ingredient === 'parfum' && 'text-danger',
             )}
           >

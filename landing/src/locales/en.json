@@ -17,8 +17,7 @@
     "toLight": "Switch to light theme"
   },
   "language": {
-    "switchTo": "Lietuviškai",
-    "label": "EN, switch to Lithuanian"
+    "switchTo": "Lietuviškai"
   },
   "hero": {
     "title": "Know what to put on today",
@@ -130,8 +129,8 @@
       "mask": "Hydrating mask",
       "everyTime": "Every time",
       "everyFewDays": "Every 3 days",
-      "sundays": "Sundays",
-      "wait": "Wait 1 min"
+      "wait": "Wait 1 min",
+      "saturdays": "Saturdays"
     },
     "hair": {
       "title": "Hair care",
@@ -178,25 +177,19 @@
   },
   "statement": {
     "title": "In short",
-    "accounts": {
-      "label": "Accounts to create",
-      "text": "No sign-up and no server. Your products, routines and photos are saved on your phone and open with a PIN, Face ID or fingerprint."
-    },
-    "tracking": {
-      "label": "Ads and trackers",
-      "text": "Nothing is sent anywhere. The only thing that leaves the phone is a backup file, when you export one."
-    },
-    "gallery": {
-      "label": "Photos in your gallery",
-      "text": "Progress photos stay inside the app, so they never show up in the phone's gallery or photo backups."
-    },
-    "languages": {
-      "label": "Languages",
-      "text": "Lithuanian and English, in light and dark."
-    },
-    "price": {
-      "label": "Price",
-      "text": "Free to use, and the code is open for anyone to read."
+    "items": {
+      "account": {
+        "title": "No account",
+        "text": "Nothing to sign up for and no server. It opens with a PIN, Face ID or fingerprint."
+      },
+      "languages": {
+        "title": "Lithuanian and English",
+        "text": "In light and dark, following your phone."
+      },
+      "free": {
+        "title": "Free and open source",
+        "text": "No price and no ads, and the code is open for anyone to read."
+      }
     }
   },
   "features": {
@@ -245,7 +238,7 @@
       "stepSchedule": {
         "title": "Steps on their own days",
         "text": "A step can run every time, on set days, or every few days, so one routine covers the whole week.",
-        "example": "a face mask only on Sundays."
+        "example": "a face mask only on Saturdays."
       },
       "player": {
         "title": "Tick as you go",
@@ -318,7 +311,22 @@
         "example": "to yourself in a messaging app."
       }
     },
-    "seeAll": "See all features"
+    "seeAll": "See all features",
+    "vignettes": {
+      "routines": {
+        "text": "Each routine has its time of day, its weekdays and its steps in order. A step can run every time, on set days or every few days.",
+        "link": "More about routines"
+      },
+      "ingredients": {
+        "text": "Jx Care flags ingredients on your avoid list and warns when two products you use on the same day should not meet.",
+        "link": "More about ingredients"
+      },
+      "progress": {
+        "text": "A guided photo once a week, and any two weeks side by side with what changed in between.",
+        "link": "More about progress photos"
+      }
+    },
+    "also": "Also inside:"
   },
   "privacy": {
     "title": "Private by design",
@@ -328,13 +336,17 @@
         "title": "PIN, Face ID or fingerprint",
         "text": "The app locks every time it opens and after a minute away. A forgotten PIN is reset with your recovery question."
       },
+      "tracking": {
+        "title": "Nothing sent anywhere",
+        "text": "No ads and no trackers. The only thing that leaves the phone is a backup file, when you export one."
+      },
       "switcher": {
         "title": "Hidden in the app switcher",
         "text": "While locked, the app's content is blurred when you switch between apps."
       },
       "photos": {
         "title": "Photos stay in the app",
-        "text": "Progress photos are kept in the app's own storage and are only visible after the PIN."
+        "text": "Progress photos are kept in the app's own storage, never in the phone's gallery, and are only visible after the PIN."
       },
       "backup": {
         "title": "Your backup, your file",
@@ -345,7 +357,7 @@
   "close": {
     "getTitle": "Want it on your phone?",
     "getText": "Jx Care is not in the stores yet. Watch the code on GitHub to see when it is.",
-    "getAction": "Follow on GitHub",
+    "getAction": "See it on GitHub",
     "buildTitle": "Build it yourself",
     "buildText": "Jx Care is free and open source. The guide on GitHub shows how to build it for iOS or Android.",
     "buildAction": "Read the build guide",
@@ -358,9 +370,14 @@
     "supportAction": "Support me on Ko-fi"
   },
   "footer": "Skin and hair care, kept on your phone · Free and open source",
-  "sourceLabel": "Jx Care on GitHub",
   "featuresPage": {
     "title": "Everything Jx Care does",
-    "lead": "Products, routines, hair, ingredients, progress and shopping, each with an example of how it works."
+    "lead": "Products, routines, hair, ingredients, progress and shopping, each with an example of how it works.",
+    "index": "Feature groups"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "There is nothing at this address. The page may have moved, or the link has a typo.",
+    "home": "Go to the home page"
   }
 }

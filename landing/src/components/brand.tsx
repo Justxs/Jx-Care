@@ -95,6 +95,7 @@ interface BrandProps {
   size?: keyof typeof sizes;
   className?: string;
   markClassName?: string;
+  wordmarkClassName?: string;
 }
 
 /** Mark and wordmark, read out once as "Jx Care". */
@@ -103,6 +104,7 @@ export function Brand({
   size = 'md',
   className,
   markClassName,
+  wordmarkClassName,
 }: Readonly<BrandProps>) {
   return (
     <span
@@ -117,7 +119,10 @@ export function Brand({
       <BrandMark
         className={cn(stacked ? sizes[size].stackedMark : sizes[size].mark, markClassName)}
       />
-      <span aria-hidden="true" className={cn('font-bold tracking-tight', sizes[size].text)}>
+      <span
+        aria-hidden="true"
+        className={cn('font-bold tracking-tight', sizes[size].text, wordmarkClassName)}
+      >
         Jx Care
       </span>
     </span>

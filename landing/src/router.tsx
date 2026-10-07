@@ -8,8 +8,9 @@ import {
 
 import { FeaturesPage } from '@/features/landing/features-page';
 import { LandingPage } from '@/features/landing/landing-page';
+import { NotFoundPage } from '@/features/landing/not-found-page';
 
-const rootRoute = createRootRoute({ component: Outlet });
+const rootRoute = createRootRoute({ component: Outlet, notFoundComponent: NotFoundPage });
 
 const landingRoute = createRoute({
   getParentRoute: () => rootRoute,

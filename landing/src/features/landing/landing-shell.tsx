@@ -17,7 +17,7 @@ import { BUILD_GUIDE_URL, SOURCE_URL, SUGGESTION_EMAIL, SUPPORT_URL } from './li
 export const landingColumn = 'mx-auto w-full max-w-[96rem] px-4 sm:px-8 lg:px-12 2xl:px-16';
 
 const navLink =
-  'inline-flex min-h-11 items-center rounded-full px-3 text-body font-medium text-ink-muted transition-colors duration-200 hover:text-ink aria-[current=page]:text-ink';
+  'inline-flex min-h-11 items-center rounded-full px-2.5 text-body font-medium text-ink-muted transition-colors duration-200 hover:text-ink aria-[current=page]:bg-black/15 aria-[current=page]:text-ink sm:px-3.5';
 
 function SignOff() {
   return (
@@ -75,6 +75,8 @@ function LandingDoors() {
             <Mail aria-hidden="true" />
             {t('close.suggestAction')}
           </a>
+          {/* Without a mail app the button does nothing, so the address is there to copy. */}
+          <p className="mt-2 text-label text-ink-muted select-all">{SUGGESTION_EMAIL}</p>
         </Door>
         <Door title={t('close.supportTitle')} text={t('close.supportText')}>
           <ExternalLink href={SUPPORT_URL} className={outline}>
@@ -100,7 +102,7 @@ export function LandingShell({
         href="#main"
         className={cn(
           buttonClasses(),
-          'fixed top-3 left-3 z-50 -translate-y-20 shadow-raised focus-visible:translate-y-0',
+          'fixed top-3 left-3 z-50 -translate-y-24 shadow-none focus-visible:translate-y-0 focus-visible:shadow-raised',
         )}
       >
         {t('skip')}
@@ -117,7 +119,8 @@ export function LandingShell({
             aria-label={t('nav.home')}
             className="flex min-h-11 items-center rounded-full"
           >
-            <Brand markClassName="text-hero-ink" />
+            {/* On the narrowest phones the mark stands alone so the nav keeps Privacy. */}
+            <Brand markClassName="text-hero-ink" wordmarkClassName="max-[419px]:hidden" />
           </Link>
           <nav aria-label={t('nav.label')} className="flex shrink-0 items-center gap-0.5">
             <Link to="/features" className={navLink}>
@@ -127,7 +130,7 @@ export function LandingShell({
               to="/"
               hash="privacy"
               activeOptions={{ exact: true, includeHash: true }}
-              className={cn(navLink, 'max-sm:hidden')}
+              className={navLink}
             >
               {t('nav.privacy')}
             </Link>
@@ -150,30 +153,10 @@ export function LandingShell({
 
       <footer className="border-t border-border">
         <div
-          className={cn(
-            landingColumn,
-            'flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-6 text-label text-ink-muted',
-          )}
+          className={cn(landingColumn, 'flex items-center gap-2 py-6 text-label text-ink-muted')}
         >
-          <span className="flex items-center gap-2">
-            <BrandMark className="h-4" />
-            {t('footer')}
-          </span>
-          <span className="flex flex-wrap items-center gap-x-6">
-            <ExternalLink
-              href={SUPPORT_URL}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-sm underline-offset-4 hover:text-ink hover:underline"
-            >
-              <KofiCup className="size-4" />
-              {t('close.supportAction')}
-            </ExternalLink>
-            <ExternalLink
-              href={SOURCE_URL}
-              className="inline-flex min-h-11 items-center rounded-sm underline-offset-4 hover:text-ink hover:underline"
-            >
-              {t('sourceLabel')}
-            </ExternalLink>
-          </span>
+          <BrandMark className="h-4 shrink-0" />
+          {t('footer')}
         </div>
       </footer>
     </div>

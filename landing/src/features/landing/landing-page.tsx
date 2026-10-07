@@ -6,25 +6,31 @@ import { useTranslation } from 'react-i18next';
 import { buttonClasses } from '@/components/button';
 import { ExternalLink } from '@/components/external-link';
 import { cn } from '@/lib/cn';
-import { intlLocale } from '@/lib/format';
 import { useDocumentTitle } from '@/lib/use-document-title';
-import { useLocale } from '@/stores/preferences';
 
-import { featureGroups } from './feature-groups';
 import { LandingShell, landingColumn } from './landing-shell';
 import { SOURCE_URL } from './links';
-import { ConflictCard, ProductsCard } from './showcase/sample-cards';
+import {
+  ConflictCard,
+  IngredientsCard,
+  PhotoCard,
+  ProductsCard,
+  RoutineCard,
+} from './showcase/sample-cards';
 import { TodayPhone } from './showcase/today-phone';
 
-const facts = [
-  { key: 'accounts', figure: 0 },
-  { key: 'tracking', figure: 0 },
-  { key: 'gallery', figure: 0 },
-  { key: 'languages', figure: 2 },
-  { key: 'price', figure: 0, price: true },
+const facts = ['account', 'languages', 'free'] as const;
+
+/** Three groups shown with their card; the other three are named under them. */
+const vignettes = [
+  { key: 'routines', Card: RoutineCard },
+  { key: 'ingredients', Card: IngredientsCard },
+  { key: 'progress', Card: PhotoCard },
 ] as const;
 
-const privacyItems = ['pin', 'switcher', 'photos', 'backup'] as const;
+const otherGroups = ['products', 'hair', 'shopping'] as const;
+
+const privacyItems = ['pin', 'tracking', 'switcher', 'photos', 'backup'] as const;
 
 function Hero() {
   const { t } = useTranslation();
@@ -63,60 +69,52 @@ function Hero() {
   );
 }
 
+/**
+ * The phone with the two strongest sample cards beside it. On phones the conflict warning comes
+ * under the phone; between md and lg, and from xl, both cards stand beside it.
+ */
 function ShowcaseStage() {
   return (
-    <div className="flex justify-center gap-5 lg:-mb-40 lg:justify-end">
+    <div className="flex flex-col items-center gap-5 md:flex-row md:items-start md:justify-center lg:-mb-32 lg:justify-end">
       <TodayPhone />
-      <div className="hidden w-84 shrink-0 flex-col gap-5 pt-14 md:flex lg:hidden xl:flex">
-        <ProductsCard delay={240} />
+      <div className="flex w-full max-w-sm shrink-0 flex-col gap-5 md:w-84 md:pt-14 lg:hidden xl:flex">
+        <ProductsCard delay={240} className="max-md:hidden" />
         <ConflictCard delay={420} />
       </div>
     </div>
   );
 }
 
+/** Three plain facts in one strip, words rather than big numbers. */
 function Statement() {
   const { t } = useTranslation();
-  const locale = useLocale();
   const titleId = useId();
-  const number = new Intl.NumberFormat(intlLocale(locale));
-  const euros = new Intl.NumberFormat(intlLocale(locale), {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0,
-  });
 
   return (
     <section
       aria-labelledby={titleId}
-      className={cn(landingColumn, 'pt-14 pb-14 sm:pb-20 lg:pt-56')}
+      className={cn(landingColumn, 'pt-12 pb-14 sm:pb-20 lg:pt-44')}
     >
-      <h2 id={titleId} className="text-display font-bold tracking-tight">
+      <h2 id={titleId} className="sr-only">
         {t('statement.title')}
       </h2>
-      {/* The figure leads each row, so it reads with its label instead of across the page. */}
-      <dl className="mt-6 divide-y divide-border border-y border-border-strong/40">
+      <ul className="grid divide-y divide-border border-y border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {facts.map((fact) => (
-          <div
-            key={fact.key}
-            className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-x-4 gap-y-1 py-4 sm:grid-cols-[5rem_minmax(0,15rem)_minmax(0,1fr)] sm:items-baseline sm:gap-x-6 lg:grid-cols-[6rem_minmax(0,18rem)_minmax(0,1fr)]"
-          >
-            <dt className="col-start-2 row-start-1 self-baseline text-body font-semibold">
-              {t(`statement.${fact.key}.label`)}
-            </dt>
-            <dd className="col-start-2 row-start-2 max-w-prose text-body text-ink-muted sm:col-start-3 sm:row-start-1">
-              {t(`statement.${fact.key}.text`)}
-            </dd>
-            <dd className="col-start-1 row-span-2 row-start-1 text-title-l font-bold text-accent tabular-nums sm:row-span-1 sm:text-display">
-              {'price' in fact ? euros.format(fact.figure) : number.format(fact.figure)}
-            </dd>
-          </div>
+          <li key={fact} className="py-5 sm:px-6 sm:py-6 sm:first:pl-0 sm:last:pr-0">
+            <h3 className="text-title-m font-bold tracking-tight text-balance">
+              {t(`statement.items.${fact}.title`)}
+            </h3>
+            <p className="mt-1 max-w-[42ch] text-body text-ink-muted">
+              {t(`statement.items.${fact}.text`)}
+            </p>
+          </li>
         ))}
-      </dl>
+      </ul>
     </section>
   );
 }
 
+/** Three feature groups with the card that shows them, then the rest by name. */
 function FeatureOverview() {
   const { t } = useTranslation();
   const titleId = useId();
@@ -124,42 +122,57 @@ function FeatureOverview() {
   return (
     <section aria-labelledby={titleId} className="border-t border-border">
       <div className={cn(landingColumn, 'py-14 sm:py-20')}>
-        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
-          <div>
-            <h2 id={titleId} className="text-display font-bold tracking-tight">
-              {t('features.title')}
-            </h2>
-            <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
-          </div>
-          <Link to="/features" className={buttonClasses({ variant: 'outline' })}>
+        <h2 id={titleId} className="text-display font-bold tracking-tight">
+          {t('features.title')}
+        </h2>
+        <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
+        <ul className="mt-10 grid items-start gap-x-10 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
+          {vignettes.map(({ key, Card }) => (
+            // From xl the three share rows (subgrid), so headings, links and cards line up.
+            <li
+              key={key}
+              className="flex max-w-md flex-col xl:row-span-4 xl:grid xl:grid-rows-subgrid xl:content-start xl:gap-y-0"
+            >
+              <h3 className="text-title-m font-bold tracking-tight">
+                {t(`features.groups.${key}`)}
+              </h3>
+              <p className="mt-1 text-body text-ink-muted">{t(`features.vignettes.${key}.text`)}</p>
+              <Link
+                to="/features"
+                hash={key}
+                className="group mt-1 inline-flex min-h-11 items-center gap-1.5 justify-self-start rounded-sm font-semibold text-accent underline-offset-4 hover:underline"
+              >
+                {t(`features.vignettes.${key}.link`)}
+                <ArrowRight
+                  aria-hidden="true"
+                  className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                />
+              </Link>
+              <Card className="mt-4 self-start" />
+            </li>
+          ))}
+        </ul>
+        <div className="mt-14 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-border pt-6">
+          <p className="flex flex-wrap items-center gap-x-1 text-body text-ink-muted">
+            {t('features.also')}
+            {otherGroups.map((key, index) => (
+              <span key={key} className="inline-flex items-center">
+                <Link
+                  to="/features"
+                  hash={key}
+                  className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-ink underline decoration-border-strong underline-offset-4 hover:text-accent hover:decoration-current"
+                >
+                  {t(`features.groups.${key}`)}
+                </Link>
+                {index < otherGroups.length - 1 ? <span aria-hidden="true">·</span> : null}
+              </span>
+            ))}
+          </p>
+          <Link to="/features" className={cn(buttonClasses({ variant: 'outline' }), 'sm:ml-auto')}>
             {t('features.seeAll')}
             <ArrowRight aria-hidden="true" />
           </Link>
         </div>
-        <ul className="mt-10 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {featureGroups.map((group) => (
-            <li key={group.key} className="border-t border-border-strong/40 pt-4">
-              <h3 className="text-title-s font-semibold">
-                <Link
-                  to="/features"
-                  hash={group.key}
-                  className="group inline-flex min-h-11 items-center gap-1.5 rounded-sm underline-offset-4 hover:text-accent hover:underline"
-                >
-                  {t(`features.groups.${group.key}`)}
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="size-4 text-ink-muted transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-accent"
-                  />
-                </Link>
-              </h3>
-              <ul className="mt-1 space-y-1 text-body text-ink-muted">
-                {group.features.map((feature) => (
-                  <li key={feature}>{t(`features.items.${feature}.title`)}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );

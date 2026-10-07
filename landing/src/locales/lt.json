@@ -17,13 +17,12 @@
     "toLight": "Įjungti šviesią temą"
   },
   "language": {
-    "switchTo": "English",
-    "label": "LT, perjungti į anglų kalbą"
+    "switchTo": "English"
   },
   "hero": {
     "title": "Žinokite, ką naudoti šiandien",
     "lead": "Jx Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare, kada plauti plaukus ir kaip oda keičiasi kas savaitę. Viskas lieka jūsų telefone, apsaugota PIN kodu.",
-    "primary": "Kas viduje",
+    "primary": "Žiūrėti, kas viduje",
     "source": "Žiūrėti GitHub",
     "soon": "Netrukus iOS ir Android. App Store ir Google Play jos dar nėra."
   },
@@ -79,7 +78,7 @@
       "title": "Mano produktai",
       "vitaminC": {
         "name": "Vitamino C serumas",
-        "meta": "Atidaryta 04-18 · 6 mėn. po atidarymo"
+        "meta": "Atidaryta 2026-04-18 · 6 mėn. po atidarymo"
       },
       "shampoo": {
         "name": "Atkuriamasis šampūnas",
@@ -87,7 +86,7 @@
       },
       "argan": {
         "name": "Arganų aliejus",
-        "meta": "Nebegalioja nuo 09-30"
+        "meta": "Nebegalioja nuo 2026-09-30"
       },
       "sunscreen": {
         "name": "Apsauga nuo saulės SPF 50",
@@ -108,7 +107,7 @@
       "timeUsed": "Kiek laiko jau praėjo iki galiojimo pabaigos",
       "opened": {
         "label": "Atidaryta",
-        "value": "04-18"
+        "value": "2026-04-18"
       },
       "lasts": {
         "label": "Po atidarymo",
@@ -116,7 +115,7 @@
       },
       "expires": {
         "label": "Galioja iki",
-        "value": "10-18"
+        "value": "2026-10-18"
       },
       "costPerDay": {
         "label": "Kaina",
@@ -130,12 +129,12 @@
       "mask": "Drėkinamoji kaukė",
       "everyTime": "Kiekvieną kartą",
       "everyFewDays": "Kas 3 dienas",
-      "sundays": "Sekmadieniais",
-      "wait": "Laukti 1 min."
+      "wait": "Laukti 1 min.",
+      "saturdays": "Šeštadieniais"
     },
     "hair": {
       "title": "Plaukų priežiūra",
-      "nextWash": "Kitas plovimas: ketv., 10-08",
+      "nextWash": "Kitas plovimas: ketv., 2026-10-08",
       "everyFewDays": "Kas 3 dienas",
       "washLabel": "Plovimo ciklas: praėjo 1 iš 3 dienų",
       "trim": "Kirpimas",
@@ -157,9 +156,9 @@
     "photos": {
       "title": "Progreso nuotraukos",
       "span": "Prieš 4 savaites ir dabar",
-      "label": "Dvi odos nuotraukos greta, 09-08 ir 10-06",
-      "before": "09-08",
-      "after": "10-06",
+      "label": "Dvi odos nuotraukos greta, 2026-09-08 ir 2026-10-06",
+      "before": "2026-09-08",
+      "after": "2026-10-06",
       "changed": "Kas pasikeitė per tą laiką",
       "changes": {
         "started": "Pradėta naudoti: Retinolio serumas",
@@ -178,25 +177,19 @@
   },
   "statement": {
     "title": "Trumpai",
-    "accounts": {
-      "label": "Paskyros, kurias reikia sukurti",
-      "text": "Jokios registracijos ir jokio serverio. Produktai, rutinos ir nuotraukos saugomi jūsų telefone ir atsidaro su PIN kodu, Face ID arba piršto atspaudu."
-    },
-    "tracking": {
-      "label": "Reklamos ir sekikliai",
-      "text": "Niekas niekur nesiunčiama. Iš telefono išeina tik atsarginės kopijos failas, kai jį eksportuojate."
-    },
-    "gallery": {
-      "label": "Nuotraukos jūsų galerijoje",
-      "text": "Progreso nuotraukos lieka programėlėje, todėl niekada neatsiranda telefono galerijoje ar nuotraukų kopijose."
-    },
-    "languages": {
-      "label": "Kalbos",
-      "text": "Lietuvių ir anglų, šviesi ir tamsi tema."
-    },
-    "price": {
-      "label": "Kaina",
-      "text": "Naudotis nemokama, o kodą gali skaityti kiekvienas."
+    "items": {
+      "account": {
+        "title": "Be paskyros",
+        "text": "Nereikia registruotis ir nėra serverio. Atsidaro su PIN kodu, Face ID arba piršto atspaudu."
+      },
+      "languages": {
+        "title": "Lietuvių ir anglų kalbos",
+        "text": "Šviesi ir tamsi tema, pagal jūsų telefoną."
+      },
+      "free": {
+        "title": "Nemokama ir atviro kodo",
+        "text": "Jokios kainos ir jokių reklamų, o kodą gali skaityti kiekvienas."
+      }
     }
   },
   "features": {
@@ -225,7 +218,7 @@
       "notes": {
         "title": "Pastabos apie produktus",
         "text": "Datuotos pastabos, kaip reagavo oda, įvertinimas nuo 1 iki 5 ir ar pirktumėte dar kartą.",
-        "example": "„nedidelis išbėrimas ant smakro“, užrašyta 10-03."
+        "example": "„nedidelis išbėrimas ant smakro“, užrašyta 2026-10-03."
       },
       "costPerDay": {
         "title": "Kaina per dieną",
@@ -245,7 +238,7 @@
       "stepSchedule": {
         "title": "Žingsniai savo dienomis",
         "text": "Žingsnis gali būti kiekvieną kartą, pasirinktomis dienomis arba kas kelias dienas, todėl viena rutina apima visą savaitę.",
-        "example": "veido kaukė tik sekmadieniais."
+        "example": "veido kaukė tik šeštadieniais."
       },
       "player": {
         "title": "Žymėkite eidami",
@@ -318,7 +311,22 @@
         "example": "sau pačiam pokalbių programėlėje."
       }
     },
-    "seeAll": "Visos funkcijos"
+    "seeAll": "Visos funkcijos",
+    "vignettes": {
+      "routines": {
+        "text": "Kiekviena rutina turi paros metą, savaitės dienas ir žingsnius iš eilės. Žingsnis gali būti kiekvieną kartą, pasirinktomis dienomis arba kas kelias dienas.",
+        "link": "Daugiau apie rutinas"
+      },
+      "ingredients": {
+        "text": "Jx Care pažymi vengiamų sąrašo ingredientus ir įspėja, kai du tą pačią dieną naudojami produktai neturėtų susitikti.",
+        "link": "Daugiau apie ingredientus"
+      },
+      "progress": {
+        "text": "Nuotrauka su gaire kartą per savaitę ir bet kurios dvi savaitės greta su tuo, kas per tą laiką pasikeitė.",
+        "link": "Daugiau apie progreso nuotraukas"
+      }
+    },
+    "also": "Taip pat viduje:"
   },
   "privacy": {
     "title": "Privatu iš esmės",
@@ -328,13 +336,17 @@
         "title": "PIN kodas, Face ID arba piršto atspaudas",
         "text": "Programėlė užsirakina kaskart ją atidarius ir po minutės nebuvimo. Pamirštą PIN kodą atkursite atsakę į atkūrimo klausimą."
       },
+      "tracking": {
+        "title": "Niekas niekur nesiunčiama",
+        "text": "Jokių reklamų ir sekiklių. Iš telefono išeina tik atsarginės kopijos failas, kai jį eksportuojate."
+      },
       "switcher": {
         "title": "Paslėpta programų perjungiklyje",
         "text": "Kol užrakinta, programėlės turinys perjungiant programas būna suliejamas."
       },
       "photos": {
         "title": "Nuotraukos lieka programėlėje",
-        "text": "Progreso nuotraukos saugomos pačios programėlės saugykloje ir matomos tik įvedus PIN kodą."
+        "text": "Progreso nuotraukos saugomos pačios programėlės saugykloje, niekada ne telefono galerijoje, ir matomos tik įvedus PIN kodą."
       },
       "backup": {
         "title": "Jūsų kopija, jūsų failas",
@@ -345,7 +357,7 @@
   "close": {
     "getTitle": "Norite jos savo telefone?",
     "getText": "Jx Care parduotuvėse dar nėra. Sekite kodą GitHub ir sužinosite, kada atsiras.",
-    "getAction": "Sekti GitHub",
+    "getAction": "Žiūrėti GitHub",
     "buildTitle": "Susikurkite patys",
     "buildText": "Jx Care nemokama ir atviro kodo. GitHub vadove parašyta, kaip ją sukompiliuoti iOS arba Android.",
     "buildAction": "Skaityti vadovą",
@@ -358,9 +370,14 @@
     "supportAction": "Paremti mane Ko-fi"
   },
   "footer": "Odos ir plaukų priežiūra jūsų telefone · Nemokama ir atviro kodo",
-  "sourceLabel": "Jx Care GitHub",
   "featuresPage": {
     "title": "Viskas, ką moka Jx Care",
-    "lead": "Produktai, rutinos, plaukai, ingredientai, progresas ir pirkiniai, prie kiekvieno pavyzdys, kaip tai veikia."
+    "lead": "Produktai, rutinos, plaukai, ingredientai, progresas ir pirkiniai, prie kiekvieno pavyzdys, kaip tai veikia.",
+    "index": "Funkcijų grupės"
+  },
+  "notFound": {
+    "title": "Puslapis nerastas",
+    "text": "Šiuo adresu nieko nėra. Puslapis galėjo būti perkeltas arba nuorodoje yra klaida.",
+    "home": "Į pradžią"
   }
 }

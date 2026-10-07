@@ -31,7 +31,10 @@ function useShownTheme(): Theme {
   return picked ?? (systemDark ? 'dark' : 'light');
 }
 
-export function LiveDemo({ className }: Readonly<{ className?: string }>) {
+export function LiveDemo({
+  className,
+  onReady,
+}: Readonly<{ className?: string; onReady?: () => void }>) {
   const { t } = useTranslation();
   const frame = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(false);
@@ -44,11 +47,13 @@ export function LiveDemo({ className }: Readonly<{ className?: string }>) {
     const onMessage = (event: MessageEvent<unknown>) => {
       if (event.origin !== window.location.origin) return;
       if (event.source !== frame.current?.contentWindow) return;
-      if ((event.data as { type?: unknown } | null)?.type === 'jx-care-demo:ready') setReady(true);
+      if ((event.data as { type?: unknown } | null)?.type !== 'jx-care-demo:ready') return;
+      setReady(true);
+      onReady?.();
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, []);
+  }, [onReady]);
 
   // Later theme and language changes go by message, once the demo is listening.
   useEffect(() => {
