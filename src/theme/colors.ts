@@ -76,10 +76,6 @@ export const cameraColors = {
   ink: '#FFFFFF',
 } as const;
 
-export function colorsFor(scheme: ColorSchemeName): ThemeColors {
-  return palette[scheme];
-}
-
 const themed = {
   light: { ...palette.light, scheme: 'light' as const },
   dark: { ...palette.dark, scheme: 'dark' as const },

@@ -13,7 +13,7 @@ import { DateField, TimeField, type DateFieldProps, type TimeFieldProps } from '
 import { Input, type InputProps } from './input';
 import { SelectField, type SelectFieldProps } from './select-field';
 
-const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
+const { fieldContext, formContext, useFieldContext } = createFormHookContexts();
 
 /**
  * The field's first error as text, shown once the field was left or the form was submitted.
@@ -126,10 +126,8 @@ const app = createFormHook({
   formComponents: {},
 });
 
-export { useFormContext };
-
 /** A form-level validator: zod issues become field errors keyed by path (i18n keys). */
-export function zodFormValidator(schema: z.ZodType) {
+function zodFormValidator(schema: z.ZodType) {
   return ({ value }: { value: unknown }) => {
     const result = schema.safeParse(value);
     if (result.success) return undefined;

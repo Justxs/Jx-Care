@@ -15,7 +15,6 @@ export const qk = {
     archive: (sort: string) => ['products', 'archive', sort] as const,
     counts: ['products', 'counts'] as const,
     brands: ['products', 'brands'] as const,
-    usedIn: (id: number) => ['products', 'usedIn', id] as const,
   },
   // Task 029
   ingredients: {
@@ -61,7 +60,6 @@ export const qk = {
   progress: {
     all: ['progress'] as const,
     list: (area: string) => ['progress', 'list', area] as const,
-    entry: (id: number) => ['progress', 'entry', id] as const,
   },
   // Task 038
   condition: {

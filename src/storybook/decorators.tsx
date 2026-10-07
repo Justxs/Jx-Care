@@ -16,7 +16,7 @@ import { cn } from '@/lib/cn';
 // The same registrations app/_layout.tsx makes at start-up, so screens behave as in the app.
 import './registrations';
 import { applyStoryPrefs, setStoryLanguage, setStoryScheme, storyPrefsStore } from './preferences';
-import { StoryRouteProvider, type StoryParams } from './router';
+import { StoryRouteProvider } from './router';
 
 /** `parameters.layout`: 'padded' (default, components) or 'fullscreen' (screens). */
 export type StoryLayout = 'padded' | 'fullscreen';
@@ -109,14 +109,5 @@ export const withStoryShell: Decorator = (Story, context) => (
     <Story />
   </StoryShell>
 );
-
-/** For components that read route params without data: `decorators: [withRouteParams({ id: '1' })]`. */
-export function withRouteParams(params: StoryParams): Decorator {
-  return (Story) => (
-    <StoryRouteProvider params={params}>
-      <Story />
-    </StoryRouteProvider>
-  );
-}
 
 export const storyDecorators: Decorator[] = [withStoryShell];
