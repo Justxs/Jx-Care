@@ -28,6 +28,7 @@ import { ToastHost } from '@/components/ui/toast-host';
 import { setDb } from '@/db';
 import { appDb } from '@/db/client';
 import { MigrationGate } from '@/db/MigrationGate';
+import { ReminderAskHost } from '@/features/products/components/ReminderAskSheet';
 import { queryClient } from '@/db/queryClient';
 import { useFullScreenModalOptions, useStackOptions } from '@/navigation/stackOptions';
 import { navigationTheme } from '@/navigation/theme';
@@ -110,6 +111,8 @@ export default function RootLayout() {
                         }}
                       />
                     </Stack>
+                    {/* The in-context notification ask (task 021), over any screen. */}
+                    <ReminderAskHost />
                   </ThemeProvider>
                 ) : null}
               </MigrationGate>

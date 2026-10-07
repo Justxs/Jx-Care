@@ -15,6 +15,7 @@ import { qk } from '@/db/queryKeys';
 import { product } from '@/db/schema';
 import { useSettings } from '@/features/settings/api';
 import { effectiveExpiry } from '@/lib/expiry';
+import { syncEntity } from '@/notifications/scheduler';
 import { appStore } from '@/state/app';
 
 import { deletePhotoFile } from './photoFiles';
@@ -47,9 +48,13 @@ import type { ArchiveSort, ProductFilters } from './types';
 
 /**
  * Expiry notifications (task 021) reschedule here whenever a product is created, changed,
- * finished, restored or deleted. Does nothing yet.
+ * finished, restored or deleted.
  */
-export function onProductChanged(_id: number): void {}
+export function onProductChanged(id: number): void {
+  syncEntity('product', id).catch(() => {
+    // No notification adapter (tests) or the phone refused: the next full sync catches up.
+  });
+}
 
 /** The app day and warning window every expiry status depends on; part of each query key. */
 function useExpiryContext() {

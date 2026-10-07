@@ -58,7 +58,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | todo |
 | 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | todo |
 | 020 | [Notification service](020-notification-service.md) | 005 | Notifications | done |
-| 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | todo |
+| 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | done |
 | 022 | [Routines data](022-routines-data.md) | 007, 012 | R1–R3, T2 | done |
 | 023 | [Routines list and templates](023-routines-list-templates.md) | 010, 022 | R1 skin, R2 starter | done |
 | 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | done |

@@ -18,6 +18,19 @@ export function resetProductFilters(): void {
   }));
 }
 
+/**
+ * My products filtered to expired and expiring, for links like the weekly digest's
+ * `/products?filter=expiring`.
+ */
+export function showExpiringProducts(): void {
+  setProductFilters({
+    ...defaultProductFilters,
+    sort: productListStore.state.filters.sort,
+    statuses: ['expired', 'expiring'],
+  });
+  setProductsSegment('mine');
+}
+
 /** How many filters are on (search and sort aside), for the filter button. */
 export function activeFilterCount(f: ProductFilters): number {
   return (

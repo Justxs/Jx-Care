@@ -1236,5 +1236,71 @@
       "backToToday": "Back to Today",
       "addNote": "Add a note"
     }
+  },
+  "reminders": {
+    "openSettings": "Open settings",
+    "paused": "Paused",
+    "off": "Off",
+    "sections": {
+      "expiry": "Expiry",
+      "care": "Routines and hair care",
+      "weekly": "Every week"
+    },
+    "expiryWarning": "Expiry warning",
+    "expiryWarningDetail": "Before a product expires",
+    "daysBefore": "Days before",
+    "time": "Time",
+    "timeHint": "For the warning and the expiry day.",
+    "expiryDay": "Expiry day",
+    "expiryDayDetail": "On the day it expires, at the same time",
+    "routineReminders": "Routine reminders",
+    "routineRemindersDetail": "Set in each routine",
+    "hairTasks": "Hair tasks",
+    "hairTasksDetail": "Set in each task",
+    "weeklyPhotoDetail": "A reminder to take this week's photo",
+    "weekday": "Day",
+    "weeklyDigest": "Weekly digest",
+    "weeklyDigestDetail": "Mondays at {{time}}: what is expiring, expired or not opened",
+    "snooze": "Snooze length",
+    "snoozeHint": "How long Snooze waits on routine and hair reminders.",
+    "ask": {
+      "title": {
+        "expiry": "Get a reminder before it expires?",
+        "routine": "Get routine reminders?",
+        "hair": "Get hair care reminders?",
+        "weeklyPhoto": "Get a weekly photo reminder?"
+      },
+      "daysAhead_one": "{{count}} day",
+      "daysAhead_other": "{{count}} days",
+      "line": {
+        "expiry": "Jx-Care reminds you about {{name}} {{days}} before it expires and on the day, at {{time}}.",
+        "expiryWarningOnly": "Jx-Care reminds you about {{name}} {{days}} before it expires, at {{time}}.",
+        "routine": "Jx-Care reminds you at the time you set for each routine.",
+        "hair": "Jx-Care reminds you on the day each hair task is due.",
+        "weeklyPhoto": "Jx-Care reminds you once a week, on the day and at the time you pick."
+      },
+      "example": {
+        "routine": "Evening routine: 5 steps",
+        "hair": "Hair wash day: shampoo + conditioner",
+        "weeklyPhoto": "Time for this week's skin photo"
+      },
+      "exampleLabel": "Example notification",
+      "now": "now",
+      "later": "You can change this any time in Settings, Reminders.",
+      "allow": "Allow reminders"
+    },
+    "notify": {
+      "expiresIn_one": "{{name}} expires in {{count}} day",
+      "expiresIn_other": "{{name}} expires in {{count}} days",
+      "expiresToday": "{{name}} expires today",
+      "digest": {
+        "expiring_one": "{{count}} expiring soon",
+        "expiring_other": "{{count}} expiring soon",
+        "expired_one": "{{count}} expired",
+        "expired_other": "{{count}} expired",
+        "unopened_one": "{{count}} unopened",
+        "unopened_other": "{{count}} unopened"
+      }
+    }
   }
 }

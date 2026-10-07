@@ -1324,5 +1324,81 @@
       "backToToday": "Grįžti į Šiandien",
       "addNote": "Pridėti pastabą"
     }
+  },
+  "reminders": {
+    "openSettings": "Atidaryti nustatymus",
+    "paused": "Pristabdyta",
+    "off": "Išjungta",
+    "sections": {
+      "expiry": "Galiojimas",
+      "care": "Rutinos ir plaukų priežiūra",
+      "weekly": "Kas savaitę"
+    },
+    "expiryWarning": "Įspėjimas apie galiojimą",
+    "expiryWarningDetail": "Prieš baigiantis produkto galiojimui",
+    "daysBefore": "Kiek dienų prieš",
+    "time": "Laikas",
+    "timeHint": "Įspėjimui ir galiojimo pabaigos dienai.",
+    "expiryDay": "Galiojimo pabaigos diena",
+    "expiryDayDetail": "Tą dieną, kai baigiasi galiojimas, tuo pačiu laiku",
+    "routineReminders": "Rutinų priminimai",
+    "routineRemindersDetail": "Nustatoma kiekvienoje rutinoje",
+    "hairTasks": "Plaukų priežiūros užduotys",
+    "hairTasksDetail": "Nustatoma kiekvienoje užduotyje",
+    "weeklyPhotoDetail": "Priminimas nusifotografuoti šią savaitę",
+    "weekday": "Diena",
+    "weeklyDigest": "Savaitės suvestinė",
+    "weeklyDigestDetail": "Pirmadieniais {{time}}: kas baigia galioti, nebegalioja ar neatidaryta",
+    "snooze": "Atidėjimo trukmė",
+    "snoozeHint": "Kiek laiko „Atidėti“ atideda rutinų ir plaukų priminimus.",
+    "ask": {
+      "title": {
+        "expiry": "Priminti, kol nesibaigė galiojimas?",
+        "routine": "Gauti rutinų priminimus?",
+        "hair": "Gauti plaukų priežiūros priminimus?",
+        "weeklyPhoto": "Gauti savaitės nuotraukos priminimą?"
+      },
+      "daysAhead_one": "{{count}} dieną",
+      "daysAhead_few": "{{count}} dienas",
+      "daysAhead_many": "{{count}} dienos",
+      "daysAhead_other": "{{count}} dienų",
+      "line": {
+        "expiry": "Jx-Care primins apie „{{name}}“ {{days}} iki galiojimo pabaigos ir tą dieną, {{time}}.",
+        "expiryWarningOnly": "Jx-Care primins apie „{{name}}“ {{days}} iki galiojimo pabaigos, {{time}}.",
+        "routine": "Jx-Care primins jūsų kiekvienai rutinai nustatytu laiku.",
+        "hair": "Jx-Care primins tą dieną, kai reikia atlikti plaukų priežiūros užduotį.",
+        "weeklyPhoto": "Jx-Care primins kartą per savaitę, jūsų pasirinktą dieną ir laiku."
+      },
+      "example": {
+        "routine": "Vakaro rutina: 5 žingsniai",
+        "hair": "Plaukų plovimo diena: šampūnas + kondicionierius",
+        "weeklyPhoto": "Laikas šios savaitės odos nuotraukai"
+      },
+      "exampleLabel": "Pranešimo pavyzdys",
+      "now": "dabar",
+      "later": "Tai galite bet kada pakeisti: Nustatymai, Priminimai.",
+      "allow": "Leisti priminimus"
+    },
+    "notify": {
+      "expiresIn_one": "{{name}} baigs galioti po {{count}} dienos",
+      "expiresIn_few": "{{name}} baigs galioti po {{count}} dienų",
+      "expiresIn_many": "{{name}} baigs galioti po {{count}} dienos",
+      "expiresIn_other": "{{name}} baigs galioti po {{count}} dienų",
+      "expiresToday": "{{name}} galioja paskutinę dieną",
+      "digest": {
+        "expiring_one": "{{count}} netrukus baigs galioti",
+        "expiring_few": "{{count}} netrukus baigs galioti",
+        "expiring_many": "{{count}} netrukus baigs galioti",
+        "expiring_other": "{{count}} netrukus baigs galioti",
+        "expired_one": "{{count}} nebegalioja",
+        "expired_few": "{{count}} nebegalioja",
+        "expired_many": "{{count}} nebegalioja",
+        "expired_other": "{{count}} nebegalioja",
+        "unopened_one": "{{count}} neatidarytas",
+        "unopened_few": "{{count}} neatidaryti",
+        "unopened_many": "{{count}} neatidaryto",
+        "unopened_other": "{{count}} neatidarytų"
+      }
+    }
   }
 }

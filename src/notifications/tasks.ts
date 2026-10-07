@@ -18,8 +18,8 @@ import { setNotificationOS, sync } from './scheduler';
 
 // Every module that calls `registerPlanner` or `registerAction` is imported here, so planners and
 // button handlers exist in the app and in a headless start alike (which loads this file, not the
-// screens). One line per feature, for example:
-// import '@/features/products/reminders'; // task 021
+// screens). One line per feature:
+import '@/features/products/reminders'; // task 021: expiry and weekly digest
 
 export const SYNC_TASK = 'jx-care-notification-sync';
 export const RESPONSE_TASK = 'jx-care-notification-response';
