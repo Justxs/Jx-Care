@@ -90,10 +90,14 @@ export type AutoLockOptions = {
 export function startAutoLock(opts: AutoLockOptions): () => void {
   const now = opts.now ?? Date.now;
   const appState = opts.appState ?? AppState;
+  // Whether a pause was running when the app left. Read then, not on return: Android hands the
+  // camera or picker result (which ends the pause) to JS before the app is active again.
+  let leftPaused = false;
 
   const onChange = (state: AppStateStatus) => {
     if (state === 'background') {
       setCovered(true);
+      if (pauses > 0) leftPaused = true;
       if (lockStore.state.lastBackgroundAt === null) setLastBackgroundAt(now());
       return;
     }
@@ -106,10 +110,12 @@ export function startAutoLock(opts: AutoLockOptions): () => void {
     const away = lockStore.state.lastBackgroundAt;
     if (away !== null) {
       setLastBackgroundAt(null);
+      const paused = leftPaused || pauses > 0;
+      leftPaused = false;
       if (
         !opts.onboarding() &&
         !lockStore.state.locked &&
-        shouldLockOnReturn(away, now(), opts.autoLockSeconds(), pauses > 0)
+        shouldLockOnReturn(away, now(), opts.autoLockSeconds(), paused)
       ) {
         setLocked(true);
       }
