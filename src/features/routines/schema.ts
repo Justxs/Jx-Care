@@ -82,6 +82,19 @@ export const stepSchema = z
     waitSeconds: s.waitSeconds,
   }));
 
+/** One step inside a routine that runs on `routineDays`: Set days can only pick those (R3). */
+export function stepSchemaWithin(routineDays: readonly number[]) {
+  return stepSchema.superRefine((s, ctx) => {
+    if (s.daysOfWeek?.some((d) => !routineDays.includes(d))) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['daysOfWeek'],
+        message: 'routines.errors.stepDaysOutside',
+      });
+    }
+  });
+}
+
 /**
  * The routine editor (spec R2) with its steps (R3). Messages are i18n keys under
  * `routines.errors`. Morning and evening get their fixed `sortTime`; custom keeps its own.

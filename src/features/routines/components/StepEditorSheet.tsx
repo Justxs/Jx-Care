@@ -23,7 +23,7 @@ import { useFormat } from '@/i18n/useFormat';
 import { appStore } from '@/state/app';
 import { motion } from '@/theme/motion';
 
-import { stepSchema, waitSecondsOptions, type StepFormValues } from '../schema';
+import { stepSchemaWithin, waitSecondsOptions, type StepFormValues } from '../schema';
 import type { EditorProduct } from './editorProducts';
 
 /** The note is short: it sits under the product name on Today and in the player. */
@@ -63,19 +63,7 @@ export function StepEditorSheet({
   const today = useSelector(appStore, (s) => s.activeDay);
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  const schema = useMemo(
-    () =>
-      stepSchema.superRefine((s, ctx) => {
-        if (s.daysOfWeek?.some((d) => !routineDays.includes(d))) {
-          ctx.addIssue({
-            code: 'custom',
-            path: ['daysOfWeek'],
-            message: 'routines.errors.stepDaysOutside',
-          });
-        }
-      }),
-    [routineDays],
-  );
+  const schema = useMemo(() => stepSchemaWithin(routineDays), [routineDays]);
 
   const form = useAppForm({
     schema,
