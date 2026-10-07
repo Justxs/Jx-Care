@@ -18,7 +18,7 @@ import {
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack, ThemeProvider } from 'expo-router';
+import { Stack, ThemeProvider, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -61,6 +61,8 @@ export default function RootLayout() {
   const fullScreen = useFullScreenModalOptions();
   const theme = useMemo(() => navigationTheme(colors), [colors]);
   const [booted, setBooted] = useState(false);
+  // On-device Storybook (docs/storybook.md) gives each story its own toast and portal hosts.
+  const storybookOpen = usePathname() === '/storybook';
 
   useEffect(() => startDayClock(), []);
   useEffect(() => watchScreenReader(), []);
@@ -102,6 +104,7 @@ export default function RootLayout() {
                           options={{ ...fullScreen, gestureEnabled: false }}
                         />
                         <Stack.Screen name="progress" options={fullScreen} />
+                        <Stack.Screen name="storybook" options={{ gestureEnabled: false }} />
                         <Stack.Screen
                           name="hair/done/[taskId]"
                           options={{
@@ -116,8 +119,12 @@ export default function RootLayout() {
                     </ThemeProvider>
                   ) : null}
                 </MigrationGate>
-                <ToastHost />
-                <PortalHost />
+                {storybookOpen ? null : (
+                  <>
+                    <ToastHost />
+                    <PortalHost />
+                  </>
+                )}
               </LockGate>
             </View>
           </BottomSheetModalProvider>

@@ -13,6 +13,7 @@
     "docs",
     "assets",
     "src/db/migrations",
+    ".rnstorybook/storybook.requires.ts",
     "**/*.md",
     "package-lock.json"
   ]

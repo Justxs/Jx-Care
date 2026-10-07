@@ -41,6 +41,7 @@ Use the newest stable versions. Expo packages go in with `npx expo install <pkg>
 | Media | `expo-image`, `expo-image-picker`, `expo-camera`, `expo-file-system`, `expo-sharing` | SDK |
 | Tests | `jest` + `jest-expo`, `@testing-library/react-native`, `better-sqlite3` (repository tests in Node) | 29 / 14 |
 | Lint and format | `oxlint` (`.oxlintrc.json`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.87 / 0.72 |
+| Component docs | `@storybook/react-native` on-device, with the controls and actions addons; see [docs/storybook.md](../storybook.md) (Justas, 2026-10-07) | 10.6 |
 
 Don't add other runtime libraries unless the task names them. If you really need one, write why under "Decisions".
 
@@ -65,10 +66,14 @@ src/
   lib/                       pure logic with no React, no Expo: dates, expiry, schedule, streak, conflicts, ...
   i18n/                      index.ts, en.json, lt.json, format.ts
   state/                     TanStack Store stores (app, lock, ui)
+  storybook/                 story decorators, fixtures and the expo-router stand-ins (docs/storybook.md)
   notifications/             scheduling and response handling
   theme/                     motion.ts, useReducedMotion, colours for non-className use
 docs/tasks/                  these task files
+.rnstorybook/                on-device Storybook config (main.ts, preview.tsx; storybook.requires.ts is generated)
 ```
+
+Stories sit next to what they show: `button.tsx` and `button.stories.tsx`, `ProductsScreen.tsx` and `ProductsScreen.stories.tsx`.
 
 Areas under `src/features/`: `onboarding`, `security`, `today`, `products`, `shopping`, `routines`, `hair`, `calendar`, `conflicts`, `progress`, `condition`, `settings`, `backup`.
 
@@ -108,10 +113,11 @@ A task is done when all of this is true:
 
 1. Every acceptance criterion in the task is met.
 2. `npm run check` passes (typecheck, oxlint, oxfmt check, tests). Pure logic and repositories you added have tests.
-3. If you changed config, native modules or babel/metro setup: `npx expo export --platform android --output-dir /tmp/jx-export` bundles without errors.
-4. New strings exist in both `en.json` and `lt.json`.
-5. The status of the task is set to **done** in [README.md](README.md), and anything you decided is written under "Decisions" in the task file.
-6. The work is committed **straight to `main`** (no branches, no pull requests) with the message `Task NNN: <title>` and pushed.
+3. Every component in `src/components/` (base and shared), every shared component in a feature's `components/` and every screen has a `*.stories.tsx` next to it covering its main states; screens use `withAppData` and the fixtures in `src/storybook/fixtures.ts`. How: [docs/storybook.md](../storybook.md). The story smoke test in `npm run check` renders them all.
+4. If you changed config, native modules or babel/metro setup: `npx expo export --platform android --output-dir /tmp/jx-export` bundles without errors.
+5. New strings exist in both `en.json` and `lt.json`.
+6. The status of the task is set to **done** in [README.md](README.md), and anything you decided is written under "Decisions" in the task file.
+7. The work is committed **straight to `main`** (no branches, no pull requests) with the message `Task NNN: <title>` and pushed.
 
 ## Working on a task
 

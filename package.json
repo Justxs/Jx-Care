@@ -95,6 +95,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "storybook": "EXPO_PUBLIC_STORYBOOK_ENABLED=true STORYBOOK_DISABLE_TELEMETRY=1 expo start",
+    "storybook:generate": "STORYBOOK_DISABLE_TELEMETRY=1 sb-rn-get-stories --config-path .rnstorybook",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt",
