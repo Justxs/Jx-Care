@@ -12,7 +12,10 @@ export type RoutineLite = {
   sortTime: string;
   daysOfWeek: number[];
   active: boolean;
-  /** App day the routine was created; earlier days never count. */
+  /**
+   * App day the routine was created or its schedule last changed; earlier days count only
+   * through their logs' snapshots.
+   */
   createdDay: string;
 };
 

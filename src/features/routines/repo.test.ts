@@ -5,7 +5,8 @@ import { createTestDb } from '@/db/test-db';
 import { hairTask, routine, routineChoice, routineLog, routineStep } from '@/db/schema';
 import { createProduct, getProduct, markFinished } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
-import { skinStreak } from '@/lib/streak';
+import { addDays, daysBetween, momentOf, weekdayOf } from '@/lib/appDay';
+import { skinDayStatuses, skinStreak } from '@/lib/streak';
 
 import {
   deleteRoutine,
@@ -21,6 +22,7 @@ import {
   saveRoutine,
   setChoice,
   setRoutineActive,
+  skinRangeInput,
   streakInput,
   tickSteps,
   type SaveRoutineInput,
@@ -31,6 +33,8 @@ import type { StepInput } from './schema';
 const MON = '2026-10-05';
 const TUE = '2026-10-06';
 const WED = '2026-10-07';
+/** Edits happen on Monday unless a test says otherwise. */
+const MON_NOON = new Date(2026, 9, 5, 12).getTime();
 const WARN = 30;
 const EVERY_DAY = [1, 2, 3, 4, 5, 6, 7];
 
@@ -110,6 +114,7 @@ describe('saveRoutine', () => {
           step({ id: sa, productId: a }),
         ],
       }),
+      MON_NOON,
     );
 
     const saved = getRoutine(db, id, MON, WARN)!;
@@ -127,7 +132,11 @@ describe('saveRoutine', () => {
     const one = addRoutine(db);
     const two = addRoutine(db, { name: 'Two' });
     const [foreign] = stepIds(db, one);
-    saveRoutine(db, routineInput({ id: two, name: 'Two', steps: [step({ id: foreign })] }));
+    saveRoutine(
+      db,
+      routineInput({ id: two, name: 'Two', steps: [step({ id: foreign })] }),
+      MON_NOON,
+    );
     expect(stepIds(db, one)).toEqual([foreign]);
     expect(stepIds(db, two)).toHaveLength(1);
     expect(stepIds(db, two)[0]).not.toBe(foreign);
@@ -136,10 +145,10 @@ describe('saveRoutine', () => {
   it('keeps active unless told otherwise, and the switch persists', () => {
     const db = createTestDb();
     const id = addRoutine(db);
-    setRoutineActive(db, id, false);
-    saveRoutine(db, routineInput({ id }));
+    setRoutineActive(db, id, false, MON_NOON);
+    saveRoutine(db, routineInput({ id }), MON_NOON);
     expect(getRoutine(db, id, MON, WARN)!.active).toBe(false);
-    setRoutineActive(db, id, true);
+    setRoutineActive(db, id, true, MON_NOON);
     expect(listRoutines(db, MON, WARN)[0]!.active).toBe(true);
   });
 });
@@ -249,7 +258,11 @@ describe('ticks', () => {
     tickSteps(db, id, [s2!], MON, true, [s1!, s2!], 5000);
 
     // Monday's routine had two steps; it now has three.
-    saveRoutine(db, routineInput({ id, steps: [step({ id: s1 }), step({ id: s2 }), step()] }));
+    saveRoutine(
+      db,
+      routineInput({ id, steps: [step({ id: s1 }), step({ id: s2 }), step()] }),
+      MON_NOON,
+    );
     expect(getDayLog(db, id, MON)).toMatchObject({ dueStepIds: [s1, s2], completedAt: 5000 });
     const mon = getRoutineDay(db, id, MON, WARN)!;
     expect(mon.progress).toMatchObject({ due: 2, done: 2, complete: true });
@@ -263,7 +276,7 @@ describe('ticks', () => {
     const id = addRoutine(db, { steps: [step(), step()] });
     const [s1, s2] = stepIds(db, id);
     tickSteps(db, id, [s1!], MON, true, [s1!, s2!]);
-    saveRoutine(db, routineInput({ id, steps: [step({ id: s1 })] }));
+    saveRoutine(db, routineInput({ id, steps: [step({ id: s1 })] }), MON_NOON);
     expect(getRoutineDay(db, id, MON, WARN)!.progress).toMatchObject({ due: 1, complete: true });
     expect(tickSteps(db, id, [s1!], MON, true, [s1!], 7)).toMatchObject({
       dueStepIds: [s1],
@@ -276,7 +289,7 @@ describe('ticks', () => {
     const id = addRoutine(db, { steps: [step(), step()] });
     const [s1, s2] = stepIds(db, id);
     tickSteps(db, id, [s1!], MON, true, [s1!, s2!]);
-    saveRoutine(db, routineInput({ id, steps: [step()] }));
+    saveRoutine(db, routineInput({ id, steps: [step()] }), MON_NOON);
     const r = getRoutineDay(db, id, MON, WARN)!;
     const [s3] = r.progress.dueStepIds;
     expect(r.progress).toMatchObject({ due: 1, done: 0 });
@@ -314,7 +327,7 @@ describe('getTodayRoutines', () => {
 
   it('offers A/B on days both run and remembers the pick per weekday', () => {
     const { db, eveA, eveB } = fixture();
-    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }));
+    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }), MON_NOON);
     const evening = (day: string) => getTodayRoutines(db, day, WARN)[1]!;
 
     expect(evening(MON).routines.map((r) => r.id)).toEqual([eveA, eveB]);
@@ -330,7 +343,7 @@ describe('getTodayRoutines', () => {
 
   it('fixes the choice to the started routine and completes the group with either', () => {
     const { db, eveA, eveB } = fixture();
-    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }));
+    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }), MON_NOON);
     setChoice(db, 'evening', 1, eveA);
     const [sb] = stepIds(db, eveB);
     tickSteps(db, eveB, [sb!], MON, true, [sb!]);
@@ -340,8 +353,12 @@ describe('getTodayRoutines', () => {
 
   it('shows the finished option when both have ticks', () => {
     const { db, eveA, eveB } = fixture();
-    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }));
-    saveRoutine(db, routineInput({ id: eveA, name: 'Evening A', steps: [step(), step()] }));
+    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }), MON_NOON);
+    saveRoutine(
+      db,
+      routineInput({ id: eveA, name: 'Evening A', steps: [step(), step()] }),
+      MON_NOON,
+    );
     // A started from Today, then B done in full from the Routines tab.
     const [a1, a2] = stepIds(db, eveA);
     tickSteps(db, eveA, [a1!], MON, true, [a1!, a2!]);
@@ -365,7 +382,7 @@ describe('getTodayRoutines', () => {
 
   it('leaves out inactive routines', () => {
     const { db, morning } = fixture();
-    setRoutineActive(db, morning, false);
+    setRoutineActive(db, morning, false, MON_NOON);
     expect(getTodayRoutines(db, MON, WARN).map((g) => g.key)).toEqual(['evening']);
   });
 });
@@ -421,6 +438,142 @@ describe('logs and streak input', () => {
     expect(input.steps.map((x) => x.id)).toEqual([s]);
     expect(input.logs.map((l) => l.day)).toEqual([MON, TUE]);
     expect(skinStreak(input).current).toBe(2);
+  });
+});
+
+const SUN = '2026-10-04';
+const THU = '2026-10-08';
+const FRI = '2026-10-09';
+const SAT = '2026-10-10';
+const at = (day: string) => momentOf(day, '12:00');
+
+/** Every day's status from two weeks back to the day before `today`, and the streak. */
+function history(db: Db, today: string) {
+  const input = skinRangeInput(db, today, null, today);
+  const days = daysBetween('2026-09-21', addDays(today, -1));
+  return {
+    statuses: Object.fromEntries(skinDayStatuses(days, input)),
+    streak: skinStreak(input),
+  };
+}
+
+/**
+ * A Mon–Wed routine of two steps, made long ago: the Monday done, the Tuesday half done, the
+ * Wednesday and every Mon–Wed before missed, the other days free.
+ */
+function pastSetup() {
+  const db = createTestDb();
+  const id = addRoutine(db, { daysOfWeek: [1, 2, 3], steps: [step(), step()] });
+  const [s1, s2] = stepIds(db, id) as [number, number];
+  tickSteps(db, id, [s1, s2], MON, true, [s1, s2]);
+  tickSteps(db, id, [s1], TUE, true, [s1, s2]);
+  return { db, id, s1, s2 };
+}
+
+/** Saves the Mon–Wed routine with `over` changed, on Thursday unless `now` says otherwise. */
+const edit = (db: Db, over: Partial<SaveRoutineInput>, now = at(THU)) =>
+  saveRoutine(db, routineInput({ daysOfWeek: [1, 2, 3], ...over }), now);
+
+describe('past days after a routine changes', () => {
+  type Setup = ReturnType<typeof pastSetup>;
+
+  it.each<[string, (s: Setup) => void]>([
+    [
+      'adding days',
+      ({ db, id, s1, s2 }) =>
+        edit(db, { id, daysOfWeek: EVERY_DAY, steps: [step({ id: s1 }), step({ id: s2 })] }),
+    ],
+    [
+      'removing days',
+      ({ db, id, s1, s2 }) =>
+        edit(db, { id, daysOfWeek: [4], steps: [step({ id: s1 }), step({ id: s2 })] }),
+    ],
+    [
+      'changing step schedules',
+      ({ db, id, s1, s2 }) =>
+        edit(db, {
+          id,
+          steps: [
+            step({ id: s1, scheduleKind: 'days', daysOfWeek: [1] }),
+            step({ id: s2, scheduleKind: 'interval', everyNDays: 2, startDate: '2026-01-01' }),
+          ],
+        }),
+    ],
+    [
+      'adding a step',
+      ({ db, id, s1, s2 }) => edit(db, { id, steps: [step({ id: s2 }), step({ id: s1 }), step()] }),
+    ],
+    ['switching it off', ({ db, id }) => setRoutineActive(db, id, false, at(THU))],
+  ])('%s keeps every past day and the streak', (_, change) => {
+    const s = pastSetup();
+    const before = history(s.db, THU);
+    expect(before.statuses).toMatchObject({
+      [SUN]: 'none',
+      ['2026-09-28']: 'missed',
+      [MON]: 'done',
+      [TUE]: 'partly',
+      [WED]: 'missed',
+    });
+    expect(before.streak).toEqual({ current: 0, best: 1 });
+
+    change(s);
+    expect(history(s.db, THU)).toEqual(before);
+  });
+
+  it('days a routine was switched off stay free after it is switched on again', () => {
+    const { db, id } = pastSetup();
+    setRoutineActive(db, id, false, at(TUE));
+    setRoutineActive(db, id, true, at(FRI));
+    expect(history(db, SAT).statuses).toMatchObject({
+      ['2026-09-28']: 'missed',
+      [MON]: 'done',
+      [TUE]: 'partly', // ticked before the switch
+      [WED]: 'none',
+      [FRI]: 'none',
+    });
+    // It counts again from the next Monday.
+    expect(getTodayRoutines(db, '2026-10-12', WARN)).toHaveLength(1);
+  });
+
+  it('a frozen day reads as missed, with nothing ticked, and today is left alone', () => {
+    const { db, id, s1, s2 } = pastSetup();
+    edit(db, { id, daysOfWeek: EVERY_DAY, steps: [step({ id: s1 }), step({ id: s2 })] });
+    expect(getDayLog(db, id, WED)).toMatchObject({
+      dueStepIds: [s1, s2],
+      doneStepIds: [],
+      completedAt: null,
+    });
+    expect(getRoutineDay(db, id, WED, WARN)!.progress).toMatchObject({ due: 2, done: 0 });
+    // Ticks of a day are kept as they were.
+    expect(getDayLog(db, id, TUE)).toMatchObject({ dueStepIds: [s1, s2], doneStepIds: [s1] });
+    expect(getDayLog(db, id, THU)).toBeNull();
+    expect(getTodayRoutines(db, THU, WARN)[0]).toMatchObject({ started: false, complete: false });
+  });
+
+  it('writes one row per missed day, and none on a second save that day', () => {
+    const { db, id, s1, s2 } = pastSetup();
+    const missed = daysBetween('2026-01-01', WED).filter(
+      (d) => [1, 2, 3].includes(weekdayOf(d)) && d !== MON && d !== TUE,
+    );
+    edit(db, { id, daysOfWeek: EVERY_DAY, steps: [step({ id: s1 }), step({ id: s2 })] });
+    const count = () => db.select().from(routineLog).all().length;
+    expect(count()).toBe(missed.length + 2);
+    edit(db, { id, daysOfWeek: [1], steps: [step({ id: s1 }), step({ id: s2 })] });
+    expect(count()).toBe(missed.length + 2);
+    expect(getRoutine(db, id, THU, WARN)!.createdDay).toBe(THU);
+  });
+
+  it('a day whose snapshot steps were all deleted earlier keeps how it reads', () => {
+    const db = createTestDb();
+    const id = addRoutine(db, { daysOfWeek: [1, 2, 3] });
+    const [s1] = stepIds(db, id);
+    tickSteps(db, id, [s1!], MON, true, [s1!]);
+    // Monday: the only step is swapped for a new one, so Monday's snapshot is gone.
+    edit(db, { id, steps: [step()] }, at(MON));
+    const before = history(db, THU);
+    const [s2] = stepIds(db, id);
+    edit(db, { id, name: 'Renamed', steps: [step({ id: s2 })] });
+    expect(history(db, THU)).toEqual(before);
   });
 });
 

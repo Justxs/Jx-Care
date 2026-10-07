@@ -8,14 +8,12 @@ import {
   product,
   progressEntry,
   progressPhoto,
-  routine,
-  routineLog,
-  routineStep,
   type ProgressPhoto,
 } from '@/db/schema';
 import { conditionSummary } from '@/features/condition/repo';
+import { skinRangeInput } from '@/features/routines/repo';
 import { addDays, appDay, daysBetween, minDay, momentOf, weekStart as weekOf } from '@/lib/appDay';
-import { groupBy, type RoutineLite, type StepLite } from '@/lib/schedule';
+import { groupBy } from '@/lib/schedule';
 import { createSkinIndex, groupComplete } from '@/lib/streak';
 
 import type {
@@ -390,46 +388,9 @@ const timeOfDayRank: Record<TimeOfDay, number> = { morning: 0, evening: 1, custo
 
 function routineCounts(db: Db, days: string[]): RoutineWeekCount[] {
   if (days.length === 0) return [];
-  const routines: RoutineLite[] = db
-    .select()
-    .from(routine)
-    .all()
-    .map((r) => ({
-      id: r.id,
-      name: r.name,
-      timeOfDay: r.timeOfDay,
-      customName: r.customName,
-      sortTime: r.sortTime,
-      daysOfWeek: r.daysOfWeek,
-      active: r.active,
-      createdDay: appDay(r.createdAt),
-    }));
-  if (routines.length === 0) return [];
-  const steps: StepLite[] = db
-    .select({
-      id: routineStep.id,
-      routineId: routineStep.routineId,
-      productId: routineStep.productId,
-      position: routineStep.position,
-      scheduleKind: routineStep.scheduleKind,
-      daysOfWeek: routineStep.daysOfWeek,
-      everyNDays: routineStep.everyNDays,
-      startDate: routineStep.startDate,
-    })
-    .from(routineStep)
-    .all();
-  const logs = db
-    .select({
-      routineId: routineLog.routineId,
-      day: routineLog.day,
-      dueStepIds: routineLog.dueStepIds,
-      doneStepIds: routineLog.doneStepIds,
-    })
-    .from(routineLog)
-    .where(inArray(routineLog.day, days))
-    .all();
-  const today = days[days.length - 1]!;
-  const index = createSkinIndex({ routines, steps, logs, today });
+  // The same input as the calendar and the streak, so the week agrees with them.
+  const last = days[days.length - 1]!;
+  const index = createSkinIndex(skinRangeInput(db, last, days[0]!, last));
 
   const counts = new Map<string, RoutineWeekCount & { sortTime: string }>();
   for (const day of days) {

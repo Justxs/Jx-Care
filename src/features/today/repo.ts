@@ -29,7 +29,8 @@ export function setupProgress(db: DbOrTx): SetupProgress {
       db
         .select({ name: routine.name })
         .from(routine)
-        .orderBy(asc(routine.createdAt), asc(routine.id))
+        // By id: a schedule change moves `createdAt` (freezePastDays in routines/repo).
+        .orderBy(asc(routine.id))
         .limit(1)
         .all(),
     ),

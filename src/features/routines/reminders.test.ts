@@ -157,10 +157,10 @@ describe('routineReminderPlanner', () => {
   it('plans nothing for routines without a reminder, switched off, or with the master switch off', () => {
     addRoutine(db, { reminderTime: null });
     const off = addRoutine(db, { name: 'Off' });
-    setRoutineActive(db, off, false);
+    setRoutineActive(db, off, false, NOW);
     expect(plan()).toEqual([]);
 
-    setRoutineActive(db, off, true);
+    setRoutineActive(db, off, true, NOW);
     expect(plan()).not.toEqual([]);
     saveSettings(db, { routineRemindersOn: false });
     expect(plan()).toEqual([]);
@@ -393,24 +393,28 @@ function resave(
 ): void {
   const r = db.select().from(routine).where(eq(routine.id, routineId)).get()!;
   const steps = db.select().from(routineStep).where(eq(routineStep.routineId, routineId)).all();
-  saveRoutine(db, {
-    id: routineId,
-    name: r.name,
-    timeOfDay: r.timeOfDay,
-    customName: r.customName,
-    sortTime: r.sortTime,
-    daysOfWeek: r.daysOfWeek,
-    reminderTime: r.reminderTime,
-    ...over,
-    steps: steps.map((s) => ({
-      id: s.id,
-      productId: s.productId,
-      note: s.note,
-      scheduleKind: s.scheduleKind,
-      daysOfWeek: s.daysOfWeek,
-      everyNDays: s.everyNDays,
-      startDate: s.startDate,
-      waitSeconds: s.waitSeconds,
-    })),
-  });
+  saveRoutine(
+    db,
+    {
+      id: routineId,
+      name: r.name,
+      timeOfDay: r.timeOfDay,
+      customName: r.customName,
+      sortTime: r.sortTime,
+      daysOfWeek: r.daysOfWeek,
+      reminderTime: r.reminderTime,
+      ...over,
+      steps: steps.map((s) => ({
+        id: s.id,
+        productId: s.productId,
+        note: s.note,
+        scheduleKind: s.scheduleKind,
+        daysOfWeek: s.daysOfWeek,
+        everyNDays: s.everyNDays,
+        startDate: s.startDate,
+        waitSeconds: s.waitSeconds,
+      })),
+    },
+    NOW,
+  );
 }

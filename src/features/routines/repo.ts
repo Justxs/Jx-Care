@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, inArray, isNotNull, lte } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, lte, sql } from 'drizzle-orm';
 
 import type { Db, DbOrTx } from '@/db';
 import {
@@ -14,9 +14,10 @@ import {
 } from '@/db/schema';
 import { addUsedInSource } from '@/features/products/repo';
 import type { PickerProduct, UsedIn } from '@/features/products/types';
-import { appDay } from '@/lib/appDay';
+import { addDays, appDay, daysBetween } from '@/lib/appDay';
 import { daysLeft, effectiveExpiry, expiryStatus, type ExpiryStatus } from '@/lib/expiry';
 import {
+  dueSteps,
   groupBy,
   routineProgress,
   todayGroups,
@@ -52,7 +53,10 @@ export type RoutineStepItem = Omit<RoutineStep, 'createdAt' | 'updatedAt'> & {
 };
 
 export type RoutineItem = Omit<Routine, 'updatedAt'> & {
-  /** App day the routine was created; earlier days never count. */
+  /**
+   * App day the routine was created or its schedule last changed; earlier days count only
+   * through their logs' snapshots.
+   */
   createdDay: string;
   /** Every step in order, whatever its schedule. */
   steps: RoutineStepItem[];
@@ -123,6 +127,19 @@ function loadSteps(
       const { createdAt: _c, updatedAt: _u, ...rest } = step;
       return { ...rest, product: p ? stepProduct(p, today, warnDays) : null };
     });
+}
+
+function routineLite(r: Routine): RoutineLite {
+  return {
+    id: r.id,
+    name: r.name,
+    timeOfDay: r.timeOfDay,
+    customName: r.customName,
+    sortTime: r.sortTime,
+    daysOfWeek: r.daysOfWeek,
+    active: r.active,
+    createdDay: appDay(r.createdAt),
+  };
 }
 
 function toItem(r: Routine, steps: RoutineStepItem[]): RoutineItem {
@@ -268,20 +285,7 @@ export function skinRangeInput(
   fromDay: string | null,
   toDay: string,
 ): SkinStreakInput {
-  const routines: RoutineLite[] = db
-    .select()
-    .from(routine)
-    .all()
-    .map((r) => ({
-      id: r.id,
-      name: r.name,
-      timeOfDay: r.timeOfDay,
-      customName: r.customName,
-      sortTime: r.sortTime,
-      daysOfWeek: r.daysOfWeek,
-      active: r.active,
-      createdDay: appDay(r.createdAt),
-    }));
+  const routines = db.select().from(routine).all().map(routineLite);
   const steps: StepLite[] = db
     .select({
       id: routineStep.id,
@@ -403,12 +407,66 @@ const sameStep = (row: RoutineStep, v: StepValues) =>
   );
 
 /**
+ * Freezes a routine's past before its schedule changes (days, steps, on or off), so the change
+ * can't rewrite past days or the streak. Every day from the routine's first day to yesterday that
+ * is due under its current definition and has no snapshot yet gets a log with that day's due steps
+ * and no ticks; a log whose snapshot steps were all deleted gets one too and keeps its ticks. Then
+ * the routine's first day (`createdAt`) moves to today, so a past day without a log stays empty
+ * whatever the new schedule says. Readers already take a day's snapshot over the schedule and skip
+ * days before the first day, so no past day reads differently. Call it in the saving transaction.
+ */
+function freezePastDays(tx: DbOrTx, routineId: number, now: number): void {
+  const r = tx.select().from(routine).where(eq(routine.id, routineId)).get();
+  if (!r) return;
+  const from = appDay(r.createdAt);
+  const yesterday = addDays(appDay(now), -1);
+  if (from <= yesterday) {
+    const steps = tx.select().from(routineStep).where(eq(routineStep.routineId, routineId)).all();
+    const live = new Set(steps.map((s) => s.id));
+    const snapshotted = new Set(
+      tx
+        .select({ day: routineLog.day, dueStepIds: routineLog.dueStepIds })
+        .from(routineLog)
+        .where(
+          and(
+            eq(routineLog.routineId, routineId),
+            gte(routineLog.day, from),
+            lte(routineLog.day, yesterday),
+          ),
+        )
+        .all()
+        .filter((l) => l.dueStepIds.some((id) => live.has(id)))
+        .map((l) => l.day),
+    );
+    const lite = routineLite(r);
+    const rows = daysBetween(from, yesterday).flatMap((day) => {
+      if (snapshotted.has(day)) return [];
+      const due = dueSteps(lite, steps, day).map((s) => s.id);
+      return due.length > 0 ? [{ routineId, day, dueStepIds: due }] : [];
+    });
+    if (rows.length > 0) {
+      tx.insert(routineLog)
+        .values(rows)
+        .onConflictDoUpdate({
+          target: [routineLog.routineId, routineLog.day],
+          set: { dueStepIds: sql`excluded.due_step_ids` },
+        })
+        .run();
+    }
+  }
+  if (now > r.createdAt) {
+    tx.update(routine).set({ createdAt: now }).where(eq(routine.id, routineId)).run();
+  }
+}
+
+/**
  * Inserts or updates a routine and its whole step list at once (the editor saves everything
  * together). Steps missing from the list are deleted, steps without a known id are inserted and
  * positions are rewritten 0…n. Unchanged steps are left alone so `updatedAt` keeps meaning "last
- * changed" (the picker's Recent group reads it). Returns the routine id.
+ * changed" (the picker's Recent group reads it). Saving an existing routine first freezes its past
+ * days (`freezePastDays`) as of `now`. Returns the routine id.
  */
-export function saveRoutine(db: Db, input: SaveRoutineInput): number {
+export function saveRoutine(db: Db, input: SaveRoutineInput, now: number = Date.now()): number {
   return db.transaction((tx) => {
     const values = {
       name: input.name,
@@ -421,6 +479,7 @@ export function saveRoutine(db: Db, input: SaveRoutineInput): number {
     };
     let id = input.id ?? null;
     if (id !== null) {
+      freezePastDays(tx, id, now);
       tx.update(routine).set(values).where(eq(routine.id, id)).run();
     } else {
       id = tx.insert(routine).values(values).returning({ id: routine.id }).get().id;
@@ -452,8 +511,17 @@ export function saveRoutine(db: Db, input: SaveRoutineInput): number {
   });
 }
 
-export function setRoutineActive(db: Db, id: number, active: boolean): void {
-  db.update(routine).set({ active }).where(eq(routine.id, id)).run();
+/** Switches a routine on or off from today; its past days keep how they read (`freezePastDays`). */
+export function setRoutineActive(
+  db: Db,
+  id: number,
+  active: boolean,
+  now: number = Date.now(),
+): void {
+  db.transaction((tx) => {
+    freezePastDays(tx, id, now);
+    tx.update(routine).set({ active }).where(eq(routine.id, id)).run();
+  });
 }
 
 /**

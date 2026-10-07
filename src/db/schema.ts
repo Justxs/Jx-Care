@@ -168,6 +168,7 @@ export const routine = sqliteTable('routine', {
   daysOfWeek: json<number[]>('days_of_week').notNull().default([1, 2, 3, 4, 5, 6, 7]),
   reminderTime: text('reminder_time'),
   active: bool('active').notNull().default(true),
+  /** Moves to the time of a schedule change, once the days before are frozen in routine_log. */
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
