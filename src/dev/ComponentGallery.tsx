@@ -1,6 +1,7 @@
 import { useColorScheme } from 'nativewind';
 import { useRef, useState, type ReactNode } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -32,6 +33,8 @@ import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import { languages, type Language } from '@/i18n';
 import { setLanguage } from '@/state/app';
 
+import { FormsGallery } from './FormsGallery';
+
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View className="gap-3">
@@ -60,7 +63,7 @@ export function ComponentGallery() {
 
   return (
     <SafeAreaView className="flex-1 bg-canvas">
-      <ScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={{ padding: 16, gap: 24, paddingBottom: FAB_LIST_END_SPACE }}
       >
         <Text className="text-title-l">{t('dev.components')}</Text>
@@ -275,6 +278,10 @@ export function ComponentGallery() {
           </View>
         </Section>
 
+        <Section title="Forms · Sheet · AlertDialog · Toast · ScreenHeader · EmptyState">
+          <FormsGallery />
+        </Section>
+
         <Section title="PinPad">
           <PinPad
             ref={pin}
@@ -286,7 +293,7 @@ export function ComponentGallery() {
             message={filled === 4 ? t('a11y.pinEntered', { count: 4 }) : undefined}
           />
         </Section>
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <Fab onPress={() => pin.current?.shake()}>{t('common.save')}</Fab>
     </SafeAreaView>
   );

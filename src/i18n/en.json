@@ -56,7 +56,11 @@
     },
     "everyDay": "Every day",
     "best": "Best {{days}}",
-    "stepOf": "Step {{index}} of {{count}}"
+    "stepOf": "Step {{index}} of {{count}}",
+    "discardTitle": "Discard changes?",
+    "discardBody": "Your changes will be lost.",
+    "discard": "Discard",
+    "keepEditing": "Keep editing"
   },
   "format": {
     "todayDate": "Today, {{date}}",
@@ -150,6 +154,39 @@
     "hairWord": "hair"
   },
   "dev": {
-    "components": "Components"
+    "components": "Components",
+    "sampleForm": "Sample form",
+    "name": "Name",
+    "price": "Price",
+    "purchased": "Purchased",
+    "time": "Time",
+    "tags": "Tags",
+    "category": "Category",
+    "answer": "Answer",
+    "notes": "Notes",
+    "nameHint": "As on the bottle",
+    "resetTitle": "Reset app?",
+    "resetBody": "This deletes all products, routines and logs. It can't be undone.",
+    "resetAction": "Reset app",
+    "typeReset": "Type RESET to confirm",
+    "removed": "Parfum removed",
+    "openSheet": "Open sheet",
+    "openDialog": "Open dialog",
+    "showToast": "Show toast",
+    "more": "More details",
+    "emptyTitle": "No products yet",
+    "emptyBody": "Add what is on your shelf to see when it expires.",
+    "addProduct": "Add product",
+    "importBackup": "Restore a backup"
+  },
+  "forms": {
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "priceNumber": "Enter the price as a number, e.g. 12.99.",
+      "priceMin": "The price can't be below 0.",
+      "monthsNumber": "Enter months as a number, e.g. 12.",
+      "dateRequired": "Pick a date.",
+      "pickOne": "Pick at least one."
+    }
   }
 }

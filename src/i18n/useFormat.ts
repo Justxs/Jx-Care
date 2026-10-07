@@ -50,6 +50,7 @@ export function makeFormatter(opts: {
   const { lang, locale, currency, today, uses24h } = opts;
   return {
     lang,
+    today,
     date: (day: string) => formatDate(day, lang, today),
     dateField: (day: string) => formatDateField(day, lang, today),
     weekdayDate: (day: string) => formatWeekdayDate(day, lang, today),

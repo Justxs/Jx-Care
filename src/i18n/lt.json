@@ -56,7 +56,11 @@
     },
     "everyDay": "Kasdien",
     "best": "Geriausia {{days}}",
-    "stepOf": "{{index}} žingsnis iš {{count}}"
+    "stepOf": "{{index}} žingsnis iš {{count}}",
+    "discardTitle": "Atmesti pakeitimus?",
+    "discardBody": "Pakeitimai bus prarasti.",
+    "discard": "Atmesti",
+    "keepEditing": "Toliau redaguoti"
   },
   "format": {
     "todayDate": "Šiandien, {{date}}",
@@ -166,6 +170,39 @@
     "hairWord": "plaukai"
   },
   "dev": {
-    "components": "Komponentai"
+    "components": "Komponentai",
+    "sampleForm": "Pavyzdinė forma",
+    "name": "Pavadinimas",
+    "price": "Kaina",
+    "purchased": "Pirkta",
+    "time": "Laikas",
+    "tags": "Žymos",
+    "category": "Kategorija",
+    "answer": "Atsakymas",
+    "notes": "Pastabos",
+    "nameHint": "Kaip ant buteliuko",
+    "resetTitle": "Atkurti programėlę?",
+    "resetBody": "Bus ištrinti visi produktai, rutinos ir įrašai. To atšaukti negalima.",
+    "resetAction": "Atkurti programėlę",
+    "typeReset": "Įrašykite RESET, kad patvirtintumėte",
+    "removed": "Parfum pašalintas",
+    "openSheet": "Atidaryti lapą",
+    "openDialog": "Atidaryti dialogą",
+    "showToast": "Rodyti pranešimą",
+    "more": "Daugiau informacijos",
+    "emptyTitle": "Produktų dar nėra",
+    "emptyBody": "Pridėkite, ką turite lentynoje, ir matysite, kada baigiasi galiojimas.",
+    "addProduct": "Pridėti produktą",
+    "importBackup": "Atkurti atsarginę kopiją"
+  },
+  "forms": {
+    "errors": {
+      "nameRequired": "Įveskite pavadinimą.",
+      "priceNumber": "Įveskite kainą skaičiumi, pvz., 12,99.",
+      "priceMin": "Kaina negali būti mažesnė nei 0.",
+      "monthsNumber": "Įveskite mėnesius skaičiumi, pvz., 12.",
+      "dateRequired": "Pasirinkite datą.",
+      "pickOne": "Pasirinkite bent vieną."
+    }
   }
 }

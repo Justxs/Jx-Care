@@ -14,9 +14,15 @@ export type UiStoreState = {
   toasts: Toast[];
   /** While a screen reader is on, toasts stay until dismissed or replaced. */
   screenReaderOn: boolean;
+  /** Space kept under toasts so they float above the tab bar or the player's timer bar. */
+  toastInset: number;
 };
 
-export const uiStore = createStore<UiStoreState>({ toasts: [], screenReaderOn: false });
+export const uiStore = createStore<UiStoreState>({
+  toasts: [],
+  screenReaderOn: false,
+  toastInset: 0,
+});
 
 export const TOAST_DURATION_MS = 8000;
 
@@ -54,6 +60,11 @@ export function runToastAction(id: number): void {
   const toast = uiStore.state.toasts.find((t) => t.id === id);
   dismissToast(id);
   toast?.onAction?.();
+}
+
+/** Screens with a bar at the bottom (tab bar, timer bar) set its height; 0 when it goes away. */
+export function setToastInset(px: number): void {
+  uiStore.setState((s) => ({ ...s, toastInset: px }));
 }
 
 export function setScreenReaderOn(on: boolean): void {
