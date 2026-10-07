@@ -1,3 +1,5 @@
+import { weekdayOf } from '@/lib/appDay';
+
 import { i18n, type Language } from './index';
 
 /**
@@ -27,13 +29,6 @@ function parseDay(day: string): DayParts {
   return { year: y ?? 1970, month: m ?? 1, day: d ?? 1 };
 }
 
-/** ISO weekday of a 'YYYY-MM-DD' day: 1 = Monday … 7 = Sunday. */
-export function isoWeekdayOf(day: string): number {
-  const { year, month, day: d } = parseDay(day);
-  const js = new Date(Date.UTC(year, month - 1, d)).getUTCDay();
-  return js === 0 ? 7 : js;
-}
-
 function capitalise(text: string): string {
   return text.charAt(0).toLocaleUpperCase() + text.slice(1);
 }
@@ -58,7 +53,7 @@ export function formatDateField(day: string, lang: Language, today: string): str
 
 /** "Tuesday, 6 Oct" (EN); "Antradienis, 2026-10-06" (LT). */
 export function formatWeekdayDate(day: string, lang: Language, today: string = day): string {
-  const weekday = t(lang, `weekdays.long.${isoWeekdayOf(day)}`);
+  const weekday = t(lang, `weekdays.long.${weekdayOf(day)}`);
   return `${capitalise(weekday)}, ${formatDate(day, lang, today)}`;
 }
 
