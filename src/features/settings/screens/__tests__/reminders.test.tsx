@@ -2,8 +2,6 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 
 import { qk } from '@/db/queryKeys';
-import '@/features/products/reminders';
-import { createProduct } from '@/features/products/repo';
 import { getSettings, saveSettings } from '@/features/settings/repo';
 import { setI18nLanguage } from '@/i18n';
 import { setPermissionAdapter } from '@/notifications/askPermission';
@@ -57,31 +55,14 @@ describe('RemindersScreen (S5)', () => {
     expect(screen.queryByText('Notifications are off in phone settings')).toBeNull();
   });
 
-  it('saves every setting at once and schedules', async () => {
+  // Re-planning after a save is the notification layer's (start.test.ts: settings changes).
+  it('saves every setting at once', async () => {
     const app = await renderScreen('granted');
-    createProduct(app.db, {
-      name: 'Vitamin C serum',
-      brand: null,
-      area: 'skin',
-      category: 'serum',
-      size: null,
-      unit: null,
-      price: null,
-      purchasedAt: null,
-      expiresAt: '2026-10-10',
-      openedAt: null,
-      paoMonths: null,
-      notes: null,
-      photoUri: null,
-      ingredients: [],
-    });
 
     await fireEvent.press(switchFor('Expiry warning'));
     await waitFor(() => expect(getSettings(app.db).expiryRemindersOn).toBe(true));
     // Turning them on here answers the product form's ask too.
     expect(getSettings(app.db).reminderAskDone).toBe(true);
-    // Every change re-plans the notifications.
-    await waitFor(() => expect(os.schedule).toHaveBeenCalled());
 
     await fireEvent.press(screen.getByRole('radio', { name: '14 days' }));
     await fireEvent.press(switchFor('Expiry day'));
