@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { buttonClasses } from '@/components/button';
 import { ExternalLink } from '@/components/external-link';
 import { cn } from '@/lib/cn';
+import { intlLocale } from '@/lib/format';
 import { useDocumentTitle } from '@/lib/use-document-title';
+import { useLocale } from '@/stores/preferences';
 
 import { LandingShell, landingColumn } from './landing-shell';
 import { SOURCE_URL } from './links';
@@ -19,7 +21,11 @@ import {
 } from './showcase/sample-cards';
 import { TodayPhone } from './showcase/today-phone';
 
-const facts = ['account', 'languages', 'free'] as const;
+const facts = [
+  { key: 'account', figure: 0 },
+  { key: 'languages', figure: 2 },
+  { key: 'free', figure: 0, price: true },
+] as const;
 
 /** Three groups shown with their card; the other three are named under them. */
 const vignettes = [
@@ -88,24 +94,35 @@ function ShowcaseStage() {
 /** Three plain facts in one strip, words rather than big numbers. */
 function Statement() {
   const { t } = useTranslation();
+  const locale = useLocale();
   const titleId = useId();
+  const number = new Intl.NumberFormat(intlLocale(locale));
+  const euros = new Intl.NumberFormat(intlLocale(locale), {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  });
 
   return (
     <section
       aria-labelledby={titleId}
       className={cn(landingColumn, 'pt-12 pb-14 sm:pb-20 lg:pt-44')}
     >
-      <h2 id={titleId} className="sr-only">
+      <h2 id={titleId} className="text-display font-bold tracking-tight">
         {t('statement.title')}
       </h2>
-      <ul className="grid divide-y divide-border border-y border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      {/* The pink figure leads each fact, so the three read as a row of answers, not a table. */}
+      <ul className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-3">
         {facts.map((fact) => (
-          <li key={fact} className="py-5 sm:px-6 sm:py-6 sm:first:pl-0 sm:last:pr-0">
-            <h3 className="text-title-m font-bold tracking-tight text-balance">
-              {t(`statement.items.${fact}.title`)}
+          <li key={fact.key} className="border-t border-border pt-5">
+            <p aria-hidden="true" className="text-display font-bold text-accent tabular-nums">
+              {'price' in fact ? euros.format(fact.figure) : number.format(fact.figure)}
+            </p>
+            <h3 className="mt-2 text-title-m font-bold tracking-tight text-balance">
+              {t(`statement.items.${fact.key}.title`)}
             </h3>
-            <p className="mt-1 max-w-[42ch] text-body text-ink-muted">
-              {t(`statement.items.${fact}.text`)}
+            <p className="mt-1 max-w-[40ch] text-body text-ink-muted">
+              {t(`statement.items.${fact.key}.text`)}
             </p>
           </li>
         ))}
