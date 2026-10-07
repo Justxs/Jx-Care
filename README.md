@@ -17,6 +17,18 @@ The app uses native modules that are not in Expo Go, so open it in a development
 npm run check   # typecheck, lint and tests
 ```
 
+## Build it
+
+Builds run on EAS ([eas.json](eas.json)); sign in once with `npx eas-cli login`.
+
+```sh
+npx eas-cli build --profile development --platform android   # dev client for npx expo start
+npx eas-cli build --profile preview --platform android       # installable APK
+npx eas-cli build --profile preview --platform ios           # ad-hoc IPA (needs an Apple account)
+```
+
+Version is 1.0.0; build numbers are set by EAS (`appVersionSource: remote`).
+
 ## Build plan
 
 The work is split into tasks in [docs/tasks/README.md](docs/tasks/README.md). What to build is in [docs/feature-spec.md](docs/feature-spec.md); how it looks is in [DESIGN.md](DESIGN.md) and [docs/design/](docs/design/).

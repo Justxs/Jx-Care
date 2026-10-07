@@ -35,24 +35,24 @@ export function Logo({ size = 64, accessibilityLabel }: LogoProps) {
       <Svg width={size} height={height} viewBox="16 44 168 144">
         <Defs>
           <Mask id="jxc-head" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
-            <Rect width="200" height="200" fill="#fff" />
-            <Circle cx="62" cy="88" r="35" fill="#000" />
-            <Circle cx="138" cy="88" r="35" fill="#000" />
+            <Rect width="200" height="200" fill="white" />
+            <Circle cx="62" cy="88" r="35" fill="black" />
+            <Circle cx="138" cy="88" r="35" fill="black" />
             <Path
               d="M 68 140 Q 100 164 132 140"
               fill="none"
-              stroke="#000"
+              stroke="black"
               strokeWidth={6.5}
               strokeLinecap="round"
             />
-            <Circle cx="92" cy="120" r="2.6" fill="#000" />
-            <Circle cx="108" cy="120" r="2.6" fill="#000" />
+            <Circle cx="92" cy="120" r="2.6" fill="black" />
+            <Circle cx="108" cy="120" r="2.6" fill="black" />
           </Mask>
           <Mask id="jxc-eyes" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
-            <Rect width="200" height="200" fill="#fff" />
+            <Rect width="200" height="200" fill="white" />
             {[62, 138].map((cx) => (
               <G key={cx}>
-                <Circle cx={cx} cy="88" r="25" fill="none" stroke="#000" strokeWidth={4} />
+                <Circle cx={cx} cy="88" r="25" fill="none" stroke="black" strokeWidth={4} />
                 {seeds(cx).map((s) => (
                   <Ellipse
                     key={s.deg}
@@ -60,7 +60,7 @@ export function Logo({ size = 64, accessibilityLabel }: LogoProps) {
                     cy={s.y}
                     rx="2.3"
                     ry="3.8"
-                    fill="#000"
+                    fill="black"
                     transform={`rotate(${s.deg} ${s.x} ${s.y})`}
                   />
                 ))}

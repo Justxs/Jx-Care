@@ -46,3 +46,6 @@ yarn-error.*
 
 # Parallel task worktrees
 .claude/worktrees/
+
+# Jest coverage
+coverage/
