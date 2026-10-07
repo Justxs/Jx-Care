@@ -1,5 +1,6 @@
 import {
   keepPreviousData,
+  queryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -11,6 +12,7 @@ import { getDb } from '@/db';
 import type { PhotoAngle, ProgressArea } from '@/db/enums';
 import { qk } from '@/db/queryKeys';
 import { weekStart as weekOf } from '@/lib/appDay';
+import { syncEntity } from '@/notifications';
 import { appStore } from '@/state/app';
 
 import { progressFiles } from './files';
@@ -29,10 +31,14 @@ import {
 import type { SaveCheckInInput } from './types';
 
 /**
- * The weekly photo reminder (task 036) reschedules here whenever a week is taken, skipped or
- * deleted. Does nothing yet.
+ * The weekly photo reminder reschedules whenever a week is taken, skipped or deleted, so a week
+ * that is done gets no reminder (task 036).
  */
-export function onWeeklyPhotoChanged(_area: ProgressArea): void {}
+export function onWeeklyPhotoChanged(_area: ProgressArea): void {
+  syncEntity('weekly_photo', null).catch(() => {
+    // No notification layer yet (tests) or no permission: the next sync catches up.
+  });
+}
 
 const useToday = () => useSelector(appStore, (s) => s.activeDay);
 
@@ -86,13 +92,16 @@ export function useWeekContext(area: ProgressArea, weekStart: string) {
   });
 }
 
-/** Today's check-in photo row and the reminder: taken, skipped or due. */
-export function useThisWeekStatus(area: ProgressArea) {
-  const today = useToday();
-  return useQuery({
+/** This week's photo status for `today`; shared by the hook and Today's prefetch. */
+export const thisWeekStatusQuery = (area: ProgressArea, today: string) =>
+  queryOptions({
     queryKey: keys.status(area, today),
     queryFn: () => thisWeekStatus(getDb(), area, today),
   });
+
+/** Today's check-in photo row and the reminder: taken, skipped or due. */
+export function useThisWeekStatus(area: ProgressArea) {
+  return useQuery(thisWeekStatusQuery(area, useToday()));
 }
 
 /** Weekly photos taken on a day, for day detail (C2). */

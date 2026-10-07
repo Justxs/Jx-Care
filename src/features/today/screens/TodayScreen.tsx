@@ -19,6 +19,7 @@ import {
 } from '@/features/products/listState';
 import { defaultProductFilters } from '@/features/products/types';
 import { openShoppingList } from '@/features/shopping/viewState';
+import { useWeeklyPhotoOptional } from '@/features/progress/useWeeklyPhotoOptional';
 import type { TodayRoutineGroup } from '@/features/routines/repo';
 import { useUpdateSettings } from '@/features/settings/api';
 import { weekdayOf } from '@/lib/appDay';
@@ -95,6 +96,7 @@ export function TodayScreen() {
   const hairDue = useHairDueSlot();
   const toBuy = useShoppingToBuySlot();
   const photoRow = useWeeklyPhotoSlot();
+  const weeklyPhoto = useWeeklyPhotoOptional();
   const skinRow = useSkinCheckInSlot();
 
   const [streakOpen, setStreakOpen] = useState(false);
@@ -159,7 +161,8 @@ export function TodayScreen() {
           <SetupCard view={view} progress={setup} onStep={openSetupStep} onHide={hideSetup} />
           {view.mode === 'progress' ? (
             <OptionalGroup
-              onPhoto={() => router.push('/settings/preferences')}
+              onPhoto={weeklyPhoto.press}
+              photoDetail={weeklyPhoto.detail}
               onAvoid={() => router.push('/settings/avoid')}
             />
           ) : null}

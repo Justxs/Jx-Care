@@ -184,17 +184,22 @@ function SetupStep({ step, index, madeName, next, onPress, onLongPress }: SetupS
   );
 }
 
-export type OptionalGroupProps = { onPhoto: () => void; onAvoid: () => void };
+export type OptionalGroupProps = {
+  onPhoto: () => void;
+  onAvoid: () => void;
+  /** Replaces the weekly photo hint once it is on ("On · Sundays at 10:00"). */
+  photoDetail?: string;
+};
 
 /** Below the setup card: optional steps that never count toward "n of 3". */
-export function OptionalGroup({ onPhoto, onAvoid }: OptionalGroupProps) {
+export function OptionalGroup({ onPhoto, onAvoid, photoDetail }: OptionalGroupProps) {
   const { t } = useTranslation();
   return (
     <Card title={t('today.optional.title')} flush>
       <ListRow
         icon="camera"
         label={t('today.optional.photo.title')}
-        detail={t('today.optional.photo.hint')}
+        detail={photoDetail ?? t('today.optional.photo.hint')}
         onPress={onPhoto}
       />
       <Separator />

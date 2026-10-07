@@ -1063,7 +1063,69 @@
       "invalid": "Šios dienos parodyti negalima."
     }
   },
-  "progress": {},
+  "progress": {
+    "angles": {
+      "front": "Iš priekio",
+      "left": "Kairė pusė",
+      "right": "Dešinė pusė",
+      "back": "Iš nugaros",
+      "top": "Iš viršaus"
+    },
+    "camera": {
+      "tipsSkin": "Ta pati šviesa · be makiažo · plaukai atgal",
+      "tipsHair": "Ta pati šviesa · sausi plaukai · tas pats sklastymas",
+      "angleStep": "{{angle}} · {{index}} iš {{count}}",
+      "guide": "Rodyti paskutinę nuotrauką kaip orientyrą",
+      "shutter": "Fotografuoti",
+      "switchCamera": "Perjungti kamerą",
+      "retake": "Fotografuoti iš naujo",
+      "usePhoto": "Naudoti nuotrauką",
+      "preview": "{{angle}}: nuotrauka dar neišsaugota",
+      "takeFailed": "Nepavyko nufotografuoti. Bandykite dar kartą.",
+      "discardTitle": "Atmesti šias nuotraukas?",
+      "discardBody": "Ką tik padarytos nuotraukos bus ištrintos. Šio veiksmo atšaukti negalima.",
+      "discard": "Atmesti",
+      "keep": "Palikti",
+      "permission": {
+        "title": "Leiskite naudoti kamerą",
+        "body": "Jx-Care naudoja kamerą savaitės progreso nuotraukoms. Jos lieka programėlėje ir niekada nepatenka į galeriją.",
+        "allow": "Leisti kamerą",
+        "deniedTitle": "Jx-Care negali naudoti kameros",
+        "deniedBody": "Kad galėtumėte daryti progreso nuotraukas, telefono nustatymuose leiskite Jx-Care naudoti kamerą. Nuotraukos lieka programėlėje ir niekada nepatenka į galeriją.",
+        "openSettings": "Atidaryti telefono nustatymus"
+      }
+    },
+    "review": {
+      "titleSkin": "Odos nuotrauka, {{date}}",
+      "titleHair": "Plaukų nuotrauka, {{date}}",
+      "photos": "Nuotraukos",
+      "retakeHint": "Bakstelėkite nuotrauką, kad nufotografuotumėte iš naujo.",
+      "tileLabel": "{{angle}}. Fotografuoti iš naujo",
+      "rating": "Įvertinkite šią savaitę",
+      "tags": "Žymos",
+      "note": "Pastaba",
+      "noteHint": "Nebūtina. Iki 280 simbolių.",
+      "noteTooLong": "Pastaba gali būti iki 280 simbolių.",
+      "save": "Išsaugoti",
+      "saved": "Išsaugota privačiai Jx-Care",
+      "saveFailed": "Nepavyko išsaugoti nuotraukų. Bandykite dar kartą."
+    },
+    "row": {
+      "title": "Šios savaitės odos nuotrauka",
+      "take": "Fotografuoti",
+      "skip": "Praleisti šią savaitę",
+      "skipped": "Šios savaitės nuotrauka praleista"
+    },
+    "reminder": {
+      "skin": "Laikas šios savaitės odos nuotraukai",
+      "skinAndHair": "Laikas šios savaitės odos ir plaukų nuotraukoms",
+      "hair": "Laikas šios savaitės plaukų nuotraukai"
+    },
+    "optional": {
+      "on": "Įjungta · {{days}} {{time}}",
+      "onToast": "Savaitės nuotrauka įjungta: {{days}} {{time}}"
+    }
+  },
   "condition": {
     "hairTags": {
       "shiny": "Blizga",

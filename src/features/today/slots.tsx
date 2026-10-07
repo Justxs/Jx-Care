@@ -6,8 +6,12 @@ import type { ReactNode } from 'react';
 import { SkinCheckIn } from '@/features/condition/components/SkinCheckIn';
 import { useHairDueToday, useHairStreakChip } from '@/features/hair/api';
 import { HairDueRows } from '@/features/hair/components/HairDueRows';
+import { useThisWeekStatus } from '@/features/progress/api';
+import { WeeklyPhotoRow } from '@/features/progress/components/WeeklyPhotoRow';
+import { useSettings } from '@/features/settings/api';
 import { useToBuyCount } from '@/features/shopping/api';
 import type { Streak } from '@/lib/streak';
+import { isPhotoRowDay } from '@/lib/weeklyPhoto';
 import { appStore } from '@/state/app';
 
 import { setupQuery } from './api';
@@ -47,9 +51,16 @@ export function useShoppingToBuySlot(): number | null {
   return count > 0 ? count : null;
 }
 
-/** Check-in weekly photo row (task 036): shows on the weekly photo day until the photo is taken. */
+/**
+ * Check-in weekly photo row (task 036): while Weekly photo is on, from the chosen weekday to the
+ * end of the week, until this week's skin photo is taken or skipped.
+ */
 export function useWeeklyPhotoSlot(): ReactNode {
-  return null;
+  const day = useSelector(appStore, (s) => s.activeDay);
+  const settings = useSettings().data;
+  const status = useThisWeekStatus('skin').data;
+  if (!settings?.weeklyPhotoOn || !isPhotoRowDay(day, settings.weeklyPhotoWeekday)) return null;
+  return status === 'due' ? <WeeklyPhotoRow area="skin" /> : null;
 }
 
 /** Check-in "How's your skin today?" chips and "Hair and note" (task 038). */

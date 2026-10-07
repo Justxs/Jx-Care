@@ -72,6 +72,11 @@ module.exports = {
         focus: 'rgb(var(--focus) / <alpha-value>)',
         // The progress camera is dark in both themes.
         'camera-bg': 'rgb(var(--camera-bg) / <alpha-value>)',
+        // Fixed alphas from DESIGN.md (task 036); `camera-ink` is the white for text and icons.
+        'camera-control': 'rgba(255, 255, 255, 0.14)',
+        'camera-guide': 'rgba(240, 168, 137, 0.3)',
+        'camera-frame': 'rgba(255, 255, 255, 0.75)',
+        'camera-ink': 'rgb(255 255 255 / <alpha-value>)',
         // React Native Reusables names, pointing at the same tokens
         background: 'rgb(var(--canvas) / <alpha-value>)',
         foreground: 'rgb(var(--ink) / <alpha-value>)',

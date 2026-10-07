@@ -72,6 +72,8 @@ export const cameraColors = {
   control: 'rgba(255,255,255,0.14)',
   guide: 'rgba(240,168,137,0.30)',
   frame: 'rgba(255,255,255,0.75)',
+  /** Text, icons and the shutter ring on the camera. */
+  ink: '#FFFFFF',
 } as const;
 
 export function colorsFor(scheme: ColorSchemeName): ThemeColors {

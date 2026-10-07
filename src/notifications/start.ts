@@ -28,6 +28,8 @@ const plannedSettings = [
   'weeklyPhotoOn',
   'weeklyPhotoWeekday',
   'weeklyPhotoTime',
+  // The weekly photo text names hair photos too while the hair album is on (task 036).
+  'hairAlbumOn',
   'weeklyDigestOn',
   'lastBackupAt',
 ] as const satisfies readonly (keyof AppSettings)[];

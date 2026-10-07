@@ -993,7 +993,69 @@
       "invalid": "This day can't be shown."
     }
   },
-  "progress": {},
+  "progress": {
+    "angles": {
+      "front": "Front",
+      "left": "Left side",
+      "right": "Right side",
+      "back": "Back",
+      "top": "Top"
+    },
+    "camera": {
+      "tipsSkin": "Same light · no makeup · hair back",
+      "tipsHair": "Same light · dry hair · same parting",
+      "angleStep": "{{angle}} · {{index}} of {{count}}",
+      "guide": "Show last photo as a guide",
+      "shutter": "Take photo",
+      "switchCamera": "Switch camera",
+      "retake": "Retake",
+      "usePhoto": "Use photo",
+      "preview": "{{angle}} photo, not saved yet",
+      "takeFailed": "The photo could not be taken. Try again.",
+      "discardTitle": "Discard these photos?",
+      "discardBody": "The photos you just took are deleted. This can't be undone.",
+      "discard": "Discard",
+      "keep": "Keep them",
+      "permission": {
+        "title": "Allow the camera",
+        "body": "Jx-Care uses the camera for your weekly progress photos. They stay in the app and never go to your gallery.",
+        "allow": "Allow camera",
+        "deniedTitle": "The camera is off for Jx-Care",
+        "deniedBody": "To take progress photos, allow the camera for Jx-Care in phone settings. Photos stay in the app and never go to your gallery.",
+        "openSettings": "Open phone settings"
+      }
+    },
+    "review": {
+      "titleSkin": "Skin photo, {{date}}",
+      "titleHair": "Hair photo, {{date}}",
+      "photos": "Photos",
+      "retakeHint": "Tap a photo to retake it.",
+      "tileLabel": "{{angle}}. Retake this photo",
+      "rating": "Rate this week",
+      "tags": "Tags",
+      "note": "Note",
+      "noteHint": "Optional. Up to 280 characters.",
+      "noteTooLong": "Keep the note to 280 characters.",
+      "save": "Save",
+      "saved": "Saved privately in Jx-Care",
+      "saveFailed": "The photos could not be saved. Try again."
+    },
+    "row": {
+      "title": "This week's skin photo",
+      "take": "Take photo",
+      "skip": "Skip this week",
+      "skipped": "This week's photo skipped"
+    },
+    "reminder": {
+      "skin": "Time for this week's skin photo",
+      "skinAndHair": "Time for this week's skin and hair photos",
+      "hair": "Time for this week's hair photo"
+    },
+    "optional": {
+      "on": "On · {{days}} at {{time}}",
+      "onToast": "Weekly photo on: {{days}} at {{time}}"
+    }
+  },
   "condition": {
     "hairTags": {
       "shiny": "Shiny",
