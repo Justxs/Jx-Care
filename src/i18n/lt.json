@@ -657,10 +657,6 @@
     "alreadyListedToast": "„{{name}}“ jau yra pirkinių sąraše",
     "allListedToast": "Jau yra pirkinių sąraše",
     "removedToast": "„{{name}}“ pašalintas",
-    "todayRow_one": "Pirkinių sąrašas · pirkti {{count}}",
-    "todayRow_few": "Pirkinių sąrašas · pirkti {{count}}",
-    "todayRow_many": "Pirkinių sąrašas · pirkti {{count}}",
-    "todayRow_other": "Pirkinių sąrašas · pirkti {{count}}",
     "areaFilter": "Rodyti prekes",
     "sheet": {
       "title": "Įtraukti į pirkinių sąrašą",

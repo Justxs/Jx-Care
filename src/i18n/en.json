@@ -607,8 +607,6 @@
     "alreadyListedToast": "{{name}} is already on your shopping list",
     "allListedToast": "Already on your shopping list",
     "removedToast": "{{name}} removed",
-    "todayRow_one": "Shopping list · {{count}} to buy",
-    "todayRow_other": "Shopping list · {{count}} to buy",
     "areaFilter": "Show items for",
     "sheet": {
       "title": "Add to shopping list",

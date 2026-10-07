@@ -50,7 +50,7 @@ import type { ArchiveSort, ProductFilters } from './types';
  * Expiry notifications (task 021) reschedule here whenever a product is created, changed,
  * finished, restored or deleted.
  */
-export function onProductChanged(id: number): void {
+function onProductChanged(id: number): void {
   syncEntity('product', id).catch(() => {
     // No notification adapter (tests) or the phone refused: the next full sync catches up.
   });
@@ -99,17 +99,12 @@ export function useHasAnyProduct() {
   });
 }
 
-/** Today's Expiring soon card; shared by `useExpiringSoon` and Today's prefetch. */
+/** Today's Expiring soon card and its prefetch. */
 export const expiringSoonQuery = (today: string, warnDays: number, limit = 3) =>
   queryOptions({
     queryKey: [...qk.products.all, 'expiring', limit, today, warnDays],
     queryFn: () => expiringSoon(getDb(), today, warnDays, limit),
   });
-
-export function useExpiringSoon(limit = 3) {
-  const { today, warnDays } = useExpiryContext();
-  return useQuery(expiringSoonQuery(today, warnDays, limit));
-}
 
 export function useProductsForPicker(
   opts: { area: 'all' | 'skin' | 'hair'; search?: string },
