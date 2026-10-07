@@ -141,7 +141,10 @@ export function PinPad({
         {/* Reserved so a message never pushes the keypad down. */}
         <View className="min-h-[36px] justify-center px-4">
           {message ? (
-            <Text accessibilityLiveRegion="polite" className="text-center text-caption text-danger">
+            <Text
+              accessibilityLiveRegion="polite"
+              className="text-center text-caption tabular-nums text-danger"
+            >
               {message}
             </Text>
           ) : null}

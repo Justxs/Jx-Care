@@ -46,7 +46,10 @@ export function Field({
         // Always rendered at one caption line so an error never moves the fields below.
         <View testID="field-helper" className="min-h-[18px]">
           {error ? (
-            <Text accessibilityLiveRegion="polite" className="text-caption text-danger">
+            <Text
+              accessibilityLiveRegion="polite"
+              className="text-caption tabular-nums text-danger"
+            >
               {error}
             </Text>
           ) : hint ? (

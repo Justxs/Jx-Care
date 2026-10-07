@@ -115,6 +115,8 @@ describe('PIN service', () => {
     });
     expect(await service.lockoutRemaining(T0)).toBe(30);
     expect(await service.lockoutRemaining(T0 + 20_500)).toBe(10);
+    expect(await service.lockoutUntil(T0 + 20_500)).toBe(T0 + PIN_LOCK_SHORT_MS);
+    expect(await service.lockoutUntil(T0 + PIN_LOCK_SHORT_MS)).toBe(0);
 
     expect(await service.verifyPin('2580', T0 + 29_999)).toEqual({
       ok: false,
@@ -205,6 +207,8 @@ describe('recovery answer', () => {
       lockedUntil: T0 + RECOVERY_LOCK_MS,
     });
     expect(await service.recoveryLockoutRemaining(T0)).toBe(900);
+    expect(await service.recoveryLockoutUntil(T0 + 1000)).toBe(T0 + RECOVERY_LOCK_MS);
+    expect(await service.lockoutUntil(T0)).toBe(0);
     expect(await service.verifyRecoveryAnswer('rex', T0 + RECOVERY_LOCK_MS - 1)).toEqual({
       ok: false,
       locked: true,

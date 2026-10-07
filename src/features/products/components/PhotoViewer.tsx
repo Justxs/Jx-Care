@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { Icon } from '@/components/ui/icon';
+import { lockStore } from '@/state/lock';
 import { cameraColors } from '@/theme/colors';
 import { useMotion } from '@/theme/useMotion';
 
@@ -37,6 +38,15 @@ export function PhotoViewer({ uri, open, onClose }: PhotoViewerProps) {
   const { t } = useTranslation();
   const m = useMotion();
   const { width } = useWindowDimensions();
+
+  // A native modal sits above the lock screen, so it closes when the app locks.
+  useEffect(() => {
+    if (!open) return undefined;
+    const sub = lockStore.subscribe((s) => {
+      if (s.locked) onClose();
+    });
+    return () => sub.unsubscribe();
+  }, [open, onClose]);
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
   const x = useSharedValue(0);

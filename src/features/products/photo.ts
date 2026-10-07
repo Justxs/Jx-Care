@@ -2,6 +2,8 @@ import { Directory, File, Paths } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 
+import { withAutoLockPaused } from '@/features/security/lock';
+
 /** Longest side of a saved product photo, in pixels. */
 export const PHOTO_SIZE = 1200;
 
@@ -28,14 +30,16 @@ export async function pickProductPhoto(source: PhotoSource): Promise<PickResult>
     quality: 1,
     exif: false,
   };
-  if (source === 'camera') {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-    if (!permission.granted) return { status: 'denied' };
-  }
-  const result =
-    source === 'camera'
-      ? await ImagePicker.launchCameraAsync(options)
-      : await ImagePicker.launchImageLibraryAsync(options);
+  // The camera and the picker are phone screens: a short trip there doesn't lock the app.
+  const result = await withAutoLockPaused(async () => {
+    if (source === 'camera') {
+      const permission = await ImagePicker.requestCameraPermissionsAsync();
+      if (!permission.granted) return null;
+      return ImagePicker.launchCameraAsync(options);
+    }
+    return ImagePicker.launchImageLibraryAsync(options);
+  });
+  if (result === null) return { status: 'denied' };
   const asset = result.canceled ? undefined : result.assets[0];
   if (!asset) return { status: 'cancelled' };
 

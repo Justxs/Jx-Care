@@ -16,7 +16,6 @@ export default function TabsLayout() {
   // No settings row, or no PIN (checked at boot): onboarding first. O4 writes both.
   const onboarding = useNeedsOnboarding(getDb());
   if (onboarding) return <Redirect href="/welcome" />;
-  // TODO(018): send to /lock while the lock store says locked.
   return (
     <Tabs
       tabBar={renderTabBar}

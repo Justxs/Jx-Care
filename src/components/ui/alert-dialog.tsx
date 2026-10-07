@@ -39,6 +39,10 @@ export type AlertDialogProps = {
   confirmText?: string;
   /** Label of the confirm field ("Type RESET to confirm"). */
   confirmLabel?: string;
+  /** A secondary button above the action ("Export backup" before Reset app). */
+  secondaryAction?: { label: string; onPress: () => void };
+  /** Render into a named PortalHost (the lock screen has its own, above the app). */
+  portalHost?: string;
 };
 
 /** Confirmation for destructive or irreversible actions. */
@@ -54,10 +58,12 @@ export function AlertDialog({
   onCancel,
   confirmText,
   confirmLabel,
+  secondaryAction,
+  portalHost,
 }: AlertDialogProps) {
   return (
     <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
-      <AlertDialogPrimitive.Portal>
+      <AlertDialogPrimitive.Portal hostName={portalHost}>
         <AlertDialogPrimitive.Overlay className="absolute inset-0 items-center justify-center px-6">
           <Animated.View
             entering={FadeIn.duration(motion.duration.base)}
@@ -75,6 +81,7 @@ export function AlertDialog({
               onCancel={onCancel}
               confirmText={confirmText}
               confirmLabel={confirmLabel}
+              secondaryAction={secondaryAction}
             />
           </AlertDialogPrimitive.Content>
         </AlertDialogPrimitive.Overlay>
@@ -94,7 +101,8 @@ function DialogBody({
   onCancel,
   confirmText,
   confirmLabel,
-}: Omit<AlertDialogProps, 'open' | 'onOpenChange'>) {
+  secondaryAction,
+}: Omit<AlertDialogProps, 'open' | 'onOpenChange' | 'portalHost'>) {
   const [typed, setTyped] = useState('');
   const confirmed = confirmText === undefined || typed === confirmText;
   return (
@@ -124,6 +132,11 @@ function DialogBody({
         />
       ) : null}
       <View className="gap-2">
+        {secondaryAction ? (
+          <Button variant="secondary" onPress={secondaryAction.onPress}>
+            {secondaryAction.label}
+          </Button>
+        ) : null}
         <AlertDialogPrimitive.Action asChild disabled={!confirmed} onPress={onAction}>
           <Button variant={destructive ? 'danger' : 'primary'} disabled={!confirmed}>
             {actionLabel}

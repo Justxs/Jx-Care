@@ -51,8 +51,6 @@ describe('route tree', () => {
       '/confirm-pin',
       '/recovery',
       '/biometrics',
-      '/lock',
-      '/forgot-pin',
       '/products',
       '/products/[id]',
       '/products/archive',

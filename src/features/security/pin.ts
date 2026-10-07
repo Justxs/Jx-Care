@@ -186,6 +186,11 @@ export function createPinService(kv: SecureKV = secureKV) {
     return lockedUntil > now ? Math.ceil((lockedUntil - now) / 1000) : 0;
   }
 
+  async function until(kind: AttemptKind, now: number): Promise<number> {
+    const { lockedUntil } = await readAttempts(kind);
+    return lockedUntil > now ? lockedUntil : 0;
+  }
+
   async function writeRecovery(question: RecoveryQuestion, answer: string): Promise<void> {
     const q: RecoveryQuestion =
       question.kind === 'custom' ? { kind: 'custom', text: question.text.trim() } : question;
@@ -250,6 +255,16 @@ export function createPinService(kv: SecureKV = secureKV) {
       return remaining('recoveryAttempts', now);
     },
 
+    /** When the PIN lockout ends (ms), 0 when not locked; countdowns compute from it (L1). */
+    lockoutUntil(now: number): Promise<number> {
+      return until('pinAttempts', now);
+    },
+
+    /** When the recovery answer lockout ends (ms), 0 when not locked (L2). */
+    recoveryLockoutUntil(now: number): Promise<number> {
+      return until('recoveryAttempts', now);
+    },
+
     /** The saved question, so L2 can show it (presets through `presetQuestionKey`). */
     async getRecoveryQuestion(): Promise<RecoveryQuestion | null> {
       return (await readJson<StoredRecovery>(KEYS.recovery))?.question ?? null;
@@ -312,6 +327,8 @@ export const {
   verifyPin,
   lockoutRemaining,
   recoveryLockoutRemaining,
+  lockoutUntil,
+  recoveryLockoutUntil,
   getRecoveryQuestion,
   verifyRecoveryAnswer,
   changePin,

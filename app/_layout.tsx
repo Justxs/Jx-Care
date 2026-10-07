@@ -30,6 +30,8 @@ import { appDb } from '@/db/client';
 import { MigrationGate } from '@/db/MigrationGate';
 import { ReminderAskHost } from '@/features/products/components/ReminderAskSheet';
 import { queryClient } from '@/db/queryClient';
+import { LockGate } from '@/features/security/components/LockGate';
+import { PrivacyOverlay } from '@/features/security/components/PrivacyOverlay';
 import { useFullScreenModalOptions, useStackOptions } from '@/navigation/stackOptions';
 import { navigationTheme } from '@/navigation/theme';
 // Also defines the background tasks, which must exist at module scope.
@@ -84,42 +86,41 @@ export default function RootLayout() {
           <BottomSheetModalProvider>
             <View className="flex-1 bg-canvas font-sans">
               <StatusBar style={colors.scheme === 'dark' ? 'light' : 'dark'} />
-              <MigrationGate onReady={onMigrated}>
-                {booted ? (
-                  <ThemeProvider value={theme}>
-                    <Stack screenOptions={stackOptions}>
-                      <Stack.Screen name="(tabs)" />
-                      <Stack.Screen name="(onboarding)" />
-                      {/* Arriving at the lock screen never animates. */}
-                      <Stack.Screen
-                        name="lock"
-                        options={{ animation: 'none', gestureEnabled: false }}
-                      />
-                      <Stack.Screen name="forgot-pin" />
-                      <Stack.Screen name="product-form" options={fullScreen} />
-                      <Stack.Screen
-                        name="player"
-                        options={{ ...fullScreen, gestureEnabled: false }}
-                      />
-                      <Stack.Screen name="progress" options={fullScreen} />
-                      <Stack.Screen
-                        name="hair/done/[taskId]"
-                        options={{
-                          presentation: 'transparentModal',
-                          animation: 'none',
-                          contentStyle: { backgroundColor: 'transparent' },
-                        }}
-                      />
-                    </Stack>
-                    {/* The in-context notification ask (task 021), over any screen. */}
-                    <ReminderAskHost />
-                  </ThemeProvider>
-                ) : null}
-              </MigrationGate>
-              <ToastHost />
-              <PortalHost />
+              {/* The lock is a layer above everything here (L1, L2); unlocking reveals the same screen. */}
+              <LockGate ready={booted}>
+                <MigrationGate onReady={onMigrated}>
+                  {booted ? (
+                    <ThemeProvider value={theme}>
+                      <Stack screenOptions={stackOptions}>
+                        <Stack.Screen name="(tabs)" />
+                        <Stack.Screen name="(onboarding)" />
+                        <Stack.Screen name="product-form" options={fullScreen} />
+                        <Stack.Screen
+                          name="player"
+                          options={{ ...fullScreen, gestureEnabled: false }}
+                        />
+                        <Stack.Screen name="progress" options={fullScreen} />
+                        <Stack.Screen
+                          name="hair/done/[taskId]"
+                          options={{
+                            presentation: 'transparentModal',
+                            animation: 'none',
+                            contentStyle: { backgroundColor: 'transparent' },
+                          }}
+                        />
+                      </Stack>
+                      {/* The in-context notification ask (task 021), over any screen. */}
+                      <ReminderAskHost />
+                    </ThemeProvider>
+                  ) : null}
+                </MigrationGate>
+                <ToastHost />
+                <PortalHost />
+              </LockGate>
             </View>
           </BottomSheetModalProvider>
+          {/* Above sheets, dialogs and the lock: the app switcher never shows content. */}
+          <PrivacyOverlay />
         </QueryClientProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>

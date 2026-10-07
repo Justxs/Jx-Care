@@ -139,7 +139,51 @@
       "customRequired": "Write your question."
     }
   },
-  "lock": {},
+  "lock": {
+    "enterPin": "Enter PIN",
+    "forgotPin": "Forgot PIN?",
+    "wrongPin": "Wrong PIN. Try again.",
+    "tryAgainSeconds": "Try again in {{seconds}} s",
+    "tryAgainTime": "Try again in {{time}}",
+    "biometricsPrompt": "Unlock Jx-Care",
+    "forgot": {
+      "title": "Forgot PIN",
+      "body": "Answer your recovery question to set a new PIN.",
+      "question": "Your question",
+      "answer": "Answer",
+      "answerHint": "Hidden as you type. Tap the eye to check it.",
+      "wrongAnswer": "That answer doesn't match. Check it and try again.",
+      "noQuestion": "No recovery question is saved on this phone. You can reset the app.",
+      "resetLink": "Reset app and delete all data"
+    },
+    "newPin": {
+      "createTitle": "Create a new PIN",
+      "createBody": "Choose 4 digits you'll remember.",
+      "confirmTitle": "Enter it again",
+      "mismatch": "PINs don't match",
+      "saveFailed": "Couldn't save the PIN. Try again."
+    },
+    "reset": {
+      "title": "Reset app and delete all data?",
+      "lost": "This deletes {{products}}, {{routines}} and {{photos}}.",
+      "products_one": "{{count}} product",
+      "products_other": "{{count}} products",
+      "routines_one": "{{count}} routine",
+      "routines_other": "{{count}} routines",
+      "photos_one": "{{count}} progress photo",
+      "photos_other": "{{count}} progress photos",
+      "notInGallery": "Progress photos are not in your gallery, so they are lost too.",
+      "lastBackup": "Your last backup is from {{date}}; you can restore it after the reset.",
+      "noUndo": "This can't be undone.",
+      "action": "Reset app",
+      "confirmLabel": "Type RESET to confirm",
+      "exportBackup": "Export backup",
+      "failed": "Couldn't reset. Try again.",
+      "pinTitle": "Enter your PIN",
+      "pinBody": "Reset app needs your PIN.",
+      "pinLabel": "PIN"
+    }
+  },
   "security": {
     "errors": {
       "pinFormat": "Enter 4 digits.",

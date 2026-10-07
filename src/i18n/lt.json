@@ -145,7 +145,57 @@
       "customRequired": "Parašykite klausimą."
     }
   },
-  "lock": {},
+  "lock": {
+    "enterPin": "Įveskite PIN",
+    "forgotPin": "Pamiršote PIN?",
+    "wrongPin": "Neteisingas PIN. Bandykite dar kartą.",
+    "tryAgainSeconds": "Bandykite dar kartą po {{seconds}} s",
+    "tryAgainTime": "Bandykite dar kartą po {{time}}",
+    "biometricsPrompt": "Atrakinti Jx-Care",
+    "forgot": {
+      "title": "Pamiršau PIN",
+      "body": "Atsakykite į atkūrimo klausimą ir sukurkite naują PIN.",
+      "question": "Jūsų klausimas",
+      "answer": "Atsakymas",
+      "answerHint": "Rašant slepiamas. Bakstelėkite akį, kad patikrintumėte.",
+      "wrongAnswer": "Atsakymas nesutampa. Patikrinkite ir bandykite dar kartą.",
+      "noQuestion": "Šiame telefone neišsaugotas atkūrimo klausimas. Galite atkurti programėlę.",
+      "resetLink": "Atkurti programėlę ir ištrinti visus duomenis"
+    },
+    "newPin": {
+      "createTitle": "Sukurkite naują PIN",
+      "createBody": "Pasirinkite 4 skaitmenis, kuriuos atsiminsite.",
+      "confirmTitle": "Įveskite jį dar kartą",
+      "mismatch": "PIN kodai nesutampa",
+      "saveFailed": "Nepavyko išsaugoti PIN. Bandykite dar kartą."
+    },
+    "reset": {
+      "title": "Atkurti programėlę ir ištrinti visus duomenis?",
+      "lost": "Bus ištrinta: {{products}}, {{routines}} ir {{photos}}.",
+      "products_one": "{{count}} produktas",
+      "products_few": "{{count}} produktai",
+      "products_many": "{{count}} produkto",
+      "products_other": "{{count}} produktų",
+      "routines_one": "{{count}} rutina",
+      "routines_few": "{{count}} rutinos",
+      "routines_many": "{{count}} rutinos",
+      "routines_other": "{{count}} rutinų",
+      "photos_one": "{{count}} progreso nuotrauka",
+      "photos_few": "{{count}} progreso nuotraukos",
+      "photos_many": "{{count}} progreso nuotraukos",
+      "photos_other": "{{count}} progreso nuotraukų",
+      "notInGallery": "Progreso nuotraukų nėra jūsų galerijoje, todėl jos irgi bus prarastos.",
+      "lastBackup": "Paskutinė atsarginė kopija padaryta {{date}}; ją galėsite atkurti po šio veiksmo.",
+      "noUndo": "To atšaukti negalima.",
+      "action": "Atkurti programėlę",
+      "confirmLabel": "Įrašykite RESET, kad patvirtintumėte",
+      "exportBackup": "Eksportuoti atsarginę kopiją",
+      "failed": "Nepavyko atkurti. Bandykite dar kartą.",
+      "pinTitle": "Įveskite PIN",
+      "pinBody": "Programėlei atkurti reikia jūsų PIN.",
+      "pinLabel": "PIN"
+    }
+  },
   "security": {
     "errors": {
       "pinFormat": "Įveskite 4 skaitmenis.",

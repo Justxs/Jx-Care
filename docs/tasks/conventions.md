@@ -50,7 +50,7 @@ Don't add other runtime libraries unless the task names them. If you really need
 app/                         Expo Router routes only: thin files that render a screen from src/
   _layout.tsx                root: providers, fonts, splash, migrations, lock gate
   (onboarding)/              O1–O5
-  lock.tsx, forgot-pin.tsx   L1, L2
+  (L1, L2 are a layer in the root layout: src/features/security/components/LockGate.tsx)
   (tabs)/                    Today, Products, Routines, Calendar, Settings (+ their stacks)
   ...                        full-screen flows and sheets as modal routes
 src/

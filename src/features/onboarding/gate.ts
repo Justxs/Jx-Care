@@ -42,6 +42,11 @@ export function markOnboarded(): void {
   setPinMissing(false);
 }
 
+/** Reset app (task 018) deleted the PIN and every row: onboarding again, without a restart. */
+export function markNeedsOnboarding(): void {
+  setPinMissing(true);
+}
+
 /** The current answer, for one-off checks outside React. */
 export function needsOnboarding(db: Db): boolean {
   return gateStore.state.pinMissing || !hasSettingsRow(db);
