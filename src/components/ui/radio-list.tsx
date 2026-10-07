@@ -32,7 +32,7 @@ export function RadioList({
       accessibilityRole="radiogroup"
       accessibilityLabel={accessibilityLabel}
       className={cn(
-        'overflow-hidden rounded-xl bg-surface shadow-card dark:shadow-none',
+        'overflow-hidden rounded-xl bg-surface shadow-card dark:border dark:border-border dark:shadow-none',
         className,
       )}
     >
