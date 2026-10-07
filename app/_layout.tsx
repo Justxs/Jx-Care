@@ -32,7 +32,7 @@ import { appDb } from '@/db/client';
 import { MigrationGate } from '@/db/MigrationGate';
 import { ReminderAskHost } from '@/features/products/components/ReminderAskSheet';
 import { queryClient } from '@/db/queryClient';
-import { LockGate } from '@/features/security/components/LockGate';
+import { LockGate, SheetsAwayOnLock } from '@/features/security/components/LockGate';
 import { PrivacyOverlay } from '@/features/security/components/PrivacyOverlay';
 import { useFullScreenModalOptions, useStackOptions } from '@/navigation/stackOptions';
 import { navigationTheme } from '@/navigation/theme';
@@ -87,11 +87,11 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardProvider>
         <QueryClientProvider client={queryClient}>
-          <BottomSheetModalProvider>
-            <View className="flex-1 bg-canvas font-sans">
-              <StatusBar style={colors.scheme === 'dark' ? 'light' : 'dark'} />
-              {/* The lock is a layer above everything here (L1, L2); unlocking reveals the same screen. */}
-              <LockGate ready={booted}>
+          <View className="flex-1 bg-canvas font-sans">
+            <StatusBar style={colors.scheme === 'dark' ? 'light' : 'dark'} />
+            {/* The lock is a layer above everything here (L1, L2); unlocking reveals the same screen. */}
+            <LockGate ready={booted}>
+              <BottomSheetModalProvider>
                 <MigrationGate onReady={onMigrated}>
                   {booted ? (
                     <ThemeProvider value={theme}>
@@ -119,15 +119,13 @@ export default function RootLayout() {
                     </ThemeProvider>
                   ) : null}
                 </MigrationGate>
-                {storybookOpen ? null : (
-                  <>
-                    <ToastHost />
-                    <PortalHost />
-                  </>
-                )}
-              </LockGate>
-            </View>
-          </BottomSheetModalProvider>
+                <SheetsAwayOnLock ready={booted} />
+                {storybookOpen ? null : <ToastHost />}
+              </BottomSheetModalProvider>
+              {/* After the provider's sheets: dialogs and menus opened from a sheet show above it. */}
+              {storybookOpen ? null : <PortalHost />}
+            </LockGate>
+          </View>
           {/* Above sheets, dialogs and the lock: the app switcher never shows content. */}
           <PrivacyOverlay />
         </QueryClientProvider>

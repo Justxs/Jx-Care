@@ -46,17 +46,23 @@ export type LockGateProps = {
   children: ReactNode;
 };
 
+/** Whether the lock layer shows: locked, except while onboarding runs (no PIN yet). */
+function useLockShown(ready: boolean): boolean {
+  const locked = useSelector(lockStore, (s) => s.locked);
+  const pinMissing = useSelector(gateStore, (s) => s.pinMissing);
+  // The settings row is only read once the database is migrated (O4 writes it).
+  return ready && locked && !pinMissing && hasSettingsRow(getDb());
+}
+
 /**
  * The lock (spec L1, L2): a full-screen layer above the app, not a route, so unlocking reveals
  * exactly the screen the person left, with its state. It shows while `lockStore.locked` is set,
  * except while onboarding runs (no PIN yet). Everything under it is hidden from screen readers,
- * and it renders after the app's toasts and PortalHost, so a dialog left open stays under it.
+ * and it renders after the app (sheets, toasts and the PortalHost), so a dialog left open stays
+ * under it.
  */
 export function LockGate({ ready, children }: LockGateProps) {
-  const locked = useSelector(lockStore, (s) => s.locked);
-  const pinMissing = useSelector(gateStore, (s) => s.pinMissing);
-  // The settings row is only read once the database is migrated (O4 writes it).
-  const visible = ready && locked && !pinMissing && hasSettingsRow(getDb());
+  const visible = useLockShown(ready);
   return (
     <>
       <View
@@ -70,6 +76,19 @@ export function LockGate({ ready, children }: LockGateProps) {
       {visible ? <LockLayer /> : null}
     </>
   );
+}
+
+/**
+ * Inside BottomSheetModalProvider (the lock layer renders outside it): locking puts away open
+ * sheets, so none is left on screen or holds unsaved edits behind the lock.
+ */
+export function SheetsAwayOnLock({ ready }: { ready: boolean }) {
+  const shown = useLockShown(ready);
+  const { dismissAll } = useBottomSheetModal();
+  useEffect(() => {
+    if (shown) dismissAll();
+  }, [shown, dismissAll]);
+  return null;
 }
 
 /** Re-locks after time away and drives the privacy cover (`startAutoLock`). */
@@ -92,15 +111,13 @@ function LockLayer() {
   const m = useMotion();
   const client = useQueryClient();
   const activeDay = useSelector(appStore, (s) => s.activeDay);
-  const { dismissAll } = useBottomSheetModal();
   const [forgot, setForgot] = useState(false);
 
-  // Locking puts away what was open over the app: keyboard, sheets and toasts.
+  // Locking puts away what was open over the app: keyboard and toasts (sheets: SheetsAwayOnLock).
   useEffect(() => {
     Keyboard.dismiss();
-    dismissAll();
     for (const toast of uiStore.state.toasts) dismissToast(toast.id);
-  }, [dismissAll]);
+  }, []);
 
   // Paint Today complete: its data is read while the lock is up.
   useEffect(() => {
