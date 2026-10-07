@@ -45,4 +45,34 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+Detail (P2):
+
+- The header title is "Product"; the product name is the `title-m` heading in the body, with brand, `AreaTag`, category and the Avoid badge under it.
+- With a photo, the box is full width at 1:1 (`aspect-square`, `subtle` placeholder, expo-image fades in). Without a photo, the box is a 160 pt square, centred, with a 64 pt category glyph, so a product without a photo doesn't open on a large empty block. Tapping the photo opens `PhotoViewer`: an RN `Modal` on `camera-bg` with pinch zoom (1 to 4 times), drag while zoomed and double tap to reset.
+- The expiry block always shows the status word in the badge (OK included, unlike the list) with the days next to it: "Expires in 145 days · 1 Mar 2027". A finished product shows a neutral "Finished" badge, no days and no progress bar, and adds a Finished row to the dates. The bar uses `expiryProgress` from `src/lib/expiry` (opened date, or the purchase date when not opened).
+- Period after opening reads "6M" in both languages (the open-jar symbol). Units have their own labels under `products.detail.units` (LT "vnt.").
+- Notes show only when there are some (no "Not set" row). Ingredient chips are red when the ingredient or its group is on the avoid list (`avoidMatches` per ingredient). Conflict marks are left for 030 (TODO in the code).
+- "Edit list" opens the P4 `IngredientEntrySheet` on the detail screen and saves with `useUpdateProduct`, the product's other fields unchanged.
+- Cost per day shows in its own card once finished; when the price or the opened date is missing, the card says what to add instead of hiding.
+- My rating and the notes timeline are `TODO(039)` comments in place, nothing rendered.
+- More menu: Mark as opened only for an active product that is not opened; Duplicate shows "Copy of X added" and opens the copy (its dates usually need editing next); Delete only when archived, with the AlertDialog, then goes back.
+- Action bar: Edit (secondary), Mark finished (primary) and Buy again (secondary, hidden until 034), without icons so the labels fit; the primary button gets a 1.4 share of the width. Its label is `products.detail.markFinished`, "Pažymėti baigtu" in LT as the design asks (the shared `common.markFinished` reads "Pažymėti kaip baigtą"). An archived product's bar is Edit, Restore (primary) and Buy again. Restore stays on the screen and shows "X restored to Products" with Undo; Mark finished shows its toast and goes back.
+- The bar is a plain row, not `BottomBar`: the tab bar sits under pushed product screens, so `BottomBar`'s safe-area padding and keyboard handling don't apply. While the screen is focused it raises `toastInset` by the bar's height so toasts float above the bar, and puts it back on blur.
+- A missing or malformed id (an old notification) shows "This product was deleted" with a Back button.
+
+Archive (P5):
+
+- The sort (Date / Cost per day) is a `ToggleGroup`, not remembered, and hidden on the empty state.
+- Each row: thumbnail, name, "Finished 27 Sep", and "€0.15 a day" when the cost is known. Tapping the row opens the product's detail; the More button (spoken "More actions") opens a bottom `Sheet` titled with the product name holding Restore to Products, Buy again (034) and Delete. Phones only, so no `DropdownMenu` variant for tablets.
+- Delete opens the AlertDialog from the spec; deleted and restored rows fade out while the others slide up (`rowExiting` / `rowLayout`).
+
+Tests: `src/features/products/screens/__tests__/detail.test.tsx` covers both screens. The dropdown menu's portal waits for a trigger measurement that never happens in Jest, so that test file draws the open menu in place.
+
+Check on a real device:
+
+- Detail at 360 pt in LT: "Pažymėti baigtu" on one line in the bar, also with Buy again once 034 lands; long names and brands wrap.
+- The photo box doesn't move when the image loads; the viewer pinches, drags, double-taps back and closes (Android back button too).
+- Toasts on the detail screen sit above the action bar, and back at the tab bar after leaving.
+- More menu position under the header button; Delete dialog over the menu closing.
+- Archive action sheet opens over a scrim and closes before the delete dialog; row collapse looks smooth.
+- Light and dark for both screens.

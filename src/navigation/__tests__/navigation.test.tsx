@@ -41,8 +41,8 @@ describe('routes', () => {
   it('opens a product from a deep link once set up', async () => {
     const app = setupTestApp();
     saveSettings(app.db, { language: 'en' });
-    await renderRouter(routes, { initialUrl: '/products/12' });
-    expect(await screen.findByText('P2 · Product')).toBeTruthy();
+    await renderRouter(routes, { initialUrl: '/products/12', wrapper: app.wrapper });
+    expect(await screen.findByText('This product was deleted')).toBeTruthy();
   });
 });
 
