@@ -153,7 +153,11 @@ function HairTaskForm({
     schema,
     defaultValues: initial,
     onSubmit: async (value) => {
-      await saveTask.mutateAsync({ id: taskId, input: value });
+      // "Last done" is saved only when it was changed here, so a wash marked done while the
+      // editor was open (from a notification) isn't undone by Save.
+      const keepLastDone = taskId !== undefined && value.lastDoneAt === initial.lastDoneAt;
+      const input = keepLastDone ? { ...value, lastDoneAt: undefined } : value;
+      await saveTask.mutateAsync({ id: taskId, input });
       showToast({
         message: t(taskId === undefined ? 'hair.editor.addedToast' : 'hair.editor.savedToast', {
           name: value.name,

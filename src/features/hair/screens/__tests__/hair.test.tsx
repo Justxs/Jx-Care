@@ -15,7 +15,7 @@ import { appStore } from '@/state/app';
 import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
-import { getHairTask, listHairTasks, saveHairTask } from '../../repo';
+import { getHairTask, listHairTasks, markHairDone, saveHairTask } from '../../repo';
 import type { HairTaskInput } from '../../schema';
 import { HairListScreen } from '../HairListScreen';
 import { HairTaskEditorScreen } from '../HairTaskEditorScreen';
@@ -383,6 +383,20 @@ describe('HairTaskEditorScreen', () => {
     });
     expect(uiStore.state.toasts[0]?.message).toBe('Long wash saved');
     expect(router.back).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a wash marked done while the editor was open', async () => {
+    const app = setup('editor', { id: '1' });
+    saveHairTask(app.db, task({ name: 'Wash' }));
+    await app.show();
+    await screen.findByLabelText('Name');
+    // Marked done from the notification while the editor is open.
+    markHairDone(app.db, 1, { day: TODAY, productIds: [], note: null });
+
+    await fireEvent.changeText(screen.getByLabelText('Name'), 'Long wash');
+    await fireEvent.press(screen.getByRole('button', { name: 'Save task' }));
+    await flush();
+    expect(getHairTask(app.db, 1, TODAY)).toMatchObject({ name: 'Long wash', lastDoneAt: TODAY });
   });
 
   it('deletes after the dialog', async () => {

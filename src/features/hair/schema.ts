@@ -22,7 +22,8 @@ export type HairTaskInput = {
   everyNDays: number | null;
   intervalUnit: IntervalUnit;
   daysOfWeek: number[] | null;
-  lastDoneAt: string;
+  /** Left out on an update: the stored "Last done" stays (it may have moved since the form opened). */
+  lastDoneAt?: string;
   reminderTime: string | null;
 };
 
@@ -135,7 +136,7 @@ export function hairTaskToForm(task: HairTaskInput): HairTaskFormValues {
     interval: task.everyNDays == null ? '' : String(weeks ? task.everyNDays / 7 : task.everyNDays),
     intervalUnit: weeks ? 'weeks' : 'days',
     daysOfWeek: task.daysOfWeek ?? [],
-    lastDoneAt: task.lastDoneAt,
+    lastDoneAt: task.lastDoneAt ?? '',
     reminderOn: task.reminderTime !== null,
     reminderTime: task.reminderTime,
   };
