@@ -15,7 +15,7 @@ import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
 import * as events from '../../events';
-import { registerAddNote, registerPlayerConflicts } from '../../playerSlots';
+import { registerPlayerConflicts } from '../../playerSlots';
 import { getDayLog, getRoutineDay, tickSteps } from '../../repo';
 import { RoutineDoneScreen } from '../RoutineDoneScreen';
 import { RoutinePlayerScreen } from '../RoutinePlayerScreen';
@@ -112,7 +112,6 @@ beforeEach(async () => {
 afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
   registerPlayerConflicts(() => []);
-  registerAddNote(() => null);
   registerBuyAgain(() => null);
   jest.restoreAllMocks();
 });
@@ -250,10 +249,10 @@ describe('RoutinePlayerScreen', () => {
 
     await fireEvent.press(screen.getAllByRole('button', { name: 'Pick another' })[0]!);
     const sheet = within(await screen.findByTestId('sheet'));
-    // Expired and finished products can't be picked.
-    expect(sheet.queryByText('SPF 50 fluid')).toBeNull();
+    // Expired products sit under Can't be picked, disabled; finished ones aren't listed.
+    expect(sheet.getByRole('header', { name: "Can't be picked" })).toBeTruthy();
     expect(sheet.queryByText('Face oil')).toBeNull();
-    await fireEvent.press(sheet.getByRole('button', { name: 'Fresh cream, Acme' }));
+    await fireEvent.press(sheet.getByRole('button', { name: /^Fresh cream/ }));
 
     await waitFor(() => expect(screen.queryByText('Step 1 · SPF 50 fluid')).toBeNull());
     expect(checkbox('Fresh cream, Acme')).toBeTruthy();
@@ -378,8 +377,6 @@ describe('RoutineDoneScreen', () => {
     );
     expect(await screen.findByText('Next: Morning · Tomorrow at 07:30')).toBeTruthy();
     expect(screen.getByText('SPF 50 fluid expired 2 Oct')).toBeTruthy();
-    // Add a note waits for the condition log (task 038).
-    expect(screen.queryByRole('button', { name: 'Add a note' })).toBeNull();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Back to Today' }));
     expect(router.dismissTo).toHaveBeenCalledWith('/');
@@ -387,8 +384,6 @@ describe('RoutineDoneScreen', () => {
 
   it('says "Started again" after a break, and Add a note opens the condition log on Skin', async () => {
     const app = setup();
-    const open = jest.fn();
-    registerAddNote(() => open);
     const id = seedRoutine(app.db, { name: 'Evening', steps: [null] });
     // Two days in a row, then a day not done, then today.
     finishAt(app.db, id, '2026-10-01');
@@ -406,7 +401,7 @@ describe('RoutineDoneScreen', () => {
     expect(await screen.findByText('Next: Evening · Tomorrow at 21:00')).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Add a note' }));
-    expect(open).toHaveBeenCalledWith('skin');
+    expect(await screen.findByLabelText('Skin tags')).toBeTruthy();
   });
 
   it('counts up from the streak before the last tick', async () => {

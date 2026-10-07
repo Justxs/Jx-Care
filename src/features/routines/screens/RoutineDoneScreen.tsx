@@ -1,3 +1,4 @@
+import { useSelector } from '@tanstack/react-store';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -12,18 +13,19 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import { StreakCard } from '@/components/ui/streak';
 import { Text } from '@/components/ui/text';
+import { useConditionLogSheet } from '@/features/condition/components/ConditionLogSheet';
 import { timeOfDayName } from '@/features/today/cardText';
 import { useCountUp } from '@/features/today/useCountUp';
 import { useFormat, type Formatter } from '@/i18n/useFormat';
 import { addDays, weekdayOf } from '@/lib/appDay';
 import { cn } from '@/lib/cn';
+import { appStore } from '@/state/app';
 import { motion } from '@/theme/motion';
 import { useMotion } from '@/theme/useMotion';
 
 import { useRoutineDay, useSkinStreak } from '../api';
 import { useNextUp } from '../playerApi';
 import { attentionProducts, streakRestarted, type NextUp } from '../playerLogic';
-import { useAddNote } from '../playerSlots';
 import type { StepProduct } from '../repo';
 
 type TFn = ReturnType<typeof useTranslation>['t'];
@@ -86,7 +88,8 @@ export function RoutineDoneScreen() {
   const { data: r } = useRoutineDay(id);
   const { data: streak } = useSkinStreak();
   const { data: next } = useNextUp(id);
-  const addNote = useAddNote();
+  const day = useSelector(appStore, (s) => s.activeDay);
+  const noteSheet = useConditionLogSheet();
   // Shown when the log has no finish time (the screen was opened some other way).
   const [openedAt] = useState(() => Date.now());
   const count = useStreakCount(Number.isFinite(from) ? from : null, streak?.current);
@@ -151,12 +154,11 @@ export function RoutineDoneScreen() {
       </ScrollView>
       <View className="gap-2 px-4 pt-3" style={{ paddingBottom: Math.max(insets.bottom, 12) }}>
         <Button onPress={() => router.dismissTo('/')}>{t('player.done.backToToday')}</Button>
-        {addNote ? (
-          <Button variant="ghost" onPress={() => addNote('skin')}>
-            {t('player.done.addNote')}
-          </Button>
-        ) : null}
+        <Button variant="ghost" onPress={() => noteSheet.open(day, 'skin')}>
+          {t('player.done.addNote')}
+        </Button>
       </View>
+      {noteSheet.element}
     </SafeAreaView>
   );
 }

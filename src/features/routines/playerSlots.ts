@@ -32,20 +32,3 @@ export function registerPlayerConflicts(
 export function usePlayerConflicts(routineId: number, day: string): readonly PlayerConflict[] {
   return useConflictsImpl(routineId, day);
 }
-
-// ─── Add a note (task 038) ──────────────────────────────────────────────────
-
-/** Opens the Condition log sheet (T4) on a side. */
-export type OpenConditionLog = (side: 'skin' | 'hair') => void;
-
-let useAddNoteImpl: () => OpenConditionLog | null = () => null;
-
-/** Task 038: how "Add a note" on the Routine done screen opens the Condition log sheet. */
-export function registerAddNote(hook: () => OpenConditionLog | null): void {
-  useAddNoteImpl = hook;
-}
-
-/** "Add a note" stays hidden while this is null. */
-export function useAddNote(): OpenConditionLog | null {
-  return useAddNoteImpl();
-}

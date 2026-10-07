@@ -1190,10 +1190,6 @@
       "title": "Routine not found",
       "body": "It may have been deleted."
     },
-    "picker": {
-      "title": "Pick a product",
-      "empty": "No skin products to pick yet."
-    },
     "done": {
       "title": "{{name}} done",
       "summary_one": "{{count}} step, finished at {{time}}.",
