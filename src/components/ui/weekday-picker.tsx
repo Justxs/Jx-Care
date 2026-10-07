@@ -10,6 +10,8 @@ export type WeekdayPickerProps = {
   /** ISO weekdays, 1 = Monday. */
   value: readonly number[];
   onValueChange: (days: number[]) => void;
+  /** Only these days can be picked (a step limited to its routine's days); the rest are off. */
+  allowed?: readonly number[];
   accessibilityLabel?: string;
   className?: string;
 };
@@ -18,6 +20,7 @@ export type WeekdayPickerProps = {
 export function WeekdayPicker({
   value,
   onValueChange,
+  allowed,
   accessibilityLabel,
   className,
 }: WeekdayPickerProps) {
@@ -39,19 +42,29 @@ export function WeekdayPicker({
     >
       {ISO_WEEKDAYS.map((d) => {
         const on = value.includes(d);
+        // A picked day outside `allowed` stays tappable so it can be cleared.
+        const off = !on && allowed !== undefined && !allowed.includes(d);
         return (
           <ToggleGroupPrimitive.Item
             key={d}
             value={String(d)}
+            disabled={off}
             accessibilityRole="checkbox"
             accessibilityLabel={t(`weekdays.long.${d}`)}
-            accessibilityState={{ checked: on }}
+            accessibilityState={{ checked: on, disabled: off }}
             className={cn(
               'h-[40px] min-w-[36px] flex-1 items-center justify-center rounded-md border active:opacity-85',
-              on ? 'border-accent bg-accent-soft' : 'border-border-strong bg-surface',
+              on
+                ? 'border-accent bg-accent-soft'
+                : off
+                  ? 'border-dashed border-border bg-subtle'
+                  : 'border-border-strong bg-surface',
             )}
           >
-            <Text numberOfLines={1} className={cn('text-label', on ? 'text-accent' : 'text-ink')}>
+            <Text
+              numberOfLines={1}
+              className={cn('text-label', on ? 'text-accent' : off ? 'text-ink-muted' : 'text-ink')}
+            >
               {t(`weekdays.letter.${d}`)}
             </Text>
           </ToggleGroupPrimitive.Item>

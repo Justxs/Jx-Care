@@ -50,6 +50,7 @@ import {
 } from '../components/ProductFields';
 import { QuickOpenFields } from '../components/QuickFields';
 import { onProductSaved } from '../events';
+import { productAddedForPick } from '../pickReturn';
 import type { AvoidContext } from '../repo';
 import {
   emptyProductForm,
@@ -235,6 +236,7 @@ function ProductForm({
     }
     showToast({ message: t('products.form.addedToast', { name: value.name }) });
     onProductSaved({ id, name: value.name }, { isFirstWithExpiry });
+    productAddedForPick({ id, area: value.area });
     if (afterSave.current === 'another') {
       form.reset(newProductValues(today));
       setMoreOpen(false);

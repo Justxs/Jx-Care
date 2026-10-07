@@ -56,3 +56,5 @@ Out:
 ## Decisions
 
 (Write any choices you make here.)
+
+Note from task 024: the editor's slots are ready. `useEditorConflicts(draft)` in `src/features/routines/useRoutineConflicts.ts` returns `EditorConflictHit[]` (`{ key, stepIndex, mild, text }`) for the unsaved draft (`{ id, timeOfDay, daysOfWeek, steps }`, steps in editor order); the editor turns hits into a `ConflictTag` on each step row (mild only when every hit of that step is mild) and fills `EditorConflictPanel` (`components/EditorConflictPanel.tsx`), which opens with a height animation and already says "You can still save.". Its `onExplainMild` is a no-op in `RoutineEditorScreen.tsx` (comment "Task 030 opens the Mild conflict sheet"); wire it to the ExplainSheets Mild conflict sheet. Step rows' tags are not pressable yet.

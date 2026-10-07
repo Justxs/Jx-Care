@@ -45,6 +45,13 @@ import {
  */
 export function onRoutineChanged(_id: number): void {}
 
+/**
+ * Called when the reminder switch in the routine editor is turned on. Task 021 calls its
+ * `askForReminders()` here, which asks for the notification permission the first time ever
+ * (refinement 8). Does nothing yet.
+ */
+export function onRoutineReminderSwitchedOn(): void {}
+
 /** The app day and expiry window that step product statuses depend on; part of each key. */
 function useDayContext() {
   const day = useSelector(appStore, (s) => s.activeDay);

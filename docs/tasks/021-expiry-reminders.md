@@ -44,3 +44,5 @@ Out:
 ## Decisions
 
 (Write any choices you make here.)
+
+Note from task 024: the routine editor's Reminder switch calls `onRoutineReminderSwitchedOn()` (`src/features/routines/api.ts`, a no-op) each time it is turned on. Call `askForReminders()` there; it should itself make sure the ask shows only the first time ever (refinement 8).
