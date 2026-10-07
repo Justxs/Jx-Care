@@ -1,6 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query';
 
 import { settingsQuery } from '@/features/settings/api';
+import { prefetchShopping } from '@/features/shopping/api';
 
 import { todayQueries } from './api';
 
@@ -18,5 +19,6 @@ export async function prefetchToday(queryClient: QueryClient, day: string): Prom
     queryClient.prefetchQuery(queries.routines),
     queryClient.prefetchQuery(queries.skinStreak),
     queryClient.prefetchQuery(queries.expiring),
+    prefetchShopping(queryClient),
   ]);
 }

@@ -12,8 +12,13 @@ import { useTranslation } from 'react-i18next';
 
 import { ABExplainSheet, StreakExplainSheet } from '@/components/ExplainSheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import { productListStore, setProductFilters } from '@/features/products/listState';
+import {
+  productListStore,
+  setProductFilters,
+  setProductsSegment,
+} from '@/features/products/listState';
 import { defaultProductFilters } from '@/features/products/types';
+import { openShoppingList } from '@/features/shopping/viewState';
 import type { TodayRoutineGroup } from '@/features/routines/repo';
 import { useUpdateSettings } from '@/features/settings/api';
 import { weekdayOf } from '@/lib/appDay';
@@ -75,6 +80,7 @@ function seeAllExpiring(): void {
     sort: productListStore.state.filters.sort,
     statuses: ['expired', 'expiring'],
   });
+  setProductsSegment('mine');
   router.navigate('/products');
 }
 
@@ -142,7 +148,7 @@ export function TodayScreen() {
         onProduct={(id) => router.push(`/products/${id}`)}
         onSeeAll={seeAllExpiring}
         toBuy={toBuy}
-        onShopping={() => router.navigate('/products')}
+        onShopping={openShoppingList}
       />
     );
 

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { useToBuyCount } from '@/features/shopping/api';
 import type { Streak } from '@/lib/streak';
 
 /**
@@ -25,7 +26,8 @@ export function useHairDueSlot(): ReactNode {
 
 /** "Shopping list · 3 to buy" count at the foot of Expiring soon (task 034); null hides the row. */
 export function useShoppingToBuySlot(): number | null {
-  return null;
+  const count = useToBuyCount().data ?? 0;
+  return count > 0 ? count : null;
 }
 
 /** Check-in weekly photo row (task 036): shows on the weekly photo day until the photo is taken. */
