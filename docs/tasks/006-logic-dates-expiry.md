@@ -68,4 +68,12 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **No date-fns.** Every date operation here is a few lines of UTC maths on `'YYYY-MM-DD'` strings (no time zone can shift a day), and only `appDay`, `nextDayBoundary` and `momentOf` read local time. Adding date-fns would bring a library for nothing, so it isn't installed.
+- Extra helpers in `appDay.ts`: `localDate`, `momentOf(day, 'HH:MM')` (a time on an app day; times before 04:00 fall on the next calendar date), `minDay`, `maxDay`, `monthStart`, `firstOfMonth`, `daysBetween`, `isValidDay`.
+- `daysInMonthGrid(year, month)` takes a 1-based month.
+- Jest runs with `TZ=Europe/Vilnius` (set in `jest.global-setup.js`) so DST days are tested in the owner's time zone.
+- `expiryProgress` reads an optional `purchasedAt` on the input; `effectiveExpiry` ignores a PAO of 0.
+- `sortBySoonestExpiry(products, today?)`: ordering by effective date gives the same order as by days left, so `today` is optional.
+- `costPerDayCents` returns `{ cents, days }` or null.
+- `text.ts` also exports `tidy()` (collapse spaces, keep case) for display names.
+- Coverage of these files: 100% of lines.
