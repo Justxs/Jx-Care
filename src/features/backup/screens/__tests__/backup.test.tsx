@@ -182,7 +182,7 @@ describe('BackupScreen', () => {
     expect(
       screen.getByRole('radio', { name: 'Zip with photos. All data. There are no photos yet.' }),
     ).toBeTruthy();
-    screen.unmount();
+    await screen.unmount();
     // A weekly photo taken elsewhere in the app, while the old count is still cached.
     files.addPhoto('progress/skin/2026-10-05/front-1.jpg', new Uint8Array(3000));
     await app.render(
