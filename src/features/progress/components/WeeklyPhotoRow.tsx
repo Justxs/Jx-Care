@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import type { ProgressArea } from '@/db/enums';
 import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
 
@@ -15,25 +14,23 @@ const leaving = FadeOut.duration(motion.duration.fast);
 
 /**
  * The photo row at the top of Today's Check-in card (T1): "This week's skin photo" with Take photo
- * (secondary) and a plain "Skip this week" link under it, so the two never look equal.
+ * (secondary) and a plain "Skip this week" link under it, so the two never look equal. Today
+ * offers the skin photo only; the hair album is taken from Progress photos.
  */
-export function WeeklyPhotoRow({ area = 'skin' }: { area?: ProgressArea }) {
+export function WeeklyPhotoRow() {
   const { t } = useTranslation();
   const skip = useSkipWeek();
   const undo = useDeleteWeek();
 
   const onSkip = () => {
-    skip.mutate(
-      { area },
-      {
-        onSuccess: (entryId) =>
-          showToast({
-            message: t('progress.row.skipped'),
-            actionLabel: t('common.undo'),
-            onAction: () => undo.mutate({ entryId, area }),
-          }),
-      },
-    );
+    skip.mutate('skin', {
+      onSuccess: (entryId) =>
+        showToast({
+          message: t('progress.row.skipped'),
+          actionLabel: t('common.undo'),
+          onAction: () => undo.mutate(entryId),
+        }),
+    });
   };
 
   return (
@@ -45,7 +42,7 @@ export function WeeklyPhotoRow({ area = 'skin' }: { area?: ProgressArea }) {
         <Button
           variant="secondary"
           icon="camera"
-          onPress={() => router.push(`/progress/camera?area=${area}`)}
+          onPress={() => router.push('/progress/camera?area=skin')}
         >
           {t('progress.row.take')}
         </Button>

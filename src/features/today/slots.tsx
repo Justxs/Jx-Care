@@ -65,7 +65,7 @@ export function useWeeklyPhotoSlot(): ReactNode {
   const settings = useSettings().data;
   const status = useThisWeekStatus('skin').data;
   if (!settings?.weeklyPhotoOn || !isPhotoRowDay(day, settings.weeklyPhotoWeekday)) return null;
-  return status === 'due' ? <WeeklyPhotoRow area="skin" /> : null;
+  return status === 'due' ? <WeeklyPhotoRow /> : null;
 }
 
 /** Check-in "How's your skin today?" chips and "Hair and note" (task 038). */

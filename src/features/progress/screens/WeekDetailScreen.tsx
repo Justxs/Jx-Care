@@ -106,19 +106,16 @@ function WeekDetail({ area, weekStart }: { area: ProgressArea; weekStart: string
     setConfirm(null);
     if (!target) return;
     if (target.kind === 'week') {
-      deleteWeek.mutate({ entryId: entry.id, area }, { onSuccess: goBack, onError: failed });
+      deleteWeek.mutate(entry.id, { onSuccess: goBack, onError: failed });
       return;
     }
-    deletePhoto.mutate(
-      { photoId: target.photo.id, area },
-      {
-        onSuccess: (result) => {
-          if (result?.entryDeleted) goBack();
-          else setPage((p) => Math.max(0, Math.min(p, photos.length - 2)));
-        },
-        onError: failed,
+    deletePhoto.mutate(target.photo.id, {
+      onSuccess: (result) => {
+        if (result?.entryDeleted) goBack();
+        else setPage((p) => Math.max(0, Math.min(p, photos.length - 2)));
       },
-    );
+      onError: failed,
+    });
   };
 
   const angleName = (photo: ProgressPhoto) => t(`progress.angles.${photo.angle}`);

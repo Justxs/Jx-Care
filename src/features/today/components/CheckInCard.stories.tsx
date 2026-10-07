@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const SkinOnly: Story = {};
 
 /** On the weekly photo day: the photo row above the chips. */
-export const WithWeeklyPhoto: Story = { args: { photo: <WeeklyPhotoRow area="skin" /> } };
+export const WithWeeklyPhoto: Story = { args: { photo: <WeeklyPhotoRow /> } };
 
 /** Nothing to check in: the card hides (blank canvas). */
 export const Hidden: Story = { args: { skin: null } };
