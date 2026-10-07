@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 
 import { getDb, type Db } from '@/db';
 import { queryClient as appQueryClient } from '@/db/queryClient';
+import { PHOTO_ROOTS } from '@/features/backup/format';
 import { clearDraft } from '@/features/onboarding/draft';
 import { markNeedsOnboarding } from '@/features/onboarding/gate';
 import { cancelAllNotifications } from '@/notifications';
@@ -12,9 +13,6 @@ import { dismissToast, uiStore } from '@/state/ui';
 
 import { pinService } from './pin';
 import { deleteAllRows } from './repo';
-
-/** Folders under the app's documents folder that hold photos: product photos, progress photos. */
-export const PHOTO_FOLDERS = ['products', 'progress'] as const;
 
 export type ResetDeps = {
   db: Db;
@@ -30,7 +28,7 @@ export type ResetDeps = {
 };
 
 function deletePhotoFolders(): void {
-  for (const name of PHOTO_FOLDERS) {
+  for (const name of PHOTO_ROOTS) {
     const dir = new Directory(Paths.document, name);
     if (dir.exists) dir.delete();
   }
