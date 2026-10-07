@@ -52,7 +52,7 @@ export function HairDaySection({ day }: { day: string }) {
         {logs.map((log, i) => {
           const icon = hairTaskIcon(log.kind, log.otherKind);
           const products = log.products.map((p) => p.name).join(' + ');
-          const late = log.timing === 'late' && log.dueDay;
+          const lateFrom = log.timing === 'late' ? log.dueDay : null;
           return (
             <View key={log.id}>
               {i > 0 ? <Separator inset /> : null}
@@ -65,9 +65,9 @@ export function HairDaySection({ day }: { day: string }) {
                   {products ? (
                     <Text className="text-caption text-ink-muted">{products}</Text>
                   ) : null}
-                  {late && log.dueDay ? (
+                  {lateFrom ? (
                     <Text className="text-caption text-warning">
-                      {t('hair.day.late', { date: f.date(log.dueDay) })}
+                      {t('hair.day.late', { date: f.date(lateFrom) })}
                     </Text>
                   ) : null}
                   {log.note ? <Text className="text-body">{log.note}</Text> : null}
