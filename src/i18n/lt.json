@@ -4,7 +4,6 @@
     "buyAgain": "Pirkti dar kartą",
     "markFinished": "Pažymėti kaip baigtą",
     "finished": "Baigta",
-    "archive": "Archyvas",
     "start": "Pradėti",
     "continue": "Tęsti",
     "timeOfDay": "Paros metas",
@@ -22,7 +21,6 @@
     "weeklyPhoto": "Savaitės nuotrauka",
     "checkIn": "Savijauta",
     "allDone": "Viskas atlikta",
-    "notDone": "Neatlikta",
     "save": "Išsaugoti",
     "cancel": "Atšaukti",
     "delete": "Ištrinti",
@@ -35,8 +33,6 @@
     "skin": "Oda",
     "hair": "Plaukai",
     "skinAndHair": "Oda + plaukai",
-    "today": "Šiandien",
-    "yesterday": "Vakar",
     "tags": {
       "calm": "Rami",
       "glow": "Švytinti",
@@ -55,7 +51,6 @@
       "avoid": "Vengti"
     },
     "everyDay": "Kasdien",
-    "best": "Geriausia {{days}}",
     "stepOf": "{{index}} žingsnis iš {{count}}",
     "discardTitle": "Atmesti pakeitimus?",
     "discardBody": "Pakeitimai bus prarasti.",
