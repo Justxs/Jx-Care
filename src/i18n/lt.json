@@ -847,7 +847,42 @@
     }
   },
   "progress": {},
-  "condition": {},
+  "condition": {
+    "hairTags": {
+      "shiny": "Blizga",
+      "frizzy": "Pasišiaušę",
+      "oily_roots": "Riebios šaknys",
+      "dry_ends": "Sausi galiukai",
+      "flaky_scalp": "Pleiskanoja galvos oda"
+    },
+    "checkIn": {
+      "question": "Kaip šiandien jūsų oda?",
+      "hairAndNote": "Plaukai ir pastaba"
+    },
+    "sheet": {
+      "title": "Būklės žurnalas",
+      "date": "Data",
+      "switch": "Oda ar plaukai",
+      "tags": {
+        "skin": "Odos žymos",
+        "hair": "Plaukų žymos"
+      },
+      "note": {
+        "skin": "Pastaba apie odą",
+        "hair": "Pastaba apie plaukus"
+      },
+      "notePlaceholder": "Kas verta įsiminti",
+      "noteCount": "{{used}} iš {{max}}"
+    },
+    "day": {
+      "title": "Būklės žurnalas",
+      "log": "Pažymėkite, kokia buvo oda",
+      "editLabel": "Redaguoti būklės žurnalą",
+      "noTags": "be žymų"
+    },
+    "legend": "Legenda: {{states}}",
+    "spokenList": "{{items}} ir {{last}}"
+  },
   "settings": {
     "title": "Nustatymai",
     "groups": {

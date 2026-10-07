@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { EmptyState } from '@/components/ui/empty-state';
 import { ScreenHeader } from '@/components/ui/screen-header';
+import { ConditionDaySection } from '@/features/condition/components/ConditionDaySection';
 import { useFormat } from '@/i18n/useFormat';
 import { isValidDay } from '@/lib/appDay';
 
@@ -36,8 +37,9 @@ export function DayDetailScreen() {
         ) : (
           <EmptyState icon="calendar" title={t('calendar.day.invalid')} />
         )}
-        {/* Task 033: hair tasks done. Task 038: condition log. Task 039: product notes.
-            Task 037: the weekly photo thumbnail. */}
+        {/* Task 033: hair tasks done. */}
+        {day ? <ConditionDaySection day={day} /> : null}
+        {/* Task 039: product notes. Task 037: the weekly photo thumbnail. */}
       </ScrollView>
     </SafeAreaView>
   );

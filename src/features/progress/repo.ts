@@ -1,9 +1,8 @@
 import { and, asc, desc, eq, gte, inArray, lt, lte, or } from 'drizzle-orm';
 
 import type { Db } from '@/db';
-import { hairTags, photoAngles, skinTags, type ProgressArea, type TimeOfDay } from '@/db/enums';
+import { photoAngles, type ProgressArea, type TimeOfDay } from '@/db/enums';
 import {
-  conditionLog,
   hairLog,
   hairTask,
   product,
@@ -14,6 +13,7 @@ import {
   routineStep,
   type ProgressPhoto,
 } from '@/db/schema';
+import { conditionSummary } from '@/features/condition/repo';
 import { addDays, appDay, daysBetween, minDay, momentOf, weekStart as weekOf } from '@/lib/appDay';
 import { groupBy, type RoutineLite, type StepLite } from '@/lib/schedule';
 import { createSkinIndex, groupComplete } from '@/lib/streak';
@@ -493,28 +493,6 @@ function productChanges(
     .map((p) => ({ ...p, day: p.day as string }));
 }
 
-function conditionSummary(
-  db: Db,
-  area: ProgressArea,
-  from: string,
-  to: string,
-): WeekContext['condition'] {
-  const logs = db
-    .select({ states: conditionLog.states })
-    .from(conditionLog)
-    .where(and(eq(conditionLog.area, area), gte(conditionLog.day, from), lte(conditionLog.day, to)))
-    .all();
-  const counts = new Map<string, number>();
-  for (const log of logs)
-    for (const s of new Set(log.states)) counts.set(s, (counts.get(s) ?? 0) + 1);
-  const order: readonly string[] = area === 'hair' ? hairTags : skinTags;
-  const rank = (tag: string) => (order.includes(tag) ? order.indexOf(tag) : order.length);
-  const tags = [...counts.entries()]
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count || rank(a.tag) - rank(b.tag) || a.tag.localeCompare(b.tag));
-  return { daysLogged: logs.filter((l) => l.states.length > 0).length, tags };
-}
-
 /**
  * C6 "What changed this week" for the week starting `weekStart`: routines done out of due per
  * time of day (skin) or hair tasks done (hair), products started (opened) and stopped
@@ -536,6 +514,6 @@ export function weekContext(
     hairTasks: area === 'hair' && days.length > 0 ? hairCounts(db, from, to) : [],
     started: productChanges(db, area, product.openedAt, from, end),
     stopped: productChanges(db, area, product.archivedAt, from, end),
-    condition: days.length > 0 ? conditionSummary(db, area, from, to) : { daysLogged: 0, tags: [] },
+    condition: days.length > 0 ? conditionSummary(db, from, to)[area] : { daysLogged: 0, tags: [] },
   };
 }

@@ -214,7 +214,7 @@ describe('TodayScreen routine cards', () => {
     seedRoutine(app.db, { name: 'Evening', steps: [null] });
     await renderToday(app);
     // Nothing expired: Expiring soon comes after Hair due.
-    expect(sectionKeys()).toEqual(['routines', 'hair', 'expiring']);
+    expect(sectionKeys()).toEqual(['routines', 'hair', 'expiring', 'checkIn']);
 
     const spf = seedProduct(app.db, { name: 'SPF 50 fluid', expiresAt: '2026-10-02' });
     seedRoutine(app.db, { name: 'Morning', timeOfDay: 'morning', steps: [spf, null] });
@@ -224,7 +224,7 @@ describe('TodayScreen routine cards', () => {
 
     const morning = within(await screen.findByTestId('routine-card-morning'));
     expect(morning.getByText('SPF 50 fluid expired 2 Oct')).toBeTruthy();
-    expect(sectionKeys()).toEqual(['routines', 'expiring', 'hair']);
+    expect(sectionKeys()).toEqual(['routines', 'expiring', 'hair', 'checkIn']);
     // The expired row's badge carries the date, and its date line doesn't repeat it.
     expect(screen.getAllByText('Expired 2 Oct')).toHaveLength(1);
 
@@ -300,7 +300,7 @@ describe('TodayScreen first run', () => {
     expect(screen.getByText('0 of 3')).toBeTruthy();
     // No streak chips or routine cards until a routine exists.
     expect(screen.queryByRole('button', { name: /Skin streak/ })).toBeNull();
-    expect(sectionKeys()).toEqual(['setup']);
+    expect(sectionKeys()).toEqual(['setup', 'checkIn']);
     expect(screen.getByText('Optional')).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Add a product' }));
@@ -327,7 +327,7 @@ describe('TodayScreen first run', () => {
     expect(await screen.findByText('2 of 3')).toBeTruthy();
     // The routine now shows with its streak chip, and the setup card keeps the filled button.
     expect(screen.getByRole('button', { name: /Skin streak/ })).toBeTruthy();
-    expect(sectionKeys()).toEqual(['setup', 'routines']);
+    expect(sectionKeys()).toEqual(['setup', 'routines', 'checkIn']);
     await fireEvent.press(screen.getByRole('button', { name: 'Set up hair care' }));
     expect(router.push).toHaveBeenLastCalledWith('/routines?segment=hair&setup=1');
   });
@@ -344,7 +344,8 @@ describe('TodayScreen first run', () => {
 
     await act(async () => appStore.setState((s) => ({ ...s, activeDay: TUE })));
     await waitFor(() => expect(screen.queryByText("You're set")).toBeNull());
-    await waitFor(() => expect(sectionKeys()).toEqual(['routines']));
+    // The new day's queries load first (Expiring soon holds its place until they do).
+    await waitFor(() => expect(sectionKeys()).toEqual(['routines', 'checkIn']));
 
     // A fresh start on the same day: See today hides it at once.
     saveSettings(app.db, { setupDoneAt: null });

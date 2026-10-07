@@ -793,7 +793,42 @@
     }
   },
   "progress": {},
-  "condition": {},
+  "condition": {
+    "hairTags": {
+      "shiny": "Shiny",
+      "frizzy": "Frizzy",
+      "oily_roots": "Oily roots",
+      "dry_ends": "Dry ends",
+      "flaky_scalp": "Flaky scalp"
+    },
+    "checkIn": {
+      "question": "How's your skin today?",
+      "hairAndNote": "Hair and note"
+    },
+    "sheet": {
+      "title": "Condition log",
+      "date": "Date",
+      "switch": "Skin or hair",
+      "tags": {
+        "skin": "Skin tags",
+        "hair": "Hair tags"
+      },
+      "note": {
+        "skin": "Skin note",
+        "hair": "Hair note"
+      },
+      "notePlaceholder": "Anything worth remembering",
+      "noteCount": "{{used}} of {{max}}"
+    },
+    "day": {
+      "title": "Condition log",
+      "log": "Log how your skin was",
+      "editLabel": "Edit condition log",
+      "noTags": "no tags"
+    },
+    "legend": "Legend: {{states}}",
+    "spokenList": "{{items}} and {{last}}"
+  },
   "settings": {
     "title": "Settings",
     "groups": {

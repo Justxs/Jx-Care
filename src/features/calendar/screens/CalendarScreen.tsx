@@ -12,6 +12,7 @@ import { ToggleGroup } from '@/components/ui/toggle-group';
 import { appStore } from '@/state/app';
 import { motion } from '@/theme/motion';
 
+import { ConditionMonthView } from '../components/ConditionMonthView';
 import { ProgressPhotosRow } from '../components/ProgressPhotosRow';
 import { SkinCalendar } from '../components/SkinCalendar';
 import { monthOf } from '../month';
@@ -20,8 +21,8 @@ export type CalendarView = 'skin' | 'hair' | 'condition';
 
 /**
  * C1 Calendar: the title and the Skin / Hair / Condition switch stay put; the view below
- * cross-fades. The month and the selected day are shared by the views. Hair (task 033) and
- * Condition (task 038) replace their placeholders with a view built on `MonthGrid`.
+ * cross-fades. The month and the selected day are shared by the views. Hair (task 033) replaces
+ * its placeholder with a view built on `MonthGrid`, as Condition (task 038) did.
  */
 export function CalendarScreen() {
   const { t } = useTranslation();
@@ -70,11 +71,15 @@ export function CalendarScreen() {
               selectedDay={selectedDay}
               onDayPress={openDay}
             />
-          ) : (
-            <ViewPlaceholder
-              label={view === 'hair' ? t('calendar.views.hair') : t('calendar.views.condition')}
-              task={view === 'hair' ? '033' : '038'}
+          ) : view === 'condition' ? (
+            <ConditionMonthView
+              month={month}
+              onMonthChange={setMonth}
+              selectedDay={selectedDay}
+              onDayPress={openDay}
             />
+          ) : (
+            <ViewPlaceholder label={t('calendar.views.hair')} task="033" />
           )}
         </Animated.View>
       </View>
@@ -82,7 +87,7 @@ export function CalendarScreen() {
   );
 }
 
-/** Stands in for the Hair and Condition views until their tasks build them. */
+/** Stands in for the Hair view until task 033 builds it. */
 function ViewPlaceholder({ label, task }: { label: string; task: string }) {
   const { t } = useTranslation();
   return (

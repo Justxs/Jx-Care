@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { SkinCheckIn } from '@/features/condition/components/SkinCheckIn';
 import { useToBuyCount } from '@/features/shopping/api';
 import type { Streak } from '@/lib/streak';
 
@@ -37,5 +38,5 @@ export function useWeeklyPhotoSlot(): ReactNode {
 
 /** Check-in "How's your skin today?" chips and "Hair and note" (task 038). */
 export function useSkinCheckInSlot(): ReactNode {
-  return null;
+  return <SkinCheckIn />;
 }
