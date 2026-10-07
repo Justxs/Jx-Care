@@ -63,4 +63,14 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Form values vs stored values.** `productSchema(today)` takes the form's strings (price "12,99", size "50,5", months "12", the ingredient box as one text) and outputs stored values (`price` in cents, `ingredients` as clean names via `parseIngredientLines`). Comma or dot both work as the decimal mark. Price allows at most 2 decimals. `unit` is dropped when there is no size.
+- **Filtering and sorting happen in JS** after one `select` of active products: status and avoid are computed, and a person has tens of products, not thousands. Name sort uses `Intl.Collator(locale, { sensitivity: 'base', numeric: true })`; the hooks pass the app language as locale.
+- **Avoid** is computed from `avoid_item` + `product_ingredient` + each ingredient's group with `avoidMatches`, so it works as soon as task 029/030 write avoid items.
+- **Used in** comes from `addUsedInSource(fn)`: tasks 022 and 031 register a function returning `{ kind, id, name }[]`.
+- **Undo for Mark finished**: `markFinished` returns the previous `archivedAt`; `markFinishedMany` returns `{ id, archivedAt }[]`; `undoFinished(db, previous)` (hook `useUndoFinished`) puts them back.
+- **Delete** throws `ActiveProductDeleteError` for an active product. The photo is deleted through the injected `deleteFile` (the app passes `deletePhotoFile` from `photoFiles.ts`, expo-file-system `File`), only when no other product shares the same `photoUri` (Duplicate copies the photo URI), and a failing file delete doesn't undo the row delete. Ingredient rows stay.
+- **Duplicate** takes `today` (the app day) for `purchasedAt`; copies the photo URI, size, price, expiry date and period after opening; clears opened, archived, rating, would buy again and notes.
+- **Archive cost sort**: highest cost per day first, products without a cost (no price or no opened date) last, then by finish date.
+- **Brand suggestions** skip a brand equal to what is already typed and are ordered by the most recently updated product.
+- **Query keys** append `today` and `warnDays` to every list/detail key that shows a status. Mutations invalidate `qk.products.all` and every `['today', …]` key; create, update and delete also invalidate `qk.ingredients.all` and `qk.conflicts.all`. Each mutation calls `onProductChanged(id)` (no-op until task 021). `useProductsForPicker` is here too for tasks 024 and 034.
+- Added `Tx` and `DbOrTx` to `src/db/types.ts` for helpers that run inside a transaction.

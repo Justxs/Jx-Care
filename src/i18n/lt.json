@@ -119,7 +119,23 @@
   "onboarding": {},
   "lock": {},
   "today": {},
-  "products": {},
+  "products": {
+    "errors": {
+      "nameRequired": "Įveskite pavadinimą.",
+      "nameLong": "Pavadinimas turi būti trumpesnis nei 80 simbolių.",
+      "brandLong": "Prekės ženklas turi būti trumpesnis nei 80 simbolių.",
+      "areaRequired": "Pasirinkite odą, plaukus arba abu.",
+      "sizeNumber": "Įveskite dydį skaičiumi, pvz., 50.",
+      "sizePositive": "Dydis turi būti didesnis nei 0.",
+      "priceNumber": "Įveskite kainą skaičiumi, pvz., 12,99.",
+      "priceNegative": "Kaina negali būti mažesnė nei 0.",
+      "date": "Pasirinkite datą.",
+      "openedFuture": "Atidarymo data negali būti vėlesnė nei šiandien.",
+      "monthsNumber": "Įveskite mėnesius sveikuoju skaičiumi.",
+      "monthsRange": "Įveskite nuo 1 iki 120 mėnesių.",
+      "notesLong": "Pastabos turi būti trumpesnės nei 500 simbolių."
+    }
+  },
   "shopping": {},
   "routines": {},
   "hair": {},

@@ -1,6 +1,6 @@
-import type { Db } from './types';
+import type { Db, DbOrTx, Tx } from './types';
 
-export type { Db };
+export type { Db, DbOrTx, Tx };
 
 /**
  * The database the query hooks use. The app sets the expo-sqlite database at start-up

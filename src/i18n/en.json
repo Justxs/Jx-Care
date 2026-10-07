@@ -113,7 +113,23 @@
   "onboarding": {},
   "lock": {},
   "today": {},
-  "products": {},
+  "products": {
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "nameLong": "Keep the name under 80 characters.",
+      "brandLong": "Keep the brand under 80 characters.",
+      "areaRequired": "Choose skin, hair or both.",
+      "sizeNumber": "Enter the size as a number, like 50.",
+      "sizePositive": "Enter a size above 0.",
+      "priceNumber": "Enter the price as a number, like 12.99.",
+      "priceNegative": "The price can't be below 0.",
+      "date": "Choose a date.",
+      "openedFuture": "The opened date can't be after today.",
+      "monthsNumber": "Enter the months as a whole number.",
+      "monthsRange": "Enter between 1 and 120 months.",
+      "notesLong": "Keep notes under 500 characters."
+    }
+  },
   "shopping": {},
   "routines": {},
   "hair": {},
