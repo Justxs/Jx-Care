@@ -88,12 +88,8 @@ export type SaveRoutineInput = RoutineInput & { id?: number | null; active?: boo
 
 // ─── Reads ──────────────────────────────────────────────────────────────────
 
-function stepProduct(
-  p: typeof product.$inferSelect | null,
-  today: string,
-  warnDays: number,
-): StepProduct | null {
-  if (!p) return null;
+/** A product with its expiry status on `today`; also the R4 picker's Recent rows. */
+function stepProduct(p: typeof product.$inferSelect, today: string, warnDays: number): StepProduct {
   const status = expiryStatus(p, today, warnDays);
   return {
     id: p.id,
@@ -125,7 +121,7 @@ function loadSteps(
     .all()
     .map(({ step, product: p }) => {
       const { createdAt: _c, updatedAt: _u, ...rest } = step;
-      return { ...rest, product: stepProduct(p, today, warnDays) };
+      return { ...rest, product: p ? stepProduct(p, today, warnDays) : null };
     });
 }
 
@@ -364,17 +360,7 @@ export function recentStepProducts(
   for (const id of ids) {
     const p = rows.get(id);
     if (!p || p.archivedAt !== null || (p.area !== area && p.area !== 'both')) continue;
-    out.push({
-      id: p.id,
-      name: p.name,
-      brand: p.brand,
-      area: p.area,
-      category: p.category,
-      photoUri: p.photoUri,
-      status: expiryStatus(p, today, warnDays),
-      daysLeft: daysLeft(p, today),
-      effectiveExpiry: effectiveExpiry(p),
-    });
+    out.push(stepProduct(p, today, warnDays));
     if (out.length === limit) break;
   }
   return out;
