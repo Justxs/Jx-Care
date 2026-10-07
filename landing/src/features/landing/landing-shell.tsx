@@ -75,8 +75,6 @@ function LandingDoors() {
             <Mail aria-hidden="true" />
             {t('close.suggestAction')}
           </a>
-          {/* Without a mail app the button does nothing, so the address is there to copy. */}
-          <p className="mt-2 text-label text-ink-muted select-all">{SUGGESTION_EMAIL}</p>
         </Door>
         <Door title={t('close.supportTitle')} text={t('close.supportText')}>
           <ExternalLink href={SUPPORT_URL} className={outline}>
