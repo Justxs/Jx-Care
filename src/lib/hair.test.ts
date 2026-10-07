@@ -4,6 +4,8 @@ import {
   hairTaskState,
   logTiming,
   nextDue,
+  nextScheduledAfter,
+  previousScheduledBefore,
   quickSetupToTask,
   type HairLogLite,
   type HairTaskLite,
@@ -43,6 +45,22 @@ describe('nextDue', () => {
   });
   it('is the creation day for a task never done', () => {
     expect(nextDue(wash({ lastDoneAt: null }))).toBe('2026-09-01');
+  });
+});
+
+describe('previousScheduledBefore', () => {
+  it('steps back one interval', () => {
+    expect(previousScheduledBefore(wash(), '2026-10-09')).toBe('2026-10-06');
+  });
+  it('finds the set day before, which gives the same next due day', () => {
+    const t = wash({ scheduleKind: 'days', daysOfWeek: [1, 4] });
+    expect(previousScheduledBefore(t, '2026-10-08')).toBe('2026-10-05');
+    expect(nextScheduledAfter(t, '2026-10-05')).toBe('2026-10-08');
+    expect(previousScheduledBefore(t, '2026-10-05')).toBe('2026-10-01');
+  });
+  it('falls back to a week for set days with no days', () => {
+    const t = wash({ scheduleKind: 'days', daysOfWeek: [] });
+    expect(previousScheduledBefore(t, '2026-10-08')).toBe('2026-10-01');
   });
 });
 

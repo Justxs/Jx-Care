@@ -303,7 +303,25 @@
   },
   "shopping": {},
   "routines": {},
-  "hair": {},
+  "hair": {
+    "defaultNames": {
+      "wash": "Plovimas",
+      "trim": "Kirpimas"
+    },
+    "errors": {
+      "kindRequired": "Pasirinkite plovimą arba kitą priežiūrą.",
+      "nameRequired": "Įveskite pavadinimą.",
+      "nameLong": "Pavadinimas turi būti ne ilgesnis nei 40 simbolių.",
+      "date": "Pasirinkite datą.",
+      "lastDoneFuture": "Paskutinio karto data negali būti vėlesnė nei šiandien.",
+      "doneFuture": "Pasirinkite šiandieną arba ankstesnę dieną.",
+      "intervalNumber": "Įveskite sveikąjį skaičių, pvz., 3.",
+      "intervalRange": "Pasirinkite nuo 1 iki 365 dienų (52 savaičių).",
+      "daysRequired": "Pasirinkite bent vieną dieną.",
+      "time": "Pasirinkite laiką.",
+      "noteLong": "Pastaba turi būti ne ilgesnė nei 280 simbolių."
+    }
+  },
   "calendar": {},
   "progress": {},
   "condition": {},

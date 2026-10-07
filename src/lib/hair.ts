@@ -33,6 +33,22 @@ export function nextScheduledAfter(task: HairTaskLite, after: string): string {
   return addDays(after, Math.max(1, task.everyNDays ?? 1));
 }
 
+/**
+ * The latest scheduled day strictly before `before`: the earliest "last done" day that still
+ * gives `before` as the next due day. Used to put a schedule back when its latest log is deleted.
+ */
+export function previousScheduledBefore(task: HairTaskLite, before: string): string {
+  if (task.scheduleKind === 'days') {
+    const days = task.daysOfWeek ?? [];
+    for (let i = 1; i <= 7 && days.length > 0; i++) {
+      const d = addDays(before, -i);
+      if (days.includes(weekdayOf(d))) return d;
+    }
+    return addDays(before, -7);
+  }
+  return addDays(before, -Math.max(1, task.everyNDays ?? 1));
+}
+
 /** Next due day: after the last time it was done; a task never done is due on its creation day. */
 export function nextDue(task: HairTaskLite): string {
   if (!task.lastDoneAt) return task.createdDay;

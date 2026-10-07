@@ -279,7 +279,25 @@
   },
   "shopping": {},
   "routines": {},
-  "hair": {},
+  "hair": {
+    "defaultNames": {
+      "wash": "Wash",
+      "trim": "Trim"
+    },
+    "errors": {
+      "kindRequired": "Choose wash or other care.",
+      "nameRequired": "Enter a name.",
+      "nameLong": "Keep the name to 40 characters or fewer.",
+      "date": "Choose a date.",
+      "lastDoneFuture": "The last done date can't be after today.",
+      "doneFuture": "Choose today or an earlier day.",
+      "intervalNumber": "Enter a whole number, like 3.",
+      "intervalRange": "Choose between 1 and 365 days (52 weeks).",
+      "daysRequired": "Choose at least one day.",
+      "time": "Choose a time.",
+      "noteLong": "Keep the note to 280 characters or fewer."
+    }
+  },
   "calendar": {},
   "progress": {},
   "condition": {},

@@ -68,7 +68,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 028 | [Skin calendar and day detail](028-skin-calendar-day-detail.md) | 007, 022, 010 | C1 skin, C2 | todo |
 | 029 | [Ingredients, groups and conflict rules](029-ingredients-conflict-rules.md) | 011, 012, 022 | S2, S3 | todo |
 | 030 | [Conflict warnings and avoid list](030-conflict-warnings-avoid-list.md) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | todo |
-| 031 | [Hair data](031-hair-data.md) | 005, 007 | R5, T3 | todo |
+| 031 | [Hair data](031-hair-data.md) | 005, 007 | R5, T3 | done |
 | 032 | [Hair setup and hair task editor](032-hair-setup-editor.md) | 023, 031 | R1 hair, R5 | todo |
 | 033 | [Hair done, hair calendar and hair reminders](033-hair-done-calendar-reminders.md) | 020, 025, 028, 032 | T3, C1 hair | todo |
 | 034 | [Shopping list](034-shopping-list.md) | 014, 015 | P6, P7, sequence 7 | todo |
