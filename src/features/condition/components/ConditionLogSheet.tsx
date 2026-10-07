@@ -12,13 +12,7 @@ import type { ConditionArea } from '@/db/enums';
 import { appStore } from '@/state/app';
 
 import { conditionKeys, useConditionDay, useSaveConditionDay } from '../api';
-import {
-  CONDITION_NOTE_MAX,
-  cleanEntry,
-  normaliseStates,
-  type ConditionDay,
-  type ConditionEntry,
-} from '../tags';
+import { CONDITION_NOTE_MAX, cleanEntry, type ConditionDay, type ConditionEntry } from '../tags';
 import { ConditionChips } from './ConditionChips';
 
 type Side = { states: string[]; note: string };
@@ -87,15 +81,8 @@ export function ConditionLogSheet({ open, onClose, day, area = 'skin' }: Conditi
     setDraft((d) => ({ ...d, [side]: { ...d[side], ...next } }));
 
   const onSave = () => {
-    if (!ready) return;
-    save.mutate(
-      {
-        day: date,
-        skin: { states: normaliseStates('skin', draft.skin.states), note: draft.skin.note },
-        hair: { states: normaliseStates('hair', draft.hair.states), note: draft.hair.note },
-      },
-      { onSuccess: onClose },
-    );
+    // Saving cleans each side (standard tag order, trimmed note) and drops an empty one.
+    if (ready) save.mutate({ day: date, ...draft }, { onSuccess: onClose });
   };
 
   return (
