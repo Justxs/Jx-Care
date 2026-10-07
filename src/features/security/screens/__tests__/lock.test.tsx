@@ -499,7 +499,7 @@ describe('ResetDialog from Settings', () => {
     expect(await screen.findByText('Enter your PIN')).toBeTruthy();
   });
 
-  it('asks for the PIN again when the check finishes after Cancel', async () => {
+  it('ignores a PIN check that finishes after Cancel, even when opened again', async () => {
     const app = await setUp();
     let finish: (() => void) | undefined;
     const verify = jest.spyOn(pinService, 'verifyPin').mockImplementation(
@@ -513,8 +513,13 @@ describe('ResetDialog from Settings', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
     await fireEvent.changeText(await screen.findByLabelText('PIN'), '2580');
     await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    // Opened again before the first check finishes.
+    await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
     await act(async () => finish?.());
     verify.mockRestore();
+    expect(screen.getByText('Enter your PIN')).toBeTruthy();
+    expect(screen.queryByText('Reset app and delete all data?')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
 
     await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
     expect(await screen.findByText('Enter your PIN')).toBeTruthy();

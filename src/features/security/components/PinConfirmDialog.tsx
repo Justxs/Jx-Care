@@ -65,6 +65,14 @@ function PinConfirmBody({
   const [lockedUntil, setLockedUntil] = useState(0);
   const busy = useRef(false);
   const left = useCountdown(lockedUntil);
+  // A check that finishes after the dialog closed (Cancel, then maybe opened again) is ignored.
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -87,6 +95,7 @@ function PinConfirmBody({
     busy.current = true;
     const result = await service.verifyPin(digits, Date.now());
     busy.current = false;
+    if (!mounted.current) return;
     if (result.ok) {
       onConfirmed();
       return;
