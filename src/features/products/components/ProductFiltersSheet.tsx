@@ -53,7 +53,10 @@ export function ProductFiltersSheet({
           <Button
             variant="ghost"
             block={false}
-            onPress={() => setDraft({ ...defaultProductFilters, sort: draft.sort })}
+            // The sheet's filters only: the search field and the sort stay as they are.
+            onPress={() =>
+              setDraft({ ...defaultProductFilters, search: draft.search, sort: draft.sort })
+            }
           >
             {t('products.resetFilters')}
           </Button>

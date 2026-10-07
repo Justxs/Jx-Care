@@ -139,6 +139,25 @@ describe('ProductsScreen', () => {
     expect(productListStore.state.filters).toMatchObject({ area: 'hair', sort: 'name' });
   });
 
+  it('keeps the search when the filters sheet is reset', async () => {
+    const app = setup();
+    createProduct(app.db, input({ name: 'Hair wash', area: 'hair' }));
+    createProduct(app.db, input({ name: 'Hair oil', area: 'hair' }));
+    createProduct(app.db, input({ name: 'Face wash', area: 'skin' }));
+    productListStore.setState(() => ({
+      filters: { ...defaultProductFilters, area: 'hair', search: 'wash' },
+    }));
+    await app.render(<ProductsScreen />);
+    await waitFor(() => expect(rowNames()).toEqual(['Hair wash']));
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Filters, 1 on' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Reset filters' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Show 2 products' }));
+    await wait(0);
+    expect(rowNames()).toEqual(['Face wash', 'Hair wash']);
+    expect(screen.getByLabelText('Search products')).toHaveProp('value', 'wash');
+  });
+
   it('filters by status and category', async () => {
     const app = setup();
     createProduct(app.db, input({ name: 'Gone', expiresAt: '2026-10-01', category: 'serum' }));
