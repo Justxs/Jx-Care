@@ -5,16 +5,10 @@
   "trailingComma": "all",
   "sortPackageJson": false,
   "ignorePatterns": [
-    ".claude",
-    "landing",
     "node_modules",
-    ".expo",
     "dist",
-    "coverage",
-    "docs",
-    "assets",
-    "src/db/migrations",
-    ".rnstorybook/storybook.requires.ts",
+    "storybook-static",
+    "public",
     "**/*.md",
     "package-lock.json"
   ]

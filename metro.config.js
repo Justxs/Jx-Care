@@ -8,6 +8,13 @@ const config = getDefaultConfig(__dirname);
 // Drizzle migrations are .sql files bundled into the app.
 config.resolver.sourceExts.push('sql');
 
+// The website in landing/ is its own package with its own node_modules; keep it out of the app.
+const landingDir = path.resolve(__dirname, 'landing').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+config.resolver.blockList = [
+  ...[config.resolver.blockList ?? []].flat(),
+  new RegExp(`^${landingDir}[/\\\\]`),
+];
+
 // On-device Storybook (docs/storybook.md): only with EXPO_PUBLIC_STORYBOOK_ENABLED=true
 // (`npm run storybook`). Otherwise every Storybook module resolves to an empty one.
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';

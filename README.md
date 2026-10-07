@@ -31,6 +31,10 @@ Version is 1.0.0; build numbers are set by EAS (`appVersionSource: remote`).
 
 The first build asks to create the EAS project and link it (it writes the project id into `app.json`); say yes and commit that change. After installing a build, walk [docs/device-checklist.md](docs/device-checklist.md).
 
+## Website
+
+The landing page lives in [landing/](landing/README.md), a separate Vite + React package (`cd landing && npm install && npm run dev`).
+
 ## Build plan
 
 The work is split into tasks in [docs/tasks/README.md](docs/tasks/README.md). What to build is in [docs/feature-spec.md](docs/feature-spec.md); how it looks is in [DESIGN.md](DESIGN.md) and [docs/design/](docs/design/).

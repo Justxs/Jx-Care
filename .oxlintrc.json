@@ -43,6 +43,7 @@
   },
   "ignorePatterns": [
     ".claude",
+    "landing",
     "node_modules",
     ".expo",
     "dist",

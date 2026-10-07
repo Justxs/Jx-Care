@@ -1,0 +1,351 @@
+{
+  "meta": {
+    "title": "Jx-Care: odos ir plaukų priežiūra jūsų telefone",
+    "description": "Jx-Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare ir kaip oda keičiasi kas savaitę. Nemokama, privati, lietuvių ir anglų kalbomis."
+  },
+  "skip": "Pereiti prie turinio",
+  "opensInNewTab": "atsidaro naujame skirtuke",
+  "nav": {
+    "label": "Pagrindinis",
+    "home": "Jx-Care pradžia",
+    "features": "Funkcijos",
+    "privacy": "Privatumas"
+  },
+  "theme": {
+    "toDark": "Įjungti tamsią temą",
+    "toLight": "Įjungti šviesią temą"
+  },
+  "language": {
+    "switchTo": "English",
+    "label": "LT, perjungti į anglų kalbą"
+  },
+  "hero": {
+    "title": "Žinokite, ką naudoti šiandien",
+    "lead": "Jx-Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare, kada plauti plaukus ir kaip oda keičiasi kas savaitę. Viskas lieka jūsų telefone, apsaugota PIN kodu.",
+    "primary": "Kas viduje",
+    "source": "Žiūrėti GitHub",
+    "soon": "Netrukus iOS ir Android. App Store ir Google Play jos dar nėra."
+  },
+  "sample": {
+    "tag": "Pavyzdys",
+    "phoneLabel": "Ekranas „Šiandien“ su pavyzdiniais duomenimis",
+    "greeting": "Labas rytas",
+    "streaks": "Serijos",
+    "skinStreak": "12 oda",
+    "skinStreakLabel": "Odos serija: 12 dienų",
+    "hairStreak": "4 plaukai",
+    "hairStreakLabel": "Plaukų serija: 4 dienos",
+    "morning": "Rytas",
+    "evening": "Vakaras B",
+    "stepsDone": "Atlikta 2 iš 4",
+    "start": "Pradėti",
+    "allDone": "Viskas atlikta",
+    "cleanser": "Švelnus prausiklis",
+    "vitaminC": "Vitamino C serumas",
+    "moisturiser": "Drėkiklis",
+    "sunscreen": "Apsauga nuo saulės SPF 50",
+    "drops": "3 lašai",
+    "exfoliant": "AHA šveitiklis",
+    "retinol": "Retinolio serumas",
+    "conflict": "Konfliktas",
+    "expiring": "Baigia galioti",
+    "expiresIn": "Galioja dar 12 dienų",
+    "hairWash": "Plaukų plovimo diena",
+    "hairWashWith": "Šampūnas ir kondicionierius",
+    "tabs": {
+      "today": "Šiandien",
+      "products": "Produktai",
+      "routines": "Rutinos",
+      "calendar": "Kalendorius",
+      "settings": "Nustatymai"
+    }
+  },
+  "showcase": {
+    "status": {
+      "ok": "Gerai",
+      "expiring": "Baigia galioti",
+      "expired": "Nebegalioja",
+      "unopened": "Neatidaryta",
+      "avoid": "Vengti"
+    },
+    "area": {
+      "skin": "Oda",
+      "hair": "Plaukai",
+      "both": "Oda + plaukai"
+    },
+    "products": {
+      "title": "Mano produktai",
+      "vitaminC": {
+        "name": "Vitamino C serumas",
+        "meta": "Atidaryta 04-18 · 6 mėn. po atidarymo"
+      },
+      "shampoo": {
+        "name": "Atkuriamasis šampūnas",
+        "meta": "Galioja iki 2027-03-01"
+      },
+      "argan": {
+        "name": "Arganų aliejus",
+        "meta": "Nebegalioja nuo 09-30"
+      },
+      "sunscreen": {
+        "name": "Apsauga nuo saulės SPF 50",
+        "meta": "Data ant pakuotės 2027-08-14"
+      }
+    },
+    "streak": {
+      "title": "Odos serija",
+      "inARow": "dienų iš eilės",
+      "best": "Geriausia 21 diena",
+      "weekLabel": "Paskutinės 7 dienos: atlikta 6, šiandien dar liko"
+    },
+    "conflict": {
+      "title": "Retinolis konfliktuoja su AHA.",
+      "text": "Abu yra „Vakaras B“ antradieniais. Išsaugoti vis tiek galite."
+    },
+    "detail": {
+      "timeUsed": "Kiek laiko jau praėjo iki galiojimo pabaigos",
+      "opened": {
+        "label": "Atidaryta",
+        "value": "04-18"
+      },
+      "lasts": {
+        "label": "Po atidarymo",
+        "value": "6 mėn."
+      },
+      "expires": {
+        "label": "Galioja iki",
+        "value": "10-18"
+      },
+      "costPerDay": {
+        "label": "Kaina",
+        "value": "18,90 € · 30 ml"
+      }
+    },
+    "routine": {
+      "cleanser": "Švelnus prausiklis",
+      "acidToner": "AHA toneris",
+      "vitaminC": "Vitamino C serumas",
+      "mask": "Drėkinamoji kaukė",
+      "everyTime": "Kiekvieną kartą",
+      "everyFewDays": "Kas 3 dienas",
+      "sundays": "Sekmadieniais",
+      "wait": "Laukti 1 min."
+    },
+    "hair": {
+      "title": "Plaukų priežiūra",
+      "nextWash": "Kitas plovimas: ketv., 10-08",
+      "everyFewDays": "Kas 3 dienas",
+      "washLabel": "Plovimo ciklas: praėjo 1 iš 3 dienų",
+      "trim": "Kirpimas",
+      "everyEightWeeks": "Kas 8 savaites",
+      "lastTrim": "Paskutinis kirpimas prieš 7 savaites",
+      "trimLabel": "Kirpimo ciklas: praėjo 7 iš 8 savaičių"
+    },
+    "ingredients": {
+      "title": "Ingredientai",
+      "product": "Kūno losjonas, po vieną eilutėje",
+      "aqua": "Aqua",
+      "glycerin": "Glycerin",
+      "shea": "Taukmedžio sviestas",
+      "parfum": "Parfum",
+      "tocopherol": "Tocopherol",
+      "onAvoidList": "Vengiamų sąraše",
+      "hint": "Parfum yra jūsų vengiamų sąraše. Išsaugoti vis tiek galite."
+    },
+    "photos": {
+      "title": "Progreso nuotraukos",
+      "front": "Iš priekio",
+      "label": "Dvi savaitės odos nuotraukos greta, 09-08 ir 10-06",
+      "before": "09-08",
+      "after": "10-06",
+      "rating": "10-06 · Oda 4 iš 5 · Rami, Švytinti"
+    },
+    "shopping": {
+      "title": "Pirkinių sąrašas",
+      "toBuy": "2 nupirkti",
+      "vitaminC": "Paskutinį kartą 18,90 € · 30 ml",
+      "shampoo": "Paskutinį kartą 12,40 € · 250 ml",
+      "sunscreen": "Nupirkta · Pridėti kaip naują produktą",
+      "bought": "nupirkta"
+    }
+  },
+  "statement": {
+    "title": "Trumpai",
+    "accounts": {
+      "label": "Paskyros, kurias reikia sukurti",
+      "text": "Jokios registracijos ir jokio serverio. Produktai, rutinos ir nuotraukos saugomi jūsų telefone ir atsidaro su PIN kodu, Face ID arba piršto atspaudu."
+    },
+    "tracking": {
+      "label": "Reklamos ir sekikliai",
+      "text": "Niekas niekur nesiunčiama. Iš telefono išeina tik atsarginės kopijos failas, kai jį eksportuojate."
+    },
+    "gallery": {
+      "label": "Nuotraukos jūsų galerijoje",
+      "text": "Progreso nuotraukos lieka programėlėje, todėl niekada neatsiranda telefono galerijoje ar nuotraukų kopijose."
+    },
+    "languages": {
+      "label": "Kalbos",
+      "text": "Lietuvių ir anglų, šviesi ir tamsi tema."
+    },
+    "price": {
+      "label": "Kaina",
+      "text": "Naudotis nemokama, o kodą gali skaityti kiekvienas."
+    }
+  },
+  "features": {
+    "title": "Ką rasite viduje",
+    "lead": "Šešios sritys, vienas ekranas „Šiandien“. Jx-Care rodo tik tai, kas suplanuota, todėl rutina prie vonios lentynos trunka minutę.",
+    "example": "Pavyzdžiui:",
+    "groups": {
+      "products": "Produktai",
+      "routines": "Rutinos",
+      "hair": "Plaukai",
+      "ingredients": "Ingredientai",
+      "progress": "Progresas",
+      "shopping": "Pirkiniai"
+    },
+    "items": {
+      "shelf": {
+        "title": "Jūsų lentyna",
+        "text": "Kiekvienas produktas su prekės ženklu, nuotrauka, dydžiu, kaina, ingredientais ir ar jis odai, plaukams, ar abiem.",
+        "example": "filtruokite pagal odą ar plaukus arba rikiuokite pagal artimiausią galiojimo pabaigą."
+      },
+      "expiry": {
+        "title": "Galiojimo datos",
+        "text": "Jx-Care apskaičiuoja, kada produktas nebegalios, pagal datą ant pakuotės, atidarymo dieną ir kiek jis galioja po atidarymo.",
+        "example": "priminimas prieš 30 dienų ir ženklelis „Gerai“, „Baigia galioti“ arba „Nebegalioja“ kiekvienoje eilutėje."
+      },
+      "notes": {
+        "title": "Pastabos apie produktus",
+        "text": "Datuotos pastabos, kaip reagavo oda, įvertinimas nuo 1 iki 5 ir ar pirktumėte dar kartą.",
+        "example": "„nedidelis išbėrimas ant smakro“, užrašyta 10-03."
+      },
+      "costPerDay": {
+        "title": "Kaina per dieną",
+        "text": "Kai produktas baigiasi, Jx-Care padalija jo kainą iš dienų, kiek jį naudojote.",
+        "example": "18,90 € per 92 dienas yra 0,21 € per dieną."
+      },
+      "timeOfDay": {
+        "title": "Rytas, vakaras ar savas laikas",
+        "text": "Kiekviena rutina turi paros metą, savaitės dienas ir žingsnius iš eilės, kiekvienas susietas su produktu.",
+        "example": "Rytas: prausiklis, vitaminas C, drėkiklis, apsauga nuo saulės."
+      },
+      "alternatives": {
+        "title": "A ir B",
+        "text": "Dvi rutinos gali turėti tą patį paros metą skirtingomis dienomis. „Šiandien“ rodo tą, kuri suplanuota.",
+        "example": "Vakaras A su retinoliu pirmadieniais, trečiadieniais ir penktadieniais; Vakaras B su šveitikliu antradieniais ir ketvirtadieniais."
+      },
+      "stepSchedule": {
+        "title": "Žingsniai savo dienomis",
+        "text": "Žingsnis gali būti kiekvieną kartą, pasirinktomis dienomis arba kas kelias dienas, todėl viena rutina apima visą savaitę.",
+        "example": "veido kaukė tik sekmadieniais."
+      },
+      "player": {
+        "title": "Žymėkite eidami",
+        "text": "Pradėkite rutiną ir pažymėkite kiekvieną žingsnį arba bakstelėkite „Viskas atlikta“. Po žingsnio gali būti laukimo laikmatis.",
+        "example": "palaukti 60 sekundžių po rūgštinio tonerio."
+      },
+      "reminders": {
+        "title": "Priminimai",
+        "text": "Vietinis priminimas jūsų pasirinktu laiku. Jis tyli, jei rutina jau atlikta.",
+        "example": "„Laikas vakaro rutinai“ 21:30."
+      },
+      "washCycle": {
+        "title": "Plovimo dienos",
+        "text": "Nurodykite, kaip dažnai plaunate. Kitas plovimas skaičiuojamas nuo paskutinio, todėl anksčiau ar vėliau atliktas jį perkelia.",
+        "example": "kas 3 dienas su šampūnu, kondicionieriumi ir kauke kas antrą plovimą."
+      },
+      "otherCare": {
+        "title": "Kita priežiūra",
+        "text": "Kirpimai, dažymas ir šveitimai savo ritmu, ir kiek laiko praėjo nuo paskutinio.",
+        "example": "paskutinis kirpimas prieš 7 savaites, kitas po savaitės."
+      },
+      "streaks": {
+        "title": "Dvi serijos",
+        "text": "Atskiros odos ir plaukų serijos su geriausiu rezultatu. Diena, kai nieko nenustatyta, jų nenutraukia.",
+        "example": "„Pradėta iš naujo. Geriausias rezultatas vis dar 21 diena.“"
+      },
+      "conflicts": {
+        "title": "Konfliktai per visą dieną",
+        "text": "Jx-Care tikrina visus tą pačią dieną naudojamus produktus, rytą ir vakarą, pagal jūsų porų, kurios neturėtų susitikti, sąrašą.",
+        "example": "retinolis su AHA abiejuose žingsniuose rodo žymą „Konfliktas“."
+      },
+      "groups": {
+        "title": "Ingredientų grupės",
+        "text": "Sugrupuokite ingredientus vieną kartą ir nustatykite konfliktus tarp grupių, o ne kiekvienai porai.",
+        "example": "„Rūgštys“: glikolio, pieno ir salicilo rūgštis."
+      },
+      "avoid": {
+        "title": "Vengiamų sąrašas",
+        "text": "Ingredientai, kurių niekada nenorite. Produktas, kuriame yra toks, gauna įspėjimą ir ženklelį „Vengti“.",
+        "example": "kvapikliai arba žinomas alergenas."
+      },
+      "weeklyPhoto": {
+        "title": "Savaitės nuotrauka",
+        "text": "Kartą per savaitę nuotrauka su gaire: paskutinė nuotrauka blankiai matosi kameroje, kad sutaptų kampas ir atstumas.",
+        "example": "iš priekio, iš kairės ir iš dešinės, toje pačioje šviesoje."
+      },
+      "compare": {
+        "title": "Palyginimas",
+        "text": "Bet kurios dvi savaitės greta ir ką tarp jų pradėjote ar nustojote naudoti.",
+        "example": "prieš 4 savaites šalia šiandienos."
+      },
+      "condition": {
+        "title": "Savijauta",
+        "text": "Vienu bakstelėjimu, kaip šiandien jaučiasi oda ir plaukai, greta atliktų rutinų.",
+        "example": "Rami, Švytinti, Riebi, Sausa, Išbėrimai, Paraudimas, Niežti."
+      },
+      "buyAgain": {
+        "title": "Pirkti dar kartą",
+        "text": "Baigti ir baigiantys galioti produktai siūlomi į sąrašą. Be jūsų bakstelėjimo niekas nepridedama.",
+        "example": "sąraše matyti, kiek mokėjote ir kokio dydžio pirkote paskutinį kartą."
+      },
+      "addAsNew": {
+        "title": "Pridėti kaip naują produktą",
+        "text": "Pažymėkite nupirktą prekę, ir Jx-Care nukopijuos jos duomenis į naują produktą su šiandienos data.",
+        "example": "pavadinimas, prekės ženklas, dydis ir ingredientai, paruošti išsaugoti."
+      },
+      "share": {
+        "title": "Dalytis sąrašu",
+        "text": "Nusiųskite sąrašą paprastu tekstu ir pasiimkite į parduotuvę.",
+        "example": "sau pačiam pokalbių programėlėje."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Privatu iš esmės",
+    "lead": "Jx-Care skirta vienam žmogui viename telefone. Nėra paskyros, kurią galėtumėte prarasti, ir nėra ką sinchronizuoti.",
+    "items": {
+      "pin": {
+        "title": "PIN kodas, Face ID arba piršto atspaudas",
+        "text": "Programėlė užsirakina kaskart ją atidarius ir po minutės nebuvimo. Pamirštą PIN kodą atkursite atsakę į atkūrimo klausimą."
+      },
+      "switcher": {
+        "title": "Paslėpta programų perjungiklyje",
+        "text": "Kol užrakinta, programėlės turinys perjungiant programas būna suliejamas."
+      },
+      "photos": {
+        "title": "Nuotraukos lieka programėlėje",
+        "text": "Progreso nuotraukos saugomos pačios programėlės saugykloje ir matomos tik įvedus PIN kodą."
+      },
+      "backup": {
+        "title": "Jūsų kopija, jūsų failas",
+        "text": "Eksportuokite viską į vieną failą ir atkurkite naujame telefone. Nuotraukos įtraukiamos, tik jei pasirenkate."
+      }
+    }
+  },
+  "close": {
+    "getTitle": "Norite jos savo telefone?",
+    "getText": "Jx-Care parduotuvėse dar nėra. Sekite kodą GitHub ir sužinosite, kada atsiras.",
+    "getAction": "Sekti GitHub",
+    "buildTitle": "Susikurkite patys",
+    "buildText": "Jx-Care nemokama ir atviro kodo. GitHub vadove parašyta, kaip ją sukompiliuoti iOS arba Android.",
+    "buildAction": "Skaityti vadovą",
+    "suggestTitle": "Trūksta funkcijos?",
+    "suggestText": "Parašykite man, ką norėtumėte, kad Jx-Care darytų, ir kaip tai naudotumėte.",
+    "suggestAction": "Pasiūlyti funkciją",
+    "suggestSubject": "Jx-Care funkcijos pasiūlymas"
+  },
+  "footer": "Odos ir plaukų priežiūra jūsų telefone · Nemokama ir atviro kodo",
+  "sourceLabel": "Jx-Care GitHub"
+}

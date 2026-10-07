@@ -1,0 +1,351 @@
+{
+  "meta": {
+    "title": "Jx-Care: skin and hair care, kept on your phone",
+    "description": "Jx-Care keeps track of your skin and hair care products, when each one expires, what to use morning and evening, and how your skin changes week to week. Free, private, in Lithuanian and English."
+  },
+  "skip": "Skip to content",
+  "opensInNewTab": "opens in a new tab",
+  "nav": {
+    "label": "Main",
+    "home": "Jx-Care home",
+    "features": "Features",
+    "privacy": "Privacy"
+  },
+  "theme": {
+    "toDark": "Switch to dark theme",
+    "toLight": "Switch to light theme"
+  },
+  "language": {
+    "switchTo": "Lietuviškai",
+    "label": "EN, switch to Lithuanian"
+  },
+  "hero": {
+    "title": "Know what to put on today",
+    "lead": "Jx-Care keeps track of your skin and hair care products: when each one expires, what to use in the morning and evening, when to wash your hair, and how your skin changes week to week. Everything stays on your phone, behind a PIN.",
+    "primary": "See what's inside",
+    "source": "See it on GitHub",
+    "soon": "Coming to iOS and Android. It is not in the App Store or Google Play yet."
+  },
+  "sample": {
+    "tag": "Sample data",
+    "phoneLabel": "Today screen with sample data",
+    "greeting": "Good morning",
+    "streaks": "Streaks",
+    "skinStreak": "12 skin",
+    "skinStreakLabel": "Skin streak: 12 days",
+    "hairStreak": "4 hair",
+    "hairStreakLabel": "Hair streak: 4 days",
+    "morning": "Morning",
+    "evening": "Evening B",
+    "stepsDone": "2 of 4 done",
+    "start": "Start",
+    "allDone": "All done",
+    "cleanser": "Gentle cleanser",
+    "vitaminC": "Vitamin C serum",
+    "moisturiser": "Moisturiser",
+    "sunscreen": "Sunscreen SPF 50",
+    "drops": "3 drops",
+    "exfoliant": "AHA exfoliant",
+    "retinol": "Retinol serum",
+    "conflict": "Conflict",
+    "expiring": "Expiring soon",
+    "expiresIn": "Expires in 12 days",
+    "hairWash": "Hair wash day",
+    "hairWashWith": "Shampoo and conditioner",
+    "tabs": {
+      "today": "Today",
+      "products": "Products",
+      "routines": "Routines",
+      "calendar": "Calendar",
+      "settings": "Settings"
+    }
+  },
+  "showcase": {
+    "status": {
+      "ok": "OK",
+      "expiring": "Expiring soon",
+      "expired": "Expired",
+      "unopened": "Not opened",
+      "avoid": "Avoid"
+    },
+    "area": {
+      "skin": "Skin",
+      "hair": "Hair",
+      "both": "Skin + hair"
+    },
+    "products": {
+      "title": "My products",
+      "vitaminC": {
+        "name": "Vitamin C serum",
+        "meta": "Opened 18 Apr · 6 months after opening"
+      },
+      "shampoo": {
+        "name": "Repair shampoo",
+        "meta": "Expires 1 Mar 2027"
+      },
+      "argan": {
+        "name": "Argan oil",
+        "meta": "Expired 30 Sep"
+      },
+      "sunscreen": {
+        "name": "Sunscreen SPF 50",
+        "meta": "Printed date 14 Aug 2027"
+      }
+    },
+    "streak": {
+      "title": "Skin streak",
+      "inARow": "days in a row",
+      "best": "Best 21 days",
+      "weekLabel": "Last 7 days: 6 done, today still to do"
+    },
+    "conflict": {
+      "title": "Retinol conflicts with AHA.",
+      "text": "Both are in Evening B on Tuesdays. You can still save."
+    },
+    "detail": {
+      "timeUsed": "Time used before it expires",
+      "opened": {
+        "label": "Opened",
+        "value": "18 Apr"
+      },
+      "lasts": {
+        "label": "After opening",
+        "value": "6 months"
+      },
+      "expires": {
+        "label": "Expires",
+        "value": "18 Oct"
+      },
+      "costPerDay": {
+        "label": "Price",
+        "value": "€18.90 · 30 ml"
+      }
+    },
+    "routine": {
+      "cleanser": "Gentle cleanser",
+      "acidToner": "AHA toner",
+      "vitaminC": "Vitamin C serum",
+      "mask": "Hydrating mask",
+      "everyTime": "Every time",
+      "everyFewDays": "Every 3 days",
+      "sundays": "Sundays",
+      "wait": "Wait 1 min"
+    },
+    "hair": {
+      "title": "Hair care",
+      "nextWash": "Next wash: Thu, 8 Oct",
+      "everyFewDays": "Every 3 days",
+      "washLabel": "Wash cycle: 1 of 3 days gone",
+      "trim": "Trim",
+      "everyEightWeeks": "Every 8 weeks",
+      "lastTrim": "Last trim 7 weeks ago",
+      "trimLabel": "Trim cycle: 7 of 8 weeks gone"
+    },
+    "ingredients": {
+      "title": "Ingredients",
+      "product": "Body lotion, one per line",
+      "aqua": "Aqua",
+      "glycerin": "Glycerin",
+      "shea": "Shea butter",
+      "parfum": "Parfum",
+      "tocopherol": "Tocopherol",
+      "onAvoidList": "On your avoid list",
+      "hint": "Parfum is on your avoid list. You can still save."
+    },
+    "photos": {
+      "title": "Progress photos",
+      "front": "Front",
+      "label": "Two weekly skin photos side by side, 8 Sep and 6 Oct",
+      "before": "8 Sep",
+      "after": "6 Oct",
+      "rating": "6 Oct · Skin 4 of 5 · Calm, Glow"
+    },
+    "shopping": {
+      "title": "Shopping list",
+      "toBuy": "2 to buy",
+      "vitaminC": "Last paid €18.90 · 30 ml",
+      "shampoo": "Last paid €12.40 · 250 ml",
+      "sunscreen": "Bought · Add as new product",
+      "bought": "bought"
+    }
+  },
+  "statement": {
+    "title": "In short",
+    "accounts": {
+      "label": "Accounts to create",
+      "text": "No sign-up and no server. Your products, routines and photos are saved on your phone and open with a PIN, Face ID or fingerprint."
+    },
+    "tracking": {
+      "label": "Ads and trackers",
+      "text": "Nothing is sent anywhere. The only thing that leaves the phone is a backup file, when you export one."
+    },
+    "gallery": {
+      "label": "Photos in your gallery",
+      "text": "Progress photos stay inside the app, so they never show up in the phone's gallery or photo backups."
+    },
+    "languages": {
+      "label": "Languages",
+      "text": "Lithuanian and English, in light and dark."
+    },
+    "price": {
+      "label": "Price",
+      "text": "Free to use, and the code is open for anyone to read."
+    }
+  },
+  "features": {
+    "title": "What you'll find inside",
+    "lead": "Six areas, one Today screen. Jx-Care shows only what is due, so a routine takes a minute at the bathroom shelf.",
+    "example": "For example:",
+    "groups": {
+      "products": "Products",
+      "routines": "Routines",
+      "hair": "Hair",
+      "ingredients": "Ingredients",
+      "progress": "Progress",
+      "shopping": "Shopping"
+    },
+    "items": {
+      "shelf": {
+        "title": "Your shelf",
+        "text": "Every product with its brand, photo, size, price, ingredients and whether it is for skin, hair or both.",
+        "example": "filter by Skin or Hair, or sort by soonest expiry."
+      },
+      "expiry": {
+        "title": "Expiry dates",
+        "text": "Jx-Care works out when each product expires from the printed date, the day you opened it and how long it lasts after opening.",
+        "example": "a reminder 30 days before, and an OK, Expiring soon or Expired badge on every row."
+      },
+      "notes": {
+        "title": "Product notes",
+        "text": "Dated notes on how your skin reacted, a 1 to 5 rating and whether you would buy it again.",
+        "example": "\"small breakout on chin\", noted on 3 Oct."
+      },
+      "costPerDay": {
+        "title": "Cost per day",
+        "text": "When a product is finished, Jx-Care divides its price by the days you used it.",
+        "example": "€18.90 over 92 days is €0.21 a day."
+      },
+      "timeOfDay": {
+        "title": "Morning, evening or your own",
+        "text": "Each routine has a time of day, the weekdays it runs and its steps in order, each linked to a product.",
+        "example": "Morning: cleanser, vitamin C, moisturiser, sunscreen."
+      },
+      "alternatives": {
+        "title": "A and B",
+        "text": "Two routines can share a time of day on different days. Today shows the one that is due.",
+        "example": "Evening A with retinol on Mon, Wed and Fri; Evening B with an exfoliant on Tue and Thu."
+      },
+      "stepSchedule": {
+        "title": "Steps on their own days",
+        "text": "A step can run every time, on set days, or every few days, so one routine covers the whole week.",
+        "example": "a face mask only on Sundays."
+      },
+      "player": {
+        "title": "Tick as you go",
+        "text": "Start a routine and tick each step, or tap All done. Steps can have a wait timer before the next one.",
+        "example": "wait 60 seconds after an acid toner."
+      },
+      "reminders": {
+        "title": "Reminders",
+        "text": "A local reminder at the time you pick. It stays quiet if the routine is already done.",
+        "example": "\"Evening routine time\" at 21:30."
+      },
+      "washCycle": {
+        "title": "Wash days",
+        "text": "Set how often you wash. The next wash counts from the last one, so washing early or late moves it.",
+        "example": "every 3 days with shampoo, conditioner and a mask every second wash."
+      },
+      "otherCare": {
+        "title": "Other care",
+        "text": "Trims, colour and scrubs with their own rhythm, and how long ago each one was.",
+        "example": "last trim 7 weeks ago, next one in a week."
+      },
+      "streaks": {
+        "title": "Two streaks",
+        "text": "Separate skin and hair streaks with your best. A day with nothing set never breaks them.",
+        "example": "\"Started again. Your best is still 21 days.\""
+      },
+      "conflicts": {
+        "title": "Conflicts across the day",
+        "text": "Jx-Care checks every product you use on the same day, morning and evening, against your list of pairs that should not meet.",
+        "example": "retinol with AHA shows a Conflict tag on both steps."
+      },
+      "groups": {
+        "title": "Ingredient groups",
+        "text": "Group ingredients once and set conflicts between groups instead of every pair.",
+        "example": "\"Acids\" holds glycolic, lactic and salicylic acid."
+      },
+      "avoid": {
+        "title": "Avoid list",
+        "text": "Ingredients you never want. A product that contains one gets a warning and an Avoid badge.",
+        "example": "fragrance, or a known allergen."
+      },
+      "weeklyPhoto": {
+        "title": "Weekly photo",
+        "text": "A guided photo once a week, with the last photo faintly over the camera so the angle and distance line up.",
+        "example": "front, left and right side, in the same light."
+      },
+      "compare": {
+        "title": "Compare",
+        "text": "Any two weeks side by side, with what you started or stopped using in between.",
+        "example": "4 weeks ago next to today."
+      },
+      "condition": {
+        "title": "Check-in",
+        "text": "One tap for how your skin and hair feel today, shown next to the routines you did.",
+        "example": "Calm, Glow, Oily, Dry, Breakout, Redness, Itchy."
+      },
+      "buyAgain": {
+        "title": "Buy again",
+        "text": "Finished and expiring products are offered for the list. Nothing is added without your tap.",
+        "example": "the list shows the price and size you paid last time."
+      },
+      "addAsNew": {
+        "title": "Add as new product",
+        "text": "Tick an item when bought and Jx-Care copies its details into a new product with today's date.",
+        "example": "name, brand, size and ingredients, ready to save."
+      },
+      "share": {
+        "title": "Share the list",
+        "text": "Send the list as plain text to take to the shop.",
+        "example": "to yourself in a messaging app."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Private by design",
+    "lead": "Jx-Care is for one person on one phone. There is no account to lose and nothing to sync.",
+    "items": {
+      "pin": {
+        "title": "PIN, Face ID or fingerprint",
+        "text": "The app locks every time it opens and after a minute away. A forgotten PIN is reset with your recovery question."
+      },
+      "switcher": {
+        "title": "Hidden in the app switcher",
+        "text": "While locked, the app's content is blurred when you switch between apps."
+      },
+      "photos": {
+        "title": "Photos stay in the app",
+        "text": "Progress photos are kept in the app's own storage and are only visible after the PIN."
+      },
+      "backup": {
+        "title": "Your backup, your file",
+        "text": "Export everything to one file and restore it on a new phone. Photos are included only if you choose."
+      }
+    }
+  },
+  "close": {
+    "getTitle": "Want it on your phone?",
+    "getText": "Jx-Care is not in the stores yet. Watch the code on GitHub to see when it is.",
+    "getAction": "Follow on GitHub",
+    "buildTitle": "Build it yourself",
+    "buildText": "Jx-Care is free and open source. The guide on GitHub shows how to build it for iOS or Android.",
+    "buildAction": "Read the build guide",
+    "suggestTitle": "Missing a feature?",
+    "suggestText": "Write to me about what you would like Jx-Care to do and how you would use it.",
+    "suggestAction": "Suggest a feature",
+    "suggestSubject": "Jx-Care feature suggestion"
+  },
+  "footer": "Skin and hair care, kept on your phone · Free and open source",
+  "sourceLabel": "Jx-Care on GitHub"
+}
