@@ -245,6 +245,14 @@ export function createPinService(kv: SecureKV = secureKV) {
       return attempt('pinAttempts', now, () => checkPin(pin));
     },
 
+    /**
+     * L1 unlocked with biometrics: the wrong PINs before it no longer count as "in a row". Only
+     * called outside a lockout (the biometrics key is disabled during one).
+     */
+    resetPinFailures(): Promise<void> {
+      return serial(() => kv.delete(KEYS.pinAttempts));
+    },
+
     /** Seconds left in the PIN lockout, 0 when not locked ("Try again in 30 s"). */
     lockoutRemaining(now: number): Promise<number> {
       return remaining('pinAttempts', now);

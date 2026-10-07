@@ -292,6 +292,25 @@ describe('L1 lock screen', () => {
     expect(auth.authenticateAsync).toHaveBeenCalledTimes(2);
   });
 
+  it('starts the wrong-PIN count again after a biometrics unlock', async () => {
+    const app = await setUp({ biometricsOn: true });
+    await launch(app);
+    await waitFor(() => expect(auth.authenticateAsync).toHaveBeenCalledTimes(1));
+    await settle();
+    for (let i = 0; i < 4; i++) await typePin('1111');
+    auth.authenticateAsync.mockResolvedValueOnce({ success: true } as never);
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Unlock with Face ID or fingerprint' }),
+    );
+    await waitFor(() => expect(lockStore.state.locked).toBe(false));
+    // One wrong PIN later is the first in a row, not the 5th.
+    expect(await pinService.verifyPin('1111', Date.now())).toEqual({
+      ok: false,
+      locked: false,
+      failures: 1,
+    });
+  });
+
   it('opens a notification tapped while locked right after unlock', async () => {
     const app = await setUp();
     await launch(app);

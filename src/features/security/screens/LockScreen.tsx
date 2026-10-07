@@ -54,7 +54,9 @@ export function LockScreen({ onForgot, covered = false }: LockScreenProps) {
     busy.current = true;
     const ok = await authenticate(t('lock.biometricsPrompt'));
     busy.current = false;
-    if (ok && mounted.current) unlock();
+    if (!ok) return;
+    pinService.resetPinFailures().catch(() => {});
+    if (mounted.current) unlock();
   }, [t]);
 
   // Arrival: read a running lockout first, so a locked-out keypad never flashes as usable.
