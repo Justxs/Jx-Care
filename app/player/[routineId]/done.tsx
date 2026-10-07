@@ -1,3 +1,3 @@
-import { RoutineDoneScreen } from '@/features/player/screens/RoutineDoneScreen';
+import { RoutineDoneScreen } from '@/features/routines/screens/RoutineDoneScreen';
 
 export default RoutineDoneScreen;

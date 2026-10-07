@@ -1168,5 +1168,44 @@
       "noMatch": "Nothing matches.",
       "more": "Type to find more."
     }
+  },
+  "player": {
+    "noProduct": "No product yet",
+    "problemTitle": "Step {{index}} · {{name}}",
+    "problemLine": "Pick another product for this step, or tick it to use this one today.",
+    "emptyLine": "Pick a product for this step, or tick it to mark it done.",
+    "pickAnother": "Pick another",
+    "pickProduct": "Pick a product",
+    "nextAfterWait": "Next, after the wait",
+    "wait": "Wait {{time}} before the next step",
+    "skipWait": "Skip wait",
+    "conflictLine": "{{product}} conflicts with {{other}} in {{routine}}. Using both on one day can irritate.",
+    "why": "Why?",
+    "whyLabel": "Why this warning",
+    "notDue": {
+      "title": "Nothing set for today",
+      "body": "{{name}} has no steps due today."
+    },
+    "missing": {
+      "title": "Routine not found",
+      "body": "It may have been deleted."
+    },
+    "picker": {
+      "title": "Pick a product",
+      "empty": "No skin products to pick yet."
+    },
+    "done": {
+      "title": "{{name}} done",
+      "summary_one": "{{count}} step, finished at {{time}}.",
+      "summary_other": "All {{count}} steps, finished at {{time}}.",
+      "next": "Next: {{name}} · {{when}}",
+      "todayAt": "Today at {{time}}",
+      "tomorrowAt": "Tomorrow at {{time}}",
+      "weekdayAt": "{{weekday}} at {{time}}",
+      "finished": "{{name}} is finished",
+      "expired": "{{name}} has expired",
+      "backToToday": "Back to Today",
+      "addNote": "Add a note"
+    }
   }
 }

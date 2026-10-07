@@ -1252,5 +1252,46 @@
       "noMatch": "Nieko nerasta.",
       "more": "Rašykite, kad rastumėte daugiau."
     }
+  },
+  "player": {
+    "noProduct": "Produktas dar nepasirinktas",
+    "problemTitle": "{{index}} žingsnis · {{name}}",
+    "problemLine": "Pasirinkite kitą produktą šiam žingsniui arba pažymėkite, kad šiandien naudosite šį.",
+    "emptyLine": "Pasirinkite produktą šiam žingsniui arba pažymėkite žingsnį kaip atliktą.",
+    "pickAnother": "Pasirinkti kitą",
+    "pickProduct": "Pasirinkti produktą",
+    "nextAfterWait": "Kitas, kai baigsis laukimas",
+    "wait": "Palaukite {{time}} prieš kitą žingsnį",
+    "skipWait": "Praleisti laukimą",
+    "conflictLine": "{{product}} nesiderina su {{other}} rutinoje {{routine}}. Naudojami tą pačią dieną, jie gali dirginti odą.",
+    "why": "Kodėl?",
+    "whyLabel": "Kodėl šis įspėjimas",
+    "notDue": {
+      "title": "Šiandien nieko nenumatyta",
+      "body": "{{name}} šiandien neturi žingsnių."
+    },
+    "missing": {
+      "title": "Rutina nerasta",
+      "body": "Galbūt ji buvo ištrinta."
+    },
+    "picker": {
+      "title": "Pasirinkite produktą",
+      "empty": "Kol kas nėra odos produktų, kuriuos galima pasirinkti."
+    },
+    "done": {
+      "title": "{{name}}: atlikta",
+      "summary_one": "{{count}} žingsnis, baigta {{time}}.",
+      "summary_few": "Visi {{count}} žingsniai, baigta {{time}}.",
+      "summary_many": "Visi {{count}} žingsnio, baigta {{time}}.",
+      "summary_other": "Visi {{count}} žingsnių, baigta {{time}}.",
+      "next": "Toliau: {{name}} · {{when}}",
+      "todayAt": "Šiandien {{time}}",
+      "tomorrowAt": "Rytoj {{time}}",
+      "weekdayAt": "{{weekday}} {{time}}",
+      "finished": "{{name}}: baigta",
+      "expired": "{{name}}: nebegalioja",
+      "backToToday": "Grįžti į Šiandien",
+      "addNote": "Pridėti pastabą"
+    }
   }
 }

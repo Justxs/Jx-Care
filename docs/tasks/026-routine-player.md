@@ -44,4 +44,23 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Where it lives:** the screens moved from the task-010 placeholders in `src/features/player/` to `src/features/routines/screens/` as this task says; the `/player/[routineId]` and `/player/[routineId]/done` routes now import them. Pure helpers are in `playerLogic.ts`, "what comes next" in `playerRepo.ts` (+ `useNextUp` in `playerApi.ts`), so `repo.ts` stays untouched.
+- **Opened on a day the routine isn't due** (Start on Routines works for every routine): the player shows "Nothing set for today" with Close instead of an empty list. A deleted routine shows "Routine not found".
+- **Layout:** runs of plain step rows share one flush card; a problem step (expired, finished, no product) is its own card between them, so no card sits inside a card. The header is the player's own (close, name, "Evening · Step 2 of 5", ProgressRing), left-aligned so the ring fits; "Step n" is the first unticked step, or the last once all are ticked.
+- **Ticking:** the whole row is the checkbox for screen readers (the visual Checkbox inside is hidden from them); the light haptic comes from the row when ticking, or from the Checkbox when its box itself is hit, never both.
+- **Wait timer:** `useWaitTimer` keeps an end timestamp and re-reads the clock every 250 ms and when the app becomes active. The step it holds back is the first unticked step after the one that started it (else the first unticked). Ticking any other step ends a running wait (and starts that step's own wait if it has one); unticking the step that started it ends it too. Skip wait has no haptic; the natural end does. While the bar shows, the toast inset is the bar's height; leaving the player restores the previous inset.
+- **Hand-over:** the tick that completes the routine (or All done) calls `router.replace` to `/player/[routineId]/done?from=<streak before>`; the done screen paints the old number first and counts up to the new one with Today's `useCountUp` (250 ms; Reduce Motion jumps). `restarted` is `best > current`.
+- **`onRoutineCompleted(routineId, day)`** lives in `src/features/routines/events.ts` and is called from `useTickStep`'s mutation whenever a tick turns the day's log complete, so the player, the player's All done and All done on Today all reach it once per completion.
+- **What comes next:** a later time of day still open today, else the first time of day due within the next 14 days (with the remembered A/B pick); time is the reminder time, else the routine's time. "Today at 21:00", "Tomorrow at 07:30", or "Thursday at 07:30". Hidden when nothing is due again.
+- **Needs attention:** each expired ("SPF 50 fluid expired 2 Oct", red) or finished ("Face oil is finished") product due today, once. The "On your shopping list" part waits for task 034.
+- **Hooks for later tasks** (`playerSlots.ts`, the same register pattern as `shopping/buyAgain.ts`): `registerPlayerConflicts` (task 030 returns `{ stepId, conflict: ConflictExplain }[]`; the step then shows a ConflictTag, the amber line under the list names the other side, and the tag and "Why?" open `ConflictExplainSheet`; mild when every conflict on the step is mild) and `registerAddNote` (task 038; "Add a note" is hidden until then). Buy again uses `useBuyAgain()` and is hidden until task 034 registers it; the card without a product only offers "Pick a product".
+- **Pick another:** task 024's `ProductPickerSheet` is being built in parallel, so `components/StepProductPicker.tsx` is a small stand-in (skin products that aren't expired, by name). Once 024 is merged, render `ProductPickerSheet area="skin"` inside it; the player doesn't change.
+- **Back to Today** uses `router.dismissTo('/')`, which closes the player modal from either screen.
+
+Check on a real device:
+
+- Slide up / slide down of the player, and `router.replace` to the done screen inside the player stack (no flash, no back gesture to the player).
+- Wait timer: lock the phone or switch apps mid-wait and come back; the time is right and the end haptic fires once. The bar sits above the home indicator and a toast floats above it.
+- Haptics on row ticks and on the box itself (one each), and that tapping the ConflictTag doesn't tick the row.
+- Done screen: logo fade, streak count-up (and a jump with Reduce Motion on), "Started again" copy, Back to Today from a player opened on Routines.
+- Light and dark, 360 pt width and Lithuanian (problem card buttons side by side, "Pasirinkti kitą" / "Pirkti dar kartą", the wait bar with "Praleisti laukimą").

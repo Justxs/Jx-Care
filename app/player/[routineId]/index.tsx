@@ -1,3 +1,3 @@
-import { RoutinePlayerScreen } from '@/features/player/screens/RoutinePlayerScreen';
+import { RoutinePlayerScreen } from '@/features/routines/screens/RoutinePlayerScreen';
 
 export default RoutinePlayerScreen;

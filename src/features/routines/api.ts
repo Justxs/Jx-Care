@@ -16,10 +16,12 @@ import { useSettings } from '@/features/settings/api';
 import { skinStreak } from '@/lib/streak';
 import { appStore } from '@/state/app';
 
+import { onRoutineCompleted } from './events';
 import {
   dayRoutine,
   deleteRoutine,
   duplicateRoutine,
+  getDayLog,
   getRoutine,
   getRoutineDay,
   getTodayRoutines,
@@ -271,8 +273,13 @@ export function applyTickToGroups(
 export function useTickStep() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (v: TickVars) =>
-      tickSteps(getDb(), v.routineId, v.stepIds, v.day, v.done, v.dueStepIds),
+    mutationFn: async (v: TickVars) => {
+      const db = getDb();
+      const wasComplete = getDayLog(db, v.routineId, v.day)?.completedAt != null;
+      const log = tickSteps(db, v.routineId, v.stepIds, v.day, v.done, v.dueStepIds);
+      if (!wasComplete && log?.completedAt != null) onRoutineCompleted(v.routineId, v.day);
+      return log;
+    },
     onMutate: async (v) => {
       const todayKey = todayRoutinesKey(v.day);
       const playerKey = qk.routines.player(v.routineId, v.day);

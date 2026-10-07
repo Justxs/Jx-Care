@@ -63,7 +63,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 023 | [Routines list and templates](023-routines-list-templates.md) | 010, 022 | R1 skin, R2 starter | done |
 | 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | done |
 | 025 | [Today](025-today.md) | 010, 012, 022 | T1 | done |
-| 026 | [Routine player](026-routine-player.md) | 022, 025 | T2 | todo |
+| 026 | [Routine player](026-routine-player.md) | 022, 025 | T2 | done |
 | 027 | [Routine reminders](027-routine-reminders.md) | 020, 024, 026 | Notifications, sequence 4 | todo |
 | 028 | [Skin calendar and day detail](028-skin-calendar-day-detail.md) | 007, 022, 010 | C1 skin, C2 | done |
 | 029 | [Ingredients, groups and conflict rules](029-ingredients-conflict-rules.md) | 011, 012, 022 | S2, S3 | done |
