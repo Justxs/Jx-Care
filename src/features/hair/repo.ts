@@ -62,7 +62,7 @@ export type HairStreakInput = { tasks: HairTaskLite[]; logs: HairLogLite[]; toda
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-export function toHairLite(t: HairTask): HairTaskLite {
+function toHairLite(t: HairTask): HairTaskLite {
   return {
     id: t.id,
     kind: t.kind,
@@ -312,10 +312,6 @@ export function hairUsedIn(db: Db, productId: number): UsedIn[] {
     .map((t) => ({ kind: 'hair' as const, id: t.id, name: t.name }));
 }
 
-export function hairTaskCountByProduct(db: Db, productId: number): number {
-  return hairUsedIn(db, productId).length;
-}
-
 addUsedInSource(hairUsedIn);
 
 // ─── Writes ─────────────────────────────────────────────────────────────────
@@ -476,8 +472,4 @@ export function deleteHairLog(db: Db, logId: number): number | null {
 /** Deletes a task and (by cascade) its logs. */
 export function deleteHairTask(db: Db, id: number): void {
   db.delete(hairTask).where(eq(hairTask.id, id)).run();
-}
-
-export function setHairTaskActive(db: Db, id: number, active: boolean): void {
-  db.update(hairTask).set({ active }).where(eq(hairTask.id, id)).run();
 }

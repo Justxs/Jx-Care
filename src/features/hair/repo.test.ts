@@ -13,7 +13,6 @@ import {
   hairLogsOnDay,
   hairMonth,
   hairStreakInput,
-  hairTaskCountByProduct,
   hasAnyHairTask,
   hasHairLogOn,
   hasWashTask,
@@ -22,7 +21,6 @@ import {
   markHairDone,
   quickSetup,
   saveHairTask,
-  setHairTaskActive,
   washDueOn,
 } from './repo';
 import type { HairTaskInput } from './schema';
@@ -49,6 +47,10 @@ const washInput = (over: Partial<HairTaskInput> = {}): HairTaskInput => ({
 
 const addProduct = (db: TestDb, name: string, area: 'skin' | 'hair' | 'both' = 'hair') =>
   db.insert(product).values({ name, area }).returning({ id: product.id }).get().id;
+
+// No screen pauses a task, but the reads still honour the `active` column.
+const setActive = (db: TestDb, id: number, active: boolean) =>
+  db.update(hairTask).set({ active }).where(eq(hairTask.id, id)).run();
 
 const task = (db: TestDb, id: number) =>
   db.select().from(hairTask).where(eq(hairTask.id, id)).get();
@@ -259,7 +261,7 @@ describe('reads', () => {
     const due = saveHairTask(db, washInput({ name: 'Due', lastDoneAt: '2026-10-04' }));
     const later = saveHairTask(db, washInput({ name: 'Later' }));
     const off = saveHairTask(db, washInput({ name: 'Off', lastDoneAt: '2026-09-01' }));
-    setHairTaskActive(db, off, false);
+    setActive(db, off, false);
     const trim = saveHairTask(
       db,
       washInput({ name: 'Trim', kind: 'other', otherKind: 'trim', everyNDays: 56 }),
@@ -275,7 +277,7 @@ describe('reads', () => {
     expect(other.map((o) => o.id)).toEqual([trim]);
     expect(hairDueToday(db, TODAY).map((r) => r.id)).toEqual([late, due]);
 
-    setHairTaskActive(db, off, true);
+    setActive(db, off, true);
     expect(hairDueToday(db, TODAY)[0]?.id).toBe(off);
   });
 
@@ -357,13 +359,12 @@ describe('hairStreakInput', () => {
 });
 
 describe('used in and delete', () => {
-  it('counts hair tasks by product and fills product "Used in"', () => {
+  it('fills product "Used in"', () => {
     const db = createTestDb();
     const shampoo = addProduct(db, 'Shampoo');
     const a = saveHairTask(db, washInput({ name: 'B wash', productIds: [shampoo] }));
     const b = saveHairTask(db, washInput({ name: 'A wash', productIds: [shampoo] }));
     saveHairTask(db, washInput({ name: 'Plain' }));
-    expect(hairTaskCountByProduct(db, shampoo)).toBe(2);
     expect(getProduct(db, shampoo, TODAY, 30)?.usedIn).toEqual([
       { kind: 'hair', id: b, name: 'A wash' },
       { kind: 'hair', id: a, name: 'B wash' },
@@ -417,7 +418,7 @@ describe('task 033 reads', () => {
     expect(hasWashTask(db)).toBe(false);
     const id = saveHairTask(db, washInput());
     expect(hasWashTask(db)).toBe(true);
-    setHairTaskActive(db, id, false);
+    setActive(db, id, false);
     expect(hasWashTask(db)).toBe(false);
   });
 
@@ -427,7 +428,7 @@ describe('task 033 reads', () => {
     const a = saveHairTask(db, washInput({ reminderTime: '19:00', productIds: [shampoo] }));
     saveHairTask(db, washInput({ reminderTime: null }));
     const paused = saveHairTask(db, washInput({ reminderTime: '08:00' }));
-    setHairTaskActive(db, paused, false);
+    setActive(db, paused, false);
     expect(listReminderTasks(db, TODAY)).toEqual([
       expect.objectContaining({ id: a, nextDue: '2026-10-09', productNames: ['Shampoo'] }),
     ]);

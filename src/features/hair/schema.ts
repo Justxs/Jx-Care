@@ -158,8 +158,6 @@ export function hairDoneSchema(today: string) {
 }
 
 export type HairDoneFormValues = z.input<ReturnType<typeof hairDoneSchema>>;
-export type HairDoneInput = z.output<ReturnType<typeof hairDoneSchema>>;
-
 /** The quick setup's frequency chips (R5); "Other" opens the full editor instead. */
 export const quickWashFrequencies = [
   'every_day',
@@ -170,7 +168,6 @@ export const quickWashFrequencies = [
 ] as const satisfies readonly QuickWashFrequency[];
 
 /** Quick hair setup (R5): "Last wash" is today or earlier. */
-
 export function quickHairSetupSchema(today: string) {
   return z.object({
     frequency: z.enum(quickWashFrequencies),
@@ -181,5 +178,3 @@ export function quickHairSetupSchema(today: string) {
     trim: z.boolean(),
   });
 }
-
-export type QuickHairSetupInput = z.output<ReturnType<typeof quickHairSetupSchema>>;

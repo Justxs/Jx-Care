@@ -30,7 +30,6 @@ import {
   markHairDone,
   quickSetup,
   saveHairTask,
-  setHairTaskActive,
   washDueOn,
   type MarkHairDone,
   type QuickHairSetup,
@@ -41,7 +40,7 @@ import type { HairTaskInput } from './schema';
  * Re-plans a task's reminder (task 033) whenever it is created, changed, marked done or deleted.
  * Fire and forget: a failure is picked up by the next full sync.
  */
-export function onHairTaskChanged(id: number): void {
+function onHairTaskChanged(id: number): void {
   syncEntity('hair_task', id).catch(() => {});
 }
 
@@ -248,20 +247,6 @@ export function useDeleteHairTask() {
     onSuccess: (id) => {
       client.removeQueries({ queryKey: qk.hair.detail(id) });
       invalidate(client, { usedIn: true });
-      onHairTaskChanged(id);
-    },
-  });
-}
-
-export function useSetHairTaskActive() {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, active }: { id: number; active: boolean }) => {
-      setHairTaskActive(getDb(), id, active);
-      return id;
-    },
-    onSuccess: (id) => {
-      invalidate(client);
       onHairTaskChanged(id);
     },
   });

@@ -16,7 +16,7 @@ import { weekdayOf } from '@/lib/appDay';
 import { skinStreak } from '@/lib/streak';
 
 import { gridDays, monthOf, shiftMonth } from './month';
-import { canEditDay, getSkinDay, getSkinMonth, oldestEditableDay } from './repo';
+import { canEditDay, getSkinDay, getSkinMonth } from './repo';
 
 const TODAY = '2026-10-07'; // a Wednesday
 const WARN = 30;
@@ -192,7 +192,6 @@ describe('edit window', () => {
   it('allows today and the six days before it', () => {
     expect(canEditDay(TODAY, TODAY)).toBe(true);
     expect(canEditDay('2026-10-01', TODAY)).toBe(true);
-    expect(oldestEditableDay(TODAY)).toBe('2026-10-01');
     expect(canEditDay('2026-09-30', TODAY)).toBe(false);
     expect(canEditDay('2026-10-08', TODAY)).toBe(false);
   });

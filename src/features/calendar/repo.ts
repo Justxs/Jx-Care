@@ -7,7 +7,7 @@ import {
   skinRangeInput,
   type DayRoutine,
 } from '@/features/routines/repo';
-import { addDays, diffDays } from '@/lib/appDay';
+import { diffDays } from '@/lib/appDay';
 import { timeOfDayKey } from '@/lib/schedule';
 import { skinDayStatus, skinDayStatuses, type SkinDayStatus } from '@/lib/streak';
 
@@ -81,15 +81,10 @@ export function getSkinDay(db: DbOrTx, day: string, today: string, warnDays: num
 }
 
 /** How many days back (today included) a day can still be changed on C2. */
-export const EDIT_WINDOW_DAYS = 7;
+const EDIT_WINDOW_DAYS = 7;
 
 /** C2 edits: today and the six days before it; older days and future days are read-only. */
 export function canEditDay(day: string, today: string): boolean {
   const back = diffDays(today, day);
   return back >= 0 && back < EDIT_WINDOW_DAYS;
-}
-
-/** The oldest day that can still be changed. */
-export function oldestEditableDay(today: string): string {
-  return addDays(today, -(EDIT_WINDOW_DAYS - 1));
 }
