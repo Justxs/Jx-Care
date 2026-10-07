@@ -94,19 +94,20 @@ function Statement() {
       <h2 id={titleId} className="text-display font-bold tracking-tight">
         {t('statement.title')}
       </h2>
+      {/* The figure leads each row, so it reads with its label instead of across the page. */}
       <dl className="mt-6 divide-y divide-border border-y border-border-strong/40">
         {facts.map((fact) => (
           <div
             key={fact.key}
-            className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-6 gap-y-1 py-4 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_6rem] sm:items-baseline lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)_8rem]"
+            className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-x-4 gap-y-1 py-4 sm:grid-cols-[5rem_minmax(0,15rem)_minmax(0,1fr)] sm:items-baseline sm:gap-x-6 lg:grid-cols-[6rem_minmax(0,18rem)_minmax(0,1fr)]"
           >
-            <dt className="col-start-1 row-start-1 text-body font-semibold">
+            <dt className="col-start-2 row-start-1 self-baseline text-body font-semibold">
               {t(`statement.${fact.key}.label`)}
             </dt>
-            <dd className="col-span-2 col-start-1 row-start-2 max-w-prose text-body text-ink-muted sm:col-span-1 sm:col-start-2 sm:row-start-1">
+            <dd className="col-start-2 row-start-2 max-w-prose text-body text-ink-muted sm:col-start-3 sm:row-start-1">
               {t(`statement.${fact.key}.text`)}
             </dd>
-            <dd className="col-start-2 row-start-1 text-right text-title-l font-bold text-accent tabular-nums sm:col-start-3 sm:text-display">
+            <dd className="col-start-1 row-span-2 row-start-1 text-title-l font-bold text-accent tabular-nums sm:row-span-1 sm:text-display">
               {'price' in fact ? euros.format(fact.figure) : number.format(fact.figure)}
             </dd>
           </div>
@@ -123,28 +124,42 @@ function FeatureOverview() {
   return (
     <section aria-labelledby={titleId} className="border-t border-border">
       <div className={cn(landingColumn, 'py-14 sm:py-20')}>
-        <h2 id={titleId} className="text-display font-bold tracking-tight">
-          {t('features.title')}
-        </h2>
-        <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
-        <div className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
+          <div>
+            <h2 id={titleId} className="text-display font-bold tracking-tight">
+              {t('features.title')}
+            </h2>
+            <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('features.lead')}</p>
+          </div>
+          <Link to="/features" className={buttonClasses({ variant: 'outline' })}>
+            {t('features.seeAll')}
+            <ArrowRight aria-hidden="true" />
+          </Link>
+        </div>
+        <ul className="mt-10 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {featureGroups.map((group) => (
-            <div key={group.key} className="border-t-2 border-accent pt-3">
-              <h3 className="text-title-s font-semibold">{t(`features.groups.${group.key}`)}</h3>
-              <ul className="mt-2 space-y-1 text-body text-ink-muted">
+            <li key={group.key} className="border-t border-border-strong/40 pt-4">
+              <h3 className="text-title-s font-semibold">
+                <Link
+                  to="/features"
+                  hash={group.key}
+                  className="group inline-flex min-h-11 items-center gap-1.5 rounded-sm underline-offset-4 hover:text-accent hover:underline"
+                >
+                  {t(`features.groups.${group.key}`)}
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="size-4 text-ink-muted transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-accent"
+                  />
+                </Link>
+              </h3>
+              <ul className="mt-1 space-y-1 text-body text-ink-muted">
                 {group.features.map((feature) => (
                   <li key={feature}>{t(`features.items.${feature}.title`)}</li>
                 ))}
               </ul>
-            </div>
+            </li>
           ))}
-          <div className="border-t-2 border-border pt-4">
-            <Link to="/features" className={buttonClasses({ variant: 'outline' })}>
-              {t('features.seeAll')}
-              <ArrowRight aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
+        </ul>
       </div>
     </section>
   );
@@ -156,16 +171,28 @@ function Privacy() {
 
   return (
     <section id="privacy" aria-labelledby={titleId} className="border-t border-border bg-surface">
-      <div className={cn(landingColumn, 'py-14 sm:py-20')}>
-        <h2 id={titleId} className="text-display font-bold tracking-tight">
-          {t('privacy.title')}
-        </h2>
-        <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('privacy.lead')}</p>
-        <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className={cn(
+          landingColumn,
+          'grid gap-x-16 gap-y-8 py-14 sm:py-20 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] xl:gap-x-24',
+        )}
+      >
+        <div className="lg:sticky lg:top-8 lg:self-start">
+          <h2 id={titleId} className="text-display font-bold tracking-tight">
+            {t('privacy.title')}
+          </h2>
+          <p className="mt-3 max-w-[60ch] text-body-l text-ink-muted">{t('privacy.lead')}</p>
+        </div>
+        <ul className="divide-y divide-border border-y border-border-strong/40 lg:-mt-1">
           {privacyItems.map((item) => (
-            <li key={item} className="border-t-2 border-accent pt-3">
-              <h3 className="text-title-s font-semibold">{t(`privacy.items.${item}.title`)}</h3>
-              <p className="mt-1 text-body text-ink-muted">{t(`privacy.items.${item}.text`)}</p>
+            <li
+              key={item}
+              className="grid gap-x-8 gap-y-1 py-4 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:items-baseline"
+            >
+              <h3 className="text-body font-semibold">{t(`privacy.items.${item}.title`)}</h3>
+              <p className="max-w-prose text-body text-ink-muted">
+                {t(`privacy.items.${item}.text`)}
+              </p>
             </li>
           ))}
         </ul>

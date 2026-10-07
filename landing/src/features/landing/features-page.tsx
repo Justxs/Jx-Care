@@ -13,8 +13,9 @@ function GroupSection({ group }: Readonly<{ group: FeatureGroup }>) {
 
   return (
     <section
+      id={group.key}
       aria-labelledby={titleId}
-      className="grid gap-x-16 gap-y-6 py-12 lg:grid-cols-[5fr_7fr] lg:py-16"
+      className="grid scroll-mt-6 gap-x-16 gap-y-6 py-12 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:py-16 xl:gap-x-24"
     >
       <div className="lg:sticky lg:top-8 lg:self-start">
         <h2 id={titleId} className="text-display font-bold tracking-tight">
