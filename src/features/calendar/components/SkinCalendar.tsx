@@ -63,7 +63,6 @@ export function SkinCalendar({
               <Skeleton height={116} radius={16} />
             </View>
           )}
-          {/* Task 033: the hair StreakCard goes beside it in the Hair view. */}
         </View>
       )}
 
