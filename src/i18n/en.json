@@ -1277,29 +1277,8 @@
     "hairWord": "hair"
   },
   "dev": {
-    "components": "Components",
-    "sampleForm": "Sample form",
-    "name": "Name",
-    "price": "Price",
-    "purchased": "Purchased",
-    "tags": "Tags",
-    "category": "Category",
-    "answer": "Answer",
-    "notes": "Notes",
-    "nameHint": "As on the bottle",
-    "resetTitle": "Reset app?",
-    "resetBody": "This deletes all products, routines and logs. It can't be undone.",
-    "resetAction": "Reset app",
-    "typeReset": "Type RESET to confirm",
-    "removed": "Parfum removed",
     "openSheet": "Open sheet",
-    "openDialog": "Open dialog",
-    "showToast": "Show toast",
-    "more": "More details",
-    "emptyTitle": "No products yet",
-    "emptyBody": "Add what is on your shelf to see when it expires.",
-    "addProduct": "Add product",
-    "importBackup": "Restore a backup"
+    "showToast": "Show toast"
   },
   "forms": {
     "errors": {

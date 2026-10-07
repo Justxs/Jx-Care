@@ -1371,29 +1371,8 @@
     "hairWord": "plaukai"
   },
   "dev": {
-    "components": "Komponentai",
-    "sampleForm": "Pavyzdinė forma",
-    "name": "Pavadinimas",
-    "price": "Kaina",
-    "purchased": "Pirkta",
-    "tags": "Žymos",
-    "category": "Kategorija",
-    "answer": "Atsakymas",
-    "notes": "Pastabos",
-    "nameHint": "Kaip ant buteliuko",
-    "resetTitle": "Atkurti programėlę?",
-    "resetBody": "Bus ištrinti visi produktai, rutinos ir įrašai. To atšaukti negalima.",
-    "resetAction": "Atkurti programėlę",
-    "typeReset": "Įrašykite RESET, kad patvirtintumėte",
-    "removed": "Parfum pašalintas",
     "openSheet": "Atidaryti lapą",
-    "openDialog": "Atidaryti dialogą",
-    "showToast": "Rodyti pranešimą",
-    "more": "Daugiau informacijos",
-    "emptyTitle": "Produktų dar nėra",
-    "emptyBody": "Pridėkite, ką turite lentynoje, ir matysite, kada baigiasi galiojimas.",
-    "addProduct": "Pridėti produktą",
-    "importBackup": "Atkurti atsarginę kopiją"
+    "showToast": "Rodyti pranešimą"
   },
   "forms": {
     "errors": {
