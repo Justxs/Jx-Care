@@ -15,10 +15,9 @@ import { isValidDay } from '@/lib/appDay';
 import { SkinDaySection } from '../components/SkinDaySection';
 
 /**
- * C2 Day detail (`/calendar/day/[day]`): the date as the title and the day's skin routines.
- * Later tasks add their sections below: hair tasks done and "Next wash was due 6 Oct" (033),
- * the condition log or "Log how your skin was" (038), product notes written that day (039) and
- * the weekly photo named by its date, "Skin photo, taken 6 Oct." (037).
+ * C2 Day detail (`/calendar/day/[day]`): the date as the title, then the day's skin routines,
+ * hair tasks done (or "Next wash was due 6 Oct"), the condition log (or "Log how your skin
+ * was"), product notes written that day and the weekly photo, "Skin photo, taken 6 Oct.".
  */
 export function DayDetailScreen() {
   const { t } = useTranslation();
@@ -36,14 +35,16 @@ export function DayDetailScreen() {
         contentContainerStyle={{ padding: 16, paddingTop: 8, gap: 24, paddingBottom: 32 }}
       >
         {day ? (
-          <SkinDaySection day={day} />
+          <>
+            <SkinDaySection day={day} />
+            <HairDaySection day={day} />
+            <ConditionDaySection day={day} />
+            <DayNotesSection day={day} />
+            <DayPhotoSection day={day} />
+          </>
         ) : (
           <EmptyState icon="calendar" title={t('calendar.day.invalid')} />
         )}
-        {day ? <HairDaySection day={day} /> : null}
-        {day ? <ConditionDaySection day={day} /> : null}
-        {day ? <DayNotesSection day={day} /> : null}
-        {day ? <DayPhotoSection day={day} /> : null}
       </ScrollView>
     </SafeAreaView>
   );
