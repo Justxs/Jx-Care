@@ -22,7 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { useIngredientInRule } from '@/features/conflicts/hooks';
-import { useBuyAgain } from '@/features/shopping/buyAgain';
+import { useBuyAgain } from '@/features/shopping/api';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
 import { expiryProgress } from '@/lib/expiry';
@@ -277,15 +277,13 @@ function Detail({ product: p }: { product: ProductDetail }) {
             {t('products.detail.markFinished')}
           </Button>
         )}
-        {buyAgain ? (
-          <Button
-            variant="secondary"
-            className="flex-1 px-2"
-            onPress={() => buyAgain([{ id: p.id, name: p.name }])}
-          >
-            {t('common.buyAgain')}
-          </Button>
-        ) : null}
+        <Button
+          variant="secondary"
+          className="flex-1 px-2"
+          onPress={() => buyAgain([{ id: p.id, name: p.name }])}
+        >
+          {t('common.buyAgain')}
+        </Button>
       </View>
 
       {p.photoUri ? (

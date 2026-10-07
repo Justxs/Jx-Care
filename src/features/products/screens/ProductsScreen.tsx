@@ -18,7 +18,7 @@ import { ToggleGroup } from '@/components/ui/toggle-group';
 import type { ProductView } from '@/db/enums';
 import { useSettings, useUpdateSettings } from '@/features/settings/api';
 import { useToBuyCount } from '@/features/shopping/api';
-import { useBuyAgain, type BuyAgain } from '@/features/shopping/buyAgain';
+import { useBuyAgain, type BuyAgain } from '@/features/shopping/api';
 import { ShoppingScreen, ShoppingShareButton } from '@/features/shopping/screens/ShoppingScreen';
 import { cn } from '@/lib/cn';
 import { showToast } from '@/state/ui';
@@ -336,20 +336,18 @@ function MyProducts({
             >
               {t('common.markFinished')}
             </Button>
-            {buyAgain ? (
-              <Button
-                className="flex-1"
-                variant="secondary"
-                icon="shopping-cart"
-                disabled={selectedItems.length === 0}
-                onPress={() => {
-                  buyAgain(selectedItems.map((p) => ({ id: p.id, name: p.name })));
-                  onSelectDone();
-                }}
-              >
-                {t('common.buyAgain')}
-              </Button>
-            ) : null}
+            <Button
+              className="flex-1"
+              variant="secondary"
+              icon="shopping-cart"
+              disabled={selectedItems.length === 0}
+              onPress={() => {
+                buyAgain(selectedItems.map((p) => ({ id: p.id, name: p.name })));
+                onSelectDone();
+              }}
+            >
+              {t('common.buyAgain')}
+            </Button>
           </View>
         </Animated.View>
       ) : (
@@ -378,7 +376,7 @@ function MyProducts({
 
 /** Swipe and long-press actions for one row. */
 function useRowActions(
-  buyAgain: BuyAgain | null,
+  buyAgain: BuyAgain,
   finish: (products: { id: number; name: string }[]) => Promise<void>,
 ) {
   const { t } = useTranslation();
@@ -402,14 +400,12 @@ function useRowActions(
       primary: true,
       onPress: () => void finish([{ id: item.id, name: item.name }]),
     });
-    if (buyAgain) {
-      list.push({
-        key: 'buyAgain',
-        label: t('common.buyAgain'),
-        icon: 'shopping-cart',
-        onPress: () => buyAgain([{ id: item.id, name: item.name }]),
-      });
-    }
+    list.push({
+      key: 'buyAgain',
+      label: t('common.buyAgain'),
+      icon: 'shopping-cart',
+      onPress: () => buyAgain([{ id: item.id, name: item.name }]),
+    });
     list.push({
       key: 'duplicate',
       label: t('products.duplicate'),

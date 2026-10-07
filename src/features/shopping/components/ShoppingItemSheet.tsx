@@ -17,7 +17,7 @@ import { AreaField } from '@/features/products/components/ProductFields';
 import { showToast } from '@/state/ui';
 
 import { useAddItem, useDeleteItems, usePickerProducts, useUpdateItem } from '../api';
-import { useBuyAgain } from '../buyAgain';
+import { useBuyAgain } from '../api';
 import { emptyShoppingItem, shoppingItemSchema, type ShoppingItemFormValues } from '../schema';
 import type { ShoppingRowItem } from '../types';
 
@@ -88,7 +88,7 @@ export function ShoppingItemSheet({ open, onClose, editing }: ShoppingItemSheetP
       void Promise.resolve(form.validate('blur')).then(() => form.handleSubmit());
       return;
     }
-    if (pickedProduct && buyAgain) {
+    if (pickedProduct) {
       buyAgain([{ id: pickedProduct.id, name: pickedProduct.name }]);
       onClose();
     }
@@ -104,7 +104,7 @@ export function ShoppingItemSheet({ open, onClose, editing }: ShoppingItemSheetP
         <Button
           onPress={submit}
           loading={submitting}
-          disabled={!showForm && (pickedProduct === null || !buyAgain)}
+          disabled={!showForm && pickedProduct === null}
         >
           {isEdit ? t('shopping.sheet.save') : t('shopping.addItem')}
         </Button>

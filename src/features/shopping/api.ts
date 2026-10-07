@@ -17,7 +17,6 @@ import { useSettings } from '@/features/settings/api';
 import { appStore } from '@/state/app';
 import { showToast } from '@/state/ui';
 
-import { registerBuyAgain, type BuyAgain } from './buyAgain';
 import {
   addBuyAgain,
   addItem,
@@ -147,11 +146,13 @@ export function addToShoppingList(client: QueryClient, productIds: readonly numb
   invalidate(client);
 }
 
+export type BuyAgain = (products: { id: number; name: string }[]) => void;
+
 /**
  * The one Buy again action (P1 rows and select bar, P2, P5, T2, Today, Mark finished toast):
  * adds linked To buy items and shows "Vitamin C serum added to your shopping list" with Undo.
  */
-function useBuyAgainAction(): BuyAgain {
+export function useBuyAgain(): BuyAgain {
   const { t } = useTranslation();
   const { mutateAsync } = useShoppingMutation(addBuyAgainItems);
   const { mutate: undoMutate } = useDeleteItems();
@@ -181,5 +182,3 @@ function useBuyAgainAction(): BuyAgain {
     [mutateAsync, undoMutate, t],
   );
 }
-
-registerBuyAgain(useBuyAgainAction);

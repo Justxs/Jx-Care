@@ -36,7 +36,7 @@ import {
   useShoppingList,
   useSuggestions,
 } from '../api';
-import { useBuyAgain } from '../buyAgain';
+import { useBuyAgain } from '../api';
 import { ShoppingItemSheet } from '../components/ShoppingItemSheet';
 import { ShoppingRow, type ShoppingRowAction } from '../components/ShoppingRow';
 import { prefillFromItem, shareText } from '../repo';
@@ -403,14 +403,12 @@ function SuggestionRow({ item }: { item: Suggestion }) {
         </Text>
         {rated ? <Text className="text-caption tabular-nums text-ink-muted">{rated}</Text> : null}
       </View>
-      {buyAgain ? (
-        <RoundButton
-          icon="plus"
-          label={`${t('common.buyAgain')}, ${item.name}`}
-          tone="accent"
-          onPress={() => buyAgain([{ id: item.productId, name: item.name }])}
-        />
-      ) : null}
+      <RoundButton
+        icon="plus"
+        label={`${t('common.buyAgain')}, ${item.name}`}
+        tone="accent"
+        onPress={() => buyAgain([{ id: item.productId, name: item.name }])}
+      />
       <RoundButton
         icon="x"
         label={`${t('shopping.dismiss')}, ${item.name}`}

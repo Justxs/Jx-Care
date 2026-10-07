@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet } from '@/components/ui/sheet';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
-import { useBuyAgain } from '@/features/shopping/buyAgain';
+import { useBuyAgain } from '@/features/shopping/api';
 import { useFormat } from '@/i18n/useFormat';
 import { motion } from '@/theme/motion';
 import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
@@ -117,17 +117,15 @@ export function ArchiveScreen() {
               trailing="none"
               onPress={() => restoreItem(menuItem)}
             />
-            {buyAgain ? (
-              <ListRow
-                label={t('common.buyAgain')}
-                icon="shopping-cart"
-                trailing="none"
-                onPress={() => {
-                  setMenuOpen(false);
-                  buyAgain([{ id: menuItem.id, name: menuItem.name }]);
-                }}
-              />
-            ) : null}
+            <ListRow
+              label={t('common.buyAgain')}
+              icon="shopping-cart"
+              trailing="none"
+              onPress={() => {
+                setMenuOpen(false);
+                buyAgain([{ id: menuItem.id, name: menuItem.name }]);
+              }}
+            />
             <ListRow
               label={t('common.delete')}
               icon="trash-2"

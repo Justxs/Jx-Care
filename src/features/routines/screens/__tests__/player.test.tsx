@@ -7,7 +7,7 @@ import type { Db } from '@/db';
 import * as conflictHooks from '@/features/conflicts/hooks';
 import { routineLog, routineStep } from '@/db/schema';
 import { markFinished } from '@/features/products/repo';
-import { registerBuyAgain } from '@/features/shopping/buyAgain';
+import * as shoppingApi from '@/features/shopping/api';
 import { getSettings, saveSettings } from '@/features/settings/repo';
 import { MON, seedProduct, seedRoutine } from '@/features/today/testUtils';
 import { setI18nLanguage } from '@/i18n';
@@ -112,7 +112,6 @@ beforeEach(async () => {
 
 afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
-  registerBuyAgain(() => null);
   jest.restoreAllMocks();
 });
 
@@ -242,8 +241,8 @@ describe('RoutinePlayerScreen', () => {
     ).toHaveLength(2);
     expect(screen.getAllByRole('button', { name: 'Pick another' })).toHaveLength(2);
     expect(screen.getByRole('button', { name: 'Pick a product' })).toBeTruthy();
-    // Buy again waits for task 034.
-    expect(screen.queryByRole('button', { name: 'Buy again' })).toBeNull();
+    // Buy again on the expired and the finished product; the empty step has nothing to buy.
+    expect(screen.getAllByRole('button', { name: 'Buy again' })).toHaveLength(2);
     // The card keeps its checkbox.
     expect(checkbox('Step 1 · SPF 50 fluid, Expired 2 Oct')).not.toBeChecked();
 
@@ -264,7 +263,7 @@ describe('RoutinePlayerScreen', () => {
   it('shows Buy again on a problem card once the shopping list provides it', async () => {
     const app = setup();
     const buy = jest.fn();
-    registerBuyAgain(() => buy);
+    jest.spyOn(shoppingApi, 'useBuyAgain').mockReturnValue(buy);
     const spf = seedProduct(app.db, { name: 'SPF 50 fluid', expiresAt: '2026-10-02' });
     const id = seedRoutine(app.db, { name: 'Evening', steps: [spf, null] });
     await renderPlayer(app, id);

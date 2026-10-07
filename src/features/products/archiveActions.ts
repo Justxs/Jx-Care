@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { useBuyAgain } from '@/features/shopping/buyAgain';
+import { useBuyAgain } from '@/features/shopping/api';
 import { showToast } from '@/state/ui';
 
 import { useMarkFinishedMany, useRestoreProduct, useUndoFinished } from './api';
@@ -25,9 +25,8 @@ export function useFinishProducts() {
           : t('products.finishedManyToast', { count: previous.length }),
       actionLabel: t('common.undo'),
       onAction: () => undo.mutate(previous),
-      ...(buyAgain
-        ? { secondaryLabel: t('common.buyAgain'), onSecondary: () => buyAgain(products) }
-        : {}),
+      secondaryLabel: t('common.buyAgain'),
+      onSecondary: () => buyAgain(products),
     });
   };
   return { run, isPending: finish.isPending };
