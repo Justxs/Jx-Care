@@ -13,6 +13,7 @@ import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
 import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
+import { addBuyAgain } from '@/features/shopping/repo';
 
 import * as events from '../../events';
 import { registerPlayerConflicts } from '../../playerSlots';
@@ -380,6 +381,18 @@ describe('RoutineDoneScreen', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Back to Today' }));
     expect(router.dismissTo).toHaveBeenCalledWith('/');
+  });
+
+  it('says when an expired product is already on the shopping list', async () => {
+    const app = setup();
+    const spf = seedProduct(app.db, { name: 'SPF 50 fluid', expiresAt: '2026-10-02' });
+    addBuyAgain(app.db, spf);
+    const id = seedRoutine(app.db, { name: 'Evening', steps: [spf] });
+    finishAt(app.db, id, MON);
+    await renderDone(app, id, 0);
+    expect(
+      await screen.findByText('SPF 50 fluid expired 2 Oct · On your shopping list'),
+    ).toBeTruthy();
   });
 
   it('says "Started again" after a break, and Add a note opens the condition log on Skin', async () => {

@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { StreakCard } from '@/components/ui/streak';
 import { Text } from '@/components/ui/text';
 import { useConditionLogSheet } from '@/features/condition/components/ConditionLogSheet';
+import { useShoppingList } from '@/features/shopping/api';
 import { timeOfDayName } from '@/features/today/cardText';
 import { useCountUp } from '@/features/today/useCountUp';
 import { useFormat, type Formatter } from '@/i18n/useFormat';
@@ -94,6 +95,8 @@ export function RoutineDoneScreen() {
   const [openedAt] = useState(() => Date.now());
   const count = useStreakCount(Number.isFinite(from) ? from : null, streak?.current);
 
+  const toBuy = useShoppingList('all').data?.toBuy;
+  const onList = new Set((toBuy ?? []).map((i) => i.productId));
   const attention = r ? attentionProducts(r) : [];
   const lines: { key: string; icon: IconName; text: string; danger?: boolean }[] = [];
   if (next) lines.push({ key: 'next', icon: 'clock', text: nextUpText(next, f, t) });
@@ -101,7 +104,9 @@ export function RoutineDoneScreen() {
     lines.push({
       key: `p${p.id}`,
       icon: 'alert-triangle',
-      text: attentionText(p, f, t),
+      text: onList.has(p.id)
+        ? t('player.done.onShoppingList', { text: attentionText(p, f, t) })
+        : attentionText(p, f, t),
       danger: p.problem === 'expired',
     });
   }

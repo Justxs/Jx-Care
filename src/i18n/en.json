@@ -1507,7 +1507,8 @@
       "finished": "{{name}} is finished",
       "expired": "{{name}} has expired",
       "backToToday": "Back to Today",
-      "addNote": "Add a note"
+      "addNote": "Add a note",
+      "onShoppingList": "{{text}} · On your shopping list"
     }
   },
   "reminders": {

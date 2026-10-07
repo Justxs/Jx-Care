@@ -1623,7 +1623,8 @@
       "finished": "{{name}}: baigta",
       "expired": "{{name}}: nebegalioja",
       "backToToday": "Grįžti į Šiandien",
-      "addNote": "Pridėti pastabą"
+      "addNote": "Pridėti pastabą",
+      "onShoppingList": "{{text}} · Yra pirkinių sąraše"
     }
   },
   "reminders": {
