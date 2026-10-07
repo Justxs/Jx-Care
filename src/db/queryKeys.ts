@@ -36,7 +36,10 @@ export const qk = {
     player: (id: number, day: string) => ['routines', 'player', id, day] as const,
   },
   // Task 025
-  today: (day: string) => ['today', day] as const,
+  today: {
+    all: ['today'] as const,
+    day: (day: string) => ['today', day] as const,
+  },
   // Task 028
   calendar: {
     all: ['calendar'] as const,

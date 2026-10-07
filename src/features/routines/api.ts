@@ -47,7 +47,7 @@ function useDayContext() {
   return { day, warnDays };
 }
 
-const todayRoutinesKey = (day: string) => [...qk.today(day), 'routines'] as const;
+const todayRoutinesKey = (day: string) => [...qk.today.day(day), 'routines'] as const;
 
 /** Today's routine cards on `day`; shared by `useToday` and Today's prefetch. */
 export const todayRoutinesQuery = (day: string, warnDays: number) =>
@@ -109,7 +109,7 @@ export function useRecentStepProducts(area: 'skin' | 'hair') {
 /** After a routine is created, changed, switched on or off, duplicated or deleted. */
 function routinesChanged(client: QueryClient, opts: { products?: boolean } = {}): void {
   client.invalidateQueries({ queryKey: qk.routines.all });
-  client.invalidateQueries({ queryKey: ['today'] });
+  client.invalidateQueries({ queryKey: qk.today.all });
   client.invalidateQueries({ queryKey: qk.calendar.all });
   // Conflict warnings (task 030) and S3's "In N routines" depend on routines and their steps.
   client.invalidateQueries({ queryKey: qk.conflicts.all });
@@ -175,7 +175,7 @@ export function useSetChoice() {
     mutationFn: async (v: { timeOfDayKey: string; weekday: number; routineId: number }) =>
       setChoice(getDb(), v.timeOfDayKey, v.weekday, v.routineId),
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['today'] });
+      client.invalidateQueries({ queryKey: qk.today.all });
       // The pick decides which routine that weekday's reminder names and opens.
       void resyncRoutineReminders();
     },
@@ -278,7 +278,7 @@ export function useTickStep() {
       for (const [key, data] of context?.previous ?? []) client.setQueryData(key, data);
     },
     onSettled: (_log, _error, v) => {
-      client.invalidateQueries({ queryKey: qk.today(v.day) });
+      client.invalidateQueries({ queryKey: qk.today.day(v.day) });
       client.invalidateQueries({ queryKey: qk.routines.all });
       client.invalidateQueries({ queryKey: qk.calendar.all });
     },

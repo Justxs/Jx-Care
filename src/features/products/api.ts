@@ -142,7 +142,7 @@ export function invalidateProductQueries(
   for (const queryKey of [
     qk.products.all,
     // Today shows expiring products and routine steps by product.
-    ['today'],
+    qk.today.all,
     // Routine steps and hair tasks name their products and flag finished or expired ones.
     qk.routines.all,
     qk.hair.all,

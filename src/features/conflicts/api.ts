@@ -90,7 +90,7 @@ function invalidateCare(client: QueryClient): void {
     qk.avoid.all,
     qk.products.all,
     qk.routines.all,
-    ['today'],
+    qk.today.all,
   ]) {
     client.invalidateQueries({ queryKey });
   }

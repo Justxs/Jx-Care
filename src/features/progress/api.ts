@@ -102,12 +102,12 @@ export function usePhotosForDay(day: string) {
 
 /**
  * After a week is taken, skipped or deleted: refreshes the progress screens, Today's check-in
- * photo row (qk.today(day)) and day detail (qk.calendar.day(day)), and reschedules the weekly
+ * photo row (qk.today.day(day)) and day detail (qk.calendar.day(day)), and reschedules the weekly
  * photo reminder, so a week that is done gets no reminder (task 036).
  */
 function onChanged(client: QueryClient): void {
   client.invalidateQueries({ queryKey: qk.progress.all });
-  client.invalidateQueries({ queryKey: ['today'] });
+  client.invalidateQueries({ queryKey: qk.today.all });
   client.invalidateQueries({ queryKey: [...qk.calendar.all, 'day'] });
   syncEntity('weekly_photo', null).catch(() => {
     // No notification layer yet (tests) or no permission: the next sync catches up.

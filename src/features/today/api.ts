@@ -15,11 +15,11 @@ export const EXPIRING_LIMIT = 3;
 
 /**
  * The first-run card's data. Under the Today key, so product, routine, hair and settings changes
- * (which all invalidate `['today']`) refresh it.
+ * (which all invalidate `qk.today.all`) refresh it.
  */
 export const setupQuery = (day: string) =>
   queryOptions({
-    queryKey: [...qk.today(day), 'setup'],
+    queryKey: [...qk.today.day(day), 'setup'],
     queryFn: () => setupProgress(getDb()),
   });
 

@@ -88,7 +88,7 @@ export const hairPlanner: Planner = ({ db, now, settings, t }) => {
 
 /** Today, the calendar, the hair lists and progress weeks read again (when the app is running). */
 function refreshHairQueries(): void {
-  for (const queryKey of [qk.hair.all, ['today'], qk.calendar.all, qk.progress.all]) {
+  for (const queryKey of [qk.hair.all, qk.today.all, qk.calendar.all, qk.progress.all]) {
     queryClient.invalidateQueries({ queryKey }).catch(() => {});
   }
 }

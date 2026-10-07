@@ -163,7 +163,7 @@ export function useHairLogsOnDay(day: string) {
 
 function invalidate(client: QueryClient, opts: { usedIn?: boolean } = {}): void {
   client.invalidateQueries({ queryKey: qk.hair.all });
-  client.invalidateQueries({ queryKey: ['today'] });
+  client.invalidateQueries({ queryKey: qk.today.all });
   client.invalidateQueries({ queryKey: qk.calendar.all });
   // C6 hair "What changed this week" counts the logs.
   client.invalidateQueries({ queryKey: qk.progress.all });
@@ -172,7 +172,6 @@ function invalidate(client: QueryClient, opts: { usedIn?: boolean } = {}): void 
   if (opts.usedIn) {
     // Product detail shows the hair tasks that use a product (P2 "Used in").
     client.invalidateQueries({ queryKey: [...qk.products.all, 'detail'] });
-    client.invalidateQueries({ queryKey: [...qk.products.all, 'usedIn'] });
   }
 }
 

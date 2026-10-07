@@ -24,7 +24,7 @@ export function useUpdateSettings() {
     onSuccess: (next) => {
       client.setQueryData(qk.settings, next);
       // Settings change Today (warning window, setup card) and every expiry badge.
-      client.invalidateQueries({ queryKey: ['today'] });
+      client.invalidateQueries({ queryKey: qk.today.all });
       client.invalidateQueries({ queryKey: qk.products.all });
     },
   });
