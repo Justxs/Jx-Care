@@ -26,15 +26,8 @@ import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
 import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
 
-import {
-  useArchiveCount,
-  useDuplicateProduct,
-  useMarkFinished,
-  useMarkFinishedMany,
-  useMarkOpened,
-  useProducts,
-  useUndoFinished,
-} from '../api';
+import { useArchiveCount, useDuplicateProduct, useMarkOpened, useProducts } from '../api';
+import { useFinishProducts } from '../archiveActions';
 import { ProductFiltersSheet } from '../components/ProductFiltersSheet';
 import { ProductRow, type RowAction } from '../components/ProductRow';
 import { ProductTile } from '../components/ProductTile';
@@ -169,9 +162,8 @@ function MyProducts({
   const view: ProductView = useSettings().data?.productView ?? 'list';
   const updateSettings = useUpdateSettings();
   const buyAgain = useBuyAgain();
-  const actions = useRowActions(buyAgain);
-  const finishMany = useMarkFinishedMany();
-  const undo = useUndoFinished();
+  const finish = useFinishProducts();
+  const actions = useRowActions(buyAgain, finish.run);
   const filterCount = activeFilterCount(filters);
 
   useEffect(() => {
@@ -193,17 +185,8 @@ function MyProducts({
   const selectedItems = items.filter((p) => selected.has(p.id));
 
   const finishSelected = async () => {
-    const finished = selectedItems.map((p) => ({ id: p.id, name: p.name }));
-    const previous = await finishMany.mutateAsync(finished.map((p) => p.id));
+    await finish.run(selectedItems.map((p) => ({ id: p.id, name: p.name })));
     onSelectDone();
-    showToast({
-      message: t('products.finishedManyToast', { count: previous.length }),
-      actionLabel: t('common.undo'),
-      onAction: () => undo.mutate(previous),
-      ...(buyAgain
-        ? { secondaryLabel: t('common.buyAgain'), onSecondary: () => buyAgain(finished) }
-        : {}),
-    });
   };
 
   return (
@@ -343,7 +326,7 @@ function MyProducts({
               className="flex-1"
               icon="archive"
               disabled={selectedItems.length === 0}
-              loading={finishMany.isPending}
+              loading={finish.isPending}
               onPress={finishSelected}
             >
               {t('common.markFinished')}
@@ -389,11 +372,12 @@ function MyProducts({
 }
 
 /** Swipe and long-press actions for one row. */
-function useRowActions(buyAgain: BuyAgain | null) {
+function useRowActions(
+  buyAgain: BuyAgain | null,
+  finish: (products: { id: number; name: string }[]) => Promise<void>,
+) {
   const { t } = useTranslation();
   const markOpened = useMarkOpened();
-  const markFinished = useMarkFinished();
-  const undo = useUndoFinished();
   const duplicate = useDuplicateProduct();
 
   return (item: ProductListItem): RowAction[] => {
@@ -411,20 +395,7 @@ function useRowActions(buyAgain: BuyAgain | null) {
       label: t('common.markFinished'),
       icon: 'archive',
       primary: true,
-      onPress: async () => {
-        const { previous } = await markFinished.mutateAsync(item.id);
-        showToast({
-          message: t('products.finishedToast', { name: item.name }),
-          actionLabel: t('common.undo'),
-          onAction: () => undo.mutate([{ id: item.id, archivedAt: previous }]),
-          ...(buyAgain
-            ? {
-                secondaryLabel: t('common.buyAgain'),
-                onSecondary: () => buyAgain([{ id: item.id, name: item.name }]),
-              }
-            : {}),
-        });
-      },
+      onPress: () => void finish([{ id: item.id, name: item.name }]),
     });
     if (buyAgain) {
       list.push({

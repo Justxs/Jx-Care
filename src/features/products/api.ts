@@ -34,7 +34,6 @@ import {
   listArchived,
   listKnownIngredients,
   listProducts,
-  markFinished,
   markFinishedMany,
   markOpened,
   productsForPicker,
@@ -220,20 +219,6 @@ export function useMarkOpened() {
       return id;
     },
     onSuccess: (id) => {
-      invalidateProductQueries(client);
-      onProductChanged(id);
-    },
-  });
-}
-
-export function useMarkFinished() {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: number) => ({
-      id,
-      previous: markFinished(getDb(), id, appStore.state.activeDay),
-    }),
-    onSuccess: ({ id }) => {
       invalidateProductQueries(client);
       onProductChanged(id);
     },

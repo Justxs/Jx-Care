@@ -34,13 +34,11 @@ import {
   useDeleteProduct,
   useDuplicateProduct,
   useKnownIngredients,
-  useMarkFinished,
   useMarkOpened,
   useProduct,
-  useRestoreProduct,
-  useUndoFinished,
   useUpdateProduct,
 } from '../api';
+import { useFinishProducts, useRestoreFromArchive } from '../archiveActions';
 import { IngredientEntrySheet } from '../components/IngredientEntrySheet';
 import { IngredientPills } from '../components/IngredientPills';
 import { NotesTimeline } from '../components/NotesTimeline';
@@ -108,9 +106,8 @@ function Detail({ product: p }: { product: ProductDetail }) {
   const f = useFormat();
   const buyAgain = useBuyAgain();
   const markOpened = useMarkOpened();
-  const markFinished = useMarkFinished();
-  const undoFinished = useUndoFinished();
-  const restore = useRestoreProduct();
+  const finish = useFinishProducts();
+  const restore = useRestoreFromArchive();
   const remove = useDeleteProduct();
   const duplicate = useDuplicateProduct();
   const update = useUpdateProduct();
@@ -160,30 +157,9 @@ function Detail({ product: p }: { product: ProductDetail }) {
     });
   }
 
-  const finish = async () => {
-    const { previous } = await markFinished.mutateAsync(p.id);
-    showToast({
-      message: t('products.finishedToast', { name: p.name }),
-      actionLabel: t('common.undo'),
-      onAction: () => undoFinished.mutate([{ id: p.id, archivedAt: previous }]),
-      ...(buyAgain
-        ? {
-            secondaryLabel: t('common.buyAgain'),
-            onSecondary: () => buyAgain([{ id: p.id, name: p.name }]),
-          }
-        : {}),
-    });
+  const finishProduct = async () => {
+    await finish.run([{ id: p.id, name: p.name }]);
     goBack();
-  };
-
-  const restoreProduct = async () => {
-    const previous = p.archivedAt;
-    await restore.mutateAsync(p.id);
-    showToast({
-      message: t('products.archive.restoredToast', { name: p.name }),
-      actionLabel: t('common.undo'),
-      onAction: () => undoFinished.mutate([{ id: p.id, archivedAt: previous }]),
-    });
   };
 
   return (
@@ -289,11 +265,15 @@ function Detail({ product: p }: { product: ProductDetail }) {
           {t('common.edit')}
         </Button>
         {archived ? (
-          <Button className="flex-[1.4] px-2" loading={restore.isPending} onPress={restoreProduct}>
+          <Button
+            className="flex-[1.4] px-2"
+            loading={restore.isPending}
+            onPress={() => void restore.run(p)}
+          >
             {t('products.detail.restore')}
           </Button>
         ) : (
-          <Button className="flex-[1.4] px-2" loading={markFinished.isPending} onPress={finish}>
+          <Button className="flex-[1.4] px-2" loading={finish.isPending} onPress={finishProduct}>
             {t('products.detail.markFinished')}
           </Button>
         )}
