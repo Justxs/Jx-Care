@@ -28,7 +28,7 @@ In: `npx expo install expo-blur`. Files: `src/features/security/screens/LockScre
 
 ### L2 Forgot PIN
 
-- Push from the lock screen. Shows the saved question (preset questions translated), answer field, Continue.
+- Push from the lock screen. Shows the saved question (preset questions translated), answer field, Continue. The answer field is a `secret` `Input` (task 009): hidden as typed, with the same eye button as O4 ("Show answer" / "Hide answer").
 - Correct (`verifyRecoveryAnswer`): Create new PIN and Confirm (reuse the O2/O3 PinPad screens), then unlocked on Today.
 - 5 wrong answers: "Try again in 15 min" countdown, field disabled.
 - Bottom link "Reset app and delete all data" opens the reset dialog below.
@@ -48,6 +48,7 @@ Out:
 - [ ] Cold start shows the lock; unlocking returns to the last screen with its state; returning after more than the auto-lock time locks again, less doesn't (unit test `lock.ts` with fake timers and a mocked `AppState`).
 - [ ] The app switcher shows the blurred overlay, never content (manual check on both platforms, note under Decisions).
 - [ ] Lockout countdowns show and survive backgrounding; the 5th and 10th wrong PIN and the 5th wrong answer lock for the right time.
+- [ ] The Forgot PIN answer is hidden as typed and the eye button shows it.
 - [ ] Forgot PIN with the right answer sets a new PIN; reset deletes everything (test that `resetApp` calls every cleanup with fakes) and lands on O1; the dialog shows real counts.
 - [ ] A notification tapped while locked opens its screen right after unlock.
 - [ ] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.

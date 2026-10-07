@@ -1,6 +1,6 @@
 # Components
 
-Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v14) on 2026-10-06 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
+Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v16) on 2026-10-07 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
 
 Props for each component are in [components.d.ts](components.d.ts). The web previews in the artifact are React DOM, not React Native: rebuild each component with rn-primitives and NativeWind, keeping the props, sizes, tokens and states described here.
 
@@ -66,14 +66,15 @@ White container that groups related content on the canvas.
 
 ## Checkbox
 
-Round tick used for routine steps, shopping items and hair tasks.
+Square tick used for routine steps, shopping items, hair tasks and multi-select.
 
 **Built on:** rn-primitives `Checkbox` (`Checkbox.Root` + `Checkbox.Indicator`), controlled with `checked` / `onCheckedChange`.
 
 **Consumer provides:** `checked`, `onCheckedChange`, and a `label` or `aria-label`.
 
-- 26px circle: unchecked is `surface` with a 2px `border-strong` ring; checked fills `accent` with an `on-accent` check.
+- 26px square with 7px corners: unchecked is `surface` with a 2px `border-strong` ring; checked fills `accent` with an `on-accent` check.
 - Keep the hit area at least 44px by giving the row the press handler too.
+- Square so it never reads as a radio button. Single choices use RadioList, with round marks.
 
 ## Chip
 
@@ -111,6 +112,18 @@ What a list shows when it has nothing yet: a plain icon in `ink-muted` (no circl
 - Used by Products, Shopping, Routines, Hair, Calendar, Progress, Archive, Avoid list and Conflicts. The copy for each is on the EmptyStates card.
 - One filled button at most. The second action, when there is one, is a ghost button.
 
+## Fab
+
+The one add action on a list screen: a labelled pill ("Add product", "New routine", "Add item", "New rule", "Add ingredient") at the bottom right, 16px from the edge, above the tab bar. Inside thumb reach, unlike a + in the header.
+
+**Built on:** RN `Pressable` + `Text`, Icon, `accent`, `on-accent`, `shadow-raised`.
+
+**Consumer provides:** `children` (the label, verb first), `icon` (default `plus`), `onPress`.
+
+- 56px tall, always labelled; it counts as the screen's one filled accent button.
+- Lists keep 96px of empty space at the end so the last row can scroll clear of it.
+- Hidden while a selection bar or a sheet is open.
+
 ## Icon
 
 Lucide icon by name, drawn in the current text colour.
@@ -128,6 +141,7 @@ Text field with a label above, for product, routine and hair task forms.
 **Consumer provides:** `label`, `value` / `onChange`, optional `placeholder`, `hint`, `error`, `inputMode` (`numeric` for size and PAO months).
 
 - 48px, radius `radius-md`, `border-strong` edge, text `body`. Error swaps the edge to `danger` and shows the message under the field; say how to fix it ("Enter months as a number, e.g. 12").
+- `secret` hides the value as typed and adds an eye button (44px) that shows it: used for the recovery answer.
 
 ## ListRow
 
@@ -171,6 +185,7 @@ One product in the Products list or the Expiring soon card: thumb, name, brand a
 
 - Thumb is the product photo when there is one, otherwise a neutral `subtle` square with a category glyph in `ink-muted` (pipette for serums and oils, droplet for cleansers and toners, sun for SPF, spray can for shampoo and styling, flask for the rest). No tinted icon tiles.
 - Rows inside a flush Card, divided by an inset Separator. Long names wrap; the badge never shrinks.
+- The badge only shows for a status that needs attention; an OK product has no badge, and the date sits only on the third line, so nothing is said twice.
 
 ## Progress
 
@@ -193,6 +208,18 @@ Circular progress for a routine card on Today ("2/5") and the player header.
 
 - Turns `ok` green when complete. The label uses tabular numbers so "9/10" and "10/10" keep the ring's size.
 - Fixed size: the ring never grows with its label.
+
+## RadioList
+
+A vertical single choice: one row per option, a label with an optional one-line explanation, and a round mark on the right. Use it for three or more options, or whenever a label would not fit a segmented control in Lithuanian (step schedule, routine templates, language).
+
+**Built on:** rn-primitives `RadioGroup`, ListRow layout, Separator.
+
+**Consumer provides:** `items` ({value, label, detail?}), `value`, `onValueChange`, `aria-label`.
+
+- Rows are at least 56px and the whole row is the target.
+- Round marks only here; checkboxes are square, so the two never look alike.
+- Two short options stay a ToggleGroup.
 
 ## Rating
 
@@ -228,6 +255,7 @@ Header for pushed screens and full-screen modals: a back (or close) button, a ce
 
 - Always 56px tall, and the right side keeps a 44px spacer when there is no action, so the title never moves between screens.
 - Long titles wrap to two lines at most, then truncate.
+- `action.text` gives a word action (Select, Share, Compare). Save never goes in the header: forms have a bottom bar.
 
 ## SelectField
 
@@ -287,6 +315,7 @@ Current and best streak for skin or hair, shown on Today and Calendar.
 
 - Skin and hair keep separate streaks. A day with nothing scheduled neither breaks nor extends one.
 - Two cards side by side, each filling half the row.
+- Icon is `calendar-check`. After a break, pass `restarted` and the line reads "Started again. Your best is still 21 days."
 
 ## StreakChip
 
@@ -296,8 +325,9 @@ Compact streak for headers and the Today top row. Skin and hair streaks are alwa
 
 **Consumer provides:** `area` (skin or hair), `value` in days.
 
-- Reads "flame 12 skin": the area is a word, not a second icon.
+- Reads "12 skin" after a `calendar-check` icon: the area is a word, not a second icon.
 - Tabular numbers and the badge minimum width keep it from changing size as the count grows. The big version is StreakCard.
+- Never a flame. With `onPress` it is a button that opens the streak sheet (ExplainSheets).
 
 ## Switch
 
@@ -328,8 +358,9 @@ Short confirmation with an optional Undo, floating above the tab bar.
 **Consumer provides:** text, optional `icon`, `actionLabel` + `onAction` (Undo).
 
 - Floats over content above the tab bar or the timer bar; it never pushes the layout.
-- Stays 4 s, or 6 s when it has an action. One at a time; a new one replaces the old one with a cross-fade.
+- One at a time; a new one replaces the old one with a cross-fade.
 - Announced to screen readers with `accessibilityLiveRegion="polite"`.
+- Stays 8 seconds. While a screen reader is on it stays until the next action or until dismissed, so Undo can always be reached. A decision that must not time out goes inline on the row instead.
 
 ## ToggleGroup
 

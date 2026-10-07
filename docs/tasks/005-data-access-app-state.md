@@ -36,7 +36,7 @@ In:
 7. **TanStack Store** in `src/state/`:
    - `appStore`: `language`, `isReady` (fonts + migrations), `activeDay` (the current app day, refreshed on app foreground and at 04:00, using task 006's `appDay()`; until 006 lands, a local stub with the same signature).
    - `lockStore`: `locked` (true at launch), `lastBackgroundAt`; task 018 fills in the behaviour.
-   - `uiStore`: the toast queue (`showToast({ message, actionLabel?, onAction?, durationMs = 5000 })`) used by task 009's Toast host.
+   - `uiStore`: the toast queue (`showToast({ message, actionLabel?, onAction?, durationMs = 8000 })`) used by task 009's Toast host. Toasts stay 8 s; while a screen reader is on (`AccessibilityInfo.isScreenReaderEnabled()`) they stay until the next action or until dismissed (spec Global UI rules).
    - Read with `useStore(store, selector)`; write with `store.setState`. Export small action functions (`setLanguage`, `showToast`) instead of calling `setState` from screens.
    - Language: `setLanguage(lang)` updates `appStore`, i18next (task 003) and `settings.language`.
 8. **Prefetch helper:** `prefetchToday(queryClient, day)` stub in `src/features/today/prefetch.ts`, called while the lock screen is open (task 018) so Today paints complete. Task 025 fills in what it prefetches.
@@ -50,7 +50,7 @@ Out:
 
 - [ ] `useSettings()` returns defaults on a fresh database and the saved values after `useUpdateSettings()`; the hook re-renders consumers after the mutation.
 - [ ] Changing language through `setLanguage` switches every mounted string at once and is still set after an app restart.
-- [ ] `showToast` adds to the queue and the queue drops a toast after its duration (unit test with fake timers).
+- [ ] `showToast` adds to the queue and the queue drops a toast after 8 s, but keeps it while a screen reader is on until it is dismissed or replaced (unit test with fake timers).
 - [ ] `activeDay` changes from one app day to the next at 04:00 (unit test with fake timers and the stub or task 006's `appDay`).
 - [ ] Repository and store tests pass; `npm run check` passes.
 

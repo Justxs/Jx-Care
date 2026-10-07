@@ -37,7 +37,7 @@ Out:
 ## Acceptance criteria
 
 - [ ] `<View className="bg-surface rounded-xl shadow-card p-4"><Text className="text-title-s text-ink">…</Text></View>` renders with the right colours in light and dark, switching live when the phone theme changes.
-- [ ] All 24 colour tokens and the React Native Reusables aliases (`bg-background`, `text-foreground`, `bg-primary`, `text-muted-foreground`, `border-input`, …) work as classes.
+- [ ] All 24 colour tokens plus `camera-bg` (fixed in both themes, for C4) and the React Native Reusables aliases (`bg-background`, `text-foreground`, `bg-primary`, `text-muted-foreground`, `border-input`, …) work as classes.
 - [ ] Type classes match DESIGN.md: `caption` and `overline` are **13 px / 18 px**, overline is semibold and **not** uppercase (DESIGN.md wins over any older 11–12 px value).
 - [ ] Figtree renders in all four weights on Android and iOS; there is no flash of the system font (the splash stays until fonts load).
 - [ ] `motion.ts`, `useMotion()` and `colors.ts` exist with tests; the colour drift test passes.

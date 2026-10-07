@@ -28,10 +28,12 @@ Light and dark are both designed; the app follows the phone. One pink accent, tw
 | `warning` | #8A5A10 | #F2C063 | Expiring soon and ingredient conflict text and icon, on warning-soft and surface. |
 | `warning-soft` | #FCF1DC | #3A3020 | Expiring soon badge, conflict pills and callouts, partly-done calendar days. |
 | `danger` | #B23731 | #F59A93 | Expired status, Reset app, destructive text. On danger-soft and surface. |
-| `danger-soft` | #FBE5E3 | #3D2321 | Expired badge fill, missed calendar days, Danger button fill. |
+| `danger-soft` | #FBE5E3 | #3D2321 | Expired badge fill, "Not done" calendar days, Danger button fill. |
 | `neutral` | #5F6662 | #B3BBB7 | Not-opened status text and dot, on neutral-soft. |
 | `neutral-soft` | #ECEEEC | #2A2E2C | Not-opened badge fill. |
 | `focus` | #B83A6E | #F28DB5 | Focus ring, 2px solid with 2px offset; 3:1 on every surface in both themes. |
+
+The progress camera is always dark in both themes: `camera-bg` #120D10, `camera-control` rgba(255,255,255,0.14), `camera-guide` rgba(240,168,137,0.30), `camera-frame` rgba(255,255,255,0.75).
 
 ## Typography
 
@@ -76,7 +78,7 @@ Skeletons at final size (product row 72px), reserved image boxes (thumb 48, prod
 
 ## Components
 
-Base components come from rn-primitives (https://rnprimitives.com/) styled with NativeWind, the React Native Reusables setup. App components: Button, Badge, AreaTag, Checkbox, Switch, ToggleGroup, Progress, ProgressRing, Separator, Input, SelectField, AlertDialog, Card, ListRow, ProductRow, RoutineStep, StreakCard, StreakChip, PinPad, TabBar, ScreenHeader, SheetFrame, Chip, Rating, WeekdayPicker, WeekdayDots, StepDots, PhotoTile, Skeleton, Toast, EmptyState, Icon (Lucide).
+Base components come from rn-primitives (https://rnprimitives.com/) styled with NativeWind, the React Native Reusables setup. App components: Button, Badge, AreaTag, Checkbox, Switch, ToggleGroup, Progress, ProgressRing, Separator, Input (with `secret` reveal), SelectField, RadioList, Fab, AlertDialog, Card, ListRow, ProductRow, RoutineStep, StreakCard, StreakChip, PinPad, TabBar, ScreenHeader, SheetFrame, Chip, Rating, WeekdayPicker, WeekdayDots, StepDots, PhotoTile, Skeleton, Toast, EmptyState, Icon (Lucide).
 
 ## Rules (what we avoid)
 
@@ -85,6 +87,7 @@ Base components come from rn-primitives (https://rnprimitives.com/) styled with 
 - Care area is a word in a coloured pill (Skin, Hair, Skin + hair), not an icon. No sparkle glyphs.
 - Product placeholders: neutral `subtle` square with a category glyph (pipette, droplet, sun, spray-can, flask-round). Photo placeholders: plain tone, no glyph.
 - Never a card inside a card. Notes and helper lines sit on the canvas as text; tinted callouts only for warnings that need action.
-- One filled accent button per screen. Header actions are a word ("Save") or a soft accent icon button. Back and close have no circle.
+- One filled accent button per screen. Add actions are a Fab at the bottom right; Save on form screens sits in a bottom-pinned bar; header actions are a word ("Select", "Share", "Compare"). Back and close have no circle.
+- Checkboxes are square (7px corners); radio marks are round. Three or more options, or long Lithuanian labels, use a RadioList, not a segmented control.
 - Touch targets 44px; smaller visuals (chips 36, switches, checkboxes) get hitSlop.
 - Copy: sentence case, verbs on buttons, no emoji, no exclamation marks, no em-dashes, no marketing words.

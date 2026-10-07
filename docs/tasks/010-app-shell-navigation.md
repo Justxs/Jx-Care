@@ -27,8 +27,8 @@ Route groups and files (thin files that render a placeholder screen component fr
 | `(tabs)/routines/index`, `routines/[id]` (R2 editor), `routines/hair/[id]` (R5) | R1, R2, R5 | Tab stack, push |
 | `(tabs)/calendar/index`, `calendar/day/[day]`, `calendar/progress`, `calendar/week/[area]/[weekStart]` | C1, C2, C3, C6 | Tab stack, push |
 | `(tabs)/settings/index`, `ingredients`, `conflicts`, `avoid`, `reminders`, `security`, `preferences`, `backup` | S1–S8 | Tab stack, push |
-| `product-form` (params `id?`, `mode=quick`, `fromShoppingItem?`) | P3 | `fullScreenModal`, `slide_from_bottom` 300 ms |
-| `player/[routineId]` | T2 | `fullScreenModal`, slide up 300 ms |
+| `product-form` (params `id?`, `fromShoppingItem?`; with `id` Edit product, without it the short Add product form) | P3 | `fullScreenModal`, `slide_from_bottom` 300 ms |
+| `player/[routineId]`, `player/[routineId]/done` (Routine done, opened with `router.replace`) | T2 | `fullScreenModal`, slide up 300 ms |
 | `progress/camera`, `progress/review`, `progress/compare` | C4, C5, C7 | `fullScreenModal`, slide up 300 ms |
 | `hair/done/[taskId]` | T3 | Transparent modal route rendering a `SheetFrame` (so the hair reminder can open it) |
 

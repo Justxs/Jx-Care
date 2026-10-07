@@ -26,7 +26,7 @@ Tasks in the same phase with no dependency between them can run in parallel (for
 | H. Conflicts | 029–030 | Ingredient groups, conflict rules, avoid list and warnings everywhere |
 | I. Hair | 031–033 | Hair tasks, quick setup, hair done, hair calendar and reminders |
 | J. Shopping | 034 | Shopping list with Buy again and suggestions |
-| K. Progress photos | 035–037 | Weekly photos, camera with guide, timeline and compare |
+| K. Progress photos | 035–037 | Weekly photos, camera with guide, Progress photos screen and compare |
 | L. Condition and notes | 038–039 | Daily condition log, product notes and ratings |
 | M. Finish | 040–041 | Backup and restore, final quality pass and release builds |
 
@@ -34,7 +34,7 @@ PIN lock comes after products on purpose (as in the feature plan): the data scre
 
 ## Task list
 
-Status: **todo**, **in progress**, **done**. Task files 008 onward follow the final designs (design system v14).
+Status: **todo**, **in progress**, **done**. Task files 008 onward follow the final designs (design system v17).
 
 | # | Task | Depends on | Spec | Status |
 | --- | --- | --- | --- | --- |
@@ -73,8 +73,8 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 033 | [Hair done, hair calendar and hair reminders](033-hair-done-calendar-reminders.md) | 020, 025, 028, 032 | T3, C1 hair | todo |
 | 034 | [Shopping list](034-shopping-list.md) | 014, 015 | P6, P7, sequence 7 | todo |
 | 035 | [Progress photo data and storage](035-progress-data-storage.md) | 005 | C3–C7 data | todo |
-| 036 | [Progress camera and review](036-progress-camera-review.md) | 020, 025, 035 | C4, C5, T1 weekly card | todo |
-| 037 | [Progress timeline, week detail and compare](037-progress-timeline-compare.md) | 036 | C3, C6, C7, S7 photos | todo |
+| 036 | [Progress camera and review](036-progress-camera-review.md) | 020, 025, 035 | C4, C5, T1 check-in photo row | todo |
+| 037 | [Progress photos, week detail and compare](037-progress-timeline-compare.md) | 036 | C3, C6, C7, S7 photos | todo |
 | 038 | [Condition log](038-condition-log.md) | 025, 028 | T4, C1 condition, C2 | todo |
 | 039 | [Product notes and rating](039-product-notes-rating.md) | 015, 034 | P2 rating, P8 | todo |
 | 040 | [Backup and restore](040-backup-restore.md) | 021, 030, 033, 037, 038, 039 | S8, sequence 9 | todo |
@@ -122,9 +122,9 @@ Choices the spec left open, made here so every task agrees. Change them here if 
 | Weekdays | ISO 1 = Monday … 7 = Sunday; weeks start on Monday |
 | Money | Integer cents plus the currency code from settings |
 | PIN and recovery answer | Salted SHA-256 hashes in expo-secure-store, with the lockout counters, so a restart doesn't reset a lockout |
-| Calendar day colours | Done = every time of day due that day is complete; partly done = something ticked but not all; missed = nothing ticked; none = nothing due |
+| Calendar day colours | Done = every time of day due that day is complete; partly done = something ticked but not all; missed = nothing ticked (shown to people as "Not done", never "Missed"; `missed` stays the internal value); none = nothing due |
 | Skin streak | A day extends the streak when at least one routine due that day is complete (feature plan rule); a day with nothing due is skipped; today only counts once complete and never breaks the streak while it is still today |
-| History before a routine existed | Days before a routine's creation date never count as missed |
+| History before a routine existed | Days before a routine's creation date never count as missed ("Not done") |
 | Hair "twice a week" in quick setup | Set days Monday and Thursday |
 | Hair "every few weeks" | Stored as a number of days with a weeks unit for display |
 | Tests for repositories | Run in Node on better-sqlite3 with the same Drizzle schema and migrations |

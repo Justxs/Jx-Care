@@ -13,12 +13,12 @@ export interface ToggleGroupItem { value: string; label: string; icon?: IconName
 export interface ToggleGroupProps { items: ToggleGroupItem[]; value: string; onValueChange?: (value: string) => void; size?: "md"|"sm"; "aria-label"?: string }
 export interface ProgressProps { value: number; max?: number; "aria-label"?: string }
 export interface SeparatorProps { inset?: boolean }
-export interface InputProps { label?: string; value?: string; defaultValue?: string; placeholder?: string; hint?: string; error?: string; inputMode?: "text"|"numeric"; validates?: boolean; noHelper?: boolean; onChange?: (e: unknown) => void }
+export interface InputProps { label?: string; value?: string; defaultValue?: string; placeholder?: string; hint?: string; error?: string; inputMode?: "text"|"numeric"; validates?: boolean; noHelper?: boolean; secret?: boolean; type?: "text"|"password"; onChange?: (e: unknown) => void }
 export interface AlertDialogProps { open?: boolean; title: string; description: string; actionLabel?: string; cancelLabel?: string; destructive?: boolean; onAction?: () => void; onCancel?: () => void }
 export interface CardProps { title?: string; flush?: boolean; children: React.ReactNode }
 export interface ProductRowProps { name: string; meta: string; expiry?: string; status?: ExpiryStatus; badge?: string; avoid?: boolean; area?: Area; category?: string; src?: string; onPress?: () => void }
 export interface RoutineStepProps { index?: number; name: string; note?: string; checked: boolean; onCheckedChange?: (checked: boolean) => void; conflict?: string }
-export interface StreakCardProps { area?: Area; value: number; best: number }
+export interface StreakCardProps { area?: Area; value: number; best: number; restarted?: boolean }
 export interface PinPadProps { filled: 0|1|2|3|4; biometric?: boolean; onDigit?: (digit: string) => void; onDelete?: () => void }
 export interface TabBarProps { active?: "today"|"products"|"routines"|"calendar"|"settings"; onChange?: (tab: string) => void; labels?: Partial<Record<"today"|"products"|"routines"|"calendar"|"settings", string>> }
 export interface ScreenHeaderProps { title: string; subtitle?: string; /** @deprecated use subtitle (shown under the title) */ overline?: string; onBack?: () => void; close?: boolean; back?: boolean; backLabel?: string; action?: { icon: IconName; label: string; onPress?: () => void; primary?: boolean; text?: boolean } }
@@ -34,7 +34,7 @@ export interface SheetFrameProps { title: string; onCancel?: () => void; cancelL
 export interface ProgressRingProps { value: number; max?: number; size?: number; label?: string; "aria-label"?: string }
 export interface ToastProps { icon?: IconName; actionLabel?: string; onAction?: () => void; children: React.ReactNode }
 export interface WeekdayDotsProps { value: number[]; short?: string[]; "aria-label"?: string }
-export interface StreakChipProps { area?: "skin" | "hair"; value: number; label?: string }
+export interface StreakChipProps { area?: "skin" | "hair"; value: number; label?: string; onPress?: () => void }
 export interface EmptyStateProps { icon?: IconName; title: string; actionLabel?: string; actionIcon?: IconName; onAction?: () => void; secondaryLabel?: string; onSecondary?: () => void; children?: React.ReactNode }
 /** Motion scale in ms and cubic-bezier control points; use with Reanimated `withTiming(v, { duration, easing: Easing.bezier(...) })`. */
 export declare const motion: { duration: { fast: 150; base: 200; slow: 300; reduced: 100 }; easing: { standard: [number, number, number, number]; enter: [number, number, number, number]; exit: [number, number, number, number] }; spring: { damping: number; stiffness: number; mass: number } };
@@ -74,3 +74,10 @@ export interface ConflictTagProps { mild?: boolean; label?: string; onPress?: ()
 /** The one conflict marker: amber pill with a triangle and the word Conflict (or Mild conflict). Tappable when onPress is set; opens the conflict details. */
 export declare function ConflictTag(props: ConflictTagProps): React.JSX.Element;
 export declare const ICON_NAMES: IconName[];
+export interface FabProps { icon?: string; children: React.ReactNode; onPress?: () => void }
+/** The one add action on a list screen: a labelled pill at the bottom right, inside thumb reach. */
+export declare function Fab(props: FabProps): React.JSX.Element;
+export interface RadioListItem { value: string; label: string; detail?: string; lead?: React.ReactNode }
+export interface RadioListProps { items: RadioListItem[]; value: string; onValueChange?: (v: string) => void; 'aria-label'?: string; className?: string }
+/** A vertical choice list for 3+ options or long labels; use it instead of ToggleGroup when Lithuanian labels would not fit. */
+export declare function RadioList(props: RadioListProps): React.JSX.Element;

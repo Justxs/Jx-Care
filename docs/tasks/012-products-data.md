@@ -1,6 +1,6 @@
 # 012 Products data
 
-**Phase:** C. Products · **Depends on:** 005, 006 · **Spec:** P1 (filters, sort, status), P2 (detail, used in, cost per day), P3 (fields, rules), P4 (ingredients), P5 (archive), refinement 10 (archive vs delete)
+**Phase:** C. Products · **Depends on:** 005, 006 · **Spec:** P1 (filters, sort, status, Select), P2 (detail, used in, cost per day), P3 (fields, rules), P4 (ingredients), P5 (archive), refinement 10 (archive vs delete)
 
 ## Goal
 
@@ -28,15 +28,16 @@ In: `src/features/products/repo.ts`, `repo.test.ts`, `api.ts`, `types.ts`, `sche
 | `saveIngredients(db, productId, lines)` | Takes parsed lines (task 006 `parseIngredientLines`), finds or creates each `ingredient` by `normalizedName`, writes `product_ingredient` with `position`; returns the new ingredient ids |
 | `markOpened(db, id, today)` | Sets `openedAt` to today |
 | `markFinished(db, id, today)` | Sets `archivedAt` to today; returns the previous value for Undo |
+| `markFinishedMany(db, ids, today)` | Select mode on P1 (Mark finished for all selected): the same for several products in one transaction; returns the previous values for Undo |
 | `restoreProduct(db, id)` | Clears `archivedAt` |
 | `deleteProduct(db, id)` | Only allowed when archived (throws otherwise); deletes the photo file too (through an injected `deleteFile` so tests don't touch the file system) |
 | `duplicateProduct(db, id)` | Copies fields and ingredients, name unchanged, dates `purchasedAt` today, `openedAt`/`archivedAt` null, no rating or notes; returns the new id |
 | `listArchived(db, sort)` | Archived products, `sort: 'date' \| 'cost'`, each with `archivedAt` and `costPerDay` |
 | `brandSuggestions(db, prefix)` | Distinct earlier brands matching the prefix, up to 5 |
 | `listKnownIngredients(db)` | For P4 suggestions: `{ id, name, normalizedName, groupId }[]` |
-| `productsForPicker(db, { area, search, category })` | For R4/P7 pickers: active products of that area (skin pickers include `both`), with status |
+| `productsForPicker(db, { area, search })` | For R4/P7 pickers: active products of that area (skin pickers include `both`), by name, with status, so R4 can list expired ones in its "Can't be picked" group. No category filter (spec R4). R4's Recent group comes from task 022's `recentStepProducts` |
 | `expiringSoon(db, today, warnDays, limit)` | Active products with status `expiring` or `expired`, soonest first, for the Today card |
-| `hasAnyProduct(db)` | For quick mode (spec P3: quick mode only while there are no products) |
+| `hasAnyProduct(db)` | For the Add product title: "Your first product" the first time (spec P3). Every new product uses the short form, so this no longer picks the form |
 
 ### Validation (`schema.ts`, zod, shared with the form in task 014)
 
@@ -45,7 +46,7 @@ In: `src/features/products/repo.ts`, `repo.test.ts`, `api.ts`, `types.ts`, `sche
 
 ### Query hooks (`api.ts`)
 
-`useProducts(filters)` (with `keepPreviousData`), `useProduct(id)`, `useArchivedProducts(sort)`, `useArchiveCount()`, `useExpiringSoon()`, `useBrandSuggestions(prefix)`, `useKnownIngredients()`, `useHasAnyProduct()`, and mutations `useCreateProduct`, `useUpdateProduct`, `useMarkOpened`, `useMarkFinished`, `useRestoreProduct`, `useDeleteProduct`, `useDuplicateProduct`. Each mutation invalidates `qk.products.all`, `qk.ingredients.all` when ingredients change, and `qk.today(activeDay)`. `today` and `warnDays` come from `appStore.activeDay` and `useSettings()`; include them in the query keys so lists recompute at 04:00 and when the warning window changes.
+`useProducts(filters)` (with `keepPreviousData`), `useProduct(id)`, `useArchivedProducts(sort)`, `useArchiveCount()`, `useExpiringSoon()`, `useBrandSuggestions(prefix)`, `useKnownIngredients()`, `useHasAnyProduct()`, and mutations `useCreateProduct`, `useUpdateProduct`, `useMarkOpened`, `useMarkFinished`, `useMarkFinishedMany`, `useRestoreProduct`, `useDeleteProduct`, `useDuplicateProduct`. Each mutation invalidates `qk.products.all`, `qk.ingredients.all` when ingredients change, and `qk.today(activeDay)`. `today` and `warnDays` come from `appStore.activeDay` and `useSettings()`; include them in the query keys so lists recompute at 04:00 and when the warning window changes.
 
 Out:
 

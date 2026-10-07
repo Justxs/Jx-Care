@@ -12,8 +12,8 @@ In: `src/features/products/notesRepo.ts`, tests, `components/ProductNoteSheet.ts
 
 - **Data:** `listNotes(db, productId)` newest first, `addNote(db, { productId, day, text, tags })`, `updateNote`, `deleteNote`, `notesOnDay(db, day)` (for C2), `setRating(db, productId, 1–5 | null)`, `setWouldRebuy(db, productId, boolean | null)`.
 - **P2 My rating** (fill task 015's slot): `Rating` stars (tap the same star again to clear), and "Would buy again" Yes / No `ToggleGroup` (no value until chosen). Saves at once.
-- **P2 Notes timeline** (fill task 015's slot): dated notes, newest first, each with its tags and text; "+ Add note" opens P8; long press: Edit, Delete (dialog). New notes fade in at the top.
-- **P8 Product note (sheet):** Date (default today), text (required, max 280, counter), quick tags (the seven skin tags: Calm, Glow, Oily, Dry, Breakout, Redness, Itchy). Save.
+- **P2 Notes timeline** (fill task 015's slot): dated notes, newest first, each with its tags and text; "Add note" opens P8; long press: Edit, Delete (dialog). New notes fade in at the top.
+- **P8 Product note (sheet):** Date (default today), text (required, max 280, counter), quick tags (the seven skin tags in the standard order: Calm, Glow, Oily, Dry, Breakout, Redness, Itchy). Save.
 - **Shopping:** task 034's suggestions already skip `wouldRebuy = false`; show the rating and "Would buy again" on linked shopping rows and suggestions ("4 stars · would buy again").
 - **C2:** fill task 028's slot with notes written that day, each linking to its product.
 - **Duplicate** (task 012) does not copy rating or notes (check).

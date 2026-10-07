@@ -53,6 +53,8 @@ NativeWind is how the app applies these tokens: Tailwind classes on React Native
     --neutral: 95 102 98;
     --neutral-soft: 236 238 236;
     --focus: 184 58 110;
+    /* Camera screen: always dark, same in both themes */
+    --camera-bg: 18 13 16;
   }
   .dark:root {
     --canvas: 20 17 18;
@@ -118,6 +120,7 @@ module.exports = {
         neutral: 'rgb(var(--neutral) / <alpha-value>)',
         'neutral-soft': 'rgb(var(--neutral-soft) / <alpha-value>)',
         focus: 'rgb(var(--focus) / <alpha-value>)',
+        'camera-bg': 'rgb(var(--camera-bg) / <alpha-value>)',
         // React Native Reusables names, pointing at the same tokens
         background: 'rgb(var(--canvas) / <alpha-value>)',
         foreground: 'rgb(var(--ink) / <alpha-value>)',
@@ -173,3 +176,5 @@ module.exports = {
 - Theme: follow the phone with NativeWind's `useColorScheme()`; the `.dark` class switches every variable at once, and the switch cross-fades (see Motion).
 - Animation: NativeWind classes for static styles only. Animated values go in Reanimated `style` props with the `JxCare.motion` timings; that is the one place inline styles are allowed.
 - Example: `<Pressable className="min-h-[52px] flex-row items-center justify-center gap-2 rounded-md bg-accent px-5 active:opacity-85"><Text className="text-body-strong text-on-accent">Add product</Text></Pressable>`
+
+Camera colours (C4) are fixed in both themes: `camera-bg` #120D10, and white or skin tints at fixed alpha for `camera-control` (white 14%), `camera-guide` (#F0A889 at 30%) and `camera-frame` (white 75%). In NativeWind write them as `bg-white/15`, `bg-[#F0A889]/30` and `border-white/75`.

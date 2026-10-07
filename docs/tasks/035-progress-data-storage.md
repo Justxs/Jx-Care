@@ -1,6 +1,6 @@
 # 035 Progress photo data and storage
 
-**Phase:** K. Progress photos · **Depends on:** 005 · **Spec:** Feature plan 10 (privacy), C3 (timeline), C4 (angles), C5 (review), C6 (week detail, "What changed this week"), C7 (compare), S7 (angles, hair album), Global UI rules (Privacy), sequence 8
+**Phase:** K. Progress photos · **Depends on:** 005 · **Spec:** Feature plan 10 (privacy), Words and copy (a progress photo is its date), C3 (Progress photos), C4 (angles), C5 (review), C6 (week detail, "What changed this week"), C7 (compare), S7 (angles, hair album), Global UI rules (Privacy), sequence 8
 
 ## Goal
 
@@ -25,12 +25,12 @@ In: `npx expo install expo-file-system expo-image-manipulator`. Files: `src/feat
 | `getWeekEntry(db, area, weekStart)` | Entry + photos by angle, or null |
 | `saveCheckIn(db, { area, weekStart, photos: { angle, fileUri }[], rating, tags, note })` | Inserts or replaces the week's entry and photo rows in one transaction; replaced photo files are deleted after commit (retake, C6) |
 | `skipWeek(db, area, weekStart)` | Entry with `skipped: true` and no photos ("Skip this week" on Today and the notification) |
-| `listTimeline(db, area, fromWeek)` | One tile per week from the first entry to this week, newest first, including empty weeks ("No photo") and skipped weeks; front photo, rating |
+| `listTimeline(db, area, fromWeek)` | One tile per week from the first entry to this week, newest first, including empty weeks ("No photo") and skipped weeks; front photo and the date it was taken (tiles show no rating) |
 | `lastPhoto(db, area, angle, beforeWeek)` | The guide photo for the camera (C4) |
 | `deletePhoto(db, photoId)` / `deleteWeek(db, entryId)` | Rows and files |
 | `weekContext(db, area, weekStart)` | C6 "What changed this week": routines done (count of evenings and mornings completed out of due, from `routine_log` and task 007), products started (`openedAt` in the week) and stopped (`archivedAt` in the week), condition log summary (most frequent skin tags that week). Return plain data; the screen formats it |
-| `photoForDay(db, day)` | C2 "Week 41 photo, taken 6 Oct." |
-| `thisWeekStatus(db, area, today)` | `taken`, `skipped` or `due` (for Today's Weekly photo card and the reminder) |
+| `photoForDay(db, day)` | C2 "Skin photo, taken 6 Oct." (named by its date, never a week number) |
+| `thisWeekStatus(db, area, today)` | `taken`, `skipped` or `due` (for the photo row in Today's Check-in card and the reminder) |
 
 Tags use the skin tag set from the spec (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy) as stable keys (`calm`, `glow`, …), translated at display.
 

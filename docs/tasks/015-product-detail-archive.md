@@ -12,7 +12,7 @@ In: `src/features/products/screens/ProductDetailScreen.tsx`, `ArchiveScreen.tsx`
 
 ### P2 Product detail
 
-- Push from the list, Today, or an expiry notification (`/products/[id]`). `ScreenHeader` with back and the "More actions" overflow.
+- Push from the list, Today, or an expiry notification (`/products/[id]`). `ScreenHeader` with back and the "More actions" menu (`DropdownMenu`): Mark as opened (only if not opened), Duplicate, and Delete (only for archived products).
 - **Photo** in a reserved 1:1 box with placeholder colour (tap opens a full-screen viewer with pinch zoom); no photo → large category glyph on `subtle`.
 - Name (`title-m`), brand, `AreaTag`, category.
 - **Expiry block:** status `Badge` with days, `Progress` from opened date to effective expiry (scaleX), dates listed: Purchased, Opened, Printed expiry, Period after opening ("12M"). Missing values read "Not set".
@@ -20,13 +20,13 @@ In: `src/features/products/screens/ProductDetailScreen.tsx`, `ArchiveScreen.tsx`
 - **Used in:** routines and hair tasks that use it, each tappable (from `usedIn`; empty until 022/031 extend it, then the section hides when empty).
 - **My rating** and **Notes timeline:** leave marked slots that task 039 fills; hide them until then.
 - **Cost per day** once finished: "€0.21 a day over 142 days".
-- **Actions bar** (pinned at the bottom): Edit (opens P3), Mark finished (primary; toast "Vitamin C serum moved to Archive" with Undo, then back to the list), Buy again (secondary; task 034, hidden until it exists), More: Mark as opened, Duplicate, Delete (only for archived products). An archived product's bar shows Restore and Buy again instead of Mark finished.
+- **Actions bar** (pinned at the bottom), three actions so "Pažymėti baigtu" fits on one line at 360 pt: Edit (opens Edit product, the full P3 form), Mark finished (primary; toast "Vitamin C serum moved to Archive" with Undo, then back to the list), Buy again (secondary; task 034, hidden until it exists). No More in the bar; it is in the header. An archived product's bar shows Restore and Buy again instead of Mark finished.
 - Deleted or missing product id (e.g. an old notification) → a plain "This product was deleted" state with Back.
 
 ### P5 Archive
 
 - Push from "Archive (N)". Finished products, newest first, each row with finished date and cost per day ("€0.21 a day"); sort toggle Date / Cost per day.
-- Row actions: Restore (toast with Undo), Buy again (034), Delete: AlertDialog "Delete Vitamin C serum? Its notes and dates are deleted for good. This can't be undone." with Delete as the destructive action. Removed rows collapse (200 ms).
+- A row's More button (spoken label "More actions") opens an action sheet over a scrim, never drawn inline in the list: Restore to Products (toast "Clay mask restored to Products" with Undo), Buy again (034), Delete: AlertDialog "Delete Vitamin C serum? Its notes and dates are deleted for good. This can't be undone." with Delete as the destructive action. Removed rows collapse (200 ms).
 - Empty: "Nothing finished yet" / "Products you mark finished move here with their cost per day." (no action).
 
 Out:
@@ -36,7 +36,8 @@ Out:
 ## Acceptance criteria
 
 - [ ] Detail shows every block for a product with all fields, and degrades cleanly for a product with only a name and area.
-- [ ] Mark finished, Undo, Restore, Duplicate, Mark as opened and Delete (archived only, with the dialog) all work and update the list and Today (query invalidation).
+- [ ] Mark finished, Undo, Restore (with its toast and Undo), Duplicate, Mark as opened and Delete (archived only, with the dialog) all work and update the list and Today (query invalidation).
+- [ ] The detail action bar has three actions and the rest sit in the header's More menu; Archive row actions open in a sheet.
 - [ ] Archive sorts by date and by cost per day; products without a cost sort last.
 - [ ] The photo box never resizes when the image loads; numbers use tabular figures.
 - [ ] Light, dark, 360 pt and Lithuanian checked.

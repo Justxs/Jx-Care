@@ -1,6 +1,6 @@
 # Design system
 
-Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v14) on 2026-10-06 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
+Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v16) on 2026-10-07 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
 
 Jx-Care is a calm, private companion, fronted by a pink spa-day frog, for one person's skin and hair care: products with their dates, daily routines, streaks and reminders, all kept on the phone. The UI should feel like a tidy bathroom shelf: soft blush neutrals, one pink accent that matches the logo, and two area colours that tell skin from hair at a glance.
 
@@ -25,10 +25,14 @@ One word per idea, everywhere: on buttons, in toasts, in notifications and in Se
 | Morning, evening, custom | Time of day | Slot |
 | Step or task schedule | Every time, Set days, Every few days | Only on, On weekdays, Every N days |
 | Trims, colour, scrubs | Other care | Events |
-| Two ingredients that should not meet on a day | Conflict, mild (for soft rules) | Clash, may clash |
+| Two ingredients that should not meet on a day | Conflict; Mild conflict when an every-few-days step only meets the other on some days | Clash, may clash |
 | Skin and hair tags | Calm, Glow, Oily, Dry, Breakout, Redness, Itchy | Dryness, Oiliness, Irritation |
 | The weekly photo | Weekly photo, progress photo | Check-in |
 | The last photo shown while shooting | Last photo as a guide | Overlay |
+| Tick every step at once | All done | Complete all, Finish |
+| A past day with routines set and none finished | Not done | Missed, Failed |
+| A photo | Its date: "6 Oct" | Week 41 |
+| Today's check-in card (weekly photo and condition) | Check-in | Daily log |
 
 ### Errors and warnings
 
@@ -40,19 +44,21 @@ One word per idea, everywhere: on buttons, in toasts, in notifications and in Se
 ### States
 
 - Empty: what the list will hold, and the one action that fills it (see EmptyStates).
-- Success: a toast that names the thing and offers the next step or Undo: "Body lotion bought. Add it to your products?"
+- Success: a toast that names the thing and offers Undo: "Parfum removed · Undo". A next step that needs a decision sits inline on the row instead (Shopping: "Add it to your products to track when it expires." with an Add button), so it does not time out. Toasts stay 8 seconds; while a screen reader is on they stay until the next action or until dismissed.
+- Done: the end of a routine and the end of setup are designed moments (RoutineDoneScreen, the "You're set" card): the frog, what was done, the streak, and what comes next. No confetti.
+- Explaining: any warning or number the user might not understand opens a short sheet when tapped (ExplainSheets): the Conflict and Mild conflict tags, the streak chips, and "About A and B" on Today.
 - Waiting: name what is waiting and how long: "Wait 0:42 before the next step", with "Skip wait", never a bare "Skip".
-- Icon-only buttons always have a spoken label that says the action: "Delete last digit", "More actions", "Show last photo as a guide".
+- Icon-only buttons always have a spoken label that says the action: "Delete last digit", "More actions", "Show last photo as a guide". Icon-only is kept for the few icons everyone knows (back, close, more, search, filter, calendar arrows); any other header action is a word: Select, Share, Compare.
 
 ## Visual foundations
 
-**Colour.** Screens sit on `canvas`; content groups sit in `surface` cards. Text is `ink`, secondary text `ink-muted`. `brand-pink` is the logo pink: use it for the logo and large decorative shapes only, never for text or small icons. `accent` (pink) marks the one primary action per screen, the active tab, checked controls and links; text on an accent fill is `on-accent`. `skin` and `hair` (with their `-soft` fills) mean care area only. `ok`, `warning`, `danger` and `neutral` mean expiry status only, and always come with a word. `border` is for hairlines; use `border-strong` for the edge of anything you can press or type into. Both themes are designed; every text pair named in a token's usage note reaches 4.5:1 in light and dark.
+**Colour.** The camera screen is always dark and uses its own `camera-*` tokens in both themes. Screens sit on `canvas`; content groups sit in `surface` cards. Text is `ink`, secondary text `ink-muted`. `brand-pink` is the logo pink: use it for the logo and large decorative shapes only, never for text or small icons. `accent` (pink) marks the one primary action per screen, the active tab, checked controls and links; text on an accent fill is `on-accent`. `skin` and `hair` (with their `-soft` fills) mean care area only. `ok`, `warning`, `danger` and `neutral` mean expiry status only, and always come with a word. `border` is for hairlines; use `border-strong` for the edge of anything you can press or type into. Both themes are designed; every text pair named in a token's usage note reaches 4.5:1 in light and dark.
 
 **Type.** One family, Figtree (Google Fonts, chosen by Justas on 2026-10-06 in place of Plus Jakarta Sans), which covers Lithuanian diacritics (ą č ę ė į š ų ū ž). Screen titles `title-l`, pushed-screen titles `title-m`, section headings `title-s`, product and step names `body-strong`, everything else `body`, `label` or `caption`. Group labels inside a card use `overline` (13px semibold, sentence case, never uppercase); a Card title sits above the card. Nothing smaller than 13px except tab bar labels and single-letter weekday dots (12px). Streak numbers use `display`.
 
 **Spacing and layout.** Phone-first at 390 × 844. Screen gutter `space-4` (onboarding and lock: `space-6`). Cards are `space-4` apart with `space-4` padding; rows inside cards are `space-3` apart. Touch targets are at least 44px; buttons are 52px. Chips (36px), switches and checkboxes draw smaller but get `hitSlop` up to 44px.
 
-**Shape and depth.** Cards `radius-lg`, buttons and inputs `radius-md`, thumbs `radius-sm`, everything round (badges, chips, checkboxes, keys) `radius-full`. Cards lift with `shadow-card`; only dialogs and menus use `shadow-raised`. No borders on cards, and never a border plus a wide shadow on the same surface.
+**Shape and depth.** Cards `radius-lg`, buttons and inputs `radius-md`, thumbs `radius-sm`, checkboxes 7px (square, so they never read as radio buttons), everything round (badges, chips, radio marks, keys) `radius-full`. Cards lift with `shadow-card`; only dialogs and menus use `shadow-raised`. No borders on cards, and never a border plus a wide shadow on the same surface.
 
 **States.** Focus is a 2px `focus` ring with 2px offset. Pressed lowers opacity to 85%. Disabled is 45% opacity and not pressable. Done routine steps keep their row and turn the name `ink-muted`.
 
@@ -63,7 +69,9 @@ The app's base components come from rn-primitives (https://rnprimitives.com/), s
 
 | Here | rn-primitives |
 | --- | --- |
-| Checkbox | `Checkbox` |
+| Checkbox | `Checkbox` (square) |
+| RadioList | `RadioGroup`; round marks, one row per option |
+| Fab | `Pressable` + `Text` (no primitive) |
 | Switch | `Switch` |
 | ToggleGroup | `ToggleGroup` (type single); `Tabs` when panels stay mounted |
 | Progress | `Progress` |
@@ -121,14 +129,18 @@ Content must not shift after it appears. The rules that keep it still:
 
 ## Screens and navigation
 
-The Screens group follows the feature spec's screen inventory; each card's subtitle carries its spec ID (O1–O5, L1–L2, T1–T4, P1–P8, R1–R5, C1–C7, S1–S8). Five bottom tabs: Today, Products (My products and Shopping), Routines (Skin and Hair), Calendar (Skin, Hair, Condition and Progress) and Settings. Pushed screens use ScreenHeader, forms in sheets use SheetFrame, and the routine player, camera and compare are full-screen flows. Styling in the app is NativeWind; see the NativeWind section for the theme config.
+The Screens group follows the feature spec's screen inventory; each card's subtitle carries its spec ID (O1–O5, L1–L2, T1–T4, P1–P8, R1–R5, C1–C7, S1–S8). Five bottom tabs: Today, Products (My products and Shopping), Routines (Skin and Hair), Calendar (Skin, Hair and Condition, with Progress photos as a row that opens its own screen) and Settings.
+
+**Where actions sit.** Everything the thumb needs is at the bottom. A list screen's one add action is a Fab (labelled pill, bottom right, above the tab bar), never a + in the header. A form screen's Save is a full-width button in a bar pinned to the bottom (sheets already have it in their footer). The header holds back or close, the title, and at most one word action (Select, Share, Compare) or the More menu. Lists keep 96px of empty space at their end so the last row can scroll clear of the Fab.
+
+**Choices.** Two short options: ToggleGroup. Three or more, or labels that run long in Lithuanian: RadioList. Long value lists (wait times, currencies): SelectField with a picker. The LithuanianCheck card shows the longest Lithuanian labels in their real controls at 360px. Pushed screens use ScreenHeader, forms in sheets use SheetFrame, and the routine player, camera and compare are full-screen flows. Styling in the app is NativeWind; see the NativeWind section for the theme config.
 
 ## First run
 
 Onboarding is five steps (language, PIN, confirm, recovery question, Face ID) and asks for nothing else. Notification permission is asked in context, right after the first product with an expiry date is saved (ReminderAskSheet), so the phone's prompt has a reason next to it.
 
-- **Today, first run (T1):** a "Set up Jx-Care" card with three steps: first product, first routine, hair care. Each opens the short version of its form. Done steps turn into a green check with what was made. When all three are done the card says so and goes away the next day. Every step can be skipped.
-- **First product (P3, quick mode):** name, area, whether it is open, and the open-jar period or printed expiry. A live line shows the expiry date. Photo, brand, price and ingredients sit behind "More details".
+- **Today, first run (T1):** a "Set up Jx-Care" card with three steps: first product, first routine, hair care. The next step is open with a filled button; the others are rows. Each opens the short version of its form. Done steps turn into a green check with what was made. When all three are done the card becomes "You're set" with the frog and a "See today" button, and goes away the next day. Every step can be skipped.
+- **Add product (P3):** every new product, not only the first, opens the short form: name, area, whether it is open, and the open-jar period or printed expiry. A live line shows the expiry date. Photo, brand, price and ingredients sit behind "More details". "Save and add another" keeps the form open for the next bottle. The full form (ProductFormScreen) is for editing.
 - **First routine (R2, starter):** pick morning or evening, then a template. Steps are filled from the user's products; a gap says "Pick a product later" in amber.
 - **Hair care (R5, quick setup):** wash frequency, last wash, and an optional trim reminder, with a live "Next wash" line.
 - **Empty states:** every list says what it will hold and offers the one action that fills it (EmptyStates card). Conflicts offers a pack of common rules before a blank form.
@@ -141,14 +153,15 @@ Checked against the impeccable.style anti-pattern list (2026-10-06 review). Thes
 - **Uppercase overlines and labels above titles.** No small caps label over a heading. Counts and dates go under the title or into the content.
 - **Sparkle as a stand-in for "skin".** Area is a word in a coloured pill. Product placeholders use a category glyph on a neutral square; photo placeholders are a plain tone.
 - **Cards for everything.** Never a card in a card. Helper lines, notes and "next due" lines sit on the canvas as text, not in tinted callout boxes. Callouts are only for warnings that need action (old backup, conflict, avoided ingredient).
-- **Filled accent everywhere.** One filled accent button per screen. Header actions are a word ("Save") or a soft accent icon button; back and close have no circle.
+- **Filled accent everywhere.** One filled accent button per screen (the Fab counts as it on list screens). Header actions are a word, never a filled or tinted circle; back and close have no circle.
+- **Guilt.** Streaks use `calendar-check`, never a flame. A broken streak says "Started again. Your best is still 21 days." and a past day with nothing done is "Not done", never "Missed".
 - **Overshoot.** No bounce or elastic easing; sheets use a critically damped spring.
 - **Tiny text.** Nothing under 13px except tab bar labels and weekday dots.
 - **Generic copy.** No "supercharge", no slogans, no em-dashes in UI strings; say what happens.
 
 ## Iconography
 
-Lucide icons (`lucide-react-native` in the app), stroke 2, round caps and joins, 16 to 24px, coloured with the text colour they sit beside. The Icons group holds the set in use; the files are drawn in `ink` (#1F2421) because an `<img>` cannot inherit colour. Care area has no icon of its own (it is a word); product placeholders use category glyphs: `pipette`, `droplet`, `sun`, `spray-can`, `flask-round`. Hair tasks use `droplets` (wash), `flask-round` (mask), `scissors` (trim), `palette` (colour).
+Lucide icons (`lucide-react-native` in the app), stroke 2, round caps and joins, 16 to 24px, coloured with the text colour they sit beside. The Icons group holds the set in use; the files are drawn in `ink` (#1F2421) because an `<img>` cannot inherit colour. Care area has no icon of its own (it is a word); product placeholders use category glyphs: `pipette`, `droplet`, `sun`, `spray-can`, `flask-round`. Hair tasks use `droplets` (wash), `flask-round` (mask), `scissors` (trim), `palette` (colour). Streaks use `calendar-check`; All done uses `check-check`; Products shelf and list views use `layout-grid` and `list`; Share uses `share-2`; showing a hidden answer uses `eye` / `eye-off`; help uses `circle-help`.
 
 ## Logo
 

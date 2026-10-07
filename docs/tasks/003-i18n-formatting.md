@@ -13,7 +13,7 @@ In:
 1. **Packages:** `npm install i18next@latest react-i18next@latest`, `npx expo install expo-localization`.
 2. **Files:** `src/i18n/en.json`, `src/i18n/lt.json`, `src/i18n/index.ts`.
    - Nested keys by area: `common.*`, `tabs.*`, `onboarding.*`, `lock.*`, `today.*`, `products.*`, `shopping.*`, `routines.*`, `hair.*`, `calendar.*`, `progress.*`, `condition.*`, `settings.*`, `notifications.*`, `errors.*`, `a11y.*`.
-   - Seed `common.*` with the shared words from the spec's "Words and copy" table so later tasks reuse them instead of inventing synonyms: `buyAgain`, `markFinished`, `finished`, `archive`, `start`, `timeOfDay`, `morning`, `evening`, `custom`, `everyTime`, `setDays`, `everyFewDays`, `repeatEveryDays`, `otherCare`, `mild`, `weeklyPhoto`, `save`, `cancel`, `delete`, `edit`, `done`, `undo`, `continue`, `back`, `notNow`, `skin`, `hair`, `skinAndHair` (area pill "Skin + hair"), and the skin tags `tags.calm/glow/oily/dry/breakout/redness/itchy`.
+   - Seed `common.*` with the shared words from the spec's "Words and copy" table so later tasks reuse them instead of inventing synonyms: `buyAgain`, `markFinished`, `finished`, `archive`, `start`, `timeOfDay`, `morning`, `evening`, `custom`, `everyTime`, `setDays`, `everyFewDays`, `repeatEveryDays`, `otherCare`, `conflict`, `mildConflict` ("Mild conflict"), `mild` (the editor panel label), `weeklyPhoto`, `checkIn` ("Check-in"), `allDone` ("All done"), `notDone` ("Not done", never "Missed"), `save`, `cancel`, `delete`, `edit`, `done`, `undo`, `continue`, `back`, `notNow`, `skin`, `hair`, `skinAndHair` (area pill "Skin + hair"), and the skin tags `tags.calm/glow/oily/dry/breakout/redness/itchy`.
    - Lithuanian: polite plural ("jūs") forms, no "I"/"we" (see the design system content rules in DESIGN.md and the spec). Plurals use i18next's `_one`, `_few`, `_many`, `_other` suffixes; Lithuanian needs `one`, `few` and `many`/`other`, so test "1 diena", "2 dienos", "10 dienų", "21 diena".
    - Weekday letters for WeekdayDots: EN `M T W T F S S`, LT `P A T K P Š S`.
 3. **Language choice:** default from `expo-localization` (`getLocales()[0].languageCode === 'lt'` → `lt`, otherwise `en`). The chosen language is stored in the `settings` table (task 004/005); until the database is ready, use the phone default. `setLanguage(lang)` changes i18next and the store at once, with no restart (spec S7: "applies at once").
@@ -24,9 +24,9 @@ In:
    - `formatTime(hhmm, lang)`: 24-hour in LT ("07:30"); EN follows the phone's 12/24-hour setting if `expo-localization` exposes it, otherwise 24-hour. Write which under Decisions.
    - `formatMoney(cents, currency, locale)`: LT "12,50 €", EN "€12.50". Numbers and currency follow the phone's locale (spec), but the currency code comes from settings.
    - `formatDays(n, lang)`: "1 day" / "12 days"; LT plural forms.
-   - `formatRelativeExpiry(daysLeft, lang)`: "Expires in 12 days", "Expires today", "Expired 3 days ago" (ProductRow badge text).
+   - `formatRelativeExpiry(daysLeft, lang)`: "Expires in 12 days", "Expires today", "Expired 3 days ago". The ProductRow date line and badge use dates instead ("Expires 15 Oct", "Expired 2 Oct"), built from `formatDate`.
    - `formatDuration(seconds, lang)`: wait chips "30 s", "1 min", countdown "0:42".
-   - `weekLabel(day, lang)`: "Week 41 · 6 Oct" (ISO week number).
+   - No week numbers anywhere: a progress photo is labelled by the date it was taken with `formatDate` ("6 Oct", "Skin photo, taken 6 Oct."), and Compare's Before and After show dates too (spec C2, C3, C7).
 5. **Hook:** `useFormat()` returns the functions above bound to the current language, locale and currency, so screens call `fmt.date(day)`.
 6. **Missing keys:** in development, a missing key logs a warning and shows the key; a Jest test fails if `en.json` and `lt.json` don't have exactly the same set of keys.
 
@@ -38,7 +38,7 @@ Out:
 ## Acceptance criteria
 
 - [ ] `t('common.buyAgain')` returns "Buy again" / the Lithuanian string, and switching language re-renders mounted screens.
-- [ ] `format.ts` has unit tests covering: EN current-year and other-year dates, LT dates, "Today, …", money in LT and EN locales, Lithuanian plural forms (1, 2, 10, 21), negative and zero day counts, durations under and over a minute, ISO week numbers around New Year.
+- [ ] `format.ts` has unit tests covering: EN current-year and other-year dates, LT dates, "Today, …", money in LT and EN locales, Lithuanian plural forms (1, 2, 10, 21), negative and zero day counts, durations under and over a minute.
 - [ ] The key-parity test passes.
 - [ ] `npm run check` passes.
 

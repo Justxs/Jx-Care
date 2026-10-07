@@ -27,6 +27,7 @@ In: `src/features/routines/repo.ts`, `repo.test.ts`, `api.ts`, `schema.ts`, `tem
 | `getTodayRoutines(db, day)` | Data for Today and the player: uses `todayGroups`, `dueSteps` and `routineProgress` from task 007 over all active routines, steps, the day's logs and choices. Each step carries its product's status so a finished (archived) or expired product can be shown (refinement 11) |
 | `logsInRange(db, fromDay, toDay)` | For the calendar and streaks (task 028) |
 | `streakInput(db, today)` | Everything `skinStreak()` needs, loaded once |
+| `recentStepProducts(db, area, limit = 5)` | R4 picker's Recent group: products most recently added to any routine step or hair task of that area, newest first, active only |
 | `routineCountByProduct(db, productId)` | Fills P2 "Used in" (extend task 012's `usedIn`) |
 
 ### Templates (`templates.ts`)
