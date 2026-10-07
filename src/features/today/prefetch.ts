@@ -1,6 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query';
 
 import { conditionDayQuery } from '@/features/condition/api';
+import { prefetchHair } from '@/features/hair/api';
 import { settingsQuery } from '@/features/settings/api';
 import { prefetchShopping } from '@/features/shopping/api';
 
@@ -23,5 +24,6 @@ export async function prefetchToday(queryClient: QueryClient, day: string): Prom
     prefetchShopping(queryClient),
     // Check-in skin chips (task 038).
     queryClient.prefetchQuery(conditionDayQuery(day)),
+    prefetchHair(queryClient, day),
   ]);
 }

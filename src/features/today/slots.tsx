@@ -1,8 +1,16 @@
+import { useQuery } from '@tanstack/react-query';
+import { useSelector } from '@tanstack/react-store';
+import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 
 import { SkinCheckIn } from '@/features/condition/components/SkinCheckIn';
+import { useHairDueToday, useHairStreakChip } from '@/features/hair/api';
+import { HairDueRows } from '@/features/hair/components/HairDueRows';
 import { useToBuyCount } from '@/features/shopping/api';
 import type { Streak } from '@/lib/streak';
+import { appStore } from '@/state/app';
+
+import { setupQuery } from './api';
 
 /**
  * Places in Today that later tasks fill in. Each returns "nothing" for now, so its section or
@@ -10,9 +18,15 @@ import type { Streak } from '@/lib/streak';
  * paints complete on the first frame.
  */
 
-/** Hair streak chip (task 033). */
+/**
+ * Hair streak chip (task 033): washes only, once a wash task exists. Like the skin chip it waits
+ * for the first routine (spec T1: no streak chips until a routine exists).
+ */
 export function useHairStreakSlot(): Streak | null {
-  return null;
+  const day = useSelector(appStore, (s) => s.activeDay);
+  const hasRoutine = !!useQuery(setupQuery(day)).data?.routine;
+  const streak = useHairStreakChip().data;
+  return hasRoutine && streak ? streak : null;
 }
 
 /** Conflict tag on a routine card (task 030). Opens the conflict sheet when tapped. */
@@ -22,7 +36,9 @@ export function useCardConflictSlot(_routineId: number): ReactNode {
 
 /** Hair due rows (task 033): the section is hidden while this is null. */
 export function useHairDueSlot(): ReactNode {
-  return null;
+  const rows = useHairDueToday().data;
+  if (!rows || rows.length === 0) return null;
+  return <HairDueRows rows={rows} onOpen={(id) => router.push(`/hair/done/${id}`)} />;
 }
 
 /** "Shopping list · 3 to buy" count at the foot of Expiring soon (task 034); null hides the row. */

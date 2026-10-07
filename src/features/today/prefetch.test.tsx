@@ -1,3 +1,5 @@
+import { hairDueTodayQuery, hairStreakChipQuery } from '@/features/hair/api';
+import { saveHairTask } from '@/features/hair/repo';
 import { saveSettings } from '@/features/settings/repo';
 import { appStore } from '@/state/app';
 import { setupTestApp } from '@/test/render';
@@ -13,6 +15,18 @@ describe('prefetchToday', () => {
     appStore.setState((s) => ({ ...s, activeDay: MON }));
     const spf = seedProduct(app.db, { name: 'SPF 50 fluid', expiresAt: '2026-10-02' });
     seedRoutine(app.db, { name: 'Morning', timeOfDay: 'morning', steps: [spf] });
+    saveHairTask(app.db, {
+      name: 'Wash',
+      kind: 'wash',
+      otherKind: null,
+      productIds: [],
+      scheduleKind: 'interval',
+      everyNDays: 3,
+      intervalUnit: 'days',
+      daysOfWeek: null,
+      lastDoneAt: '2026-10-01',
+      reminderTime: null,
+    });
 
     await prefetchToday(app.client, MON);
 
@@ -20,12 +34,18 @@ describe('prefetchToday', () => {
     for (const q of Object.values(todayQueries(MON, 14))) {
       expect(app.client.getQueryData(q.queryKey)).toBeDefined();
     }
+    // The hair slots (task 033): due rows and the streak chip.
+    expect(app.client.getQueryData(hairDueTodayQuery(MON).queryKey)).toHaveLength(1);
+    expect(app.client.getQueryData(hairStreakChipQuery(MON).queryKey)).toEqual({
+      current: 0,
+      best: 0,
+    });
 
     // The very first render already has every part, so no section shows a skeleton.
     const { result } = await app.renderHook(() => useToday());
     const first = result.current;
     expect(first.settings?.expiryWarnDays).toBe(14);
-    expect(first.setup).toEqual({ product: 'SPF 50 fluid', routine: 'Morning', hair: null });
+    expect(first.setup).toEqual({ product: 'SPF 50 fluid', routine: 'Morning', hair: 'Wash' });
     expect(first.groups).toHaveLength(1);
     expect(first.skinStreak).toEqual({ current: 0, best: 0 });
     expect(first.expiring?.map((p) => p.name)).toEqual(['SPF 50 fluid']);

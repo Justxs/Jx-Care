@@ -1,4 +1,5 @@
 import {
+  dueDayAsOf,
   hairMonthMarks,
   hairStreak,
   hairTaskState,
@@ -61,6 +62,24 @@ describe('previousScheduledBefore', () => {
   it('falls back to a week for set days with no days', () => {
     const t = wash({ scheduleKind: 'days', daysOfWeek: [] });
     expect(previousScheduledBefore(t, '2026-10-08')).toBe('2026-10-01');
+  });
+});
+
+describe('dueDayAsOf', () => {
+  // Washed 1 Oct (due 30 Sep, late), then 6 Oct (due 4 Oct); last done 6 Oct, next due 9 Oct.
+  const t = wash({ lastDoneAt: '2026-10-06' });
+  const logs = [log(1, '2026-10-01', '2026-09-30'), log(1, '2026-10-06', '2026-10-04')];
+
+  it('is the due day the next log answered', () => {
+    expect(dueDayAsOf(t, logs, '2026-10-05')).toBe('2026-10-04');
+    expect(dueDayAsOf(t, logs, '2026-09-30')).toBe('2026-09-30');
+  });
+  it('is the current next due after the last log', () => {
+    expect(dueDayAsOf(t, logs, '2026-10-06')).toBe('2026-10-09');
+    expect(dueDayAsOf(t, logs, '2026-10-12')).toBe('2026-10-09');
+  });
+  it("ignores other tasks' logs", () => {
+    expect(dueDayAsOf(t, [log(2, '2026-10-08', '2026-10-07')], '2026-10-07')).toBe('2026-10-09');
   });
 });
 

@@ -869,6 +869,70 @@
       "cantPick": "Negalima pasirinkti",
       "expiredNote": "Nebegaliojantys produktai į plaukų užduotis neįtraukiami. Nupirkite jį iš naujo skiltyje „Produktai“.",
       "expiredLabel": "{{name}}, nebegalioja. Nebegaliojantys produktai į plaukų užduotis neįtraukiami. Nupirkite jį iš naujo skiltyje „Produktai“."
+    },
+    "done": {
+      "date": "Data",
+      "products": "Produktai",
+      "noProducts": "Produktų nepasirinkta.",
+      "addProduct": "Pridėti produktą",
+      "note": "Pastaba",
+      "noteHint": "Nebūtina, iki 280 simbolių.",
+      "markDone": "Pažymėti atliktu",
+      "next": {
+        "wash": "Kitas plovimas: {{date}}",
+        "trim": "Kitas kirpimas: {{date}}",
+        "colour": "Kitas dažymas: {{date}}",
+        "mask": "Kita plaukų kaukė: {{date}}",
+        "other": "Kitą kartą: {{date}}"
+      },
+      "nextLabel": "{{text}}. Bakstelėkite, kad uždarytumėte."
+    },
+    "today": {
+      "title": "Plaukų priežiūra",
+      "rowWith": "{{name}}: {{products}}",
+      "openLabel": "{{title}}, {{status}}. Atidaro „Pažymėti atliktu“."
+    },
+    "calendar": {
+      "washDone": "plaukai išplauti",
+      "washLate": "plaukai išplauti pavėluotai",
+      "washDue": "numatytas plovimas",
+      "overdue": "plovimas vėluoja",
+      "otherDone": {
+        "trim": "kirpimas atliktas",
+        "colour": "dažymas atliktas",
+        "mask": "plaukų kaukė atlikta",
+        "other": "kita priežiūra atlikta"
+      }
+    },
+    "day": {
+      "title": "Plaukų priežiūra",
+      "nothingDone": "Nieko neatlikta · kitas plovimas buvo numatytas {{date}}",
+      "nothingYet": "Dar nieko neatlikta · kitas plovimas numatytas {{date}}",
+      "none": "Šią dieną plaukų priežiūros neužrašyta.",
+      "late": "Atlikta pavėluotai, buvo numatyta {{date}}",
+      "deleteLabel": "Ištrinti „{{name}}“ iš šios dienos",
+      "deleteTitle": "Ištrinti „{{name}}“ {{date}}?",
+      "deleteBodyWash": "Įrašas dings iš kalendoriaus ir plaukų serijos, o kito plovimo data grįš atgal. Atšaukti nebus galima.",
+      "deleteBodyOther": "Įrašas dings iš kalendoriaus, o kita data grįš atgal. Atšaukti nebus galima."
+    },
+    "reminder": {
+      "wash": "Plaukų plovimo diena",
+      "washWith": "Plaukų plovimo diena: {{products}}",
+      "other": {
+        "trim": "Laikas kirptis",
+        "colour": "Laikas dažyti plaukus",
+        "mask": "Laikas plaukų kaukei",
+        "other": "Laikas: {{name}}"
+      },
+      "withSpan": "{{text}} ({{span}})",
+      "weeks_one": "{{count}} savaitė",
+      "weeks_few": "{{count}} savaitės",
+      "weeks_many": "{{count}} savaitės",
+      "weeks_other": "{{count}} savaičių",
+      "days_one": "{{count}} diena",
+      "days_few": "{{count}} dienos",
+      "days_many": "{{count}} dienos",
+      "days_other": "{{count}} dienų"
     }
   },
   "calendar": {

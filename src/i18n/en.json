@@ -811,6 +811,66 @@
       "cantPick": "Can't be picked",
       "expiredNote": "Expired products stay out of hair tasks. Buy it again from Products.",
       "expiredLabel": "{{name}}, expired. Expired products stay out of hair tasks. Buy it again from Products."
+    },
+    "done": {
+      "date": "Date",
+      "products": "Products",
+      "noProducts": "No products for this one.",
+      "addProduct": "Add a product",
+      "note": "Note",
+      "noteHint": "Optional, up to 280 characters.",
+      "markDone": "Mark as done",
+      "next": {
+        "wash": "Next wash: {{date}}",
+        "trim": "Next trim: {{date}}",
+        "colour": "Next colour: {{date}}",
+        "mask": "Next hair mask: {{date}}",
+        "other": "Next due: {{date}}"
+      },
+      "nextLabel": "{{text}}. Tap to close."
+    },
+    "today": {
+      "title": "Hair care",
+      "rowWith": "{{name}}: {{products}}",
+      "openLabel": "{{title}}, {{status}}. Opens Mark as done."
+    },
+    "calendar": {
+      "washDone": "wash done",
+      "washLate": "wash done late",
+      "washDue": "wash due",
+      "overdue": "wash overdue",
+      "otherDone": {
+        "trim": "trim done",
+        "colour": "colour done",
+        "mask": "hair mask done",
+        "other": "other care done"
+      }
+    },
+    "day": {
+      "title": "Hair care",
+      "nothingDone": "Nothing done · Next wash was due {{date}}",
+      "nothingYet": "Nothing done yet · Next wash is due {{date}}",
+      "none": "No hair care logged this day.",
+      "late": "Done late, was due {{date}}",
+      "deleteLabel": "Delete {{name}} from this day",
+      "deleteTitle": "Delete {{name}} on {{date}}?",
+      "deleteBodyWash": "It leaves the calendar and the hair streak, and the next wash moves back. This can't be undone.",
+      "deleteBodyOther": "It leaves the calendar, and the next due date moves back. This can't be undone."
+    },
+    "reminder": {
+      "wash": "Hair wash day",
+      "washWith": "Hair wash day: {{products}}",
+      "other": {
+        "trim": "Time for a trim",
+        "colour": "Time to colour your hair",
+        "mask": "Time for a hair mask",
+        "other": "Time for {{name}}"
+      },
+      "withSpan": "{{text}} ({{span}})",
+      "weeks_one": "{{count}} week",
+      "weeks_other": "{{count}} weeks",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
     }
   },
   "calendar": {

@@ -36,6 +36,7 @@ import { motion } from '@/theme/motion';
 
 import { useDeleteHairTask, useHairTask, useSaveHairTask } from '../api';
 import { HairProductPickerSheet } from '../components/HairProductPickerSheet';
+import { askForHairReminders } from '../reminders';
 import { defaultHairName, formNextDue, hairTaskIcon, isDefaultHairName } from '../display';
 import type { HairProductRef, HairTaskDetail } from '../repo';
 import {
@@ -466,6 +467,8 @@ function HairTaskForm({
                       form.setFieldValue('reminderTime', DEFAULT_REMINDER_TIME);
                     }
                     field.handleBlur();
+                    // The first reminder switched on asks for notification permission.
+                    if (on) void askForHairReminders();
                   }}
                   accessibilityLabel={t('hair.editor.reminder')}
                 />

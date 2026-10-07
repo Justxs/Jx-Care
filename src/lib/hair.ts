@@ -55,6 +55,23 @@ export function nextDue(task: HairTaskLite): string {
   return nextScheduledAfter(task, task.lastDoneAt);
 }
 
+/**
+ * A task's due day as it stood on `day` (C2 "Next wash was due 6 Oct"): the due day answered by
+ * the first log after `day`, or the task's current next due when nothing was logged since.
+ */
+export function dueDayAsOf(
+  task: HairTaskLite,
+  logs: readonly HairLogLite[],
+  day: string,
+): string | null {
+  let first: HairLogLite | null = null;
+  for (const l of logs) {
+    if (l.hairTaskId !== task.id || l.day <= day) continue;
+    if (!first || l.day < first.day) first = l;
+  }
+  return first ? first.dueDay : nextDue(task);
+}
+
 export function hairTaskState(
   task: HairTaskLite,
   today: string,

@@ -1,19 +1,18 @@
 import { useSelector } from '@tanstack/react-store';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { EmptyState } from '@/components/ui/empty-state';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import { appStore } from '@/state/app';
 import { motion } from '@/theme/motion';
 
 import { ConditionMonthView } from '../components/ConditionMonthView';
-import { ProgressPhotosRow } from '../components/ProgressPhotosRow';
+import { HairMonthView } from '../components/HairMonthView';
 import { SkinCalendar } from '../components/SkinCalendar';
 import { monthOf } from '../month';
 
@@ -21,8 +20,7 @@ export type CalendarView = 'skin' | 'hair' | 'condition';
 
 /**
  * C1 Calendar: the title and the Skin / Hair / Condition switch stay put; the view below
- * cross-fades. The month and the selected day are shared by the views. Hair (task 033) replaces
- * its placeholder with a view built on `MonthGrid`, as Condition (task 038) did.
+ * cross-fades. The month and the selected day are shared by the views.
  */
 export function CalendarScreen() {
   const { t } = useTranslation();
@@ -71,31 +69,23 @@ export function CalendarScreen() {
               selectedDay={selectedDay}
               onDayPress={openDay}
             />
-          ) : view === 'condition' ? (
-            <ConditionMonthView
+          ) : view === 'hair' ? (
+            <HairMonthView
               month={month}
               onMonthChange={setMonth}
               selectedDay={selectedDay}
               onDayPress={openDay}
             />
           ) : (
-            <ViewPlaceholder label={t('calendar.views.hair')} task="033" />
+            <ConditionMonthView
+              month={month}
+              onMonthChange={setMonth}
+              selectedDay={selectedDay}
+              onDayPress={openDay}
+            />
           )}
         </Animated.View>
       </View>
     </SafeAreaView>
-  );
-}
-
-/** Stands in for the Hair view until task 033 builds it. */
-function ViewPlaceholder({ label, task }: { label: string; task: string }) {
-  const { t } = useTranslation();
-  return (
-    <ScrollView contentContainerStyle={{ padding: 16, paddingTop: 8, gap: 16 }}>
-      <EmptyState icon="calendar" title={label}>
-        {t('dev.builtIn', { task })}
-      </EmptyState>
-      <ProgressPhotosRow />
-    </ScrollView>
   );
 }

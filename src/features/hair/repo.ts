@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, inArray, lte } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, gte, inArray, isNotNull, lte } from 'drizzle-orm';
 
 import type { Db, DbOrTx } from '@/db';
 import type { Area, HairOtherKind } from '@/db/enums';
@@ -8,6 +8,7 @@ import { addUsedInSource } from '@/features/products/repo';
 import type { UsedIn } from '@/features/products/types';
 import { appDay } from '@/lib/appDay';
 import {
+  dueDayAsOf,
   hairMonthMarks,
   hairTaskState,
   logTiming,
@@ -208,6 +209,78 @@ export function hairLogsOnDay(db: Db, day: string): HairDayLog[] {
       otherKind: task.otherKind,
     }))
     .toSorted((a, b) => (a.kind === b.kind ? 0 : a.kind === 'wash' ? -1 : 1));
+}
+
+/**
+ * C2 "Next wash was due 6 Oct": for a day with no hair logs, the earliest due day of an active
+ * wash task that had come by that day (as things stood then), or null when no wash was due.
+ */
+export function washDueOn(db: Db, day: string): string | null {
+  const tasks = db
+    .select()
+    .from(hairTask)
+    .where(and(eq(hairTask.kind, 'wash'), eq(hairTask.active, true)))
+    .all()
+    .map(toHairLite)
+    .filter((t) => t.createdDay <= day);
+  if (tasks.length === 0) return null;
+  const logs: HairLogLite[] = db
+    .select({ hairTaskId: hairLog.hairTaskId, day: hairLog.day, dueDay: hairLog.dueDay })
+    .from(hairLog)
+    .where(
+      and(
+        inArray(
+          hairLog.hairTaskId,
+          tasks.map((t) => t.id),
+        ),
+        gt(hairLog.day, day),
+      ),
+    )
+    .all();
+  let earliest: string | null = null;
+  for (const t of tasks) {
+    const due = dueDayAsOf(t, logs, day);
+    if (due && due <= day && (earliest === null || due < earliest)) earliest = due;
+  }
+  return earliest;
+}
+
+/** True when an active wash task exists (the hair streak chip and card show only then). */
+export function hasWashTask(db: Db): boolean {
+  return (
+    db
+      .select({ id: hairTask.id })
+      .from(hairTask)
+      .where(and(eq(hairTask.kind, 'wash'), eq(hairTask.active, true)))
+      .limit(1)
+      .all().length > 0
+  );
+}
+
+/** Active tasks with a reminder time, with their next due day (hair reminders planner). */
+export function listReminderTasks(db: Db, today: string): HairTaskRow[] {
+  const tasks = db
+    .select()
+    .from(hairTask)
+    .where(and(eq(hairTask.active, true), isNotNull(hairTask.reminderTime)))
+    .all();
+  const refs = productRefs(
+    db,
+    tasks.flatMap((t) => t.productIds),
+  );
+  return tasks.map((t) => toRow(t, today, refs)).toSorted(byDue);
+}
+
+/** True when the task already has a log on `day`. */
+export function hasHairLogOn(db: Db, taskId: number, day: string): boolean {
+  return (
+    db
+      .select({ id: hairLog.id })
+      .from(hairLog)
+      .where(and(eq(hairLog.hairTaskId, taskId), eq(hairLog.day, day)))
+      .limit(1)
+      .all().length > 0
+  );
 }
 
 /**

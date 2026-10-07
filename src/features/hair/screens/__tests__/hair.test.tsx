@@ -1,6 +1,8 @@
 import { PortalHost } from '@rn-primitives/portal';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import * as Notifications from 'expo-notifications';
 
+import { queryClient } from '@/db/queryClient';
 import { createProduct } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
 import { saveSettings } from '@/features/settings/repo';
@@ -101,6 +103,9 @@ beforeEach(async () => {
 afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
 });
+
+// The permission ask stores its answer in the app's query client.
+afterAll(() => queryClient.clear());
 
 describe('HairListScreen', () => {
   it('shows the empty state in EN and LT, and the Fab opens a new task', async () => {
@@ -253,6 +258,8 @@ describe('HairTaskEditorScreen', () => {
     await fireEvent.changeText(screen.getByLabelText('Repeat every (days)'), '4');
     expect(screen.getByTestId('hair-next-due')).toHaveTextContent('Next due: Sunday, 11 Oct');
     await fireEvent.press(screen.getByRole('switch', { name: 'Reminder' }));
+    // The first reminder asks for notification permission (task 021's ask stands in later).
+    await waitFor(() => expect(Notifications.requestPermissionsAsync).toHaveBeenCalled());
     await fireEvent.press(screen.getByRole('button', { name: 'Save task' }));
     await flush();
 

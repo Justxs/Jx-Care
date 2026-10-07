@@ -180,7 +180,7 @@ describe('CalendarScreen', () => {
     expect(router.push).toHaveBeenCalledWith('/calendar/progress');
 
     await fireEvent.press(within(switcher).getByRole('radio', { name: 'Hair' }));
-    expect(await screen.findByText('Built in task 033.')).toBeTruthy();
+    expect(await screen.findByText('Hair care is not set up')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Progress photos' })).toBeTruthy();
   });
 

@@ -12,7 +12,7 @@ import { useCountUp } from '../useCountUp';
 
 export type TodayHeaderProps = {
   day: string;
-  /** Null hides the chip (no routine yet); a hair streak arrives with task 033. */
+  /** Null hides the chip (no routine yet, or no wash task for hair). */
   skinStreak: Streak | null;
   hairStreak: Streak | null;
   onStreakPress: () => void;
@@ -33,6 +33,7 @@ export function TodayHeader({ day, skinStreak, hairStreak, onStreakPress }: Toda
   const { t } = useTranslation();
   const f = useFormat();
   const skin = useCountUp(skinStreak?.current ?? 0);
+  const hair = useCountUp(hairStreak?.current ?? 0);
   const greeting = useGreeting();
   return (
     <View className="gap-1 pt-2">
@@ -43,9 +44,7 @@ export function TodayHeader({ day, skinStreak, hairStreak, onStreakPress }: Toda
       {skinStreak || hairStreak ? (
         <View accessibilityLabel={t('today.streaks')} className="flex-row flex-wrap gap-2 pt-2">
           {skinStreak ? <StreakChip area="skin" value={skin} onPress={onStreakPress} /> : null}
-          {hairStreak ? (
-            <StreakChip area="hair" value={hairStreak.current} onPress={onStreakPress} />
-          ) : null}
+          {hairStreak ? <StreakChip area="hair" value={hair} onPress={onStreakPress} /> : null}
         </View>
       ) : null}
     </View>

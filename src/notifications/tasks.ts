@@ -20,6 +20,7 @@ import { setNotificationOS, sync } from './scheduler';
 // button handlers exist in the app and in a headless start alike (which loads this file, not the
 // screens). One line per feature:
 import '@/features/products/reminders'; // task 021: expiry and weekly digest
+import '@/features/hair/reminders'; // task 033: hair tasks
 
 export const SYNC_TASK = 'jx-care-notification-sync';
 export const RESPONSE_TASK = 'jx-care-notification-response';

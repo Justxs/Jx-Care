@@ -1,5 +1,6 @@
 import {
   keepPreviousData,
+  queryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -12,6 +13,7 @@ import { qk } from '@/db/queryKeys';
 import { i18n } from '@/i18n';
 import { daysInMonthGrid } from '@/lib/appDay';
 import { hairStreak } from '@/lib/hair';
+import { cancelSnoozes, syncEntity } from '@/notifications';
 import { appStore } from '@/state/app';
 
 import {
@@ -23,21 +25,25 @@ import {
   hairMonth,
   hairStreakInput,
   hasAnyHairTask,
+  hasWashTask,
   listHairTasks,
   markHairDone,
   quickSetup,
   saveHairTask,
   setHairTaskActive,
+  washDueOn,
   type MarkHairDone,
   type QuickHairSetup,
 } from './repo';
 import type { HairTaskInput } from './schema';
 
 /**
- * Hair reminders (task 033) re-plan a task here whenever it is created, changed, marked done
- * or deleted. Does nothing yet.
+ * Re-plans a task's reminder (task 033) whenever it is created, changed, marked done or deleted.
+ * Fire and forget: a failure is picked up by the next full sync.
  */
-export function onHairTaskChanged(_id: number): void {}
+export function onHairTaskChanged(id: number): void {
+  syncEntity('hair_task', id).catch(() => {});
+}
 
 const useToday = () => useSelector(appStore, (s) => s.activeDay);
 
@@ -47,10 +53,42 @@ export const hairKeys = {
   detail: (id: number, today: string) => [...qk.hair.detail(id), today] as const,
   dueToday: (today: string) => [...qk.hair.all, 'dueToday', today] as const,
   streak: (today: string) => [...qk.hair.all, 'streak', today] as const,
+  /** Today's chip: the streak, or null while there is no wash task. */
+  streakChip: (today: string) => [...qk.hair.all, 'streakChip', today] as const,
   /** Under the calendar keys, so calendar invalidation refreshes the Hair view too. */
   month: (month: string, today: string) => [...qk.calendar.month('hair', month), today] as const,
   day: (day: string) => [...qk.calendar.day(day), 'hair'] as const,
+  /** C2 "Next wash was due 6 Oct". */
+  dayDue: (day: string, today: string) => [...qk.calendar.day(day), 'hair', 'due', today] as const,
+  hasWash: [...qk.hair.all, 'hasWash'] as const,
 };
+
+/** Today's "Hair due" rows; shared with `prefetchHair`, so the keys always match. */
+export const hairDueTodayQuery = (today: string) =>
+  queryOptions({
+    queryKey: hairKeys.dueToday(today),
+    queryFn: () => hairDueToday(getDb(), today),
+  });
+
+/** Today's hair streak chip: washes only, null while there is no active wash task. */
+export const hairStreakChipQuery = (today: string) =>
+  queryOptions({
+    queryKey: hairKeys.streakChip(today),
+    queryFn: () => {
+      const db = getDb();
+      if (!hasWashTask(db)) return null;
+      const input = hairStreakInput(db, today);
+      return hairStreak(input.tasks, input.logs, input.today);
+    },
+  });
+
+/** What Today's hair slots read, so Today paints complete (task 025's `prefetchToday`). */
+export async function prefetchHair(client: QueryClient, today: string): Promise<void> {
+  await Promise.all([
+    client.prefetchQuery(hairDueTodayQuery(today)),
+    client.prefetchQuery(hairStreakChipQuery(today)),
+  ]);
+}
 
 export function useHairTasks() {
   const today = useToday();
@@ -76,9 +114,25 @@ export function useHairTask(id: number) {
 
 export function useHairDueToday() {
   const today = useToday();
+  return useQuery(hairDueTodayQuery(today));
+}
+
+export function useHairStreakChip() {
+  const today = useToday();
+  return useQuery(hairStreakChipQuery(today));
+}
+
+/** True while an active wash task exists (the hair streak card on the calendar). */
+export function useHasWashTask() {
+  return useQuery({ queryKey: hairKeys.hasWash, queryFn: () => hasWashTask(getDb()) });
+}
+
+/** C2: for a day with nothing done, the wash due day that had come by then (or null). */
+export function useWashDueOn(day: string) {
+  const today = useToday();
   return useQuery({
-    queryKey: hairKeys.dueToday(today),
-    queryFn: () => hairDueToday(getDb(), today),
+    queryKey: hairKeys.dayDue(day, today),
+    queryFn: () => washDueOn(getDb(), day),
   });
 }
 
@@ -162,6 +216,8 @@ export function useMarkHairDone() {
     }),
     onSuccess: ({ taskId }) => {
       invalidate(client);
+      // A snoozed copy of today's reminder is no longer needed.
+      cancelSnoozes('hair_task', taskId).catch(() => {});
       onHairTaskChanged(taskId);
     },
   });

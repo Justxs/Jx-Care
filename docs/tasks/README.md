@@ -70,7 +70,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 030 | [Conflict warnings and avoid list](030-conflict-warnings-avoid-list.md) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | todo |
 | 031 | [Hair data](031-hair-data.md) | 005, 007 | R5, T3 | done |
 | 032 | [Hair setup and hair task editor](032-hair-setup-editor.md) | 023, 031 | R1 hair, R5 | done |
-| 033 | [Hair done, hair calendar and hair reminders](033-hair-done-calendar-reminders.md) | 020, 025, 028, 032 | T3, C1 hair | todo |
+| 033 | [Hair done, hair calendar and hair reminders](033-hair-done-calendar-reminders.md) | 020, 025, 028, 032 | T3, C1 hair | done |
 | 034 | [Shopping list](034-shopping-list.md) | 014, 015 | P6, P7, sequence 7 | done |
 | 035 | [Progress photo data and storage](035-progress-data-storage.md) | 005 | C3–C7 data | done |
 | 036 | [Progress camera and review](036-progress-camera-review.md) | 020, 025, 035 | C4, C5, T1 check-in photo row | todo |

@@ -15,11 +15,15 @@ import {
   hairStreakInput,
   hairTaskCountByProduct,
   hasAnyHairTask,
+  hasHairLogOn,
+  hasWashTask,
   listHairTasks,
+  listReminderTasks,
   markHairDone,
   quickSetup,
   saveHairTask,
   setHairTaskActive,
+  washDueOn,
 } from './repo';
 import type { HairTaskInput } from './schema';
 
@@ -374,5 +378,67 @@ describe('used in and delete', () => {
     expect(task(db, id)).toBeUndefined();
     expect(db.select().from(hairLog).all()).toEqual([]);
     expect(hasAnyHairTask(db)).toBe(false);
+  });
+});
+
+const created = (db: TestDb, id: number, day: string) =>
+  db
+    .update(hairTask)
+    .set({ createdAt: new Date(`${day}T12:00:00`).getTime() })
+    .where(eq(hairTask.id, id))
+    .run();
+
+describe('task 033 reads', () => {
+  it('washDueOn says when the wash was due on a day with nothing done', () => {
+    const db = createTestDb();
+    // Every 3 days, last done 30 Sep: due 3 Oct, washed late on 5 Oct, next due 8 Oct.
+    const id = saveHairTask(db, washInput({ lastDoneAt: '2026-09-30' }));
+    created(db, id, '2026-09-30');
+    done(db, id, '2026-10-05');
+    expect(washDueOn(db, '2026-10-02')).toBeNull();
+    expect(washDueOn(db, '2026-10-03')).toBe('2026-10-03');
+    expect(washDueOn(db, '2026-10-04')).toBe('2026-10-03');
+    expect(washDueOn(db, '2026-10-07')).toBeNull();
+    expect(washDueOn(db, '2026-10-09')).toBe('2026-10-08');
+    // Before the task existed nothing was due; other care never counts.
+    expect(washDueOn(db, '2026-09-29')).toBeNull();
+    const trim = saveHairTask(
+      db,
+      washInput({ kind: 'other', otherKind: 'trim', lastDoneAt: '2026-09-01' }),
+    );
+    created(db, trim, '2026-09-01');
+    expect(washDueOn(db, '2026-10-02')).toBeNull();
+  });
+
+  it('hasWashTask counts active washes only', () => {
+    const db = createTestDb();
+    expect(hasWashTask(db)).toBe(false);
+    saveHairTask(db, washInput({ kind: 'other', otherKind: 'trim' }));
+    expect(hasWashTask(db)).toBe(false);
+    const id = saveHairTask(db, washInput());
+    expect(hasWashTask(db)).toBe(true);
+    setHairTaskActive(db, id, false);
+    expect(hasWashTask(db)).toBe(false);
+  });
+
+  it('listReminderTasks keeps active tasks with a reminder time, with product names', () => {
+    const db = createTestDb();
+    const shampoo = addProduct(db, 'Shampoo');
+    const a = saveHairTask(db, washInput({ reminderTime: '19:00', productIds: [shampoo] }));
+    saveHairTask(db, washInput({ reminderTime: null }));
+    const paused = saveHairTask(db, washInput({ reminderTime: '08:00' }));
+    setHairTaskActive(db, paused, false);
+    expect(listReminderTasks(db, TODAY)).toEqual([
+      expect.objectContaining({ id: a, nextDue: '2026-10-09', productNames: ['Shampoo'] }),
+    ]);
+  });
+
+  it('hasHairLogOn tells whether a task was logged on a day', () => {
+    const db = createTestDb();
+    const id = saveHairTask(db, washInput());
+    expect(hasHairLogOn(db, id, TODAY)).toBe(false);
+    done(db, id, TODAY);
+    expect(hasHairLogOn(db, id, TODAY)).toBe(true);
+    expect(hasHairLogOn(db, id, YESTERDAY)).toBe(false);
   });
 });
