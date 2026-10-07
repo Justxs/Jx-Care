@@ -9,15 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Sheet } from '@/components/ui/sheet';
 import { Text } from '@/components/ui/text';
 import { useIngredientInRule } from '@/features/conflicts/hooks';
-import { parsedLinesAvoidMatches } from '@/lib/avoid';
-import {
-  classifyIngredients,
-  parseIngredientLines,
-  suggestIngredients,
-  type KnownIngredient,
-} from '@/lib/ingredients';
+import { parseIngredientLines, suggestIngredients, type KnownIngredient } from '@/lib/ingredients';
 import { rowLayout } from '@/theme/listMotion';
 
+import { linePills } from '../detail';
 import { applyIngredientChange, lineAt, replaceLine } from '../ingredientInput';
 import type { AvoidContext } from '../repo';
 import { IngredientPills } from './IngredientPills';
@@ -51,15 +46,7 @@ export function IngredientEntrySheet({
   const [split, setSplit] = useState<{ count: number; undo: string } | null>(null);
 
   const parsed = useMemo(() => parseIngredientLines(text), [text]);
-  const classified = useMemo(() => classifyIngredients(parsed, known), [parsed, known]);
   const inRule = useIngredientInRule();
-  const avoided = useMemo(
-    () =>
-      new Set(
-        parsedLinesAvoidMatches(parsed, known, avoid.groupOf, avoid.items).map((m) => m.line),
-      ),
-    [parsed, known, avoid],
-  );
   const current = lineAt(text, cursor).line;
   const suggestions = suggestIngredients(current, known, 5);
 
@@ -150,14 +137,7 @@ export function IngredientEntrySheet({
         )}
       </View>
       <Animated.View layout={rowLayout}>
-        <IngredientPills
-          items={classified.map((c) => ({
-            name: c.name,
-            isNew: c.status === 'new',
-            avoided: avoided.has(c.name),
-            conflict: c.status === 'existing' && inRule(c.id),
-          }))}
-        />
+        <IngredientPills items={linePills(parsed, known, avoid, inRule)} />
       </Animated.View>
     </Sheet>
   );

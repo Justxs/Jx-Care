@@ -26,8 +26,7 @@ import { useIngredientInRule } from '@/features/conflicts/hooks';
 import { useSettings } from '@/features/settings/api';
 import { useLinkBoughtItem } from '@/features/shopping/api';
 import { currencySymbol } from '@/features/settings/currencies';
-import { parsedLinesAvoidMatches } from '@/lib/avoid';
-import { classifyIngredients, parseIngredientLines } from '@/lib/ingredients';
+import { parseIngredientLines } from '@/lib/ingredients';
 import { appStore } from '@/state/app';
 import { showToast } from '@/state/ui';
 
@@ -50,6 +49,7 @@ import {
   PhotoField,
 } from '../components/ProductFields';
 import { QuickOpenFields } from '../components/QuickFields';
+import { avoidedLines, linePills } from '../detail';
 import { onProductSaved } from '../events';
 import { productAddedForPick } from '../pickReturn';
 import type { AvoidContext } from '../repo';
@@ -216,12 +216,6 @@ function ProductForm({
   // "Save and add another" must change them too or a prefilled form would fill itself again.
   const [defaults, setDefaults] = useState(initial);
 
-  const avoidedLines = (lines: readonly string[]) => [
-    ...new Set(
-      parsedLinesAvoidMatches(lines, known, avoid.groupOf, avoid.items).map((m) => m.line),
-    ),
-  ];
-
   const save = async (value: ProductInput) => {
     const keep = value.photoUri;
     const cleanUp = () => {
@@ -263,7 +257,7 @@ function ProductForm({
     schema,
     defaultValues: defaults,
     onSubmit: async (value) => {
-      if (avoidedLines(value.ingredients).length > 0) {
+      if (avoidedLines(value.ingredients, known, avoid).length > 0) {
         setPending(value);
         return;
       }
@@ -271,6 +265,7 @@ function ProductForm({
     },
   });
   const dirty = useFormDirty(form);
+  const pendingAvoided = pending ? avoidedLines(pending.ingredients, known, avoid) : [];
   const submitting = useStore(form.store, (s) => s.isSubmitting);
 
   const close = () => {
@@ -358,20 +353,12 @@ function ProductForm({
     <form.Field name="ingredients">
       {(field) => {
         const lines = parseIngredientLines(field.state.value);
-        const avoided = new Set(avoidedLines(lines));
-        const names = [...avoided].join(', ');
+        const avoided = avoidedLines(lines, known, avoid);
         return (
           <View className="gap-1.5">
             <Text className="text-label text-ink">{t('products.form.ingredients')}</Text>
             {lines.length > 0 ? (
-              <IngredientPills
-                items={classifyIngredients(lines, known).map((c) => ({
-                  name: c.name,
-                  isNew: c.status === 'new',
-                  avoided: avoided.has(c.name),
-                  conflict: c.status === 'existing' && inRule(c.id),
-                }))}
-              />
+              <IngredientPills items={linePills(lines, known, avoid, inRule)} />
             ) : (
               <Text className="text-body text-ink-muted">{t('products.form.noIngredients')}</Text>
             )}
@@ -389,14 +376,17 @@ function ProductForm({
             </Button>
             {/* Reserved line for the avoid warning. */}
             <View className="min-h-[36px] flex-row items-start gap-1.5">
-              {avoided.size > 0 ? (
+              {avoided.length > 0 ? (
                 <>
                   <Icon name="ban" size={16} tone="danger" />
                   <Text
                     accessibilityLiveRegion="polite"
                     className="flex-1 text-caption text-danger"
                   >
-                    {t('products.form.avoidWarning', { names, count: avoided.size })}
+                    {t('products.form.avoidWarning', {
+                      names: avoided.join(', '),
+                      count: avoided.length,
+                    })}
                   </Text>
                 </>
               ) : null}
@@ -665,8 +655,8 @@ function ProductForm({
         }}
         title={t('products.form.avoidTitle')}
         description={t('products.form.avoidBody', {
-          names: pending ? avoidedLines(pending.ingredients).join(', ') : '',
-          count: pending ? avoidedLines(pending.ingredients).length : 1,
+          names: pendingAvoided.join(', '),
+          count: pendingAvoided.length || 1,
         })}
         actionLabel={t('products.form.saveAnyway')}
         cancelLabel={t('products.form.editIngredients')}
