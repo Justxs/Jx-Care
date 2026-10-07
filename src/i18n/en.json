@@ -878,15 +878,6 @@
       "deletedToast": "{{name}} deleted",
       "missing": "This hair task no longer exists."
     },
-    "picker": {
-      "title": "Hair products",
-      "search": "Search products",
-      "none": "No hair products yet. Add them in Products as Hair or Both.",
-      "noMatch": "No products match your search.",
-      "cantPick": "Can't be picked",
-      "expiredNote": "Expired products stay out of hair tasks. Buy it again from Products.",
-      "expiredLabel": "{{name}}, expired. Expired products stay out of hair tasks. Buy it again from Products."
-    },
     "done": {
       "date": "Date",
       "products": "Products",
@@ -1298,7 +1289,6 @@
     "name": "Name",
     "price": "Price",
     "purchased": "Purchased",
-    "time": "Time",
     "tags": "Tags",
     "category": "Category",
     "answer": "Answer",
@@ -1323,9 +1313,7 @@
       "nameRequired": "Enter a name.",
       "priceNumber": "Enter the price as a number, e.g. 12.99.",
       "priceMin": "The price can't be below 0.",
-      "pickOne": "Pick at least one.",
-      "dateRequired": "Pick a date.",
-      "monthsNumber": "Enter months as a number, e.g. 12."
+      "pickOne": "Pick at least one."
     }
   },
   "screens": {

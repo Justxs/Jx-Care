@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { productCategories } from '@/db/enums';
-import { samplePhotoUri } from '@/storybook/seeds/ui-b';
+import { samplePhotoUri } from '@/storybook/seeds/products';
 
 import { ProductThumb } from './product-thumb';
 import { Text } from './text';

@@ -12,7 +12,7 @@ import { storyDecorators, storyQueryClient } from '../decorators';
 
 /**
  * Smoke test for every story under src/: each one renders with its args, decorators and data,
- * and no query fails. Mocks are the ones screen tests use; add one here when a new story needs it.
+ * no query fails, and every control has a role and a name for screen readers. Mocks are the ones screen tests use; add one here when a new story needs it.
  */
 
 // Screens get the story stand-ins (params from the story, navigation logged, not followed).
@@ -73,6 +73,36 @@ afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
 });
 
+type HostNode = { props: Record<string, unknown>; children: (HostNode | string)[] | null };
+
+function textOf(node: HostNode | string): string {
+  return typeof node === 'string' ? node : (node.children ?? []).map(textOf).join('');
+}
+
+/**
+ * Controls a screen reader can reach (pressables not hidden from it) that lack a role or a name
+ * (a label or text inside). Hidden boxes, like a row's visual checkbox, are skipped.
+ */
+function unnamedControls(tree: unknown): string[] {
+  const found: string[] = [];
+  const visit = (node: HostNode | HostNode[] | string | null) => {
+    if (!node || typeof node === 'string') return;
+    if (Array.isArray(node)) return node.forEach(visit);
+    const p = node.props;
+    if (p.accessibilityElementsHidden || p.importantForAccessibility === 'no-hide-descendants') {
+      return;
+    }
+    if ((p.onClick || p.onResponderRelease) && p.accessible !== false) {
+      const name = String(p.accessibilityLabel ?? p['aria-label'] ?? textOf(node)).trim();
+      const role = p.accessibilityRole ?? p.role;
+      if (!role || !name) found.push(`${String(p.testID ?? '')} role=${String(role)} name=${name}`);
+    }
+    (node.children ?? []).forEach(visit);
+  };
+  visit(tree as HostNode);
+  return found;
+}
+
 it('finds the story files', () => {
   expect(files.length).toBeGreaterThan(0);
 });
@@ -93,6 +123,8 @@ describe.each(files.map((file) => [path.relative(SRC, file), file]))('%s', (_nam
     await waitFor(() => expect(screen.queryByTestId('story-data-loading')).toBeNull());
     await act(() => new Promise<void>((r) => setTimeout(r, 0)));
     expect(view.toJSON()).not.toBeNull();
+    // Every control a screen reader reaches has a role and a name.
+    expect(unnamedControls(view.toJSON())).toEqual([]);
 
     const failed = (storyQueryClient()?.getQueryCache().getAll() ?? []).filter(
       (q) => q.state.status === 'error',

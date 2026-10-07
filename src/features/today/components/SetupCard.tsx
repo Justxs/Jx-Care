@@ -33,22 +33,22 @@ export function SetupCard({ view, progress, onStep, onHide }: SetupCardProps) {
   const { t } = useTranslation();
   const menu = useRef<DropdownMenuPrimitive.TriggerRef>(null);
   const openMenu = () => menu.current?.open();
-  const onAccessibilityAction = (e: AccessibilityActionEvent) => {
-    if (e.nativeEvent.actionName === 'hide') onHide();
+  const hideAction = {
+    accessibilityActions: [{ name: 'hide', label: t('today.setup.hideLabel') }],
+    onAccessibilityAction: (e: AccessibilityActionEvent) => {
+      if (e.nativeEvent.actionName === 'hide') onHide();
+    },
   };
 
   return (
     <DropdownMenuPrimitive.Root>
-      <Pressable
-        onLongPress={openMenu}
-        accessibilityActions={[{ name: 'hide', label: t('today.setup.hideLabel') }]}
-        onAccessibilityAction={onAccessibilityAction}
-        testID="setup-card"
-      >
+      {/* Not one accessible element, or screen readers could not reach the buttons inside; the
+          titles carry the Hide action instead. */}
+      <Pressable onLongPress={openMenu} accessible={false} testID="setup-card">
         {view.mode === 'set' ? (
           <Card className="items-center gap-3 py-6">
             <Logo size={72} />
-            <Text accessibilityRole="header" className="text-center text-title-m">
+            <Text accessibilityRole="header" {...hideAction} className="text-center text-title-m">
               {t('today.setup.setTitle')}
             </Text>
             <Text className="text-center text-body text-ink-muted">{t('today.setup.setBody')}</Text>
@@ -60,7 +60,7 @@ export function SetupCard({ view, progress, onStep, onHide }: SetupCardProps) {
           <Card flush>
             <View className="gap-2 px-4 pb-2 pt-4">
               <View className="flex-row items-center justify-between gap-2">
-                <Text accessibilityRole="header" className="flex-1 text-title-s">
+                <Text accessibilityRole="header" {...hideAction} className="flex-1 text-title-s">
                   {t('today.setup.title')}
                 </Text>
                 <Text className="text-label text-ink-muted tabular-nums">

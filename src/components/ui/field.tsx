@@ -35,7 +35,8 @@ export function Field({
   return (
     <View className={cn('gap-1.5', className)}>
       {label ? (
-        <LabelPrimitive.Root onPress={onLabelPress}>
+        // Not a focus stop of its own: the control below carries the label for screen readers.
+        <LabelPrimitive.Root onPress={onLabelPress} accessible={false}>
           <LabelPrimitive.Text nativeID={nativeID} className="text-label text-ink">
             {label}
           </LabelPrimitive.Text>

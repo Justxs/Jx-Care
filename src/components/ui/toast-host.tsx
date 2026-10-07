@@ -1,11 +1,12 @@
 import { useSelector } from '@tanstack/react-store';
 import { Pressable, View } from 'react-native';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut, ReduceMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { dismissToast, runToastAction, runToastSecondary, uiStore } from '@/state/ui';
 import { motion } from '@/theme/motion';
+import { useMotion } from '@/theme/useMotion';
 
 import { Icon } from './icon';
 import { Text } from './text';
@@ -20,6 +21,7 @@ export function ToastHost() {
   const toast = useSelector(uiStore, (s) => s.toasts.at(-1));
   const inset = useSelector(uiStore, (s) => s.toastInset);
   const screenReaderOn = useSelector(uiStore, (s) => s.screenReaderOn);
+  const m = useMotion();
 
   return (
     <View
@@ -30,7 +32,11 @@ export function ToastHost() {
       {toast ? (
         <Animated.View
           key={toast.id}
-          entering={FadeInDown.duration(motion.duration.base)}
+          entering={
+            m.allowMovement
+              ? FadeInDown.duration(motion.duration.base)
+              : FadeIn.duration(motion.duration.reduced).reduceMotion(ReduceMotion.Never)
+          }
           exiting={FadeOut.duration(motion.duration.base)}
           accessibilityLiveRegion="polite"
           className="min-h-[52px] flex-row items-center gap-2 rounded-md bg-surface pl-4 shadow-raised dark:border dark:border-border"

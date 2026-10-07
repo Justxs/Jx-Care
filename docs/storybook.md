@@ -47,6 +47,7 @@ export const Danger: Story = { args: { variant: 'danger', children: 'Delete' } }
 ```
 
 - Callbacks: `argTypes: { onPress: { action: 'pressed' } }`. Don't import `fn` from `storybook/test`: it doesn't load in Jest.
+- Required callbacks (props without `?`): `StoryObj<typeof meta>` wants them in `args`. Spread a typed empty object into the meta args, `args: { ...({} as Pick<Props, 'onPick' | 'onClose'>) }`, and give each an `action` in `argTypes`; the Actions panel then logs them.
 - Text that should follow the EN/LT switch: use `useTranslation()` inside a `render` function (see `AllVariants` in `button.stories.tsx`). Literal args (`children: 'Save'`) are fine for controls.
 - A story file exports only `default` (the meta) and stories.
 
@@ -76,6 +77,8 @@ All under `src/storybook/`.
 | --- | --- |
 | `withAppData({ seed?, params?, today? })` from `appData` | Story decorator. A fresh in-memory database with every migration, set with `setDb`, seeded with `seed(db, today)`, `appStore.activeDay = today` (default `FIXTURE_TODAY`), the settings query filled as after boot, and `params` returned by `useLocalSearchParams()`. Renders a blank canvas until ready; the app's own database and day come back when the story closes. |
 | `withRouteParams(params)` from `decorators` | Route params without a database (a component that reads params). |
+| `withPendingData()` from `seeds/pending` | Every query stays pending, so the screen shows its skeletons (Loading stories). |
+| `samplePhotoUri` from `seeds/products`, `storyPhotoUri(angle)` from `seeds/progress` | Photos for stories: an inlined product photo, and bundled images for progress photos. |
 | `seedDemo(db, today?)`, `seedEmpty(db)` from `fixtures` | The seeds. Write new ones there, only through repo functions. |
 | `demoIds` from `fixtures` | Fixed ids `seedDemo` creates (it throws if they drift). |
 | `FIXTURE_TODAY` from `fixtures` | `'2026-10-07'`, a Wednesday. |
@@ -102,7 +105,7 @@ All under `src/storybook/`.
 | `hairTasks.trim` 2 | Every 8 weeks |
 | `shoppingItems.clayMask` 1, `hairOil` 2, `hydratingToner` 3, `lipBalm` 4 | Buy again, To buy, Want to try, Bought today |
 
-Also: condition logs on the 4th, 2nd and last day before today, the avoid list (Parfum), and settings with reminders on. No progress photos (they need image files).
+Also: condition logs on the 4th, 2nd and last day before today, the avoid list (Parfum), and settings with reminders on. No progress photos: `seedProgress` in `seeds/progress` adds Weekly photo and five weeks of check-ins.
 
 ## What every story gets
 
@@ -116,7 +119,7 @@ Params reach the story tree only: a bottom sheet or menu rendered through a port
 
 ## Tests
 
-`src/storybook/__tests__/stories.test.tsx` finds every `*.stories.tsx` under `src/`, renders each story with its meta and story args, decorators and `render`, waits for its data and fails on a render error or a failed query. It runs in `npm run check`, so a broken story fails the build. It mocks `expo-router` with the same stand-ins (`storyExpoRouterMock()`) and `expo-haptics`; add a mock there when a new story needs a native module Jest doesn't have. `fixtures.test.ts` checks that `seedDemo` holds what the table above says.
+`src/storybook/__tests__/stories.test.tsx` finds every `*.stories.tsx` under `src/`, renders each story with its meta and story args, decorators and `render`, waits for its data and fails on a render error, a failed query, or a control a screen reader reaches without a role or a name (a label or text inside; boxes hidden from screen readers are skipped). It runs in `npm run check`, so a broken story fails the build. It mocks `expo-router` with the same stand-ins (`storyExpoRouterMock()`), `expo-haptics`, `expo-crypto` and `expo-camera` (permission refused); add a mock there when a new story needs a native module Jest doesn't have. `fixtures.test.ts` checks that `seedDemo` holds what the table above says.
 
 `src/storybook/compose.tsx` (`composeStory`, `storyEntries`) can render a story in any other test too.
 

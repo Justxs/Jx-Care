@@ -948,15 +948,6 @@
       "deletedToast": "Ištrinta: {{name}}",
       "missing": "Šios plaukų užduoties nebėra."
     },
-    "picker": {
-      "title": "Plaukų produktai",
-      "search": "Ieškoti produktų",
-      "none": "Plaukų produktų dar nėra. Pridėkite juos skiltyje „Produktai“ kaip plaukų arba abiem.",
-      "noMatch": "Pagal paiešką produktų nerasta.",
-      "cantPick": "Negalima pasirinkti",
-      "expiredNote": "Nebegaliojantys produktai į plaukų užduotis neįtraukiami. Nupirkite jį iš naujo skiltyje „Produktai“.",
-      "expiredLabel": "{{name}}, nebegalioja. Nebegaliojantys produktai į plaukų užduotis neįtraukiami. Nupirkite jį iš naujo skiltyje „Produktai“."
-    },
     "done": {
       "date": "Data",
       "products": "Produktai",
@@ -1394,7 +1385,6 @@
     "name": "Pavadinimas",
     "price": "Kaina",
     "purchased": "Pirkta",
-    "time": "Laikas",
     "tags": "Žymos",
     "category": "Kategorija",
     "answer": "Atsakymas",
@@ -1419,9 +1409,7 @@
       "nameRequired": "Įveskite pavadinimą.",
       "priceNumber": "Įveskite kainą skaičiumi, pvz., 12,99.",
       "priceMin": "Kaina negali būti mažesnė nei 0.",
-      "pickOne": "Pasirinkite bent vieną.",
-      "dateRequired": "Pasirinkite datą.",
-      "monthsNumber": "Įveskite mėnesius skaičiumi, pvz., 12."
+      "pickOne": "Pasirinkite bent vieną."
     }
   },
   "screens": {

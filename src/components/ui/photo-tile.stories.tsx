@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { samplePhotoUri } from '@/storybook/seeds/ui-b';
+import { samplePhotoUri } from '@/storybook/seeds/products';
 
 import { PhotoTile } from './photo-tile';
 
