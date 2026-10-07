@@ -29,6 +29,7 @@ import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import { hairOtherKinds, type HairOtherKind, type HairTaskKind } from '@/db/enums';
 import { useProductsForPicker } from '@/features/products/api';
 import { ProductPickerSheet } from '@/features/products/components/ProductPickerSheet';
+import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
 import { appStore } from '@/state/app';
@@ -183,6 +184,9 @@ function HairTaskForm({
       }),
     [navigation, dirty, guard],
   );
+  // Back from Add product (opened from the picker): stop waiting, so a product added later from
+  // the Products tab doesn't land in this task while the editor stays open under it.
+  useEffect(() => navigation.addListener('focus', endAddProductForPick), [navigation]);
 
   // Values set from code skip the blur that validates, so check again: an error that no longer
   // applies (or a new one, after a Save attempt) shows at once, and Save is never stuck on it.
