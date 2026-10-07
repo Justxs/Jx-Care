@@ -64,7 +64,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | done |
 | 025 | [Today](025-today.md) | 010, 012, 022 | T1 | done |
 | 026 | [Routine player](026-routine-player.md) | 022, 025 | T2 | done |
-| 027 | [Routine reminders](027-routine-reminders.md) | 020, 024, 026 | Notifications, sequence 4 | todo |
+| 027 | [Routine reminders](027-routine-reminders.md) | 020, 024, 026 | Notifications, sequence 4 | done |
 | 028 | [Skin calendar and day detail](028-skin-calendar-day-detail.md) | 007, 022, 010 | C1 skin, C2 | done |
 | 029 | [Ingredients, groups and conflict rules](029-ingredients-conflict-rules.md) | 011, 012, 022 | S2, S3 | done |
 | 030 | [Conflict warnings and avoid list](030-conflict-warnings-avoid-list.md) | 024, 026, 029 | S4, R2 panel, T2, P1–P3 | done |

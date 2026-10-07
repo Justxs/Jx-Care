@@ -22,6 +22,7 @@ import { setNotificationOS, sync } from './scheduler';
 import '@/features/products/reminders'; // task 021: expiry and weekly digest
 import '@/features/hair/reminders'; // task 033: hair tasks
 import '@/features/progress/reminders'; // task 036: weekly photo
+import '@/features/routines/reminders'; // task 027: routines
 
 export const SYNC_TASK = 'jx-care-notification-sync';
 export const RESPONSE_TASK = 'jx-care-notification-response';

@@ -17,6 +17,7 @@ import { skinStreak } from '@/lib/streak';
 import { appStore } from '@/state/app';
 
 import { onRoutineCompleted } from './events';
+import { askForRoutineReminders, resyncRoutineReminders } from './reminders';
 import {
   dayRoutine,
   deleteRoutine,
@@ -42,17 +43,19 @@ import {
 
 /**
  * Called whenever a routine is created, changed, switched on or off, duplicated or deleted.
- * Task 027 reschedules its reminders here and task 030 refreshes its conflict cache. Does
- * nothing yet.
+ * Reschedules reminders (task 027); task 030 refreshes its conflict cache here.
  */
-export function onRoutineChanged(_id: number): void {}
+export function onRoutineChanged(_id: number): void {
+  void resyncRoutineReminders();
+}
 
 /**
- * Called when the reminder switch in the routine editor is turned on. Task 021 calls its
- * `askForReminders()` here, which asks for the notification permission the first time ever
- * (refinement 8). Does nothing yet.
+ * Called when the reminder switch in the routine editor is turned on: asks for the notification
+ * permission in context (refinement 8) and syncs once granted (task 027).
  */
-export function onRoutineReminderSwitchedOn(): void {}
+export function onRoutineReminderSwitchedOn(): void {
+  void askForRoutineReminders();
+}
 
 /** The app day and expiry window that step product statuses depend on; part of each key. */
 function useDayContext() {
@@ -209,6 +212,8 @@ export function useSetChoice() {
       setChoice(getDb(), v.timeOfDayKey, v.weekday, v.routineId),
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ['today'] });
+      // The pick decides which routine that weekday's reminder names and opens.
+      void resyncRoutineReminders();
     },
   });
 }

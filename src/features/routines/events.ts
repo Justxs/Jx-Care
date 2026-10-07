@@ -1,6 +1,10 @@
+import { cancelTodaysRoutineReminders } from './reminders';
+
 /**
  * Called whenever a routine becomes complete on an app day: the last tick in the player, All
- * done in the player, or All done on Today. Task 027 cancels today's pending reminder for the
- * routine here. Does nothing yet.
+ * done in the player, or All done on Today. Cancels today's pending reminder for the routine's
+ * time of day and any snoozed copy (task 027).
  */
-export function onRoutineCompleted(_routineId: number, _day: string): void {}
+export function onRoutineCompleted(routineId: number, _day: string): void {
+  void cancelTodaysRoutineReminders(routineId);
+}

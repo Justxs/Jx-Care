@@ -762,6 +762,14 @@
       "empty": "No products yet. Add one to use it here.",
       "noMatch": "Nothing matches your search.",
       "selected": "Selected"
+    },
+    "reminders": {
+      "morning_one": "Morning routine: {{count}} step",
+      "morning_other": "Morning routine: {{count}} steps",
+      "evening_one": "Evening routine: {{count}} step",
+      "evening_other": "Evening routine: {{count}} steps",
+      "custom_one": "{{name}}: {{count}} step",
+      "custom_other": "{{name}}: {{count}} steps"
     }
   },
   "hair": {

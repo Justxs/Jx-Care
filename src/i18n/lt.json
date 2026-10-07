@@ -820,6 +820,20 @@
       "empty": "Produktų dar nėra. Pridėkite, kad galėtumėte jį čia naudoti.",
       "noMatch": "Nieko nerasta.",
       "selected": "Pasirinkta"
+    },
+    "reminders": {
+      "morning_one": "Ryto rutina: {{count}} žingsnis",
+      "morning_few": "Ryto rutina: {{count}} žingsniai",
+      "morning_many": "Ryto rutina: {{count}} žingsnio",
+      "morning_other": "Ryto rutina: {{count}} žingsnių",
+      "evening_one": "Vakaro rutina: {{count}} žingsnis",
+      "evening_few": "Vakaro rutina: {{count}} žingsniai",
+      "evening_many": "Vakaro rutina: {{count}} žingsnio",
+      "evening_other": "Vakaro rutina: {{count}} žingsnių",
+      "custom_one": "{{name}}: {{count}} žingsnis",
+      "custom_few": "{{name}}: {{count}} žingsniai",
+      "custom_many": "{{name}}: {{count}} žingsnio",
+      "custom_other": "{{name}}: {{count}} žingsnių"
     }
   },
   "hair": {
