@@ -17,6 +17,7 @@ import { cn } from '@/lib/cn';
 import { longDate } from '@/lib/format';
 import { useLocale } from '@/stores/preferences';
 
+import { LiveDemo } from './live-demo';
 import { ProductThumb } from './sample-cards';
 import { Meter } from './showcase-card';
 
@@ -132,7 +133,8 @@ function SideButton({ className }: Readonly<{ className: string }>) {
 
 /**
  * The app's Today screen in a phone frame, at a fixed size so the page never shifts while it
- * animates. The rows settle in one after another once the phone has risen in.
+ * animates. The rows settle in one after another once the phone has risen in; then the live demo
+ * of the real app, when it is built, fades in over the drawing.
  */
 export function TodayPhone({ className }: Readonly<{ className?: string }>) {
   const { t } = useTranslation();
@@ -266,7 +268,7 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
               </div>
 
               <div aria-hidden="true" className="shrink-0 border-t border-border bg-surface">
-                <div className="grid h-[50px] grid-cols-5 px-2 pt-1.5">
+                <div className="grid h-[50px] grid-cols-5 overflow-hidden px-2 pt-1.5">
                   {tabs.map((tab) => (
                     <span
                       key={tab.key}
@@ -287,6 +289,9 @@ export function TodayPhone({ className }: Readonly<{ className?: string }>) {
                   <span className="h-[5px] w-[134px] rounded-full bg-ink" />
                 </div>
               </div>
+
+              {/* The real app between the status bar and the home indicator, once it has loaded. */}
+              <LiveDemo className="absolute top-[54px] left-0 h-[756px] w-full" />
             </div>
           </div>
         </div>

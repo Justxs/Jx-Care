@@ -2,3 +2,5 @@ node_modules/
 dist/
 storybook-static/
 *.tsbuildinfo
+# The live demo, built from the app by `pnpm demo` (../scripts/build-web-demo.mjs).
+public/demo/

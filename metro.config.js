@@ -18,8 +18,10 @@ config.resolver.blockList = [
 // On-device Storybook (docs/storybook.md): only with EXPO_PUBLIC_STORYBOOK_ENABLED=true
 // (`pnpm storybook`). Otherwise every Storybook module resolves to an empty one.
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
+// The website's live demo (scripts/build-web-demo.mjs) renders screens the way stories do.
+const webDemo = process.env.JX_WEB_DEMO === '1';
 
-if (storybookEnabled) {
+if (storybookEnabled || webDemo) {
   // Screens under src/ get an expo-router whose router, params, navigation and Redirect stand in
   // for the real ones while a story is on screen. The shim itself imports the real module.
   const srcDir = path.resolve(__dirname, 'src') + path.sep;

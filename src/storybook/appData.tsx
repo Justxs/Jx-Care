@@ -44,7 +44,7 @@ function currentDb(): Db | null {
   }
 }
 
-function AppData({
+export function AppData({
   seed,
   params,
   today = FIXTURE_TODAY,

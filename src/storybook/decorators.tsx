@@ -66,9 +66,12 @@ function StoryToolbar() {
  */
 export function StoryShell({
   layout = 'padded',
+  toolbar = true,
   children,
 }: {
   layout?: StoryLayout;
+  /** The Light/Dark and EN/LT switches; the web demo on the website has its own. */
+  toolbar?: boolean;
   children: ReactNode;
 }) {
   // No garbage-collection timers: a story's cache lives exactly as long as the story.
@@ -86,7 +89,7 @@ export function StoryShell({
           <QueryClientProvider client={client}>
             <BottomSheetModalProvider>
               <View className="flex-1 bg-canvas font-sans">
-                <StoryToolbar />
+                {toolbar ? <StoryToolbar /> : null}
                 <View className={cn('flex-1', layout === 'padded' && 'p-4')}>{children}</View>
                 <ToastHost />
                 <PortalHost />

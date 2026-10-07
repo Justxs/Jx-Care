@@ -30,6 +30,7 @@
   "sample": {
     "tag": "Sample data",
     "phoneLabel": "Today screen with sample data",
+    "liveDemo": "Jx Care running with sample data. Tap the tabs to look around.",
     "greeting": "Good morning",
     "streaks": "Streaks",
     "skinStreak": "12 skin",

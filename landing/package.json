@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm typecheck && vite build",
+    "build": "pnpm demo && pnpm typecheck && vite build",
+    "demo": "node ../scripts/build-web-demo.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b tsconfig.json tsconfig.node.json",
     "lint": "oxlint --deny-warnings",
