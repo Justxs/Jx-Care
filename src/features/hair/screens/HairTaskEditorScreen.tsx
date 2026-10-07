@@ -1,7 +1,7 @@
 import { useStore, type AnyFieldApi } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
@@ -13,7 +13,7 @@ import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
 import { ChipField } from '@/components/ui/chip-field';
 import { Chip } from '@/components/ui/chip';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -140,7 +140,6 @@ function HairTaskForm({
   const saveTask = useSaveHairTask();
   const deleteTask = useDeleteHairTask();
   const pickerProducts = useProductsForPicker({ area: 'hair' }, i18n.language).data;
-  const leaving = useRef(false);
   const [picker, setPicker] = useState({ open: false, key: 0 });
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -160,30 +159,15 @@ function HairTaskForm({
           name: value.name,
         }),
       });
-      leaving.current = true;
-      router.back();
+      guard.leave();
     },
   });
   const dirty = useFormDirty(form);
   const submitting = useStore(form.store, (s) => s.isSubmitting);
   const kind = useStore(form.store, (s) => s.values.kind);
 
-  const close = () => {
-    leaving.current = true;
-    router.back();
-  };
-  const guard = useCloseGuard({ dirty, onClose: close });
+  const guard = useScreenCloseGuard({ dirty });
 
-  // Android back and any other way of leaving go through the same "Discard changes?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
   // Back from Add product (opened from the picker): stop waiting, so a product added later from
   // the Products tab doesn't land in this task while the editor stays open under it.
   useEffect(() => navigation.addListener('focus', endAddProductForPick), [navigation]);
@@ -240,10 +224,9 @@ function HairTaskForm({
   const remove = async () => {
     if (taskId === undefined) return;
     setConfirmDelete(false);
-    leaving.current = true;
     await deleteTask.mutateAsync(taskId);
     showToast({ message: t('hair.editor.deletedToast', { name: initial.name }) });
-    router.back();
+    guard.leave();
   };
 
   const frequencyItems = [

@@ -11,7 +11,7 @@ import { AlertDialog } from '@/components/ui/alert-dialog';
 import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
 import { Chip, ChipGroup } from '@/components/ui/chip';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
 import { Field } from '@/components/ui/field';
@@ -165,7 +165,6 @@ function RoutineForm({
     [stepProducts, active],
   );
 
-  const leaving = useRef(false);
   /** Set while Add product is open from the picker: the step editor opens again on return. */
   const returning = useRef(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -183,8 +182,7 @@ function RoutineForm({
     onSubmit: async (value) => {
       await save.mutateAsync(toSaveInput(value, routineId));
       showToast({ message: t('routines.editor.savedToast', { name: value.name }) });
-      leaving.current = true;
-      router.back();
+      guard.leave();
     },
   });
   const formDirty = useFormDirty(form);
@@ -203,22 +201,7 @@ function RoutineForm({
   // Already in the editor: the conflict sheet offers "See the rule" only.
   const conflictSheets = useConflictSheets();
 
-  const close = () => {
-    leaving.current = true;
-    router.back();
-  };
-  const guard = useCloseGuard({ dirty, onClose: close });
-
-  // Android back and swipe-back go through the same "Discard changes?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
+  const guard = useScreenCloseGuard({ dirty });
   // Back from Add product (opened from the picker): show the step editor again.
   useEffect(
     () =>
@@ -528,9 +511,8 @@ function RoutineForm({
         onAction={() => {
           setDeleteOpen(false);
           if (routineId === null) return;
-          leaving.current = true;
           del.mutate(routineId);
-          router.back();
+          guard.leave();
         }}
         onCancel={() => setDeleteOpen(false)}
       />

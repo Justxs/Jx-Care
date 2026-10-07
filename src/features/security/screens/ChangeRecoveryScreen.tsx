@@ -1,6 +1,6 @@
 import { useStore } from '@tanstack/react-form';
-import { router, useNavigation } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { router } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
 import { useAppForm, useFormDirty } from '@/components/ui/form';
@@ -87,15 +87,8 @@ function RecoveryForm({
   onPinRejected: (pin: null) => void;
 }) {
   const { t } = useTranslation();
-  const navigation = useNavigation();
-  const leaving = useRef(false);
   // Re-built when the language changes so the presets read in the app's language.
   const options = useMemo(() => questionOptions(t), [t]);
-
-  const close = useCallback(() => {
-    leaving.current = true;
-    router.back();
-  }, []);
 
   const form = useAppForm({
     schema: recoverySchema,
@@ -113,24 +106,13 @@ function RecoveryForm({
         return;
       }
       showToast({ message: t('security.recovery.changed') });
-      close();
+      guard.leave();
     },
   });
 
   const isCustom = useStore(form.store, (s) => s.values.questionId === CUSTOM_QUESTION);
   const dirty = useFormDirty(form);
-  const guard = useCloseGuard({ dirty, onClose: close });
-
-  // Android back and the swipe ask "Discard changes?" too.
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
+  const guard = useScreenCloseGuard({ dirty });
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-canvas">

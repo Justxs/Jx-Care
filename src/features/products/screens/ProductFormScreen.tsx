@@ -1,8 +1,8 @@
 import type { AnyFieldApi } from '@tanstack/react-form';
 import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { AlertDialog } from '@/components/ui/alert-dialog';
 import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DateField } from '@/components/ui/date-field';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
@@ -189,7 +189,6 @@ function ProductForm({
   fromShoppingItem?: number;
 }) {
   const { t, i18n } = useTranslation();
-  const navigation = useNavigation();
   const today = useSelector(appStore, (s) => s.activeDay);
   const schema = useMemo(() => productSchema(today), [today]);
   const currency = useSettings().data?.currency ?? 'EUR';
@@ -204,7 +203,6 @@ function ProductForm({
   const scroll = useRef<React.ComponentRef<typeof KeyboardAwareScrollView>>(null);
   /** Photos picked in this form; the ones not saved are deleted on save or discard. */
   const picked = useRef<string[]>([]);
-  const leaving = useRef(false);
   const linked = useRef(false);
   const afterSave = useRef<'close' | 'another'>('close');
   const [savingAs, setSavingAs] = useState<'close' | 'another'>('close');
@@ -226,8 +224,7 @@ function ProductForm({
       await update.mutateAsync({ id: productId, input: value });
       cleanUp();
       showToast({ message: t('products.form.savedToast') });
-      leaving.current = true;
-      router.back();
+      guard.leave();
       return;
     }
     const { id, isFirstWithExpiry } = await create.mutateAsync(value);
@@ -248,8 +245,7 @@ function ProductForm({
       setMoreOpen(false);
       scroll.current?.scrollTo({ y: 0, animated: true });
     } else {
-      leaving.current = true;
-      router.back();
+      guard.leave();
     }
   };
 
@@ -268,24 +264,13 @@ function ProductForm({
   const pendingAvoided = pending ? avoidedLines(pending.ingredients, known, avoid) : [];
   const submitting = useStore(form.store, (s) => s.isSubmitting);
 
-  const close = () => {
-    for (const uri of picked.current) discardPickedPhoto(uri);
-    picked.current = [];
-    leaving.current = true;
-    router.back();
-  };
-  const guard = useCloseGuard({ dirty, onClose: close });
-
-  // Android back and any other way of leaving go through the same "Discard changes?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
+  const guard = useScreenCloseGuard({
+    dirty,
+    onDiscard: () => {
+      for (const uri of picked.current) discardPickedPhoto(uri);
+      picked.current = [];
+    },
+  });
 
   const submit = (next: 'close' | 'another') => {
     afterSave.current = next;
