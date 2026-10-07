@@ -315,6 +315,29 @@ describe('suggestions', () => {
     clearBought(db);
     expect(suggestions(db, TODAY, WARN)).toEqual([]);
   });
+
+  it('comes back after a tick is taken back and the item removed', () => {
+    const db = createTestDb();
+    const id = createProduct(db, input({ name: 'Serum' }));
+    markFinished(db, id, '2026-10-01');
+    const item = addBuyAgain(db, id)!.id;
+    setBought(db, item, NOW);
+    setBought(db, item, null);
+    deleteItem(db, item);
+    expect(suggestions(db, TODAY, WARN).map((s) => s.name)).toEqual(['Serum']);
+  });
+
+  it('keeps a dismissal made before the tick when the tick is taken back', () => {
+    const db = createTestDb();
+    const id = createProduct(db, input({ name: 'Serum' }));
+    markFinished(db, id, '2026-10-01');
+    dismissSuggestion(db, id, NOW - 1000);
+    const item = addBuyAgain(db, id)!.id;
+    setBought(db, item, NOW);
+    setBought(db, item, null);
+    deleteItem(db, item);
+    expect(suggestions(db, TODAY, WARN)).toEqual([]);
+  });
 });
 
 describe('prefillFromItem', () => {

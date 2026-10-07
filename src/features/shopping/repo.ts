@@ -146,21 +146,30 @@ export function moveToList(db: Db, id: number, list: ShoppingList): void {
 /**
  * Ticks (`at` = epoch ms) or unticks (`null`) an item. Ticking a linked item also dismisses its
  * product from Suggested: it has been bought again, so it should not come back once the bought
- * row leaves the list.
+ * row leaves the list. Unticking takes that dismissal back (not one the user made before).
  */
 export function setBought(db: Db, id: number, at: number | null): void {
   db.transaction((tx) => {
-    tx.update(shoppingItem).set({ boughtAt: at }).where(eq(shoppingItem.id, id)).run();
-    if (at === null) return;
     const row = tx
-      .select({ productId: shoppingItem.productId })
+      .select({ productId: shoppingItem.productId, boughtAt: shoppingItem.boughtAt })
       .from(shoppingItem)
       .where(eq(shoppingItem.id, id))
       .get();
-    if (row?.productId != null) {
+    tx.update(shoppingItem).set({ boughtAt: at }).where(eq(shoppingItem.id, id)).run();
+    if (row?.productId == null) return;
+    if (at !== null) {
       tx.insert(shoppingDismissal)
         .values({ productId: row.productId, dismissedAt: at })
         .onConflictDoNothing()
+        .run();
+    } else if (row.boughtAt !== null) {
+      tx.delete(shoppingDismissal)
+        .where(
+          and(
+            eq(shoppingDismissal.productId, row.productId),
+            eq(shoppingDismissal.dismissedAt, row.boughtAt),
+          ),
+        )
         .run();
     }
   });
