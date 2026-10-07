@@ -25,7 +25,7 @@ const featuresRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([landingRoute, featuresRoute]);
 
-/** Pages cross-fade with view transitions and every page opens at the top (or at its #hash). */
+/** Pages change with view transitions (the pink band morphs, the rest cross-fades); each opens at the top or its #hash. */
 export function createAppRouter(history?: RouterHistory) {
   return createRouter({
     routeTree,

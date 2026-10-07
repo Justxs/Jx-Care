@@ -138,9 +138,10 @@ export function LandingShell({
       </header>
 
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
-        <div className="relative isolate bg-hero">
+        <div className="relative isolate">
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-hero vt-hero-band" />
           <ScallopEdge />
-          {hero}
+          <div className="vt-hero-content">{hero}</div>
         </div>
         {children}
         <SignOff />

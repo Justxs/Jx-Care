@@ -273,6 +273,47 @@
   animation-timing-function: ease-out;
 }
 
+/*
+ * Between pages the pink band morphs: it grows or shrinks to the new hero's height and its
+ * scalloped edge travels with it, while the hero text cross-fades on top.
+ */
+.vt-hero-band {
+  view-transition-name: hero-band;
+}
+
+.vt-hero-edge {
+  view-transition-name: hero-edge;
+}
+
+.vt-hero-content {
+  view-transition-name: hero-content;
+}
+
+::view-transition-group(hero-band),
+::view-transition-group(hero-edge),
+::view-transition-group(hero-content) {
+  animation-duration: 520ms;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+/* The band is one flat colour, so both snapshots stretch to the morphing box instead of spilling. */
+::view-transition-old(hero-band),
+::view-transition-new(hero-band) {
+  block-size: 100%;
+  animation-duration: 240ms;
+}
+
+/* The old hero leaves quickly so it never sits on top of the next page's text. */
+::view-transition-old(hero-content) {
+  animation-duration: 160ms;
+  animation-timing-function: ease-in;
+}
+
+::view-transition-new(hero-content) {
+  animation-duration: 320ms;
+  animation-timing-function: ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

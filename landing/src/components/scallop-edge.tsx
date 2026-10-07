@@ -2,7 +2,8 @@ import { useId } from 'react';
 
 /**
  * The bottom edge of the pink band: a row of shallow scallops, like cucumber slices laid in a line.
- * It hangs below the band, so the band's own height never changes.
+ * It hangs below the band, so the band's own height never changes, and moves with the band when
+ * a page change morphs it.
  */
 export function ScallopEdge() {
   const patternId = useId();
@@ -10,7 +11,7 @@ export function ScallopEdge() {
   return (
     <svg
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-full -z-10 block h-2 w-full text-hero"
+      className="pointer-events-none absolute inset-x-0 top-full -z-10 block h-2 w-full text-hero vt-hero-edge"
     >
       <defs>
         <pattern id={patternId} width="24" height="8" patternUnits="userSpaceOnUse">
