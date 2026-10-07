@@ -14,7 +14,7 @@ import { useTagLabel } from '../labels';
  * warning-soft, hair on hair-soft, danger on danger-soft, accent on accent-soft, neutral on
  * neutral-soft.
  */
-export const skinTones: Record<SkinTag, { fill: string; soft: string; text: string }> = {
+const skinTones: Record<SkinTag, { fill: string; soft: string; text: string }> = {
   calm: { fill: 'bg-ok', soft: 'bg-ok-soft', text: 'text-ok' },
   glow: { fill: 'bg-skin', soft: 'bg-skin-soft', text: 'text-skin' },
   oily: { fill: 'bg-warning', soft: 'bg-warning-soft', text: 'text-warning' },
