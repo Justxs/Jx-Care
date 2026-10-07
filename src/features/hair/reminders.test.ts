@@ -12,7 +12,7 @@ import { setNotificationOS, snoozeIdFor, sync } from '@/notifications/scheduler'
 import type { OsNotificationRequest } from '@/notifications/types';
 
 import { getHairTask, hairLogsOnDay, markHairDone, saveHairTask } from './repo';
-import { askForHairReminders, reminderBody } from './reminders';
+import { reminderBody } from './reminders';
 import type { HairTaskInput } from './schema';
 
 // Wednesday 7 Oct 2026, noon.
@@ -273,30 +273,5 @@ describe('Done action', () => {
     await handleResponse(response('done', snoozed!), { now: NOW });
     expect(os.pending.has(snoozeIdFor(reminder!.data.key))).toBe(false);
     expect(getHairTask(db, id, TODAY)?.lastDoneAt).toBe(TODAY);
-  });
-});
-
-describe('askForHairReminders', () => {
-  const granted = {
-    status: 'granted',
-    granted: true,
-    canAskAgain: true,
-    expires: 'never',
-  } as unknown as Notifications.NotificationPermissionsStatus;
-
-  it('asks while the answer is undetermined, then schedules', async () => {
-    saveHairTask(db, input());
-    jest.mocked(Notifications.requestPermissionsAsync).mockResolvedValueOnce(granted);
-    await askForHairReminders();
-    expect(Notifications.requestPermissionsAsync).toHaveBeenCalledTimes(1);
-    await sync(NOW); // the ask's own sync ran on the real clock; this pins the time
-    expect(pending()).toHaveLength(1);
-  });
-
-  it('does not ask again once answered', async () => {
-    jest.mocked(Notifications.requestPermissionsAsync).mockClear();
-    jest.mocked(Notifications.getPermissionsAsync).mockResolvedValueOnce(granted);
-    await askForHairReminders();
-    expect(Notifications.requestPermissionsAsync).not.toHaveBeenCalled();
   });
 });

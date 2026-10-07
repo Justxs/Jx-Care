@@ -1,12 +1,16 @@
 import { PortalHost } from '@rn-primitives/portal';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import * as Notifications from 'expo-notifications';
 
 import { queryClient } from '@/db/queryClient';
 import { createProduct } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
 import { saveSettings } from '@/features/settings/repo';
 import { setI18nLanguage } from '@/i18n';
+import {
+  reminderAskStore,
+  resetReminderAsk,
+  setPermissionAdapter,
+} from '@/notifications/askPermission';
 import { appStore } from '@/state/app';
 import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
@@ -102,6 +106,8 @@ beforeEach(async () => {
 
 afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
+  resetReminderAsk();
+  setPermissionAdapter(null);
 });
 
 // The permission ask stores its answer in the app's query client.
@@ -230,6 +236,7 @@ describe('HairListScreen', () => {
 
 describe('HairTaskEditorScreen', () => {
   it('creates a wash with products; Save task is in the bottom bar, not the header', async () => {
+    setPermissionAdapter({ get: async () => 'undetermined', request: async () => 'granted' });
     const app = setup('editor', { id: 'new' });
     createProduct(app.db, product({ name: 'Shampoo' }));
     createProduct(app.db, product({ name: 'Face cream', area: 'skin', category: 'moisturiser' }));
@@ -258,8 +265,8 @@ describe('HairTaskEditorScreen', () => {
     await fireEvent.changeText(screen.getByLabelText('Repeat every (days)'), '4');
     expect(screen.getByTestId('hair-next-due')).toHaveTextContent('Next due: Sunday, 11 Oct');
     await fireEvent.press(screen.getByRole('switch', { name: 'Reminder' }));
-    // The first reminder asks for notification permission (task 021's ask stands in later).
-    await waitFor(() => expect(Notifications.requestPermissionsAsync).toHaveBeenCalled());
+    // Turning a reminder on asks for notification permission (task 021's ask, worded for hair).
+    await waitFor(() => expect(reminderAskStore.state.ask?.reason).toBe('hair'));
     await fireEvent.press(screen.getByRole('button', { name: 'Save task' }));
     await flush();
 

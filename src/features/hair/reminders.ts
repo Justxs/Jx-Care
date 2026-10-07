@@ -11,12 +11,9 @@ import { qk } from '@/db/queryKeys';
 import { appDay, momentOf } from '@/lib/appDay';
 import {
   cancelSnoozes,
-  getPermission,
   notificationKey,
   registerAction,
   registerPlanner,
-  requestPermission,
-  sync,
   syncEntity,
   type ActionHandler,
   type PlannedNotification,
@@ -120,17 +117,3 @@ export const hairDoneHandler: ActionHandler = async (ctx) => {
 registerPlanner('hair', hairPlanner);
 registerAction('hair', 'done', hairDoneHandler);
 registerAction('other_care', 'done', hairDoneHandler);
-
-/**
- * The first hair reminder switched on asks for permission (spec refinement 8). Stands in for
- * task 021's `askForReminders` until both are on main: asks only while the answer is
- * undetermined, and syncs once it is granted.
- */
-export async function askForHairReminders(): Promise<void> {
-  try {
-    if ((await getPermission()) !== 'undetermined') return;
-    if ((await requestPermission()) === 'granted') await sync();
-  } catch {
-    // Asking again later is fine; the switch keeps its value either way.
-  }
-}

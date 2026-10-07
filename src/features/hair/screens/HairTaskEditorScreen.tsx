@@ -33,10 +33,10 @@ import { cn } from '@/lib/cn';
 import { appStore } from '@/state/app';
 import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
+import { askForReminders } from '@/notifications';
 
 import { useDeleteHairTask, useHairTask, useSaveHairTask } from '../api';
 import { HairProductPickerSheet } from '../components/HairProductPickerSheet';
-import { askForHairReminders } from '../reminders';
 import { defaultHairName, formNextDue, hairTaskIcon, isDefaultHairName } from '../display';
 import type { HairProductRef, HairTaskDetail } from '../repo';
 import {
@@ -468,7 +468,7 @@ function HairTaskForm({
                     }
                     field.handleBlur();
                     // The first reminder switched on asks for notification permission.
-                    if (on) void askForHairReminders();
+                    if (on) void askForReminders({ reason: 'hair' });
                   }}
                   accessibilityLabel={t('hair.editor.reminder')}
                 />
