@@ -9,7 +9,6 @@ export type Toast = {
   /** A second action before the main one ("Buy again" next to Undo). */
   secondaryLabel?: string;
   onSecondary?: () => void;
-  durationMs: number;
 };
 
 export type UiStoreState = {
@@ -27,7 +26,7 @@ export const uiStore = createStore<UiStoreState>({
   toastInset: 0,
 });
 
-export const TOAST_DURATION_MS = 8000;
+const TOAST_DURATION_MS = 8000;
 
 let nextId = 1;
 const timers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -40,21 +39,14 @@ export function dismissToast(id: number): void {
 }
 
 /** Shows a toast for 8 s (spec); with a screen reader on it stays until dismissed or replaced. */
-export function showToast(input: {
-  message: string;
-  actionLabel?: string;
-  onAction?: () => void;
-  secondaryLabel?: string;
-  onSecondary?: () => void;
-  durationMs?: number;
-}): number {
-  const toast: Toast = { durationMs: TOAST_DURATION_MS, ...input, id: nextId++ };
+export function showToast(input: Omit<Toast, 'id'>): number {
+  const toast: Toast = { ...input, id: nextId++ };
   for (const old of uiStore.state.toasts) dismissToast(old.id);
   uiStore.setState((s) => ({ ...s, toasts: [...s.toasts, toast] }));
   if (!uiStore.state.screenReaderOn) {
     timers.set(
       toast.id,
-      setTimeout(() => dismissToast(toast.id), toast.durationMs),
+      setTimeout(() => dismissToast(toast.id), TOAST_DURATION_MS),
     );
   }
   return toast.id;
