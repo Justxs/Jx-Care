@@ -13,7 +13,7 @@ import { normalizeName, tidy } from '@/lib/text';
 import { motion } from '@/theme/motion';
 
 import { useAddAvoidItem } from '../avoidApi';
-import { AVOID_NOTE_MAX } from '../avoidRepo';
+import { AVOID_NOTE_MAX, type AvoidListItem } from '../avoidRepo';
 import { useSideOptions } from './ConflictRuleSheet';
 import { SideName, SideResults, sideOptionKey, useSideLabel, type SideOption } from './SidePicker';
 
@@ -22,8 +22,8 @@ type Picked = SideOption | { kind: 'new'; name: string };
 export type AddAvoidSheetProps = {
   open: boolean;
   onClose: () => void;
-  /** `sideOptionKey`s already on the list; they are left out of the results. */
-  listed: ReadonlySet<string>;
+  /** What is already on the list; it is left out of the results. */
+  listed: readonly Pick<AvoidListItem, 'kind' | 'refId'>[];
 };
 
 /**
@@ -39,7 +39,10 @@ export function AddAvoidSheet({ open, onClose, listed }: AddAvoidSheetProps) {
   const [picked, setPicked] = useState<Picked | null>(null);
   const [note, setNote] = useState('');
 
-  const options = useMemo(() => all.filter((o) => !listed.has(sideOptionKey(o))), [all, listed]);
+  const options = useMemo(() => {
+    const keys = new Set(listed.map((i) => sideOptionKey({ kind: i.kind, id: i.refId })));
+    return all.filter((o) => !keys.has(sideOptionKey(o)));
+  }, [all, listed]);
   const typed = tidy(query);
   // A typed name no ingredient has yet can be added as a new one.
   const isNew =

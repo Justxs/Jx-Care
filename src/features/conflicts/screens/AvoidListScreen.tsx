@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,7 +27,7 @@ import {
 } from '../avoidApi';
 import type { AvoidListItem } from '../avoidRepo';
 import { AddAvoidSheet } from '../components/AddAvoidSheet';
-import { SideName, sideOptionKey, useSideLabel } from '../components/SidePicker';
+import { SideName, useSideLabel } from '../components/SidePicker';
 
 const NO_ITEMS: readonly AvoidListItem[] = [];
 
@@ -47,7 +47,6 @@ export function AvoidListScreen() {
   const [sheet, setSheet] = useState({ key: 0, open: false });
   const list = items.data ?? NO_ITEMS;
   const empty = !items.isPending && list.length === 0;
-  const listed = useMemo(() => new Set(list.map(sideOptionKey)), [list]);
 
   const openSheet = () => setSheet((s) => ({ key: s.key + 1, open: true }));
 
@@ -134,7 +133,7 @@ export function AvoidListScreen() {
         key={sheet.key}
         open={sheet.open}
         onClose={() => setSheet((s) => ({ ...s, open: false }))}
-        listed={listed}
+        listed={list}
       />
     </SafeAreaView>
   );

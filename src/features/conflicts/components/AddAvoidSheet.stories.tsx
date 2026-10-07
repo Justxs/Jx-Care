@@ -1,19 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-native';
-import { useMemo } from 'react';
-
 import { withAppData } from '@/storybook/appData';
 import { seedDemo, seedEmpty } from '@/storybook/fixtures';
 
 import { useAvoidItems } from '../avoidApi';
 import { AddAvoidSheet, type AddAvoidSheetProps } from './AddAvoidSheet';
-import { sideOptionKey } from './SidePicker';
 
 /** Leaves out what the story database's avoid list already has, as S4 does. */
 function StoryAddAvoidSheet(args: AddAvoidSheetProps) {
   const items = useAvoidItems().data;
-  const listed = useMemo(() => new Set((items ?? []).map(sideOptionKey)), [items]);
   // Nothing until the list is read, so the sheet opens with the right options.
-  return items ? <AddAvoidSheet {...args} listed={listed} /> : <></>;
+  return items ? <AddAvoidSheet {...args} listed={items} /> : <></>;
 }
 
 /**
@@ -26,7 +22,7 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   args: {
     open: true,
-    listed: new Set<string>(),
+    listed: [],
     // Callbacks come from the `action` argTypes (Actions panel); a value here would replace them.
     ...({} as Pick<AddAvoidSheetProps, 'onClose'>),
   },

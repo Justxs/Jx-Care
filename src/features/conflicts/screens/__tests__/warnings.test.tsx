@@ -352,6 +352,21 @@ describe('AvoidListScreen', () => {
     expect(listIngredients(app.db).some((i) => i.name === 'Linalool')).toBe(true);
   });
 
+  it('leaves what is already listed out of Add ingredient, by ingredient id, not row id', async () => {
+    const app = setup();
+    const retinol = idOf(app.db, 'Retinol');
+    const glycolic = idOf(app.db, 'Glycolic acid');
+    const row = addAvoidItem(app.db, { kind: 'ingredient', refId: glycolic });
+    // The avoid row's id is also Retinol's ingredient id, which must stay pickable.
+    expect(row).toBe(retinol);
+    await show(app, <AvoidListScreen />);
+    await screen.findByLabelText('Glycolic acid, In 1 product');
+    await fireEvent.press(screen.getByRole('button', { name: 'Add ingredient' }));
+
+    expect(sheet().getByTestId(`side-option-ingredient-${retinol}`)).toBeTruthy();
+    expect(sheet().queryByTestId(`side-option-ingredient-${glycolic}`)).toBeNull();
+  });
+
   it('removes a row with "Parfum removed" and Undo puts it back in the same place', async () => {
     const app = setup();
     const parfum = seedProduct(app.db, { name: 'Body lotion', ingredients: ['Parfum'] });
