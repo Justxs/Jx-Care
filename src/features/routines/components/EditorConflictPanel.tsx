@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Collapsible } from '@/components/ui/collapsible';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-
-import type { EditorConflictHit } from '../useRoutineConflicts';
+import type { EditorConflictHit } from '@/features/conflicts/hooks';
 
 export type EditorConflictPanelProps = {
   hits: readonly EditorConflictHit[];

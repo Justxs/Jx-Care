@@ -26,6 +26,7 @@ import { TimeField } from '@/components/ui/date-field';
 import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import type { TimeOfDay } from '@/db/enums';
 import { useConflictSheets } from '@/features/conflicts/components/ConflictSheets';
+import { useEditorConflicts } from '@/features/conflicts/hooks';
 import { useProductsForPicker } from '@/features/products/api';
 import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
@@ -57,7 +58,6 @@ import {
   type RoutineFormValues,
   type StepFormValues,
 } from '../schema';
-import { useEditorConflicts } from '../useRoutineConflicts';
 
 /**
  * R2 routine editor. `/routines/new` starts from the starter sheet's draft (or empty);
