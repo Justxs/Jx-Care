@@ -7,6 +7,10 @@ import { sortBySoonestExpiry } from '@/lib/expiry';
 import {
   ActiveProductDeleteError,
   addUsedInSource,
+  avoidContext,
+  deletePhotoIfUnused,
+  hasProductWithExpiry,
+  photoInUse,
   brandSuggestions,
   countArchived,
   createProduct,
@@ -349,6 +353,37 @@ describe('archive', () => {
     expect(names(byCost)).toEqual(['Dear', 'Cheap', 'No price']);
     expect(byCost[0]?.costPerDay).toEqual({ cents: 103, days: 29 });
     expect(byCost[2]?.costPerDay).toBeNull();
+  });
+});
+
+describe('photos and expiry', () => {
+  it('deletes a replaced photo only when no product uses it', () => {
+    const db = createTestDb();
+    const deleteFile = jest.fn();
+    createProduct(db, input({ photoUri: 'file:///a.jpg' }));
+    deletePhotoIfUnused(db, 'file:///a.jpg', deleteFile);
+    expect(deleteFile).not.toHaveBeenCalled();
+    expect(photoInUse(db, 'file:///b.jpg')).toBe(false);
+    deletePhotoIfUnused(db, 'file:///b.jpg', deleteFile);
+    expect(deleteFile).toHaveBeenCalledWith('file:///b.jpg');
+  });
+
+  it('knows whether any product has an expiry date', () => {
+    const db = createTestDb();
+    createProduct(db, input({ openedAt: '2026-01-01' }));
+    expect(hasProductWithExpiry(db)).toBe(false);
+    createProduct(db, input({ openedAt: '2026-01-01', paoMonths: 6 }));
+    expect(hasProductWithExpiry(db)).toBe(true);
+  });
+
+  it('lists avoid items with the ingredient groups', () => {
+    const db = createTestDb();
+    expect(avoidContext(db)).toEqual({ items: [], groupOf: new Map() });
+    createProduct(db, input({ ingredients: ['Parfum'] }));
+    db.insert(avoidItem).values({ kind: 'ingredient', refId: 1 }).run();
+    const ctx = avoidContext(db);
+    expect(ctx.items).toEqual([{ id: 1, kind: 'ingredient', refId: 1 }]);
+    expect(ctx.groupOf.get(1)).toBeNull();
   });
 });
 

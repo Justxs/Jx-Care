@@ -7,21 +7,28 @@ import {
 } from '@tanstack/react-query';
 import { useSelector } from '@tanstack/react-store';
 
+import { eq } from 'drizzle-orm';
+
 import { getDb } from '@/db';
 import { qk } from '@/db/queryKeys';
+import { product } from '@/db/schema';
 import { useSettings } from '@/features/settings/api';
+import { effectiveExpiry } from '@/lib/expiry';
 import { appStore } from '@/state/app';
 
 import { deletePhotoFile } from './photoFiles';
 import {
+  avoidContext,
   brandSuggestions,
   countArchived,
   createProduct,
+  deletePhotoIfUnused,
   deleteProduct,
   duplicateProduct,
   expiringSoon,
   getProduct,
   hasAnyProduct,
+  hasProductWithExpiry,
   listArchived,
   listKnownIngredients,
   listProducts,
@@ -130,22 +137,47 @@ function invalidate(client: QueryClient, opts: { ingredients?: boolean } = {}): 
   }
 }
 
+export function useAvoidContext() {
+  return useQuery({
+    queryKey: [...qk.avoid.all, 'context'],
+    queryFn: () => avoidContext(getDb()),
+  });
+}
+
+/**
+ * Creates a product. `isFirstWithExpiry` is true when no product had an expiry date before
+ * this one, so the form can show the reminder ask (task 021).
+ */
 export function useCreateProduct() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (input: ProductInput) => createProduct(getDb(), input),
-    onSuccess: (id) => {
+    mutationFn: async (input: ProductInput) => {
+      const db = getDb();
+      const isFirstWithExpiry = !hasProductWithExpiry(db) && effectiveExpiry(input) !== null;
+      return { id: createProduct(db, input), isFirstWithExpiry };
+    },
+    onSuccess: ({ id }) => {
       invalidate(client, { ingredients: true });
       onProductChanged(id);
     },
   });
 }
 
+/** Saves an edit; a replaced or removed photo file is deleted once nothing uses it. */
 export function useUpdateProduct() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, input }: { id: number; input: ProductInput }) => {
-      updateProduct(getDb(), id, input);
+      const db = getDb();
+      const before = db
+        .select({ photoUri: product.photoUri })
+        .from(product)
+        .where(eq(product.id, id))
+        .get();
+      updateProduct(db, id, input);
+      if (before?.photoUri && before.photoUri !== input.photoUri) {
+        deletePhotoIfUnused(db, before.photoUri, deletePhotoFile);
+      }
       return id;
     },
     onSuccess: (id) => {
@@ -247,4 +279,9 @@ export function useDuplicateProduct() {
       onProductChanged(id);
     },
   });
+}
+
+/** Deletes a photo picked in the form but never saved (Discard, or replaced before saving). */
+export function discardPickedPhoto(uri: string): void {
+  deletePhotoIfUnused(getDb(), uri, deletePhotoFile);
 }

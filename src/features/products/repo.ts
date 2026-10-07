@@ -1,4 +1,4 @@
-import { asc, count, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
+import { and, asc, count, desc, eq, inArray, isNotNull, isNull, or } from 'drizzle-orm';
 
 import type { Db, DbOrTx } from '@/db';
 import { avoidItem, ingredient, product, productIngredient } from '@/db/schema';
@@ -393,18 +393,64 @@ export function deleteProduct(db: Db, id: number, deleteFile: DeleteFile): void 
   if (!p) return;
   if (!p.archivedAt) throw new ActiveProductDeleteError();
   db.delete(product).where(eq(product.id, id)).run();
-  if (!p.photoUri) return;
-  const shared = db
-    .select({ n: count() })
-    .from(product)
-    .where(eq(product.photoUri, p.photoUri))
-    .get();
-  if ((shared?.n ?? 0) > 0) return;
+  if (p.photoUri) deletePhotoIfUnused(db, p.photoUri, deleteFile);
+}
+
+/** True while any product (active or archived) still shows this photo file. */
+export function photoInUse(db: Db, uri: string): boolean {
+  const row = db.select({ n: count() }).from(product).where(eq(product.photoUri, uri)).get();
+  return (row?.n ?? 0) > 0;
+}
+
+/** Deletes a photo file nobody uses any more. A failure leaves an orphaned file at worst. */
+export function deletePhotoIfUnused(db: Db, uri: string, deleteFile: DeleteFile): void {
+  if (photoInUse(db, uri)) return;
   try {
-    deleteFile(p.photoUri);
+    deleteFile(uri);
   } catch {
-    // A missing or locked file must not undo the delete; the file is orphaned at worst.
+    // A missing or locked file must not undo the save or delete.
   }
+}
+
+/** Any product, finished ones included, that has an expiry date (for the reminder ask, P3). */
+export function hasProductWithExpiry(db: Db): boolean {
+  return (
+    db
+      .select({ id: product.id })
+      .from(product)
+      .where(
+        or(
+          isNotNull(product.expiresAt),
+          and(isNotNull(product.openedAt), isNotNull(product.paoMonths)),
+        ),
+      )
+      .limit(1)
+      .all().length > 0
+  );
+}
+
+export type AvoidContext = {
+  items: AvoidItemLite[];
+  /** Ingredient id → group id, for group avoid items. */
+  groupOf: Map<number, number | null>;
+};
+
+/** What the product form needs to warn about avoided ingredients before saving (P3). */
+export function avoidContext(db: Db): AvoidContext {
+  const items: AvoidItemLite[] = db
+    .select({ id: avoidItem.id, kind: avoidItem.kind, refId: avoidItem.refId })
+    .from(avoidItem)
+    .all();
+  const groupOf = new Map<number, number | null>();
+  if (items.length > 0) {
+    for (const i of db
+      .select({ id: ingredient.id, groupId: ingredient.groupId })
+      .from(ingredient)
+      .all()) {
+      groupOf.set(i.id, i.groupId);
+    }
+  }
+  return { items, groupOf };
 }
 
 /** Copies a product and its ingredients as a new purchase today (P2 Duplicate). */

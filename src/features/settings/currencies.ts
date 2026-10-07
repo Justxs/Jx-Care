@@ -34,3 +34,17 @@ export function currencyOptions(locale: string, codes: readonly string[] = curre
     return { value: code, label: name && name !== code ? `${code} · ${name}` : code };
   });
 }
+
+/** The currency's short symbol for field suffixes ("€", "$"); the code when there is none. */
+export function currencySymbol(code: string, locale?: string): string {
+  try {
+    const parts = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: code,
+      currencyDisplay: 'narrowSymbol',
+    }).formatToParts(0);
+    return parts.find((p) => p.type === 'currency')?.value ?? code;
+  } catch {
+    return code;
+  }
+}

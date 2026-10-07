@@ -1,3 +1,4 @@
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useId, useRef, useState } from 'react';
 import { Pressable, TextInput, View, type TextInputProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +7,7 @@ import { cn } from '@/lib/cn';
 import { useThemeColors } from '@/theme/colors';
 
 import { Field, fieldBoxClass } from './field';
+import { useInSheet } from './sheet';
 import { Icon, type IconName } from './icon';
 import { Text } from './text';
 
@@ -56,6 +58,8 @@ export function Input({
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const hidden = type === 'password' || (!!secret && !revealed);
+  // Inside a bottom sheet the sheet's own input keeps the keyboard and the sheet in step.
+  const TextField = (useInSheet() ? BottomSheetTextInput : TextInput) as typeof TextInput;
 
   return (
     <Field
@@ -78,7 +82,7 @@ export function Input({
             <Icon name={leadingIcon} size={20} tone="ink-muted" />
           </View>
         ) : null}
-        <TextInput
+        <TextField
           ref={input}
           editable={editable}
           multiline={multiline}

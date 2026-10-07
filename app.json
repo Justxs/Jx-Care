@@ -42,7 +42,15 @@
       "expo-localization",
       "expo-sqlite",
       "expo-image",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Jx-Care uses your photos so you can add a picture of a product.",
+          "cameraPermission": "Jx-Care uses the camera so you can photograph a product.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -23,6 +23,11 @@ import { Text } from './text';
 /** True inside a bottom sheet, so SheetFrame scrolls with the sheet's own scroll view. */
 const InSheetContext = createContext(false);
 
+/** True inside a bottom sheet: text fields then use the sheet's own input for keyboard handling. */
+export function useInSheet(): boolean {
+  return useContext(InSheetContext);
+}
+
 export type SheetFrameProps = {
   title: string;
   onCancel: () => void;
