@@ -49,7 +49,7 @@ export const snoozeHandler: ActionHandler = async (ctx) => {
   await scheduleSnooze(ctx, ctx.settings.snoozeMinutes, ctx.now);
 };
 
-registerAction('routine', 'snooze', snoozeHandler);
+// Routines register their own Snooze, which skips a time of day already done.
 registerAction('hair', 'snooze', snoozeHandler);
 
 // ---------------------------------------------------------------------------------------------
