@@ -12,12 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ABExplainSheet, StreakExplainSheet } from '@/components/ExplainSheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  productListStore,
-  setProductFilters,
-  setProductsSegment,
-} from '@/features/products/listState';
-import { defaultProductFilters } from '@/features/products/types';
+import { showExpiringProducts } from '@/features/products/listState';
 import { openShoppingList } from '@/features/shopping/viewState';
 import { useWeeklyPhotoOptional } from '@/features/progress/useWeeklyPhotoOptional';
 import type { TodayRoutineGroup } from '@/features/routines/repo';
@@ -75,12 +70,7 @@ function openSetupStep(step: SetupStepKey): void {
 
 /** "See all": Products filtered to expired and expiring. */
 function seeAllExpiring(): void {
-  setProductFilters({
-    ...defaultProductFilters,
-    sort: productListStore.state.filters.sort,
-    statuses: ['expired', 'expiring'],
-  });
-  setProductsSegment('mine');
+  showExpiringProducts();
   router.navigate('/products');
 }
 
