@@ -1,5 +1,8 @@
 import { act, waitFor } from '@testing-library/react-native';
 
+import { product } from '@/db/schema';
+import { useWeekContext } from '@/features/progress/api';
+import { useRecentStepProducts } from '@/features/routines/api';
 import { appStore } from '@/state/app';
 import { setupTestApp } from '@/test/render';
 
@@ -77,6 +80,54 @@ describe('hair hooks', () => {
     await waitFor(() => expect(result.current.day.data).toEqual([]));
     await waitFor(() => expect(result.current.due.data).toHaveLength(1));
     expect(result.current.tasks.data?.washes[0]?.lastDoneAt).toBe('2026-10-04');
+  });
+
+  it('saving a task and marking it done refresh the picker Recent and the week summary', async () => {
+    const app = setupTestApp();
+    const shampoo = app.db
+      .insert(product)
+      .values({ name: 'Shampoo', area: 'hair' })
+      .returning({ id: product.id })
+      .get().id;
+    const { result } = await app.renderHook(() => ({
+      recent: useRecentStepProducts('hair'),
+      week: useWeekContext('hair', '2026-10-05'),
+      save: useSaveHairTask(),
+      markDone: useMarkHairDone(),
+    }));
+    await waitFor(() => expect(result.current.recent.data).toEqual([]));
+    await waitFor(() => expect(result.current.week.data?.hairTasks).toEqual([]));
+
+    let id = 0;
+    await act(async () => {
+      id = await result.current.save.mutateAsync({
+        input: {
+          name: 'Wash',
+          kind: 'wash',
+          otherKind: null,
+          productIds: [shampoo],
+          scheduleKind: 'interval',
+          everyNDays: 3,
+          intervalUnit: 'days',
+          daysOfWeek: null,
+          lastDoneAt: '2026-10-04',
+          reminderTime: null,
+        },
+      });
+    });
+    await waitFor(() => expect(result.current.recent.data?.map((p) => p.id)).toEqual([shampoo]));
+
+    await act(async () => {
+      await result.current.markDone.mutateAsync({
+        taskId: id,
+        day: TODAY,
+        productIds: [shampoo],
+        note: null,
+      });
+    });
+    await waitFor(() =>
+      expect(result.current.week.data?.hairTasks).toEqual([{ taskId: id, name: 'Wash', done: 1 }]),
+    );
   });
 
   it('saves, reads and deletes one task', async () => {

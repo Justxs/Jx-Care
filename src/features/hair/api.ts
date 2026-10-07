@@ -171,6 +171,10 @@ function invalidate(client: QueryClient, opts: { usedIn?: boolean } = {}): void 
   client.invalidateQueries({ queryKey: qk.hair.all });
   client.invalidateQueries({ queryKey: ['today'] });
   client.invalidateQueries({ queryKey: qk.calendar.all });
+  // C6 hair "What changed this week" counts the logs.
+  client.invalidateQueries({ queryKey: qk.progress.all });
+  // The R4 picker's Recent hair products follow the tasks' products, latest changed first.
+  client.invalidateQueries({ queryKey: [...qk.routines.all, 'recentProducts', 'hair'] });
   if (opts.usedIn) {
     // Product detail shows the hair tasks that use a product (P2 "Used in").
     client.invalidateQueries({ queryKey: [...qk.products.all, 'detail'] });
