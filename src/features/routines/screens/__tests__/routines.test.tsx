@@ -192,20 +192,31 @@ describe('RoutinesScreen', () => {
     expect(screen.getByRole('header', { name: 'Evening, A or B' })).toBeTruthy();
   });
 
-  it('deletes after the dialog', async () => {
+  it('deletes after the dialog, and Deleted routines restores it', async () => {
     const app = setup();
     saveRoutine(app.db, routineInput());
     await app.show();
+    expect(screen.queryByRole('button', { name: /Deleted routines/ })).toBeNull();
     await fireEvent(await screen.findByTestId('routine-card-1'), 'longPress');
     await fireEvent.press(await screen.findByRole('menuitem', { name: 'Delete' }));
     expect(await screen.findByText('Delete Evening A?')).toBeTruthy();
     expect(
-      screen.getByText("Its history in the calendar is deleted too. This can't be undone."),
+      screen.getByText(
+        'It leaves Routines and Today, and its calendar history stays. You can restore it from Deleted routines.',
+      ),
     ).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Delete' }));
     await flush();
     expect(listRoutines(app.db, TODAY, 30)).toEqual([]);
     expect(await screen.findByText('No routines yet')).toBeTruthy();
+    expect(uiStore.state.toasts[0]).toMatchObject({ message: 'Evening A deleted' });
+
+    await fireEvent.press(await screen.findByRole('button', { name: /Deleted routines/ }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Restore Evening A' }));
+    await flush();
+    expect(listRoutines(app.db, TODAY, 30).map((r) => r.name)).toEqual(['Evening A']);
+    expect(uiStore.state.toasts[0]).toMatchObject({ message: 'Evening A restored' });
+    await waitFor(() => expect(cardNames()).toEqual(['Evening A']));
   });
 });
 

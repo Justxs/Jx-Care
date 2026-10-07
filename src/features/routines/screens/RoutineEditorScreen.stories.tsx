@@ -6,7 +6,7 @@ import { useProducts } from '@/features/products/api';
 import { defaultProductFilters } from '@/features/products/types';
 import { withAppData } from '@/storybook/appData';
 import { demoIds, seedDemo } from '@/storybook/fixtures';
-import { routineSeedIds, seedPlayerProblems } from '@/storybook/seeds/routines';
+import { routineSeedIds, seedDeleted, seedPlayerProblems } from '@/storybook/seeds/routines';
 
 import { NEW_ROUTINE_ID, setRoutineDraft } from '../draft';
 import {
@@ -68,6 +68,11 @@ export const EditMorning: Story = {
 /** Editing the B evening: the conflict panel opens at the end of the form. */
 export const WithConflicts: Story = {
   decorators: [withAppData({ seed: seedDemo, params: { id: String(r.eveningB) } })],
+};
+
+/** The morning after its sunscreen step was deleted: "Deleted steps" offers Restore. */
+export const DeletedSteps: Story = {
+  decorators: [withAppData({ seed: seedDeleted, params: { id: String(r.morning) } })],
 };
 
 /** A custom time of day with a finished product, a step without one and an expired product. */

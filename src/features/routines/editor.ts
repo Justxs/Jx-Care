@@ -1,6 +1,6 @@
 import type { TimeOfDay } from '@/db/enums';
 
-import type { RoutineItem, SaveRoutineInput } from './repo';
+import type { RoutineItem, RoutineStepItem, SaveRoutineInput } from './repo';
 import {
   defaultSortTimes,
   emptyStep,
@@ -44,16 +44,21 @@ export function routineToForm(r: RoutineItem): RoutineFormValues {
     sortTime: r.sortTime,
     daysOfWeek: [...r.daysOfWeek],
     reminderTime: r.reminderTime,
-    steps: r.steps.map((s) => ({
-      id: s.id,
-      productId: s.productId,
-      note: s.note,
-      scheduleKind: s.scheduleKind,
-      daysOfWeek: s.daysOfWeek ? [...s.daysOfWeek] : null,
-      everyNDays: s.everyNDays,
-      startDate: s.startDate,
-      waitSeconds: s.waitSeconds,
-    })),
+    steps: r.steps.map(stepToForm),
+  };
+}
+
+/** Editor values for a saved step (also a deleted one being restored, which keeps its id). */
+export function stepToForm(s: RoutineStepItem): StepFormValues {
+  return {
+    id: s.id,
+    productId: s.productId,
+    note: s.note,
+    scheduleKind: s.scheduleKind,
+    daysOfWeek: s.daysOfWeek ? [...s.daysOfWeek] : null,
+    everyNDays: s.everyNDays,
+    startDate: s.startDate,
+    waitSeconds: s.waitSeconds,
   };
 }
 

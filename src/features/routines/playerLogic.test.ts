@@ -37,6 +37,7 @@ const step = (id: number, p: StepProduct | null = product(id)): RoutineStepItem 
   everyNDays: null,
   startDate: null,
   waitSeconds: 0,
+  deletedAt: null,
   product: p,
 });
 

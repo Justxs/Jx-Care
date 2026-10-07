@@ -7,8 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AlertDialog } from '@/components/ui/alert-dialog';
+import { Card } from '@/components/ui/card';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FAB_LIST_END_SPACE, Fab } from '@/components/ui/fab';
+import { ListRow } from '@/components/ui/list-row';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import { qk } from '@/db/queryKeys';
@@ -17,7 +19,14 @@ import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
 import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
 
-import { useDeleteRoutine, useDuplicateRoutine, useRoutines, useSetRoutineActive } from '../api';
+import {
+  useDeletedRoutines,
+  useDeleteRoutine,
+  useDuplicateRoutine,
+  useRoutines,
+  useSetRoutineActive,
+} from '../api';
+import { DeletedRoutinesSheet } from '../components/DeletedRoutinesSheet';
 import { RoutineCard, RoutineCardSkeleton } from '../components/RoutineCard';
 import { RoutineStarterSheet } from '../components/RoutineStarterSheet';
 import { defaultStarterTime, groupRoutinesForList, type RoutineListGroup } from '../listGroups';
@@ -125,6 +134,8 @@ function SkinRoutines({ onNew }: { onNew: () => void }) {
   const routines = useRoutines();
   const actions = useCardActions();
   const [deleting, setDeleting] = useState<RoutineItem | null>(null);
+  const [deletedOpen, setDeletedOpen] = useState(false);
+  const deletedCount = useDeletedRoutines().data?.length ?? 0;
   const items = routines.data ?? [];
 
   return (
@@ -187,7 +198,25 @@ function SkinRoutines({ onNew }: { onNew: () => void }) {
             </Animated.View>
           </LayoutAnimationConfig>
         )}
+        {deletedCount > 0 ? (
+          <Animated.View
+            entering={rowEntering}
+            exiting={rowExiting}
+            layout={rowLayout}
+            className="mt-6"
+          >
+            <Card flush>
+              <ListRow
+                icon="trash-2"
+                label={t('routines.deleted.title')}
+                value={String(deletedCount)}
+                onPress={() => setDeletedOpen(true)}
+              />
+            </Card>
+          </Animated.View>
+        ) : null}
       </ScrollView>
+      <DeletedRoutinesSheet open={deletedOpen} onClose={() => setDeletedOpen(false)} />
       <AlertDialog
         open={deleting !== null}
         onOpenChange={(open) => {
@@ -199,7 +228,7 @@ function SkinRoutines({ onNew }: { onNew: () => void }) {
         cancelLabel={t('common.cancel')}
         destructive
         onAction={() => {
-          if (deleting) actions.remove(deleting.id);
+          if (deleting) actions.remove(deleting);
           setDeleting(null);
         }}
         onCancel={() => setDeleting(null)}
@@ -258,6 +287,6 @@ function useCardActions() {
       const name = t('routines.copyName', { name: routine.name });
       showToast({ message: t('routines.duplicatedToast', { name }) });
     },
-    remove: (id: number) => del.mutate(id),
+    remove: (routine: Pick<RoutineItem, 'id' | 'name'>) => del.mutate(routine),
   };
 }

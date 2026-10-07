@@ -4,13 +4,15 @@ import journal from './meta/_journal.json';
 import m0000 from './0000_ancient_ultron.sql';
 import m0001 from './0001_tired_echo.sql';
 import m0002 from './0002_conscious_photon.sql';
+import m0003 from './0003_soft_delete_routines.sql';
 
   export default {
     journal,
     migrations: {
       m0000,
 m0001,
-m0002
+m0002,
+m0003
     }
   }
   

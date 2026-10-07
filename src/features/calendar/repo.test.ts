@@ -123,7 +123,7 @@ describe('getSkinMonth', () => {
     expect(new Set(Object.values(month.statuses))).toEqual(new Set(['none']));
   });
 
-  it('keeps a finished day done after a step is deleted or added', () => {
+  it('keeps past days as they were after a step is deleted or added', () => {
     const { db, evening, ev } = seededMonth();
     saveRoutine(db, {
       id: evening,
@@ -137,8 +137,8 @@ describe('getSkinMonth', () => {
     });
     const month = getSkinMonth(db, gridDays('2026-10'), TODAY);
     expect(month.statuses['2026-10-05']).toBe('done');
-    // The deleted step was the one ticked on 6 Oct, so nothing of that day is left ticked.
-    expect(month.statuses['2026-10-06']).toBe('missed');
+    // The deleted step was the one ticked on 6 Oct; deleted steps still count on earlier days.
+    expect(month.statuses['2026-10-06']).toBe('partly');
   });
 });
 

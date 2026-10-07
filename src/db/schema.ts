@@ -168,6 +168,11 @@ export const routine = sqliteTable('routine', {
   daysOfWeek: json<number[]>('days_of_week').notNull().default([1, 2, 3, 4, 5, 6, 7]),
   reminderTime: text('reminder_time'),
   active: bool('active').notNull().default(true),
+  /**
+   * Set when the routine is deleted: it leaves Routines, Today and reminders but keeps its
+   * calendar history, and can be restored. It counts on the days before this one only.
+   */
+  deletedAt: integer('deleted_at'),
   /** Moves to the time of a schedule change, once the days before are frozen in routine_log. */
   createdAt: createdAt(),
   updatedAt: updatedAt(),
@@ -186,6 +191,11 @@ export const routineStep = sqliteTable('routine_step', {
   everyNDays: integer('every_n_days'),
   startDate: text('start_date'),
   waitSeconds: integer('wait_seconds').notNull().default(0),
+  /**
+   * Set when the step is deleted in the editor: past days keep counting it, from that day on it
+   * is gone, and the editor can restore it.
+   */
+  deletedAt: integer('deleted_at'),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

@@ -9,16 +9,19 @@ import { addDays, daysBetween, momentOf, weekdayOf } from '@/lib/appDay';
 import { skinDayStatuses, skinStreak } from '@/lib/streak';
 
 import {
+  deletedSteps,
   deleteRoutine,
   duplicateRoutine,
   getDayLog,
   getRoutine,
   getRoutineDay,
   getTodayRoutines,
+  listDeletedRoutines,
   listRoutines,
   logsInRange,
   recentStepProducts,
   replaceStepProduct,
+  restoreRoutine,
   saveRoutine,
   setChoice,
   setRoutineActive,
@@ -407,19 +410,24 @@ describe('duplicate and delete', () => {
     expect(stepIds(db, id)).toHaveLength(2);
   });
 
-  it('deleting a routine removes its steps, logs and choices', () => {
+  it('deleting a routine hides it but keeps its steps, logs and choices', () => {
     const db = createTestDb();
     const id = addRoutine(db);
     const keep = addRoutine(db, { name: 'Keep' });
     const [s] = stepIds(db, id);
     tickSteps(db, id, [s!], MON, true, [s!]);
     setChoice(db, 'evening', 1, id);
-    deleteRoutine(db, id);
-    expect(getRoutine(db, id, MON, WARN)).toBeNull();
-    expect(db.select().from(routineStep).where(eq(routineStep.routineId, id)).all()).toEqual([]);
-    expect(db.select().from(routineLog).all()).toEqual([]);
-    expect(db.select().from(routineChoice).all()).toEqual([]);
+    deleteRoutine(db, id, MON_NOON);
     expect(listRoutines(db, MON, WARN).map((r) => r.id)).toEqual([keep]);
+    expect(listDeletedRoutines(db)).toEqual([
+      { id, name: 'Evening', timeOfDay: 'evening', customName: null, deletedAt: MON_NOON },
+    ]);
+    expect(getRoutine(db, id, MON, WARN)).toMatchObject({ deletedAt: MON_NOON, stepCount: 1 });
+    expect(db.select().from(routineStep).where(eq(routineStep.routineId, id)).all()).toHaveLength(
+      1,
+    );
+    expect(getDayLog(db, id, MON)).toMatchObject({ doneStepIds: [s] });
+    expect(db.select().from(routineChoice).all()).toHaveLength(1);
   });
 });
 
@@ -504,6 +512,8 @@ describe('past days after a routine changes', () => {
       ({ db, id, s1, s2 }) => edit(db, { id, steps: [step({ id: s2 }), step({ id: s1 }), step()] }),
     ],
     ['switching it off', ({ db, id }) => setRoutineActive(db, id, false, at(THU))],
+    ['deleting a step', ({ db, id, s1 }) => edit(db, { id, steps: [step({ id: s1 })] })],
+    ['deleting the routine', ({ db, id }) => deleteRoutine(db, id, at(THU))],
   ])('%s keeps every past day and the streak', (_, change) => {
     const s = pastSetup();
     const before = history(s.db, THU);
@@ -561,6 +571,51 @@ describe('past days after a routine changes', () => {
     edit(db, { id, daysOfWeek: [1], steps: [step({ id: s1 }), step({ id: s2 })] });
     expect(count()).toBe(missed.length + 2);
     expect(getRoutine(db, id, THU, WARN)!.createdDay).toBe(THU);
+  });
+
+  it('a deleted step stays on past days and comes back when restored', () => {
+    const { db, id, s1, s2 } = pastSetup();
+    const before = history(db, THU);
+    edit(db, { id, steps: [step({ id: s1 })] });
+    expect(stepIds(db, id)).toEqual([s1]);
+    expect(deletedSteps(db, id, THU, WARN).map((s) => [s.id, s.deletedAt])).toEqual([
+      [s2, at(THU)],
+    ]);
+    // Monday's snapshot still holds both steps, so it reads done.
+    expect(getRoutineDay(db, id, MON, WARN)!.progress).toMatchObject({ due: 2, done: 2 });
+    expect(history(db, THU)).toEqual(before);
+
+    // Restored on Friday with its id: back in the routine and due from the next Monday.
+    edit(db, { id, steps: [step({ id: s1 }), step({ id: s2 })] }, at(FRI));
+    expect(stepIds(db, id)).toEqual([s1, s2]);
+    expect(deletedSteps(db, id, FRI, WARN)).toEqual([]);
+    expect(getRoutineDay(db, id, '2026-10-12', WARN)!.progress.dueStepIds).toEqual([s1, s2]);
+    expect(history(db, FRI).statuses).toMatchObject(before.statuses);
+  });
+
+  it('a step deleted on a ticked day leaves that day for good, even once restored', () => {
+    const { db, id, s1, s2 } = pastSetup();
+    // Tuesday: s2 (not ticked) is deleted, so Tuesday reads done from then on.
+    edit(db, { id, steps: [step({ id: s1 })] }, at(TUE));
+    expect(history(db, WED).statuses[TUE]).toBe('done');
+    edit(db, { id, steps: [step({ id: s1 }), step({ id: s2 })] }, at(THU));
+    expect(getDayLog(db, id, TUE)!.dueStepIds).toEqual([s1]);
+    expect(history(db, THU).statuses[TUE]).toBe('done');
+  });
+
+  it('a deleted routine leaves Today and comes back when restored', () => {
+    const { db, id } = pastSetup();
+    const before = history(db, THU);
+    deleteRoutine(db, id, at(THU));
+    expect(getTodayRoutines(db, '2026-10-12', WARN)).toEqual([]);
+    expect(listDeletedRoutines(db).map((r) => r.id)).toEqual([id]);
+
+    restoreRoutine(db, id, at(SAT));
+    expect(listDeletedRoutines(db)).toEqual([]);
+    expect(listRoutines(db, SAT, WARN).map((r) => r.id)).toEqual([id]);
+    expect(getTodayRoutines(db, '2026-10-12', WARN)).toHaveLength(1);
+    expect(history(db, SAT).statuses).toMatchObject(before.statuses);
+    expect(history(db, SAT).streak).toEqual(before.streak);
   });
 
   it('a day whose snapshot steps were all deleted earlier keeps how it reads', () => {

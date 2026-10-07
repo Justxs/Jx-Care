@@ -669,7 +669,15 @@
     "duplicate": "Duplicate as variant",
     "duplicatedToast": "{{name}} added",
     "deleteTitle": "Delete {{name}}?",
-    "deleteBody": "Its history in the calendar is deleted too. This can't be undone.",
+    "deleteBody": "It leaves Routines and Today, and its calendar history stays. You can restore it from Deleted routines.",
+    "deletedToast": "{{name}} deleted",
+    "deleted": {
+      "title": "Deleted routines",
+      "deletedOn": "Deleted {{date}}",
+      "restore": "Restore",
+      "restoreName": "Restore {{name}}",
+      "restoredToast": "{{name}} restored"
+    },
     "list": {
       "alternatives": "{{time}}, A or B",
       "alternativesNote": "On days both are set, you pick one on Today. A and B are never checked against each other for conflicts.",
@@ -722,7 +730,12 @@
       "conflicts_one": "{{count}} conflict this week",
       "conflicts_other": "{{count}} conflicts this week",
       "canStillSave": "You can still save.",
-      "whatIsMild": "What does mild mean?"
+      "whatIsMild": "What does mild mean?",
+      "deletedSteps": "Deleted steps",
+      "deletedStepsNote": "Restoring puts a step back at the end.",
+      "noProduct": "No product",
+      "restoreStep": "Restore",
+      "restoreStepName": "Restore {{name}}"
     },
     "step": {
       "addTitle": "Add step",

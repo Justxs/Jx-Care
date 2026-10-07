@@ -31,7 +31,8 @@ import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
 import { showToast } from '@/state/ui';
 
-import { useDeleteRoutine, useRoutine, useSaveRoutine } from '../api';
+import { useDeletedSteps, useDeleteRoutine, useRoutine, useSaveRoutine } from '../api';
+import { DeletedSteps } from '../components/DeletedSteps';
 import { EditorConflictPanel } from '../components/EditorConflictPanel';
 import { editorProductMap, type EditorProduct } from '../components/editorProducts';
 import { StepEditorSheet } from '../components/StepEditorSheet';
@@ -40,14 +41,16 @@ import type { StepRowData } from '../components/StepRow';
 import { NEW_ROUTINE_ID, routineDraftStore, takeRoutineDraft } from '../draft';
 import {
   defaultReminderTime,
+  isNewStepId,
   newStep,
   routineToForm,
   sortTimeFor,
   stepProblem,
+  stepToForm,
   toSaveInput,
   withStepKeys,
 } from '../editor';
-import type { StepProduct } from '../repo';
+import type { RoutineStepItem, StepProduct } from '../repo';
 import { askForRoutineReminders } from '../reminders';
 import { moveItem } from '../reorder';
 import {
@@ -129,6 +132,7 @@ type StepEditorState = {
 };
 
 const NO_PRODUCTS: readonly StepProduct[] = [];
+const NO_STEPS: readonly RoutineStepItem[] = [];
 
 function RoutineForm({
   routineId,
@@ -239,6 +243,27 @@ function RoutineForm({
   const rows = values.steps.map((s, i) =>
     stepRow(s, values.daysOfWeek, products, stepConflict(i), f, t),
   );
+
+  // Steps that can be restored: deleted before (saved) or removed since the editor opened.
+  const savedDeleted = useDeletedSteps(routineId).data ?? NO_STEPS;
+  const deleted = useMemo(() => {
+    const shown = new Set(values.steps.map((s) => s.id));
+    const removedNow = initial.steps.filter((s) => !isNewStepId(s.id) && !shown.has(s.id));
+    const before = savedDeleted.filter((s) => !shown.has(s.id));
+    const names = new Map(before.flatMap((s) => (s.product ? [[s.id, s.product.name]] : [])));
+    return [...removedNow, ...before.map(stepToForm)].map((step) => ({
+      step,
+      id: step.id!,
+      label:
+        (step.productId !== null ? products.get(step.productId)?.name : undefined) ??
+        names.get(step.id!) ??
+        (step.note?.trim() || t('routines.editor.noProduct')),
+    }));
+  }, [values.steps, initial.steps, savedDeleted, products, t]);
+  const restoreStep = (id: number) => {
+    const step = deleted.find((d) => d.id === id)?.step;
+    if (step) setSteps([...form.state.values.steps, step]);
+  };
 
   return (
     <SafeAreaView edges={['top']} className="flex-1 bg-canvas">
@@ -438,6 +463,8 @@ function RoutineForm({
           )}
         </form.Field>
 
+        <DeletedSteps steps={deleted} onRestore={restoreStep} />
+
         <EditorConflictPanel
           hits={conflicts.hits}
           alternatives={conflicts.alternatives}
@@ -499,7 +526,7 @@ function RoutineForm({
         onAction={() => {
           setDeleteOpen(false);
           if (routineId === null) return;
-          del.mutate(routineId);
+          del.mutate({ id: routineId, name: initial.name });
           guard.leave();
         }}
         onCancel={() => setDeleteOpen(false)}

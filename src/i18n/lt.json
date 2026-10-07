@@ -719,7 +719,15 @@
     "duplicate": "Kopijuoti kaip variantą",
     "duplicatedToast": "Pridėta: {{name}}",
     "deleteTitle": "Ištrinti „{{name}}“?",
-    "deleteBody": "Jos istorija kalendoriuje irgi bus ištrinta. Šio veiksmo atšaukti negalima.",
+    "deleteBody": "Ji dings iš Rutinų ir Šiandien, o jos istorija kalendoriuje liks. Ją galėsite atkurti iš ištrintų rutinų.",
+    "deletedToast": "„{{name}}“ ištrinta",
+    "deleted": {
+      "title": "Ištrintos rutinos",
+      "deletedOn": "Ištrinta {{date}}",
+      "restore": "Atkurti",
+      "restoreName": "Atkurti „{{name}}“",
+      "restoredToast": "„{{name}}“ atkurta"
+    },
     "list": {
       "alternatives": "{{time}}, A arba B",
       "alternativesNote": "Dienomis, kai nustatytos abi, vieną pasirenkate skiltyje Šiandien. A ir B tarpusavyje niekada netikrinamos dėl konfliktų.",
@@ -778,7 +786,12 @@
       "conflicts_many": "{{count}} konflikto šią savaitę",
       "conflicts_other": "{{count}} konfliktų šią savaitę",
       "canStillSave": "Vis tiek galite išsaugoti.",
-      "whatIsMild": "Ką reiškia švelnus?"
+      "whatIsMild": "Ką reiškia švelnus?",
+      "deletedSteps": "Ištrinti žingsniai",
+      "deletedStepsNote": "Atkurtas žingsnis grįžta į sąrašo pabaigą.",
+      "noProduct": "Be produkto",
+      "restoreStep": "Atkurti",
+      "restoreStepName": "Atkurti „{{name}}“"
     },
     "step": {
       "addTitle": "Pridėti žingsnį",

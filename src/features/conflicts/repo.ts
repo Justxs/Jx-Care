@@ -1,4 +1,4 @@
-import { and, asc, count, eq, inArray, notInArray, or } from 'drizzle-orm';
+import { and, asc, count, eq, inArray, isNull, notInArray, or } from 'drizzle-orm';
 
 import type { Db, DbOrTx } from '@/db';
 import type { RefKind } from '@/db/enums';
@@ -622,6 +622,7 @@ export function conflictInput(db: DbOrTx): ConflictInput {
   const routines: RoutineLite[] = db
     .select()
     .from(routine)
+    .where(isNull(routine.deletedAt))
     .all()
     .map((r) => ({
       id: r.id,
@@ -645,6 +646,7 @@ export function conflictInput(db: DbOrTx): ConflictInput {
       startDate: routineStep.startDate,
     })
     .from(routineStep)
+    .where(isNull(routineStep.deletedAt))
     .all();
   const productIngredients = new Map<number, number[]>();
   for (const l of db

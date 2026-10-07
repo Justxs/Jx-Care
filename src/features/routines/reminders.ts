@@ -9,6 +9,7 @@
  *
  * Registered with the notification layer through `src/notifications/tasks.ts`.
  */
+import { isNull } from 'drizzle-orm';
 import type { TFunction } from 'i18next';
 
 import { getDb, type Db } from '@/db';
@@ -146,6 +147,7 @@ export function groupRoutineIds(db: Db, routineId: number): number[] {
   const all = db
     .select({ id: routine.id, timeOfDay: routine.timeOfDay, customName: routine.customName })
     .from(routine)
+    .where(isNull(routine.deletedAt))
     .all();
   const self = all.find((r) => r.id === routineId);
   if (!self) return [routineId];

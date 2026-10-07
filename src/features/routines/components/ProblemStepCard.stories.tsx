@@ -43,6 +43,7 @@ const step: RoutineStepItem = {
   everyNDays: null,
   startDate: null,
   waitSeconds: 0,
+  deletedAt: null,
   product: sunscreen,
 };
 

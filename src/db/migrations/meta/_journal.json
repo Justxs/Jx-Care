@@ -22,6 +22,13 @@
       "when": 1791376585565,
       "tag": "0002_conscious_photon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1791380395910,
+      "tag": "0003_soft_delete_routines",
+      "breakpoints": true
     }
   ]
 }

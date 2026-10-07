@@ -1,8 +1,9 @@
 import type { DbOrTx } from '@/db';
 import type { Routine } from '@/db/schema';
 import {
+  countsOn,
   dayRoutine,
-  listRoutines,
+  listRoutinesWithHistory,
   logsInRange,
   skinRangeInput,
   type DayRoutine,
@@ -46,13 +47,14 @@ export type SkinDay = {
 /**
  * The skin routines due on `day`, by time of day, each with its due steps (the day's snapshot
  * once it has a tick) and log. A routine counts on the same terms as the calendar mark: it has a
- * snapshot that day, or it existed and had steps due. Of two A/B options, only the one started
- * is shown, so the other never reads "Not done".
+ * snapshot that day, or it existed and had steps due; a deleted routine only before the day it was
+ * deleted. Of two A/B options, only the one started is shown, so the other never reads "Not done".
  */
 export function getSkinDay(db: DbOrTx, day: string, today: string, warnDays: number): SkinDay {
   const logs = new Map(logsInRange(db, day, day).map((l) => [l.routineId, l]));
   const shown: DayRoutine[] = [];
-  for (const r of listRoutines(db, today, warnDays)) {
+  for (const r of listRoutinesWithHistory(db, today, warnDays)) {
+    if (!countsOn(r.deletedAt, day)) continue;
     const log = logs.get(r.id) ?? null;
     const hasSnapshot = !!log && log.dueStepIds.length > 0;
     if (!hasSnapshot && day < r.createdDay) continue;
@@ -75,7 +77,7 @@ export function getSkinDay(db: DbOrTx, day: string, today: string, warnDays: num
       routines: started.length > 0 ? started : routines,
     };
   });
-  // listRoutines is ordered by time then id, so the groups already are.
+  // listRoutinesWithHistory is ordered by time then id, so the groups already are.
 
   return { day, status: skinDayStatus(day, skinRangeInput(db, today, day, day)), groups };
 }

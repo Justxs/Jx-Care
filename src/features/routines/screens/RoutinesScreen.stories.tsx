@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-native';
 
 import { withAppData } from '@/storybook/appData';
 import { seedDemo, seedEmpty } from '@/storybook/fixtures';
-import { seedPlayerProblems } from '@/storybook/seeds/routines';
+import { seedDeleted, seedPlayerProblems } from '@/storybook/seeds/routines';
 
 import { RoutinesScreen } from './RoutinesScreen';
 
@@ -24,6 +24,9 @@ export const Empty: Story = { decorators: [withAppData({ seed: seedEmpty })] };
 
 /** More routines: a custom time of day and three evening alternatives. */
 export const ManyRoutines: Story = { decorators: [withAppData({ seed: seedPlayerProblems })] };
+
+/** After deleting Evening B: "Deleted routines" under the list opens the sheet to restore it. */
+export const WithDeleted: Story = { decorators: [withAppData({ seed: seedDeleted })] };
 
 /** From Today's "Add a routine" (`?starter=1`): the starter sheet opens. */
 export const StarterOpen: Story = {

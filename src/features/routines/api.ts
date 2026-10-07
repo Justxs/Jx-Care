@@ -15,10 +15,12 @@ import type { RoutineLog } from '@/db/schema';
 import { useSettings } from '@/features/settings/api';
 import { skinStreak } from '@/lib/streak';
 import { appStore } from '@/state/app';
+import { showToast } from '@/state/ui';
 
 import { cancelTodaysRoutineReminders, resyncRoutineReminders } from './reminders';
 import {
   dayRoutine,
+  deletedSteps,
   deleteRoutine,
   duplicateRoutine,
   getDayLog,
@@ -26,10 +28,12 @@ import {
   getRoutineDay,
   getTodayRoutines,
   groupDayRoutines,
+  listDeletedRoutines,
   listRoutines,
   nextDoneIds,
   recentStepProducts,
   replaceStepProduct,
+  restoreRoutine,
   saveRoutine,
   setChoice,
   setRoutineActive,
@@ -78,6 +82,24 @@ export function useRoutine(id: number) {
   return useQuery({
     queryKey: [...qk.routines.detail(id), day, warnDays],
     queryFn: () => getRoutine(getDb(), id, day, warnDays),
+  });
+}
+
+/** Deleted routines for R1's "Deleted routines" sheet. */
+export function useDeletedRoutines() {
+  return useQuery({
+    queryKey: [...qk.routines.all, 'deleted'],
+    queryFn: () => listDeletedRoutines(getDb()),
+  });
+}
+
+/** A routine's deleted steps, for R2's "Deleted steps". */
+export function useDeletedSteps(id: number | null) {
+  const { day, warnDays } = useDayContext();
+  return useQuery({
+    queryKey: [...qk.routines.detail(id ?? 0), 'deletedSteps', day, warnDays],
+    queryFn: () => (id === null ? [] : deletedSteps(getDb(), id, day, warnDays)),
+    enabled: id !== null,
   });
 }
 
@@ -146,16 +168,39 @@ export function useDuplicateRoutine() {
   });
 }
 
+/**
+ * Deletes softly, with an Undo toast; "Deleted routines" on R1 can restore it later too. The
+ * toast outlives the editor that deleted, so its Undo doesn't go through a mutation hook.
+ */
 export function useDeleteRoutine() {
   const client = useQueryClient();
+  const { t } = useTranslation();
   return useMutation({
-    mutationFn: async (id: number) => {
-      deleteRoutine(getDb(), id);
-      return id;
-    },
-    onSuccess: (id) => {
-      client.removeQueries({ queryKey: qk.routines.detail(id) });
+    mutationFn: async (r: { id: number; name: string }) => deleteRoutine(getDb(), r.id),
+    onSuccess: (_, r) => {
+      client.removeQueries({ queryKey: qk.routines.detail(r.id) });
       routinesChanged(client, { products: true });
+      showToast({
+        message: t('routines.deletedToast', { name: r.name }),
+        actionLabel: t('common.undo'),
+        onAction: () => {
+          restoreRoutine(getDb(), r.id);
+          routinesChanged(client, { products: true });
+        },
+      });
+    },
+  });
+}
+
+/** Brings a deleted routine back (R1 "Deleted routines"). */
+export function useRestoreRoutine() {
+  const client = useQueryClient();
+  const { t } = useTranslation();
+  return useMutation({
+    mutationFn: async (r: { id: number; name: string }) => restoreRoutine(getDb(), r.id),
+    onSuccess: (_, r) => {
+      routinesChanged(client, { products: true });
+      showToast({ message: t('routines.deleted.restoredToast', { name: r.name }) });
     },
   });
 }

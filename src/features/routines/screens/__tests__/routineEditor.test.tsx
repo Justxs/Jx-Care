@@ -6,14 +6,20 @@ import type { ProductInput } from '@/features/products/schema';
 import { saveSettings } from '@/features/settings/repo';
 import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
-import { dismissToast, uiStore } from '@/state/ui';
+import { dismissToast, runToastAction, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
 import { pickReturnStore, productAddedForPick } from '@/features/products/pickReturn';
 
 import { routineDraftStore, setRoutineDraft } from '../../draft';
 import * as reminders from '../../reminders';
-import { getRoutine, listRoutines, saveRoutine, type SaveRoutineInput } from '../../repo';
+import {
+  deletedSteps,
+  getRoutine,
+  listRoutines,
+  saveRoutine,
+  type SaveRoutineInput,
+} from '../../repo';
 import { buildFromTemplate, draftFromTemplate, routineTemplates } from '../../templates';
 import { RoutineEditorScreen } from '../RoutineEditorScreen';
 
@@ -357,12 +363,43 @@ describe('Edit routine', () => {
       nativeEvent: { actionName: 'delete' },
     });
     await waitFor(() => expect(stepLabels()).toEqual(['Moisturiser', 'Cleanser']));
+    // The removed step can be put back until Save.
+    expect(screen.getByText('Deleted steps')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Restore Serum' })).toBeTruthy();
 
     // Nothing is written before Save routine.
     expect(getRoutine(app.db, id, TODAY, 30)?.steps).toHaveLength(3);
     await save();
     await flush();
     expect(getRoutine(app.db, id, TODAY, 30)?.steps.map((s) => s.productId)).toEqual([c, a]);
+    // Deleted softly: kept for past days and for Restore.
+    expect(deletedSteps(app.db, id, TODAY, 30).map((s) => s.productId)).toEqual([b]);
+  });
+
+  it('restores a deleted step to the end of the list', async () => {
+    const app = setup('1');
+    const a = createProduct(app.db, productInput({ name: 'Cleanser' }));
+    const b = createProduct(app.db, productInput({ name: 'Serum' }));
+    const id = saveRoutine(
+      app.db,
+      routineInput({ steps: [step({ productId: a }), step({ productId: b })] }),
+    );
+    const [sa, sb] = getRoutine(app.db, id, TODAY, 30)!.steps.map((s) => s.id);
+    saveRoutine(
+      app.db,
+      routineInput({ id, steps: [step({ id: sb, productId: b }), step({ id: sa, productId: a })] }),
+    );
+    saveRoutine(app.db, routineInput({ id, steps: [step({ id: sb, productId: b })] }));
+    await app.show();
+    await waitFor(() => expect(stepLabels()).toEqual(['Serum']));
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Restore Cleanser' }));
+    expect(stepLabels()).toEqual(['Serum', 'Cleanser']);
+    expect(screen.queryByText('Deleted steps')).toBeNull();
+    await save();
+    await flush();
+    expect(getRoutine(app.db, id, TODAY, 30)?.steps.map((s) => s.id)).toEqual([sb, sa]);
+    expect(deletedSteps(app.db, id, TODAY, 30)).toEqual([]);
   });
 
   it('asks before leaving with changes, and deletes the routine after the dialog', async () => {
@@ -381,8 +418,15 @@ describe('Edit routine', () => {
     expect(screen.getByText('Delete Evening A?')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Delete' }));
     await flush();
-    expect(getRoutine(app.db, id, TODAY, 30)).toBeNull();
+    expect(getRoutine(app.db, id, TODAY, 30)?.deletedAt).not.toBeNull();
+    expect(listRoutines(app.db, TODAY, 30)).toEqual([]);
     expect(router.back).toHaveBeenCalled();
+
+    // The toast's Undo brings it back.
+    const [toast] = uiStore.state.toasts;
+    expect(toast).toMatchObject({ message: 'Evening A deleted', actionLabel: 'Undo' });
+    await act(async () => runToastAction(toast!.id));
+    expect(listRoutines(app.db, TODAY, 30).map((r) => r.id)).toEqual([id]);
   });
 
   it('has Save only in the bottom bar', async () => {

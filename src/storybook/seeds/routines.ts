@@ -6,7 +6,13 @@ import type { Db } from '@/db';
 import { saveHairTask } from '@/features/hair/repo';
 import { createProduct } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
-import { getRoutineDay, saveRoutine, tickSteps } from '@/features/routines/repo';
+import {
+  deleteRoutine,
+  getRoutine,
+  getRoutineDay,
+  saveRoutine,
+  tickSteps,
+} from '@/features/routines/repo';
 import type { StepInput } from '@/features/routines/schema';
 import { addDays, momentOf } from '@/lib/appDay';
 
@@ -165,5 +171,27 @@ export function seedPlayerProblems(db: Db, today: string = FIXTURE_TODAY): void 
       steps: [step(p.cleanser), step(p.glycolicToner), step(p.moisturiser)],
     }),
     routineSeedIds.weekend,
+  );
+}
+
+/**
+ * The demo data after some deleting: Evening B was deleted two days ago (R1 "Deleted routines")
+ * and the morning's sunscreen step yesterday (the editor's "Deleted steps"). Their history stays.
+ */
+export function seedDeleted(db: Db, today: string = FIXTURE_TODAY): void {
+  seedDemo(db, today);
+  const r = demoIds.routines;
+  deleteRoutine(db, r.eveningB, momentOf(addDays(today, -2), '21:00'));
+  const morning = getRoutine(db, r.morning, today, 30);
+  if (!morning) throw new Error('seeds/routines: the morning routine is missing');
+  saveRoutine(
+    db,
+    {
+      ...morning,
+      steps: morning.steps
+        .filter((st) => st.productId !== demoIds.products.sunscreen)
+        .map(({ product: _p, routineId: _r, position: _o, deletedAt: _d, ...st }) => st),
+    },
+    momentOf(addDays(today, -1), '09:00'),
   );
 }

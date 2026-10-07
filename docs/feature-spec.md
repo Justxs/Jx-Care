@@ -393,7 +393,7 @@ Date (default today), text (required, max 280), quick tags (Calm, Glow, Oily, Dr
 ### R1 Routines list
 
 - Segmented switch: Skin / Hair.
-- **Skin:** routines grouped by time of day (Morning, Evening, custom). Card: name, weekday dots (M T W T F S S, active ones filled), "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), conflict tag, active switch. Tap: editor. Start button: routine player. New routine is the Fab. Long-press: Duplicate as variant, Delete. No section heading repeats a card's name; two routines at one time of day sit under "Evening, A or B" with the line "On nights both are set, you pick one on Today. A and B are never checked against each other for conflicts."
+- **Skin:** routines grouped by time of day (Morning, Evening, custom). Card: name, weekday dots (M T W T F S S, active ones filled), "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), conflict tag, active switch. Tap: editor. Start button: routine player. New routine is the Fab. Long-press: Duplicate as variant, Delete. Delete is soft: the dialog says the routine leaves Routines and Today while its calendar history stays, the toast "Evening B deleted" has Undo, and a "Deleted routines" row under the list (only while there are some) opens a sheet with each one's deleted date and Restore. No section heading repeats a card's name; two routines at one time of day sit under "Evening, A or B" with the line "On nights both are set, you pick one on Today. A and B are never checked against each other for conflicts."
 - **Hair:** two groups, Washes and Other care. Row: name, frequency ("Every 3 days", "Every 8 weeks", "Mon, Thu"), next due date, last done as a date ("Last 18 Aug"). New hair task is the Fab.
 - Empty states: see the Empty states table in the Overview.
 
@@ -409,7 +409,7 @@ Date (default today), text (required, max 280), quick tags (Calm, Glow, Oily, Dr
 | Reminder | Switch + time picker | Optional |
 | Steps | Reorderable list (drag handle) | At least one step to save |
 
-- Step row (RoutineStep): order number, product photo + name, schedule chip if not every time ("Tue, Fri" / "Every 3 days"), wait chip ("1 min"), conflict tag. Tap: step editor. Swipe: delete.
+- Step row (RoutineStep): order number, product photo + name, schedule chip if not every time ("Tue, Fri" / "Every 3 days"), wait chip ("1 min"), conflict tag. Tap: step editor. Swipe: delete. Deleted steps are kept: past days still count them, and a "Deleted steps" list under Add step (only while there are some, including steps removed since the editor opened) has Restore, which puts the step back at the end of the list.
 - **Conflict panel** at the bottom, when any: "2 conflicts this week", each line "Retinol (step 3) × Glycolic acid in Evening B, Tue" with a "mild" label for every-few-days steps. Saving is still allowed, and the panel says so ("You can still save."). The panel ends with "What does mild mean?", which opens the Mild conflict sheet. Save routine sits in the bottom bar.
 - Unsaved changes: leaving asks Discard / Keep editing.
 

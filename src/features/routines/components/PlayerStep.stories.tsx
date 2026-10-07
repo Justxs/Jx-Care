@@ -28,6 +28,7 @@ const step: RoutineStepItem = {
   everyNDays: null,
   startDate: null,
   waitSeconds: 60,
+  deletedAt: null,
   product: vitaminC,
 };
 

@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, inArray, isNotNull, lte, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lte, sql } from 'drizzle-orm';
 
 import type { Db, DbOrTx } from '@/db';
 import {
@@ -58,9 +58,17 @@ export type RoutineItem = Omit<Routine, 'updatedAt'> & {
    * through their logs' snapshots.
    */
   createdDay: string;
-  /** Every step in order, whatever its schedule. */
+  /**
+   * Every step in order, whatever its schedule. Deleted steps only in `listRoutinesWithHistory`,
+   * where `dayRoutine` keeps those that still counted on the day.
+   */
   steps: RoutineStepItem[];
   stepCount: number;
+};
+
+/** A deleted routine in the R1 "Deleted routines" sheet. */
+export type DeletedRoutine = Pick<Routine, 'id' | 'name' | 'timeOfDay' | 'customName'> & {
+  deletedAt: number;
 };
 
 /** A routine on one day: what Today's card and the player show. */
@@ -92,6 +100,20 @@ export type SaveRoutineInput = RoutineInput & { id?: number | null; active?: boo
 
 // ─── Reads ──────────────────────────────────────────────────────────────────
 
+/**
+ * Whether a routine or step deleted at `deletedAt` (null: not deleted) still counts on `day`.
+ * Deleting is soft: the days before the deletion keep it, from that day on it is gone.
+ */
+export function countsOn(deletedAt: number | null, day: string): boolean {
+  return deletedAt === null || appDay(deletedAt) > day;
+}
+
+/** Whether a step id counts on a day, from the steps' rows (an id with no row never does). */
+function stepCounter(rows: readonly { id: number; deletedAt: number | null }[]) {
+  const deletedAt = new Map(rows.map((s) => [s.id, s.deletedAt]));
+  return (id: number, day: string) => deletedAt.has(id) && countsOn(deletedAt.get(id)!, day);
+}
+
 /** A product with its expiry status on `today`; also the R4 picker's Recent rows. */
 function stepProduct(p: typeof product.$inferSelect, today: string, warnDays: number): StepProduct {
   const status = expiryStatus(p, today, warnDays);
@@ -110,17 +132,28 @@ function stepProduct(p: typeof product.$inferSelect, today: string, warnDays: nu
   };
 }
 
+/** Steps with their products; deleted steps only with `deleted` 'with' or 'only'. */
 function loadSteps(
   db: DbOrTx,
   routineIds: readonly number[] | null,
   today: string,
   warnDays: number,
+  deleted: 'without' | 'with' | 'only' = 'without',
 ): RoutineStepItem[] {
   return db
     .select({ step: routineStep, product })
     .from(routineStep)
     .leftJoin(product, eq(product.id, routineStep.productId))
-    .where(routineIds ? inArray(routineStep.routineId, [...routineIds]) : undefined)
+    .where(
+      and(
+        routineIds ? inArray(routineStep.routineId, [...routineIds]) : undefined,
+        deleted === 'without'
+          ? isNull(routineStep.deletedAt)
+          : deleted === 'only'
+            ? isNotNull(routineStep.deletedAt)
+            : undefined,
+      ),
+    )
     .orderBy(asc(routineStep.routineId), asc(routineStep.position), asc(routineStep.id))
     .all()
     .map(({ step, product: p }) => {
@@ -137,7 +170,8 @@ function routineLite(r: Routine): RoutineLite {
     customName: r.customName,
     sortTime: r.sortTime,
     daysOfWeek: r.daysOfWeek,
-    active: r.active,
+    // A deleted routine is due on no day; its past counts through its logs.
+    active: r.active && r.deletedAt === null,
     createdDay: appDay(r.createdAt),
   };
 }
@@ -148,15 +182,49 @@ function toItem(r: Routine, steps: RoutineStepItem[]): RoutineItem {
 }
 
 /**
- * Every routine with its steps and their products, by `sortTime` then id (R1 groups them).
- * `today` and `warnDays` give each step product its expiry status.
+ * Every routine that isn't deleted, with its steps and their products, by `sortTime` then id (R1
+ * groups them). `today` and `warnDays` give each step product its expiry status.
  */
 export function listRoutines(db: DbOrTx, today: string, warnDays: number): RoutineItem[] {
-  const rows = db.select().from(routine).orderBy(asc(routine.sortTime), asc(routine.id)).all();
+  const rows = db
+    .select()
+    .from(routine)
+    .where(isNull(routine.deletedAt))
+    .orderBy(asc(routine.sortTime), asc(routine.id))
+    .all();
   const steps = groupBy(loadSteps(db, null, today, warnDays), (s) => s.routineId);
   return rows.map((r) => toItem(r, steps.get(r.id) ?? []));
 }
 
+/** Like `listRoutines`, with deleted routines and steps too: what a past day (C2) may show. */
+export function listRoutinesWithHistory(
+  db: DbOrTx,
+  today: string,
+  warnDays: number,
+): RoutineItem[] {
+  const rows = db.select().from(routine).orderBy(asc(routine.sortTime), asc(routine.id)).all();
+  const steps = groupBy(loadSteps(db, null, today, warnDays, 'with'), (s) => s.routineId);
+  return rows.map((r) => toItem(r, steps.get(r.id) ?? []));
+}
+
+/** Deleted routines, most recently deleted first (R1 "Deleted routines"). */
+export function listDeletedRoutines(db: DbOrTx): DeletedRoutine[] {
+  return db
+    .select({
+      id: routine.id,
+      name: routine.name,
+      timeOfDay: routine.timeOfDay,
+      customName: routine.customName,
+      deletedAt: routine.deletedAt,
+    })
+    .from(routine)
+    .where(isNotNull(routine.deletedAt))
+    .orderBy(desc(routine.deletedAt), desc(routine.id))
+    .all()
+    .map((r) => ({ ...r, deletedAt: r.deletedAt! }));
+}
+
+/** A routine (deleted or not) with the steps it has now. */
 export function getRoutine(
   db: DbOrTx,
   id: number,
@@ -165,6 +233,18 @@ export function getRoutine(
 ): RoutineItem | null {
   const r = db.select().from(routine).where(eq(routine.id, id)).get();
   return r ? toItem(r, loadSteps(db, [id], today, warnDays)) : null;
+}
+
+/** A routine's deleted steps, most recently deleted first (R2 "Deleted steps"). */
+export function deletedSteps(
+  db: DbOrTx,
+  routineId: number,
+  today: string,
+  warnDays: number,
+): RoutineStepItem[] {
+  return loadSteps(db, [routineId], today, warnDays, 'only').sort(
+    (a, b) => b.deletedAt! - a.deletedAt! || b.id - a.id,
+  );
 }
 
 export function getDayLog(db: DbOrTx, routineId: number, day: string): RoutineLog | null {
@@ -178,20 +258,31 @@ export function getDayLog(db: DbOrTx, routineId: number, day: string): RoutineLo
 }
 
 /**
- * The log as progress should read it: the snapshot of due steps, minus steps deleted since, so a
- * removed step can never block a day (an empty result falls back to today's schedule).
+ * The log as progress should read it: the snapshot of due steps, minus steps that no longer
+ * count that day (deleted on it or before, or gone for good), so a removed step can never block
+ * a day (an empty result falls back to the schedule).
  */
 function liveLog(log: RoutineLog | null, stepIds: ReadonlySet<number>) {
   if (!log) return null;
   return { ...log, dueStepIds: log.dueStepIds.filter((id) => stepIds.has(id)) };
 }
 
-/** A routine on `day` with its due steps and progress. Pure; the optimistic tick reuses it. */
+/**
+ * A routine on `day` with the steps it had then, its due steps and progress. Pure; the optimistic
+ * tick reuses it.
+ */
 export function dayRoutine(r: RoutineItem, log: RoutineLog | null, day: string): DayRoutine {
-  const ids = new Set(r.steps.map((s) => s.id));
-  const progress = routineProgress(r, r.steps, liveLog(log, ids), day);
+  const steps = r.steps.filter((s) => countsOn(s.deletedAt, day));
+  const progress = routineProgress(r, steps, liveLog(log, new Set(steps.map((s) => s.id))), day);
   const due = new Set(progress.dueStepIds);
-  return { ...r, dueSteps: r.steps.filter((s) => due.has(s.id)), progress, log };
+  return {
+    ...r,
+    steps,
+    stepCount: steps.length,
+    dueSteps: steps.filter((s) => due.has(s.id)),
+    progress,
+    log,
+  };
 }
 
 function logsOn(db: DbOrTx, day: string): Map<number, RoutineLog> {
@@ -255,8 +346,10 @@ export function getRoutineDay(
   day: string,
   warnDays: number,
 ): DayRoutine | null {
-  const r = getRoutine(db, id, day, warnDays);
-  return r ? dayRoutine(r, getDayLog(db, id, day), day) : null;
+  const r = db.select().from(routine).where(eq(routine.id, id)).get();
+  if (!r) return null;
+  const steps = loadSteps(db, [id], day, warnDays, 'with');
+  return dayRoutine(toItem(r, steps), getDayLog(db, id, day), day);
 }
 
 /** Logs of every routine between two app days, inclusive (calendar, streaks). */
@@ -276,8 +369,9 @@ export function streakInput(db: DbOrTx, today: string): SkinStreakInput {
 
 /**
  * Routines, steps and the logs from `fromDay` (null: the first) to `toDay`, inclusive, for the
- * skin streak and the calendar statuses (task 028). As on Today, steps deleted since a day's
- * snapshot are dropped from it, so a removed step can never block a day.
+ * skin streak and the calendar statuses (task 028). Deleted routines keep the days before they
+ * were deleted. As on Today, steps that no longer count on a day are dropped from its snapshot,
+ * so a removed step can never block a day.
  */
 export function skinRangeInput(
   db: DbOrTx,
@@ -285,8 +379,10 @@ export function skinRangeInput(
   fromDay: string | null,
   toDay: string,
 ): SkinStreakInput {
-  const routines = db.select().from(routine).all().map(routineLite);
-  const steps: StepLite[] = db
+  const routineRows = db.select().from(routine).all();
+  const routines = routineRows.map(routineLite);
+  const routineDeletedAt = new Map(routineRows.map((r) => [r.id, r.deletedAt]));
+  const stepRows = db
     .select({
       id: routineStep.id,
       routineId: routineStep.routineId,
@@ -296,10 +392,15 @@ export function skinRangeInput(
       daysOfWeek: routineStep.daysOfWeek,
       everyNDays: routineStep.everyNDays,
       startDate: routineStep.startDate,
+      deletedAt: routineStep.deletedAt,
     })
     .from(routineStep)
     .all();
-  const live = new Set(steps.map((s) => s.id));
+  // Only steps that aren't deleted are scheduled; past days count deleted ones through logs.
+  const steps: StepLite[] = stepRows.flatMap(({ deletedAt, ...s }) =>
+    deletedAt === null ? [s] : [],
+  );
+  const stepCounts = stepCounter(stepRows);
   const logs: RoutineLogLite[] = db
     .select({
       routineId: routineLog.routineId,
@@ -314,7 +415,8 @@ export function skinRangeInput(
         : and(gte(routineLog.day, fromDay), lte(routineLog.day, toDay)),
     )
     .all()
-    .map((l) => ({ ...l, dueStepIds: l.dueStepIds.filter((id) => live.has(id)) }));
+    .filter((l) => countsOn(routineDeletedAt.get(l.routineId) ?? null, l.day))
+    .map((l) => ({ ...l, dueStepIds: l.dueStepIds.filter((id) => stepCounts(id, l.day)) }));
   return { routines, steps, logs, today };
 }
 
@@ -370,13 +472,19 @@ export function recentStepProducts(
   return out;
 }
 
-/** The routines a product is used in, by time (P2 "Used in"). */
+/** The routines a product is used in, by time (P2 "Used in"); deleted ones don't count. */
 export function routinesUsingProduct(db: Db, productId: number): UsedIn[] {
   return db
     .selectDistinct({ id: routine.id, name: routine.name })
     .from(routineStep)
     .innerJoin(routine, eq(routine.id, routineStep.routineId))
-    .where(eq(routineStep.productId, productId))
+    .where(
+      and(
+        eq(routineStep.productId, productId),
+        isNull(routineStep.deletedAt),
+        isNull(routine.deletedAt),
+      ),
+    )
     .orderBy(asc(routine.sortTime), asc(routine.id))
     .all()
     .map((r) => ({ kind: 'routine' as const, id: r.id, name: r.name }));
@@ -407,10 +515,11 @@ const sameStep = (row: RoutineStep, v: StepValues) =>
   );
 
 /**
- * Freezes a routine's past before its schedule changes (days, steps, on or off), so the change
- * can't rewrite past days or the streak. Every day from the routine's first day to yesterday that
- * is due under its current definition and has no snapshot yet gets a log with that day's due steps
- * and no ticks; a log whose snapshot steps were all deleted gets one too and keeps its ticks. Then
+ * Freezes a routine's past before its schedule changes (days, steps, on or off, deleted), so the
+ * change can't rewrite past days or the streak. Every day from the routine's first day to yesterday
+ * that is due under its current definition and has no snapshot yet gets a log with that day's due
+ * steps and no ticks; a log whose snapshot steps were all deleted gets one too and keeps its ticks,
+ * and a snapshot with some deleted steps loses them (a deleted step counts before its day only). Then
  * the routine's first day (`createdAt`) moves to today, so a past day without a log stays empty
  * whatever the new schedule says. Readers already take a day's snapshot over the schedule and skip
  * days before the first day, so no past day reads differently. Call it in the saving transaction.
@@ -421,9 +530,11 @@ function freezePastDays(tx: DbOrTx, routineId: number, now: number): void {
   const from = appDay(r.createdAt);
   const yesterday = addDays(appDay(now), -1);
   if (from <= yesterday) {
-    const steps = tx.select().from(routineStep).where(eq(routineStep.routineId, routineId)).all();
-    const live = new Set(steps.map((s) => s.id));
-    const snapshotted = new Set(
+    const all = tx.select().from(routineStep).where(eq(routineStep.routineId, routineId)).all();
+    // Every step deletion goes through here first, so none was live after `from`.
+    const steps = all.filter((s) => s.deletedAt === null);
+    const stepCounts = stepCounter(all);
+    const snapshots = new Map(
       tx
         .select({ day: routineLog.day, dueStepIds: routineLog.dueStepIds })
         .from(routineLog)
@@ -435,12 +546,16 @@ function freezePastDays(tx: DbOrTx, routineId: number, now: number): void {
           ),
         )
         .all()
-        .filter((l) => l.dueStepIds.some((id) => live.has(id)))
-        .map((l) => l.day),
+        .map((l) => [l.day, l.dueStepIds]),
     );
     const lite = routineLite(r);
     const rows = daysBetween(from, yesterday).flatMap((day) => {
-      if (snapshotted.has(day)) return [];
+      const snapshot = snapshots.get(day) ?? [];
+      const counted = snapshot.filter((id) => stepCounts(id, day));
+      // Steps that no longer count leave the snapshot for good, so restoring one can't change it.
+      if (counted.length > 0) {
+        return counted.length < snapshot.length ? [{ routineId, day, dueStepIds: counted }] : [];
+      }
       const due = dueSteps(lite, steps, day).map((s) => s.id);
       return due.length > 0 ? [{ routineId, day, dueStepIds: due }] : [];
     });
@@ -461,8 +576,8 @@ function freezePastDays(tx: DbOrTx, routineId: number, now: number): void {
 
 /**
  * Inserts or updates a routine and its whole step list at once (the editor saves everything
- * together). Steps missing from the list are deleted, steps without a known id are inserted and
- * positions are rewritten 0…n. Unchanged steps are left alone so `updatedAt` keeps meaning "last
+ * together). Steps missing from the list are soft deleted (`deletedAt`), a deleted step back in
+ * the list is restored, steps without a known id are inserted and positions are rewritten 0…n. Unchanged steps are left alone so `updatedAt` keeps meaning "last
  * changed" (the picker's Recent group reads it). Saving an existing routine first freezes its past
  * days (`freezePastDays`) as of `now`. Returns the routine id.
  */
@@ -497,15 +612,22 @@ export function saveRoutine(db: Db, input: SaveRoutineInput, now: number = Date.
     const kept = new Set(
       input.steps.flatMap((s) => (s.id != null && existing.has(s.id) ? [s.id] : [])),
     );
-    const removed = [...existing.keys()].filter((stepId) => !kept.has(stepId));
-    if (removed.length > 0) tx.delete(routineStep).where(inArray(routineStep.id, removed)).run();
+    const removed = [...existing.values()]
+      .filter((s) => s.deletedAt === null && !kept.has(s.id))
+      .map((s) => s.id);
+    if (removed.length > 0) {
+      tx.update(routineStep).set({ deletedAt: now }).where(inArray(routineStep.id, removed)).run();
+    }
 
     input.steps.forEach((s, position) => {
       const v = stepValues(s, routineId, position);
       const row = s.id != null ? existing.get(s.id) : undefined;
       if (!row) tx.insert(routineStep).values(v).run();
-      else if (!sameStep(row, v))
-        tx.update(routineStep).set(v).where(eq(routineStep.id, row.id)).run();
+      else if (row.deletedAt !== null || !sameStep(row, v))
+        tx.update(routineStep)
+          .set({ ...v, deletedAt: null })
+          .where(eq(routineStep.id, row.id))
+          .run();
     });
     return routineId;
   });
@@ -548,13 +670,13 @@ export function duplicateRoutine(db: Db, id: number, makeName: (name: string) =>
     const steps = tx
       .select()
       .from(routineStep)
-      .where(eq(routineStep.routineId, id))
+      .where(and(eq(routineStep.routineId, id), isNull(routineStep.deletedAt)))
       .orderBy(asc(routineStep.position), asc(routineStep.id))
       .all();
     if (steps.length > 0) {
       tx.insert(routineStep)
         .values(
-          steps.map(({ id: _id, createdAt: _c, updatedAt: _u, ...s }, position) => ({
+          steps.map(({ id: _id, createdAt: _c, updatedAt: _u, deletedAt: _d, ...s }, position) => ({
             ...s,
             routineId: newId,
             position,
@@ -566,9 +688,26 @@ export function duplicateRoutine(db: Db, id: number, makeName: (name: string) =>
   });
 }
 
-/** Deletes a routine; its steps, logs and A/B choices go with it (foreign key cascade). */
-export function deleteRoutine(db: Db, id: number): void {
-  db.delete(routine).where(eq(routine.id, id)).run();
+/**
+ * Deletes a routine softly: it leaves Routines, Today, the player and reminders from today, and
+ * the days before keep their history (`freezePastDays`) until `restoreRoutine` brings it back.
+ */
+export function deleteRoutine(db: Db, id: number, now: number = Date.now()): void {
+  db.transaction((tx) => {
+    freezePastDays(tx, id, now);
+    tx.update(routine).set({ deletedAt: now }).where(eq(routine.id, id)).run();
+  });
+}
+
+/**
+ * Brings a deleted routine back as it was. Its schedule starts again today (`createdAt`), so the
+ * days it was deleted stay empty.
+ */
+export function restoreRoutine(db: Db, id: number, now: number = Date.now()): void {
+  db.update(routine)
+    .set({ deletedAt: null, createdAt: sql`max(${routine.createdAt}, ${now})` })
+    .where(eq(routine.id, id))
+    .run();
 }
 
 /** "Pick another" (T2) and replacing missing steps (sequence 7). */
@@ -608,18 +747,17 @@ export function tickSteps(
 
     const doneIds = nextDoneIds(log?.doneStepIds ?? [], stepIds, done);
 
-    const live = new Set(
+    const stepCounts = stepCounter(
       tx
-        .select({ id: routineStep.id })
+        .select({ id: routineStep.id, deletedAt: routineStep.deletedAt })
         .from(routineStep)
         .where(eq(routineStep.routineId, routineId))
-        .all()
-        .map((s) => s.id),
+        .all(),
     );
-    // As `dayRoutine` reads it: the snapshot minus deleted steps, or the caller's due steps when
-    // none of the snapshot is left.
-    const fromLog = (log?.dueStepIds ?? []).filter((id) => live.has(id));
-    const due = fromLog.length > 0 ? fromLog : dueStepIds.filter((id) => live.has(id));
+    // As `dayRoutine` reads it: the snapshot minus steps that no longer count that day, or the
+    // caller's due steps when none of the snapshot is left.
+    const fromLog = (log?.dueStepIds ?? []).filter((id) => stepCounts(id, day));
+    const due = fromLog.length > 0 ? fromLog : dueStepIds.filter((id) => stepCounts(id, day));
     const complete = due.length > 0 && due.every((id) => doneIds.includes(id));
     const values = {
       dueStepIds: due,
