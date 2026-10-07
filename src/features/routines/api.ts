@@ -1,4 +1,5 @@
 import {
+  queryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -53,6 +54,20 @@ function useDayContext() {
 
 const todayRoutinesKey = (day: string) => [...qk.today(day), 'routines'] as const;
 
+/** Today's routine cards on `day`; shared by `useTodayRoutines` and Today's prefetch. */
+export const todayRoutinesQuery = (day: string, warnDays: number) =>
+  queryOptions({
+    queryKey: [...todayRoutinesKey(day), warnDays],
+    queryFn: () => getTodayRoutines(getDb(), day, warnDays),
+  });
+
+/** Current and best skin streak; shared by `useSkinStreak` and Today's prefetch. */
+export const skinStreakQuery = (day: string) =>
+  queryOptions({
+    queryKey: [...qk.calendar.streaks, 'skin', day],
+    queryFn: () => skinStreak(streakInput(getDb(), day)),
+  });
+
 // ─── Reads ──────────────────────────────────────────────────────────────────
 
 export function useRoutines() {
@@ -74,10 +89,7 @@ export function useRoutine(id: number) {
 /** Today's routine cards, keyed by the app day. */
 export function useTodayRoutines() {
   const { day, warnDays } = useDayContext();
-  return useQuery({
-    queryKey: [...todayRoutinesKey(day), warnDays],
-    queryFn: () => getTodayRoutines(getDb(), day, warnDays),
-  });
+  return useQuery(todayRoutinesQuery(day, warnDays));
 }
 
 /** One routine on the current app day, for the player (T2). */
@@ -91,10 +103,7 @@ export function useRoutineDay(id: number) {
 
 export function useSkinStreak() {
   const day = useSelector(appStore, (s) => s.activeDay);
-  return useQuery({
-    queryKey: [...qk.calendar.streaks, 'skin', day],
-    queryFn: () => skinStreak(streakInput(getDb(), day)),
-  });
+  return useQuery(skinStreakQuery(day));
 }
 
 /** The R4 picker's Recent group. */

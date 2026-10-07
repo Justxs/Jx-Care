@@ -129,7 +129,130 @@
       "usePin": "Use PIN"
     }
   },
-  "today": {},
+  "today": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "streaks": "Streaks",
+    "weekdaysPlural": {
+      "1": "Mondays",
+      "2": "Tuesdays",
+      "3": "Wednesdays",
+      "4": "Thursdays",
+      "5": "Fridays",
+      "6": "Saturdays",
+      "7": "Sundays"
+    },
+    "routine": {
+      "reminderAt": "Reminder at {{time}}",
+      "noReminder": "No reminder",
+      "steps_one": "{{count}} step",
+      "steps_other": "{{count}} steps",
+      "expiredOne": "{{name}} expired {{date}}",
+      "expiredMany_one": "{{count}} product expired",
+      "expiredMany_other": "{{count}} products expired",
+      "pick": {
+        "morning": "Pick one for this morning; Jx-Care remembers it for {{weekdays}}.",
+        "evening": "Pick one for tonight; Jx-Care remembers it for {{weekdays}}.",
+        "custom": "Pick one for today; Jx-Care remembers it for {{weekdays}}."
+      },
+      "aboutAB": "About A and B",
+      "options": "{{name}}: pick a routine",
+      "doneToast": "{{name}} done",
+      "done": "Done",
+      "doneLabel": "{{name}} done. Opens the routine."
+    },
+    "expiring": {
+      "title": "Expiring soon",
+      "seeAll": "See all",
+      "seeAllLabel": "See all expiring products",
+      "shopping_one": "Shopping list · {{count}} to buy",
+      "shopping_other": "Shopping list · {{count}} to buy"
+    },
+    "setup": {
+      "title": "Set up Jx-Care",
+      "progress": "{{done}} of {{total}}",
+      "progressLabel": "Setup: {{done}} of {{total}} steps done",
+      "stepDone": "Done",
+      "stepTodo": "To do",
+      "stepLabel": "Step {{index}}, {{title}}: {{state}}. {{detail}}",
+      "product": {
+        "title": "Add your first product",
+        "hint": "Jx-Care tracks when it expires.",
+        "done": "{{name}} added",
+        "action": "Add a product"
+      },
+      "routine": {
+        "title": "Build a routine",
+        "hint": "Start from a template and swap in your products.",
+        "done": "{{name}} added",
+        "action": "Build a routine"
+      },
+      "hair": {
+        "title": "Set up hair care",
+        "hint": "Tell Jx-Care how often you wash your hair.",
+        "done": "{{name}} set up",
+        "action": "Set up hair care"
+      },
+      "hide": "Hide",
+      "hideLabel": "Hide the setup card",
+      "setTitle": "You're set",
+      "setBody": "Your products, routine and hair care are in. Today shows what is due each day.",
+      "seeToday": "See today"
+    },
+    "optional": {
+      "title": "Optional",
+      "photo": {
+        "title": "Weekly progress photo",
+        "hint": "One photo a week shows how your skin changes."
+      },
+      "avoid": {
+        "title": "Ingredients to avoid",
+        "hint": "Products that contain them get a red Avoid badge."
+      }
+    },
+    "explain": {
+      "and": "and",
+      "streak": {
+        "title": "Skin streak",
+        "current_one": "Your skin streak is {{count}} day.",
+        "current_other": "Your skin streak is {{count}} days.",
+        "best_one": "Your best is {{count}} day.",
+        "best_other": "Your best is {{count}} days.",
+        "counts": "A day counts when you finish a skin routine set for it. A or B is enough.",
+        "skipped": "Days with nothing set are skipped.",
+        "today": "Today never breaks it. It counts once you finish.",
+        "restart": "An earlier day with a routine set and none finished starts it again. Your best stays.",
+        "hair": "The hair streak counts washes done on or before their day."
+      },
+      "ab": {
+        "title": "{{name}} A or B",
+        "options": "{{names}} are both set for today. They are options: you do one of them.",
+        "notMissed": "Finishing either one completes {{name}}. The other is not missed.",
+        "remembered": "Your pick is remembered for {{weekdays}}. You can change it until the first tick.",
+        "neverCompared": "They are never checked against each other for conflicts."
+      },
+      "conflict": {
+        "title": "Why this warning",
+        "pair": "{{first}} in {{firstRoutine}} and {{second}} in {{secondRoutine}} are a conflict pair.",
+        "days": "They meet on {{days}}.",
+        "daysMild": "They meet on some {{days}}, when the every few days step is due.",
+        "alternatives": "A and B routines at one time of day are never compared with each other.",
+        "editRoutine": "Edit the routine",
+        "seeRule": "See the rule"
+      },
+      "mild": {
+        "title": "Mild conflict",
+        "step_one": "{{product}} runs every {{count}} day, so the pair only meets on some days.",
+        "step_other": "{{product}} runs every {{count}} days, so the pair only meets on some days.",
+        "generic": "One of the steps runs every few days, so the pair only meets on some days.",
+        "thoseDays": "On those days the tag is a normal Conflict.",
+        "noStrength": "Mild comes from the step schedules. Rules have no strength of their own."
+      }
+    }
+  },
   "products": {
     "errors": {
       "nameRequired": "Enter a name.",

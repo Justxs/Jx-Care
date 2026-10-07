@@ -1,5 +1,6 @@
 import {
   keepPreviousData,
+  queryOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -93,12 +94,16 @@ export function useHasAnyProduct() {
   });
 }
 
-export function useExpiringSoon(limit = 3) {
-  const { today, warnDays } = useExpiryContext();
-  return useQuery({
+/** Today's Expiring soon card; shared by `useExpiringSoon` and Today's prefetch. */
+export const expiringSoonQuery = (today: string, warnDays: number, limit = 3) =>
+  queryOptions({
     queryKey: [...qk.products.all, 'expiring', limit, today, warnDays],
     queryFn: () => expiringSoon(getDb(), today, warnDays, limit),
   });
+
+export function useExpiringSoon(limit = 3) {
+  const { today, warnDays } = useExpiryContext();
+  return useQuery(expiringSoonQuery(today, warnDays, limit));
 }
 
 export function useProductsForPicker(

@@ -135,7 +135,142 @@
       "usePin": "Naudoti PIN"
     }
   },
-  "today": {},
+  "today": {
+    "greeting": {
+      "morning": "Labas rytas",
+      "afternoon": "Laba diena",
+      "evening": "Labas vakaras"
+    },
+    "streaks": "Serijos",
+    "weekdaysPlural": {
+      "1": "pirmadieniais",
+      "2": "antradieniais",
+      "3": "trečiadieniais",
+      "4": "ketvirtadieniais",
+      "5": "penktadieniais",
+      "6": "šeštadieniais",
+      "7": "sekmadieniais"
+    },
+    "routine": {
+      "reminderAt": "Priminimas {{time}}",
+      "noReminder": "Be priminimo",
+      "steps_one": "{{count}} žingsnis",
+      "steps_few": "{{count}} žingsniai",
+      "steps_many": "{{count}} žingsnio",
+      "steps_other": "{{count}} žingsnių",
+      "expiredOne": "{{name}} nebegalioja nuo {{date}}",
+      "expiredMany_one": "Nebegalioja {{count}} produktas",
+      "expiredMany_few": "Nebegalioja {{count}} produktai",
+      "expiredMany_many": "Nebegalioja {{count}} produkto",
+      "expiredMany_other": "Nebegalioja {{count}} produktų",
+      "pick": {
+        "morning": "Pasirinkite vieną šiam rytui; Jx-Care tai įsimins {{weekdays}}.",
+        "evening": "Pasirinkite vieną šiam vakarui; Jx-Care tai įsimins {{weekdays}}.",
+        "custom": "Pasirinkite vieną šiandienai; Jx-Care tai įsimins {{weekdays}}."
+      },
+      "aboutAB": "Apie A ir B",
+      "options": "{{name}}: pasirinkite rutiną",
+      "doneToast": "{{name}}: atlikta",
+      "done": "Atlikta",
+      "doneLabel": "{{name}}: atlikta. Atidaro rutiną."
+    },
+    "expiring": {
+      "title": "Baigia galioti",
+      "seeAll": "Visi",
+      "seeAllLabel": "Rodyti visus baigiančius galioti produktus",
+      "shopping_one": "Pirkinių sąrašas · {{count}} nupirkti",
+      "shopping_few": "Pirkinių sąrašas · {{count}} nupirkti",
+      "shopping_many": "Pirkinių sąrašas · {{count}} nupirkti",
+      "shopping_other": "Pirkinių sąrašas · {{count}} nupirkti"
+    },
+    "setup": {
+      "title": "Paruoškite Jx-Care",
+      "progress": "{{done}} iš {{total}}",
+      "progressLabel": "Paruošimas: atlikta {{done}} iš {{total}}",
+      "stepDone": "Atlikta",
+      "stepTodo": "Neatlikta",
+      "stepLabel": "{{index}} žingsnis, {{title}}: {{state}}. {{detail}}",
+      "product": {
+        "title": "Pridėkite pirmą produktą",
+        "hint": "Jx-Care seks, kada jis nebegalios.",
+        "done": "{{name}} pridėtas",
+        "action": "Pridėti produktą"
+      },
+      "routine": {
+        "title": "Sukurkite rutiną",
+        "hint": "Pradėkite nuo šablono ir įdėkite savo produktus.",
+        "done": "{{name}} pridėta",
+        "action": "Sukurti rutiną"
+      },
+      "hair": {
+        "title": "Nustatykite plaukų priežiūrą",
+        "hint": "Nurodykite, kaip dažnai plaunate plaukus.",
+        "done": "{{name}} nustatyta",
+        "action": "Nustatyti plaukų priežiūrą"
+      },
+      "hide": "Slėpti",
+      "hideLabel": "Slėpti paruošimo kortelę",
+      "setTitle": "Viskas paruošta",
+      "setBody": "Produktai, rutina ir plaukų priežiūra įvesti. Šiandien rodys, ką reikia atlikti kasdien.",
+      "seeToday": "Rodyti šiandieną"
+    },
+    "optional": {
+      "title": "Nebūtina",
+      "photo": {
+        "title": "Savaitės progreso nuotrauka",
+        "hint": "Viena nuotrauka per savaitę parodo, kaip keičiasi oda."
+      },
+      "avoid": {
+        "title": "Vengtinos sudedamosios dalys",
+        "hint": "Jų turintys produktai gauna raudoną žymą Vengti."
+      }
+    },
+    "explain": {
+      "and": "ir",
+      "streak": {
+        "title": "Odos serija",
+        "current_one": "Jūsų odos serija: {{count}} diena.",
+        "current_few": "Jūsų odos serija: {{count}} dienos.",
+        "current_many": "Jūsų odos serija: {{count}} dienos.",
+        "current_other": "Jūsų odos serija: {{count}} dienų.",
+        "best_one": "Geriausia: {{count}} diena.",
+        "best_few": "Geriausia: {{count}} dienos.",
+        "best_many": "Geriausia: {{count}} dienos.",
+        "best_other": "Geriausia: {{count}} dienų.",
+        "counts": "Diena įskaitoma, kai atliekate jai nustatytą odos rutiną. Užtenka A arba B.",
+        "skipped": "Dienos, kai nieko nenustatyta, praleidžiamos.",
+        "today": "Šiandiena serijos niekada nenutraukia. Ji įskaitoma, kai baigiate.",
+        "restart": "Ankstesnė diena su nustatyta, bet neatlikta rutina seriją pradeda iš naujo. Geriausias rezultatas lieka.",
+        "hair": "Plaukų serija skaičiuoja plovimus, atliktus laiku arba anksčiau."
+      },
+      "ab": {
+        "title": "{{name}}: A ar B",
+        "options": "{{names}} abi nustatytos šiandienai. Tai pasirinkimai: atliekate vieną iš jų.",
+        "notMissed": "Atlikus bet kurią, paros metas {{name}} atliktas. Kita nelaikoma praleista.",
+        "remembered": "Jūsų pasirinkimas įsimenamas {{weekdays}}. Jį galite keisti iki pirmo pažymėjimo.",
+        "neverCompared": "Jos niekada netikrinamos viena su kita dėl konfliktų."
+      },
+      "conflict": {
+        "title": "Kodėl šis įspėjimas",
+        "pair": "{{first}} ({{firstRoutine}}) ir {{second}} ({{secondRoutine}}) yra konfliktuojanti pora.",
+        "days": "Jie susitinka: {{days}}.",
+        "daysMild": "Jie kartais susitinka: {{days}}, kai reikia kas kelias dienas atliekamo žingsnio.",
+        "alternatives": "A ir B rutinos tuo pačiu paros metu niekada nelyginamos viena su kita.",
+        "editRoutine": "Redaguoti rutiną",
+        "seeRule": "Rodyti taisyklę"
+      },
+      "mild": {
+        "title": "Švelnus konfliktas",
+        "step_one": "{{product}} naudojamas kas {{count}} dieną, todėl pora susitinka tik kai kuriomis dienomis.",
+        "step_few": "{{product}} naudojamas kas {{count}} dienas, todėl pora susitinka tik kai kuriomis dienomis.",
+        "step_many": "{{product}} naudojamas kas {{count}} dienos, todėl pora susitinka tik kai kuriomis dienomis.",
+        "step_other": "{{product}} naudojamas kas {{count}} dienų, todėl pora susitinka tik kai kuriomis dienomis.",
+        "generic": "Vienas iš žingsnių atliekamas kas kelias dienas, todėl pora susitinka tik kai kuriomis dienomis.",
+        "thoseDays": "Tomis dienomis žyma yra įprastas Konfliktas.",
+        "noStrength": "Švelnumas kyla iš žingsnių tvarkaraščių. Taisyklės savo stiprumo neturi."
+      }
+    }
+  },
   "products": {
     "errors": {
       "nameRequired": "Įveskite pavadinimą.",
