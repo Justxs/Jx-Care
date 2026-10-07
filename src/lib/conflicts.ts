@@ -260,3 +260,18 @@ export function productsInConflict(hits: readonly ConflictHit[]): Set<number> {
   }
   return ids;
 }
+
+/** Rule id → the routines it fires in (either side), for "In 2 routines" (S3). */
+export function routinesPerRule(hits: readonly ConflictHit[]): Map<number, Set<number>> {
+  const out = new Map<number, Set<number>>();
+  for (const h of hits) {
+    let set = out.get(h.ruleId);
+    if (!set) {
+      set = new Set();
+      out.set(h.ruleId, set);
+    }
+    set.add(h.a.routineId);
+    set.add(h.b.routineId);
+  }
+  return out;
+}

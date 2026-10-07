@@ -1,3 +1,3 @@
-import { IngredientsScreen } from '@/features/ingredients/screens/IngredientsScreen';
+import { IngredientsScreen } from '@/features/conflicts/screens/IngredientsScreen';
 
 export default IngredientsScreen;

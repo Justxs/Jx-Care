@@ -1,3 +1,3 @@
-import { ConflictsScreen } from '@/features/ingredients/screens/ConflictsScreen';
+import { ConflictsScreen } from '@/features/conflicts/screens/ConflictsScreen';
 
 export default ConflictsScreen;

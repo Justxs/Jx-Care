@@ -4,6 +4,7 @@ import {
   productsInConflict,
   productTokens,
   routineConflictSummary,
+  routinesPerRule,
   routinesWithConflicts,
   ruleMatches,
   weeklyConflicts,
@@ -238,5 +239,27 @@ describe('dayConflicts', () => {
         '2026-10-05',
       ),
     ).toEqual([]);
+  });
+});
+
+describe('routinesPerRule', () => {
+  it('collects the routines each rule fires in, never counting A/B alternates', () => {
+    const hits = weeklyConflicts(
+      input({
+        routines: [
+          routine({ id: 1, timeOfDay: 'morning', sortTime: '07:00' }),
+          routine({ id: 2 }),
+          routine({ id: 3 }),
+        ],
+        // Retinol in the morning, glycolic in evening A; evening B holds salicylic only.
+        steps: [step(1, 1, 100), step(2, 2, 200), step(3, 3, 300)],
+        rules: [retinolVsGlycolic, retinoidsVsAcids, { ...retinolVsGlycolic, id: 3, rightId: 99 }],
+      }),
+    );
+    const perRule = routinesPerRule(hits);
+    expect([...(perRule.get(1) ?? [])].sort()).toEqual([1, 2]);
+    expect([...(perRule.get(2) ?? [])].sort()).toEqual([1, 2, 3]);
+    // Rule 3 names an ingredient no product has.
+    expect(perRule.get(3)).toBeUndefined();
   });
 });

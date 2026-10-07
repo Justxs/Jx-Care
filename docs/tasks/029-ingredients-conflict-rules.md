@@ -63,4 +63,25 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Where it lives.** Everything is in `src/features/conflicts/` as the scope lists. The S2/S3 placeholders in `src/features/ingredients/screens/` are deleted and `app/(tabs)/settings/ingredients.tsx` and `conflicts.tsx` now render the new screens. The S4 placeholder (`AvoidListScreen`) stays for task 030.
+- **Extra components** beyond the scope list: `IngredientSheet` (rename, group, products, delete), `GroupSheet` (group editor) and `MergeSheet` (choose the name to keep), all in `components/`.
+- **"In N routines"** counts the distinct routines on either side of the rule's hits from `weeklyConflicts` (a pure `routinesPerRule()` added to `src/lib/conflicts.ts`, tested). A/B alternates are never compared, so they never add to the count. The editor's "Affects N routines" is the same count for the saved rule (`ruleRoutineCount`).
+- **Rule list freshness.** Routine edits (task 022's hooks) don't invalidate `qk.conflicts.*`, so `useRules()` re-reads on every mount (`refetchOnMount: 'always'`). Task 030 should invalidate `qk.conflicts.all` from `onRoutineChanged` (or the routine hooks) once its warnings depend on it. `useConflictInput()` (`qk.conflicts.input`) is ready for 030.
+- **Rules are unordered pairs.** `saveRule` refuses equal sides (`SameSidesError`) and a second rule with the same two sides either way round (`DuplicateRuleError`, shown as "This rule already exists."). Notes are tidied and cut at 120 characters; an empty note is null.
+- **Rename into an existing name** merges into the existing ingredient, which takes the typed spelling. **Merge** keeps `keepId`'s group, or the first merged one's when it has none; product links that would repeat are dropped, rules that become "X × X" are deleted, repeated rule pairs and avoid items keep the oldest. The merge sheet defaults to the name in the most products.
+- **Delete ingredient** shows only when nothing uses it (no product, rule or avoid item); otherwise the sheet says why it can't be deleted. Ingredients have no Fab: they come from products.
+- **Groups.** An ingredient has one group, so adding a member in the group editor moves it from its old group (the picker says "In Retinoids" for those). New group is the Fab on the Groups segment. Delete group warns with the member, rule and avoid counts as saved.
+- **Common rules.** Group names and notes come from i18n at creation time. A group is reused when one already has its name in any app language (EN or LT), so switching language between runs adds nothing. Members already in another group of the person's are left there (only ungrouped ones join). Rules are skipped when the pair exists, so a deleted common rule comes back on the next run. Ingredient display names are the INCI names ("Retinol", "3-O-ethyl ascorbic acid"), the same in both languages.
+- **Empty S3** hides the New rule Fab: the empty state already has Add common rules (filled) and Add a rule (ghost), and a screen keeps one filled accent button. A toast confirms "Added 3 common rules".
+- **Side pickers** open inline under their field (search plus up to 30 results, groups first and tagged "Group") instead of a second stacked sheet; the group editor reuses the same results list for "Add ingredient". After Save the pickers and note lock, the callout opens with `Collapsible`, and the footer button becomes Done.
+- **Group icon:** Lucide `Layers` (added to `src/components/ui/icon.tsx` as `layers`). A group side reads "Retinoids group" to screen readers.
+- **LT counts** use the "Produktuose: 4" / "Rutinose: 2" form for every plural so no locative-plural genitive phrasing is needed.
+- **Ingredient chips' conflict flag** (`IngredientPills.conflict`) is left for task 030, as the task doesn't ask for it.
+
+### Check on a real device
+
+- S3 editor: after Save rule, the "Affects 2 routines" callout grows the dynamic-height sheet smoothly (no jump or snap), and Done closes it.
+- Inline side pickers in the rule sheet: the search field gets focus and the keyboard doesn't cover the results; the sheet grows and shrinks without jumping as the results open and close.
+- The Group select (menu) inside the ingredient sheet opens above the sheet, and the Delete dialogs (rule, ingredient, group) show above their sheets.
+- Tapping a product in the ingredient sheet closes the sheet and opens P2 in the Products tab.
+- Light and dark, 360 pt wide, and Lithuanian: rule rows with long group names wrap ("Retinoidai × AHA/BHA"), the group chip on ingredient rows truncates, the selection bar with Merge sits above the tab bar, and the last rule clears the New rule Fab.
