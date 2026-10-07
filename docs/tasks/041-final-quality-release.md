@@ -45,4 +45,35 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+### Audit
+
+What could be checked without a phone was checked in code and tests; the rest is in [docs/device-checklist.md](../device-checklist.md), one walk-through for the preview build.
+
+1. **Copy:** a script read all 1341 EN and 1477 LT strings (LT has more plural forms) for em and en dashes, exclamation marks, emoji and "..." (none), Lithuanian values left in English (only format strings like `{{count}} min`, the app name and units), and Title Case (none, only proper nouns and sentence starts). The spec's empty-state table matches word for word. Unused keys removed: `hair.picker.*` (the hair picker now uses the shared product picker), `dev.time`, `forms.errors.dateRequired`, `forms.errors.monthsNumber`. The `dev.*` strings stay for the development-only component gallery (`/dev/components`), which `overlays.test.tsx` also uses.
+2. **Lithuanian layout:** needs the phone (largest font at 360 × 800). Every screen has a Lithuanian long-text story in Storybook for a quick look.
+3. **Themes:** `grep -rE "#[0-9a-fA-F]{3,6}" src` finds only `src/theme/colors.ts` (and notification ids like `#abc` in tests). Light and dark on the phone: checklist.
+4. **Layout shift:** covered by each screen's tests (skeletons at final size, reserved helper lines, floating toasts and wait bar, Today prefetched before unlock). The visual pass is on the checklist.
+5. **Motion:** Reanimated skips layout animations and timings when Reduce Motion is on (its default `ReduceMotion.System`), so no slide or scale runs. Two places now fade for 100 ms instead of appearing at once: the toast (was a fade-down) and the route sheet `ModalSheet` (was a slide-up). Counters already jump (`useCountUp` with `allowCounting`).
+6. **Accessibility:** the Storybook smoke test now also fails when a control a screen reader can reach has no role or no name, across every story. It found two problems, both fixed:
+   - The Today setup card was one accessible element (a `Pressable` for the long-press Hide), so VoiceOver and TalkBack could not reach the buttons inside. It is no longer accessible itself; the card's title carries the Hide action.
+   - Every form label was a role-less focus stop (rn-primitives `Label` is a pressable). Labels are no longer focusable; each control already carries its label.
+   Touch targets, contrast and how each screen reads aloud need the phone: checklist.
+7. **Empty states:** all nine from the spec's table, exact copy and action (checked against `en.json`, and each list screen has an Empty story).
+8. **Notifications:** `src/notifications/__tests__/load.test.ts` seeds 80 products, 4 routines and 3 hair tasks: 60 pending at most, a second sync changes nothing, and it tops up after delivered notifications are gone. Taps after unlock and actions with the app closed: checklist.
+9. **Privacy:** the app switcher overlay is a blur with the logo (task 018); progress photos are saved in the app's own folder, never the gallery (task 035); backups exclude the PIN, recovery answer and biometrics flag, which live in secure storage (task 040 tests).
+10. **Performance:** needs a release build on a mid-range Android phone: checklist.
+
+`src/lib` coverage: 99.8% statements, 91% branches, 100% functions and lines.
+
+Not done, on purpose:
+
+- A Clear action on DateField (task 014 note) waits for a reason from the phone; switching Yes/Not yet clears the printed expiry on the short form.
+- The shopping list's add-item sheet keeps its own product search rather than the shared product picker; it adds names that aren't products too.
+
+### Release builds
+
+- `eas.json` has `development` (dev client, APK), `preview` (internal, APK, auto-incremented build numbers) and `production`; `appVersionSource: remote`, version 1.0.0. `expo-dev-client` is installed.
+- iOS permission texts (camera, photo library, Face ID) are in English in `app.json` with Lithuanian through `locales/lt.json` (`CFBundleAllowMixedLocalizations`). Notifications have no iOS usage text.
+- Icons, splash and adaptive icon are the frog from docs/brand.md (task 001); the notification icon is the white frog (task 020).
+- README has the build commands.
+- **Not built yet:** the `preview` build needs Justas's Expo account. `npx eas-cli login` (or an `EXPO_TOKEN`) can't be done from here, and the first build also links the project (`eas init`). The iOS build needs his Apple account. So this task stays open until a preview APK has run the checklist's end-to-end walk on a phone.
