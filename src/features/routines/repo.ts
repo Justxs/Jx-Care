@@ -563,9 +563,10 @@ export function tickSteps(
         .all()
         .map((s) => s.id),
     );
-    const snapshot = log && log.dueStepIds.length > 0 ? log.dueStepIds : [...dueStepIds];
-    const liveSnapshot = snapshot.filter((id) => live.has(id));
-    const due = liveSnapshot.length > 0 ? liveSnapshot : snapshot;
+    // As `dayRoutine` reads it: the snapshot minus deleted steps, or the caller's due steps when
+    // none of the snapshot is left.
+    const fromLog = (log?.dueStepIds ?? []).filter((id) => live.has(id));
+    const due = fromLog.length > 0 ? fromLog : dueStepIds.filter((id) => live.has(id));
     const complete = due.length > 0 && due.every((id) => doneIds.includes(id));
     const values = {
       dueStepIds: due,

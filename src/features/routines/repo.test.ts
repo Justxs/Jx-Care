@@ -273,6 +273,22 @@ describe('ticks', () => {
       completedAt: 7,
     });
   });
+
+  it('a snapshot whose steps were all replaced falls back to the steps due now', () => {
+    const db = createTestDb();
+    const id = addRoutine(db, { steps: [step(), step()] });
+    const [s1, s2] = stepIds(db, id);
+    tickSteps(db, id, [s1!], MON, true, [s1!, s2!]);
+    saveRoutine(db, routineInput({ id, steps: [step()] }));
+    const r = getRoutineDay(db, id, MON, WARN)!;
+    const [s3] = r.progress.dueStepIds;
+    expect(r.progress).toMatchObject({ due: 1, done: 0 });
+    // Finishing the new step completes the day in the log too, not only on screen.
+    expect(tickSteps(db, id, [s3!], MON, true, r.progress.dueStepIds, 9)).toMatchObject({
+      dueStepIds: [s3],
+      completedAt: 9,
+    });
+  });
 });
 
 function skinDay(db: Db, day: string): boolean {
