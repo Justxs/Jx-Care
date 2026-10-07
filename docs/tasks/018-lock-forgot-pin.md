@@ -8,7 +8,7 @@ The app is locked on every open and after time away, unlocks with the PIN or bio
 
 ## Scope
 
-In: `npx expo install expo-blur`. Files: `src/features/security/screens/LockScreen.tsx`, `ForgotPinScreen.tsx`, `src/features/security/lock.ts`, `src/features/security/resetApp.ts`, `components/PrivacyOverlay.tsx`.
+In: `pnpm expo install expo-blur`. Files: `src/features/security/screens/LockScreen.tsx`, `ForgotPinScreen.tsx`, `src/features/security/lock.ts`, `src/features/security/resetApp.ts`, `components/PrivacyOverlay.tsx`.
 
 ### Locking (`lock.ts`)
 
@@ -51,7 +51,7 @@ Out:
 - [ ] The Forgot PIN answer is hidden as typed and the eye button shows it.
 - [ ] Forgot PIN with the right answer sets a new PIN; reset deletes everything (test that `resetApp` calls every cleanup with fakes) and lands on O1; the dialog shows real counts.
 - [ ] A notification tapped while locked opens its screen right after unlock.
-- [ ] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [ ] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Decisions
 

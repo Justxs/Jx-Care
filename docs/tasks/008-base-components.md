@@ -8,7 +8,7 @@ The small building blocks every screen uses, built on rn-primitives and styled o
 
 ## Scope
 
-In: `npx expo install react-native-svg expo-haptics`, `npm install lucide-react-native@latest` and the `@rn-primitives/*` packages each component needs (`slot`, `checkbox`, `radio-group`, `switch`, `toggle`, `toggle-group`, `progress`, `separator`, `label`, `portal`). The React Native Reusables CLI (`npx @react-native-reusables/cli@latest add <name>`) may scaffold a component, but restyle it to our tokens and props (Reusables uses `bg-accent` for pressed rows; ours use `bg-accent-soft`).
+In: `pnpm expo install react-native-svg expo-haptics`, `pnpm add lucide-react-native@latest` and the `@rn-primitives/*` packages each component needs (`slot`, `checkbox`, `radio-group`, `switch`, `toggle`, `toggle-group`, `progress`, `separator`, `label`, `portal`). The React Native Reusables CLI (`pnpm dlx @react-native-reusables/cli@latest add <name>`) may scaffold a component, but restyle it to our tokens and props (Reusables uses `bg-accent` for pressed rows; ours use `bg-accent-soft`).
 
 Each component lives in `src/components/ui/<name>.tsx` (base) or `src/components/<Name>.tsx` (app composites below), exports typed props matching [components.d.ts](../design/components.d.ts) (rename `aria-label` to React Native's `accessibilityLabel`), and follows its section in [components.md](../design/components.md) for sizes, tokens and states.
 
@@ -37,7 +37,7 @@ Each component lives in `src/components/ui/<name>.tsx` (base) or `src/components
 | `StepDots` | Onboarding progress, **5** steps (not 3); current dot widens to 24 px; fixed-height row; exposed as progressbar "Step 2 of 5" |
 | `StreakChip` | `calendar-check` icon (never a flame), number, area word ("12 skin"); area colours; `tabular-nums`; min width. With `onPress` it is a button with `hitSlop` to 44 pt that opens the streak explain sheet; the spoken label names the streak |
 | `StreakCard` | Half-width card: `calendar-check` icon, area word, current (`text-display`), "Best 21 days". With `restarted` the line reads "Started again. Your best is still 21 days." |
-| `ProductThumb` | 48 × 48 `rounded-sm`; photo with `expo-image` (`npx expo install expo-image`), else `subtle` square with the category glyph (`pipette` serum and oils, `droplet` cleanser and toner, `sun` SPF, `spray-can` shampoo and styling, `flask-round` the rest); box reserved before the image loads |
+| `ProductThumb` | 48 × 48 `rounded-sm`; photo with `expo-image` (`pnpm expo install expo-image`), else `subtle` square with the category glyph (`pipette` serum and oils, `droplet` cleanser and toner, `sun` SPF, `spray-can` shampoo and styling, `flask-round` the rest); box reserved before the image loads |
 | `PhotoTile` | 3:4 box reserved, neutral placeholder, `expo-image` fade 200 ms, `selected`, `add` slot |
 | `Fab` | New in v16. The one add action on a list screen: a 56 pt labelled pill (`bg-accent`, `text-on-accent`, `shadow-raised`), `icon` default `plus`, label verb first ("Add product", "New routine"). Sits bottom right, 16 pt from the edge, above the tab bar; it counts as the screen's one filled accent button. Callers hide it while a selection bar or a sheet is open. Lists keep 96 pt of space at the end so the last row scrolls clear of it; export that value so lists reuse it |
 | `PinPad` | Four dots (empty dots `border-strong`), 76 px `surface` keys with `title-l` digits, delete key labelled "Delete last digit", optional biometrics key; `shake()` method (300 ms) for wrong PIN; `disabled` with the reason in the reserved line under the dots |
@@ -63,7 +63,7 @@ Out:
 - [ ] `Progress` animates `scaleX`, not width (code review); `ConflictTag` and `Badge` always show a word.
 - [ ] `Checkbox` is square and `RadioList` marks are round; a `StreakChip` with `onPress` is a button with a 44 pt hit area; `Fab` always shows its label.
 - [ ] No text uses opacity for state (grep for `opacity` in `src/components` shows only pressed and disabled).
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

@@ -8,7 +8,7 @@ The form fields, overlays and feedback pieces, wired to TanStack Form and the to
 
 ## Scope
 
-In: `npm install @tanstack/react-form@latest zod@latest @gorhom/bottom-sheet@latest`, `npx expo install react-native-gesture-handler react-native-keyboard-controller @react-native-community/datetimepicker`, and `@rn-primitives/alert-dialog`, `select`, `dropdown-menu`.
+In: `pnpm add @tanstack/react-form@latest zod@latest @gorhom/bottom-sheet@latest`, `pnpm expo install react-native-gesture-handler react-native-keyboard-controller @react-native-community/datetimepicker`, and `@rn-primitives/alert-dialog`, `select`, `dropdown-menu`.
 
 ### Form fields (`src/components/ui/`)
 
@@ -54,7 +54,7 @@ Out:
 - [ ] Sheets open with the spring and no overshoot; a dirty sheet asks before closing (test the dirty guard logic).
 - [ ] Toasts: one at a time, Undo calls the handler, gone after 8 s, and kept until dismissed while a screen reader is on (fake timers test with a mocked `AccessibilityInfo`).
 - [ ] A `secret` Input hides the text and the eye button shows and hides it, with the right spoken label.
-- [ ] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [ ] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Decisions
 

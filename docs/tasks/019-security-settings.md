@@ -27,7 +27,7 @@ Out:
 - [x] Changing the recovery question requires the PIN; the new answer works in Forgot PIN.
 - [x] Biometrics switch is hidden without hardware, and needs a successful prompt to turn on.
 - [x] Auto-lock choice is saved and used.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

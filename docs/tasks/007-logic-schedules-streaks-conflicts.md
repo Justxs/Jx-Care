@@ -99,7 +99,7 @@ Out:
   - an avoid item that is a group matches a product through one of its ingredients.
 - [ ] Coverage of the files from this task is at least 95% of lines.
 - [ ] The streak performance test passes.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

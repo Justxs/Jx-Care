@@ -1,5 +1,5 @@
 // Writes src/features/settings/licences.json: name, version and licence of every runtime
-// dependency in package.json. Run with `npm run licences` after adding or updating packages.
+// dependency in package.json. Run with `pnpm run licences` after adding or updating packages.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 

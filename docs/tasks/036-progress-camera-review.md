@@ -8,7 +8,7 @@ Taking this week's progress photos with last week's photo as a guide, rating the
 
 ## Scope
 
-In: `npx expo install expo-camera`; add the `expo-camera` plugin with camera permission text (EN "Jx Care uses the camera for your weekly progress photos. They stay in the app."). Files: `src/features/progress/screens/CameraScreen.tsx`, `ReviewScreen.tsx`, `components/WeeklyPhotoRow.tsx`, `reminders.ts`, `captureSession.ts` (TanStack Store holding the photos taken in this session until saved).
+In: `pnpm expo install expo-camera`; add the `expo-camera` plugin with camera permission text (EN "Jx Care uses the camera for your weekly progress photos. They stay in the app."). Files: `src/features/progress/screens/CameraScreen.tsx`, `ReviewScreen.tsx`, `components/WeeklyPhotoRow.tsx`, `reminders.ts`, `captureSession.ts` (TanStack Store holding the photos taken in this session until saved).
 
 ### C4 Progress camera (`/progress/camera?area=skin`)
 
@@ -41,7 +41,7 @@ Out:
 - [ ] The photo row in Today's Check-in card shows on the right day until taken or skipped; Skip this week is a text link and hides the row for the week.
 - [ ] The camera uses only the `camera-*` tokens and looks the same in light and dark.
 - [ ] Planner tests: weekly reminder on the chosen weekday and time, skipped when taken or skipped, none when off.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Decisions
 

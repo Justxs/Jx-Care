@@ -40,7 +40,7 @@ Out:
 - [ ] Expired and finished products show the problem card; Pick another replaces the product in the routine.
 - [ ] Finishing shows the Routine done screen with the streak counting up ("Started again" after a break), what is next and Back to Today; leaving mid-way keeps ticks.
 - [ ] The conflict tag and "Why?" open the conflict sheet.
-- [ ] No text uses opacity; light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] No text uses opacity; light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

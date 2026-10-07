@@ -8,7 +8,7 @@ The date and product rules as pure, fully tested functions in `src/lib/`. No Rea
 
 ## Scope
 
-In: `npm install date-fns@latest`. Each module gets a `*.test.ts` next to it.
+In: `pnpm add date-fns@latest`. Each module gets a `*.test.ts` next to it.
 
 ### `src/lib/appDay.ts`
 
@@ -64,7 +64,7 @@ Out:
 - [ ] Tests cover every rule listed, including: printed date earlier than opened + PAO, PAO earlier than printed date, opened with no PAO and no printed date (`'nodate'`), unopened with a printed date inside the warning window (`'expiring'`), unopened far from expiry (`'unopened'`), expiring exactly on the warning boundary, expiring today (0 days, `'expiring'`), expired yesterday.
 - [ ] `splitPastedText` tests: a comma list from a pack splits; a line with one comma doesn't; commas in parentheses don't split; mixed pasted text with some lines split and some not; the result run through `parseIngredientLines` drops blanks and duplicates.
 - [ ] Coverage of `src/lib/` files from this task is at least 95% of lines.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

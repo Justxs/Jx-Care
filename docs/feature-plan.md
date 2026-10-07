@@ -181,7 +181,7 @@ Progress photos are a screen of their own, opened from a row under the Calendar 
 
 ## Tech stack
 
-Expo-managed React Native with TypeScript on the newest versions, so Android and iOS build from one codebase. Expo packages are added with `npx expo install` so they match the SDK; everything else starts on its latest release. Versions below are the npm latest on 2026-10-06.
+Expo-managed React Native with TypeScript on the newest versions, so Android and iOS build from one codebase. Expo packages are added with `pnpm expo install` so they match the SDK; everything else starts on its latest release. Versions below are the npm latest on 2026-10-06.
 
 | Need | Pick | Why |
 | --- | --- | --- |

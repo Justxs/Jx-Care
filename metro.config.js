@@ -16,7 +16,7 @@ config.resolver.blockList = [
 ];
 
 // On-device Storybook (docs/storybook.md): only with EXPO_PUBLIC_STORYBOOK_ENABLED=true
-// (`npm run storybook`). Otherwise every Storybook module resolves to an empty one.
+// (`pnpm storybook`). Otherwise every Storybook module resolves to an empty one.
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
 
 if (storybookEnabled) {

@@ -37,12 +37,12 @@ Out:
 - [ ] Changing language in Preferences switches the whole app immediately and survives a restart.
 - [ ] Changing currency reformats a sample price (use the formatter test from task 003 plus a render test of the Preferences screen).
 - [ ] Light, dark and 360 pt checked.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 
 - **Rows:** each Settings row has a bare `ink-muted` icon (flask, triangle, ban, bell, lock, languages, coins, camera, download, rotate, info, list) because the groups mix very different things. Language, Currency and Progress photos all push Preferences. Backup shows the last backup date or "Never". Reset app opens a placeholder AlertDialog that says nothing was deleted (`TODO(018)`).
-- **Licences** are generated: `npm run licences` (`scripts/licences.mjs`) writes name, version and licence of every runtime dependency to `src/features/settings/licences.json`, which the new `settings/licences` route lists. Re-run it after adding or updating packages (task 041 should run it before the release build).
+- **Licences** are generated: `pnpm run licences` (`scripts/licences.mjs`) writes name, version and licence of every runtime dependency to `src/features/settings/licences.json`, which the new `settings/licences` route lists. Re-run it after adding or updating packages (task 041 should run it before the release build).
 - **Version** comes from `Constants.expoConfig.version`.
 - **Language** is a `ToggleGroup` (Lietuvių / English, names never translated) calling `setLanguage`, which updates i18next, the store and the settings row at once. `LANGUAGE_NAMES` is exported for onboarding.
 - **Currency** opens a sheet (`SelectField mode="sheet"`) because the list is long: EUR, USD, GBP, PLN first, then every other code from `Intl.supportedValuesOf('currency')` sorted, or CHF, CZK, DKK, NOK, SEK when the engine lacks it (Hermes may). Labels add the currency name in the app language through `Intl.DisplayNames` when available ("USD · US Dollar"), else just the code. Saving goes through `useUpdateSettings`, so every `useFormat().money` re-renders with the new code.

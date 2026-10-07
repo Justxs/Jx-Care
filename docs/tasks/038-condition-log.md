@@ -41,7 +41,7 @@ Out:
 - [x] Tapping a chip on Today saves immediately and survives a restart; T4 saves states and note for any past day.
 - [x] Today shows the seven skin chips in the standard order and "Hair and note"; T4's Skin / Hair switch shows the picked count on each side and the five hair tags.
 - [x] Condition view shows chips and the legend; spoken labels name the states.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes. (`npm run check` passes; the visual checks need a device, listed under Decisions.)
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes. (`pnpm check` passes; the visual checks need a device, listed under Decisions.)
 
 ## Decisions
 

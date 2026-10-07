@@ -8,7 +8,7 @@ One local-notification layer that every feature uses: permission, Android channe
 
 ## Scope
 
-In: `npx expo install expo-notifications expo-background-task expo-task-manager`; add the `expo-notifications` plugin to `app.json` with the notification icon (a white frog silhouette from `assets/brand/logo-white.svg` rendered to a 96 × 96 PNG, `assets/images/notification-icon.png`) and colour `#B83A6E`. Files in `src/notifications/`.
+In: `pnpm expo install expo-notifications expo-background-task expo-task-manager`; add the `expo-notifications` plugin to `app.json` with the notification icon (a white frog silhouette from `assets/brand/logo-white.svg` rendered to a 96 × 96 PNG, `assets/images/notification-icon.png`) and colour `#B83A6E`. Files in `src/notifications/`.
 
 ### Permission (`permission.ts`)
 
@@ -63,7 +63,7 @@ Out:
 - [x] Planner diff tests with the fake adapter: new items are scheduled; an item whose `fireAt` or text changed is cancelled and rescheduled; removed items are cancelled; items beyond 14 days or past are dropped; more than 60 items keeps the soonest 60; a second identical `sync` makes no calls; `syncEntity` touches only that entity.
 - [x] Without permission, `sync` cancels all and schedules none.
 - [ ] Tapping a notification while locked opens the target screen right after the PIN (manual check on a device, described under Decisions with what you tested).
-- [x] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [x] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Decisions
 

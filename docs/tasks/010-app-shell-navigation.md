@@ -63,8 +63,8 @@ Out:
 - [ ] Every route in the table opens with the presentation and transition listed (manual walk-through on one platform, note it under Decisions); no white flash between screens in dark mode.
 - [ ] Tab switches cross-fade in 150 ms and keep each tab's stack and scroll position.
 - [ ] Tab labels fit in Lithuanian at 360 pt without truncation.
-- [ ] `npx uri-scheme open jxcare://products/1 --ios` (or the Android equivalent) opens the product placeholder.
-- [ ] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [ ] `pnpm dlx uri-scheme open jxcare://products/1 --ios` (or the Android equivalent) opens the product placeholder.
+- [ ] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Decisions
 
@@ -75,4 +75,4 @@ Out:
 - **Placeholders:** every screen is a component in `src/features/<area>/screens/` rendering `PlaceholderScreen` (ScreenHeader, "P2 · Product", "Built in task 015.") with buttons to the screens it leads to, so the skeleton can be walked. Route files only re-export them. Titles are in `screens.*` and tab labels in `tabs.*`. `product-form` reads `id` and `fromShoppingItem`; with `id` it says Edit product.
 - **Hair task done** (`hair/done/[taskId]`) is a `transparentModal` route rendering `ModalSheet` (`src/components/ModalSheet.tsx`): a fading backdrop and a `SheetFrame` panel that slides up, with the same dirty guard as in-place sheets. `SheetFrame` takes a `className`.
 - **Tests:** `routes.test.ts` builds Expo Router's route tree from the real `app/` folder, checks every path in the table exists and that no two screens share a path (Expo Router only reports that at runtime). `navigation.test.tsx` renders the real layouts with `renderRouter`: a first launch lands on Welcome and `/products/12` opens the product placeholder once settings exist. Jest now transforms `standard-navigation`, and the Reanimated mock is patched at `react-native-reanimated/mock` because expo-router's testing library mocks Reanimated again from there.
-- **Device check needed:** walking every route for the listed transitions, no white flash in dark mode, the tab cross-fade and kept scroll position, Lithuanian tab labels at 360 pt, and `npx uri-scheme open jxcare://products/1 --ios` (or `adb shell am start -d jxcare://products/1`). I couldn't run a simulator here.
+- **Device check needed:** walking every route for the listed transitions, no white flash in dark mode, the tab cross-fade and kept scroll position, Lithuanian tab labels at 360 pt, and `pnpm dlx uri-scheme open jxcare://products/1 --ios` (or `adb shell am start -d jxcare://products/1`). I couldn't run a simulator here.

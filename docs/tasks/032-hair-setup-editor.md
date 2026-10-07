@@ -41,7 +41,7 @@ Out:
 - [ ] The editor creates and edits washes and other care; products only for washes; preview line matches `nextDue`.
 - [ ] Rows show frequency, next due (with overdue in warning colour) and last done as a date.
 - [ ] New hair task is the Fab and Save task sits in the bottom bar; the header has no + and no Save.
-- [ ] Empty state and setup reachable from Today; light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Empty state and setup reachable from Today; light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

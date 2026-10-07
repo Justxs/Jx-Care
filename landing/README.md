@@ -2,27 +2,27 @@
 
 The website for Jx Care: a landing page (`/`) and a features page (`/features`) in Lithuanian and English, light and dark, with a drawn Today screen and sample cards instead of screenshots. It follows the Jx-Finance landing page (pink band in place of the blue one, scalloped edge in place of the torn receipt, "In short" facts, feature groups, sign-off and the four doors at the bottom).
 
-It is its own package, separate from the app: Vite 8, React 19 with the React Compiler, Tailwind CSS 4, i18next, TanStack Router, TanStack Store (language and theme, saved in localStorage), lucide-react and Figtree. The app's `npm run check` ignores this folder.
+It is its own package, separate from the app: Vite 8, React 19 with the React Compiler, Tailwind CSS 4, i18next, TanStack Router, TanStack Store (language and theme, saved in localStorage), lucide-react and Figtree. The app's `pnpm check` ignores this folder.
 
 ## Run it
 
 ```sh
 cd landing
-npm install
-npm run dev        # http://localhost:5173
-npm run storybook  # http://localhost:6006
+pnpm install
+pnpm dev        # http://localhost:5173
+pnpm storybook  # http://localhost:6006
 ```
 
 ## Check it
 
 ```sh
-npm run check      # typecheck, oxlint, oxfmt and vitest
+pnpm check      # typecheck, oxlint, oxfmt and vitest
 ```
 
 ## Build it
 
 ```sh
-npm run build      # static site in landing/dist
+pnpm build      # static site in landing/dist
 ```
 
 Serve `dist/` from the root of a domain. The build also writes `404.html` (a copy of `index.html`), so hosts such as GitHub Pages open `/features` directly; on other hosts, send unknown paths to `index.html`.

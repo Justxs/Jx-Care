@@ -25,7 +25,7 @@ In:
 
 ### Release builds
 
-- `eas.json` with `development`, `preview` (internal distribution APK / ad-hoc IPA) and `production` profiles; `npx expo install expo-dev-client` for the development profile.
+- `eas.json` with `development`, `preview` (internal distribution APK / ad-hoc IPA) and `production` profiles; `pnpm expo install expo-dev-client` for the development profile.
 - Version `1.0.0`, build numbers auto-incremented by EAS (`appVersionSource: remote`).
 - App name, icons, splash and adaptive icon from docs/brand.md checked on both platforms.
 - iOS permission texts (camera, Face ID, notifications) in English, with Lithuanian through `locales` in app.json (`ios.infoPlist` per language).
@@ -39,7 +39,7 @@ Out:
 ## Acceptance criteria
 
 - [ ] Every audit item above is checked and its findings fixed or listed with a reason.
-- [ ] `npm run check` passes and the coverage of `src/lib` stays at least 95%.
+- [ ] `pnpm check` passes and the coverage of `src/lib` stays at least 95%.
 - [ ] A preview Android build installs and runs through onboarding, adding a product, a routine, ticking it, a hair wash, a weekly photo and a backup round trip.
 - [ ] README updated; all tasks in docs/tasks/README.md marked done.
 
@@ -76,4 +76,4 @@ Not done, on purpose:
 - iOS permission texts (camera, photo library, Face ID) are in English in `app.json` with Lithuanian through `locales/lt.json` (`CFBundleAllowMixedLocalizations`). Notifications have no iOS usage text.
 - Icons, splash and adaptive icon are the frog from docs/brand.md (task 001); the notification icon is the white frog (task 020).
 - README has the build commands.
-- **Skipped for now (Justas, 2026-10-07):** the `preview` build and the phone walk-through. When picked up: `npx eas-cli login` (or an `EXPO_TOKEN`), the first build links the project (`eas init`), the iOS build needs Justas's Apple account, then walk [docs/device-checklist.md](../device-checklist.md). The task is marked deferred in the README until these two acceptance criteria are met; everything else is done.
+- **Skipped for now (Justas, 2026-10-07):** the `preview` build and the phone walk-through. When picked up: `pnpm dlx eas-cli login` (or an `EXPO_TOKEN`), the first build links the project (`eas init`), the iOS build needs Justas's Apple account, then walk [docs/device-checklist.md](../device-checklist.md). The task is marked deferred in the README until these two acceptance criteria are met; everything else is done.

@@ -32,7 +32,7 @@ Out:
 - [x] Killing the app on O3 and reopening starts at O1 with nothing saved (test the draft store and the gate logic).
 - [x] The language choice is a RadioList; the recovery answer is hidden as typed and the eye button shows it.
 - [ ] Back works on every step after O1; Lithuanian strings fit at 360 pt; light and dark checked.
-- [x] `npm run check` passes.
+- [x] `pnpm check` passes.
 
 ## Decisions
 

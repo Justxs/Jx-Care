@@ -1,0 +1,16 @@
+# pnpm settings for the app. The website in landing/ is a separate pnpm project with its own
+# lockfile, so its React version never mixes with the app's.
+
+# A flat node_modules, like npm made, so Metro, Jest and Expo autolinking find every package.
+nodeLinker: hoisted
+
+# Storybook asks for react-native-safe-area-context 5.8; it runs on the version the Expo SDK pins.
+peerDependencyRules:
+  allowAny:
+    - react-native-safe-area-context
+
+allowBuilds:
+  esbuild: true
+
+# Run package.json scripts in pnpm's own shell, so `VAR=value command` works on Windows too.
+shellEmulator: true

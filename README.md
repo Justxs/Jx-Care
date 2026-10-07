@@ -5,26 +5,27 @@ Jx Care helps one person look after their skin and hair: which products they own
 ## Run it
 
 ```sh
-npm install
-npx expo start
+npm install -g pnpm   # once per computer; the repo pins pnpm 12.9.1 in package.json
+pnpm install
+pnpm expo start
 ```
 
-The app uses native modules that are not in Expo Go, so open it in a development build (`npx expo run:android` or `npx expo run:ios`).
+The app uses native modules that are not in Expo Go, so open it in a development build (`pnpm expo run:android` or `pnpm expo run:ios`).
 
 ## Check it
 
 ```sh
-npm run check   # typecheck, lint and tests
+pnpm check   # typecheck, lint and tests
 ```
 
 ## Build it
 
-Builds run on EAS ([eas.json](eas.json)); sign in once with `npx eas-cli login`.
+Builds run on EAS ([eas.json](eas.json)); sign in once with `pnpm dlx eas-cli login`.
 
 ```sh
-npx eas-cli build --profile development --platform android   # dev client for npx expo start
-npx eas-cli build --profile preview --platform android       # installable APK
-npx eas-cli build --profile preview --platform ios           # ad-hoc IPA (needs an Apple account)
+pnpm dlx eas-cli build --profile development --platform android   # dev client for pnpm expo start
+pnpm dlx eas-cli build --profile preview --platform android       # installable APK
+pnpm dlx eas-cli build --profile preview --platform ios           # ad-hoc IPA (needs an Apple account)
 ```
 
 Version is 1.0.0; build numbers are set by EAS (`appVersionSource: remote`).
@@ -33,7 +34,7 @@ The first build asks to create the EAS project and link it (it writes the projec
 
 ## Website
 
-The landing page lives in [landing/](landing/README.md), a separate Vite + React package (`cd landing && npm install && npm run dev`).
+The landing page lives in [landing/](landing/README.md), a separate Vite + React package (`cd landing && pnpm install && pnpm dev`).
 
 ## Build plan
 

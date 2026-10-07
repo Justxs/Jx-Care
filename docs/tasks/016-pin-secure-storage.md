@@ -8,7 +8,7 @@ One tested module that owns the PIN, the recovery question and answer, biometric
 
 ## Scope
 
-In: `npx expo install expo-secure-store expo-crypto expo-local-authentication`; add the `expo-local-authentication` and `expo-secure-store` config plugins in `app.json` with an iOS `faceIDPermission` text (EN: "Unlock Jx Care with Face ID."). Files: `src/features/security/pin.ts`, `secureStore.ts`, `biometrics.ts`, `pin.test.ts`.
+In: `pnpm expo install expo-secure-store expo-crypto expo-local-authentication`; add the `expo-local-authentication` and `expo-secure-store` config plugins in `app.json` with an iOS `faceIDPermission` text (EN: "Unlock Jx Care with Face ID."). Files: `src/features/security/pin.ts`, `secureStore.ts`, `biometrics.ts`, `pin.test.ts`.
 
 ### Storage
 
@@ -56,7 +56,7 @@ Out:
 - [x] Unit tests with the in-memory store cover: weak PIN rejection; set and verify; the 5th failure locks for 30 s and refuses even a correct PIN until the time passes; the 10th failure locks for 5 min; success resets failures; recovery answer matches "  Rex " against "rex" and "Réx"; 5 wrong answers lock for 15 min; changePin with a wrong old PIN counts as a failure; resetAll clears everything.
 - [x] Lockout survives a restart (counters are stored, not in memory) — test by creating a new module instance over the same store.
 - [x] No PIN, answer or hash is ever logged or put in SQLite (review your diff for `console.log`).
-- [x] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [x] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Notes
 

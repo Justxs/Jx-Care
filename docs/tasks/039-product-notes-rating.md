@@ -27,7 +27,7 @@ Out:
 - [x] Repository tests for notes and rating functions, including clearing a rating.
 - [x] A product marked "Would buy again: No" never appears in Suggested (end-to-end test with task 034's repository).
 - [x] Notes show on P2 and on the day they were written in C2.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes. (Lithuanian strings and `npm run check` done; light, dark and 360 pt need a device, see below.)
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes. (Lithuanian strings and `pnpm check` done; light, dark and 360 pt need a device, see below.)
 
 ## Decisions
 

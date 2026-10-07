@@ -8,7 +8,7 @@ Private file storage for progress photos and the repository and hooks for weekly
 
 ## Scope
 
-In: `npx expo install expo-file-system expo-image-manipulator`. Files: `src/features/progress/files.ts`, `repo.ts`, `repo.test.ts`, `api.ts`.
+In: `pnpm expo install expo-file-system expo-image-manipulator`. Files: `src/features/progress/files.ts`, `repo.ts`, `repo.test.ts`, `api.ts`.
 
 ### Files (`files.ts`)
 
@@ -46,7 +46,7 @@ Out:
 
 - [x] Repository tests with a fake file system: saving a week twice replaces photos and deletes the old files; skipping a week shows as skipped in the timeline; the timeline fills empty weeks between entries; deleting a week removes its folder; `weekContext` counts completed routines and products started and stopped in that week.
 - [ ] A manual check on a device that a saved photo doesn't appear in the phone's gallery (write what you checked under Decisions).
-- [x] `npm run check` passes.
+- [x] `pnpm check` passes.
 
 ## Decisions
 

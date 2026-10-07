@@ -8,7 +8,7 @@ Everything the person has can leave the phone as one file they control, come bac
 
 ## Scope
 
-In: `npx expo install expo-file-system expo-sharing expo-document-picker`, `npm install fflate@latest` (zip in pure JS; note it under Decisions as the one added library). Files: `src/features/backup/format.ts`, `export.ts`, `import.ts`, tests, `screens/BackupScreen.tsx`, `reminders.ts`.
+In: `pnpm expo install expo-file-system expo-sharing expo-document-picker`, `pnpm add fflate@latest` (zip in pure JS; note it under Decisions as the one added library). Files: `src/features/backup/format.ts`, `export.ts`, `import.ts`, tests, `screens/BackupScreen.tsx`, `reminders.ts`.
 
 ### Format (`format.ts`)
 
@@ -51,7 +51,7 @@ Out:
 - [x] No secure data in the export (test the JSON has no PIN or recovery fields).
 - [x] Reset from Settings asks for the PIN, offers Export backup, needs RESET and wipes everything.
 - [x] Planner test for the backup reminder.
-- [x] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [x] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Decisions
 

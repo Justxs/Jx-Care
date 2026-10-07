@@ -8,7 +8,7 @@ Adding a product with the three-question short form (every new product) and edit
 
 ## Scope
 
-In: `npx expo install expo-image-picker expo-image-manipulator expo-file-system`. Files: `src/features/products/screens/ProductFormScreen.tsx`, `components/QuickFields.tsx`, `components/IngredientEntrySheet.tsx`, `photo.ts`.
+In: `pnpm expo install expo-image-picker expo-image-manipulator expo-file-system`. Files: `src/features/products/screens/ProductFormScreen.tsx`, `components/QuickFields.tsx`, `components/IngredientEntrySheet.tsx`, `photo.ts`.
 
 ### Full form (P3, Edit product)
 
@@ -47,7 +47,7 @@ Out:
 - [ ] Photos are stored in app storage, replaced files are deleted, nothing goes to the gallery.
 - [ ] Dirty form asks before closing.
 - [ ] Light, dark, 360 pt, Lithuanian and keyboard behaviour checked.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

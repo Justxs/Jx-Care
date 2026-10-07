@@ -52,7 +52,7 @@ Out:
 - [ ] Repository tests: saving a routine with reordered, added and removed steps; ticking the last due step sets `completedAt`, unticking clears it; the `dueStepIds` snapshot is kept after the routine is edited; a step with a finished product still appears with its status; A/B choice is remembered per weekday; deleting a routine removes its logs.
 - [ ] `getTodayRoutines` returns one group per time of day with the right A/B options for a set of routines on a Monday and a Tuesday (reuse task 007's fixtures).
 - [ ] `buildFromTemplate` picks the newest product per category and leaves gaps.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

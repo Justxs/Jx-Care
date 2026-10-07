@@ -8,7 +8,7 @@ Looking back at progress: a weekly grid of photos labelled by date, a week's det
 
 ## Scope
 
-In: `npx expo install expo-image` (if not already). Files: `src/features/progress/screens/ProgressPhotosScreen.tsx`, `WeekDetailScreen.tsx`, `CompareScreen.tsx`, `src/features/settings/components/ProgressPrefs.tsx`.
+In: `pnpm expo install expo-image` (if not already). Files: `src/features/progress/screens/ProgressPhotosScreen.tsx`, `WeekDetailScreen.tsx`, `CompareScreen.tsx`, `src/features/settings/components/ProgressPrefs.tsx`.
 
 ### C3 Progress photos (`/calendar/progress`, a pushed screen)
 
@@ -59,7 +59,7 @@ Out:
 - [ ] Week detail shows all angles and the "What changed" lines for a seeded week; Retake replaces, Delete removes rows and files.
 - [ ] Compare (from the header word): both modes, Before and After date pickers, "4 weeks ago vs now", angle switcher, synced pinch zoom.
 - [ ] Photo preferences save and the hair album toggle shows the Hair segment without the card jumping.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

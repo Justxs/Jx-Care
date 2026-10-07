@@ -41,7 +41,7 @@ Out:
 - [ ] Archive sorts by date and by cost per day; products without a cost sort last.
 - [ ] The photo box never resizes when the image loads; numbers use tabular figures.
 - [ ] Light, dark, 360 pt and Lithuanian checked.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

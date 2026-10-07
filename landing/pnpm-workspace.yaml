@@ -1,0 +1,4 @@
+# pnpm settings for the website. It is its own project, separate from the app at the repo root.
+
+allowBuilds:
+  esbuild: true

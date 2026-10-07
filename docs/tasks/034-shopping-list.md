@@ -61,7 +61,7 @@ Out:
 - [ ] A bought item that is not yet a product shows the inline "Add it to your products…" line, and Add opens Add product pre-filled with today's purchase date.
 - [ ] Buy again works from every place listed and the Today Shopping list row shows the count.
 - [ ] Add item is the Fab and Share is a header word; no + in the header.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

@@ -39,7 +39,7 @@ Out:
 - [x] Planner tests: warning and expiry-day items with the right days and times; nothing for `nodate`, archived or reminders-off products; the warning window setting changes the day; digest text and skip-when-zero.
 - [x] Saving the first product with an expiry shows the ask once; Not now never shows it again; Allow with permission granted schedules reminders (test the flow logic with a fake permission adapter).
 - [x] Reminders screen saves every setting; with permission denied it shows the card and "Paused"/"Off" texts instead of switches, without the list jumping when permission returns.
-- [x] `npm run check` passes.
+- [x] `pnpm check` passes.
 
 ## Decisions
 

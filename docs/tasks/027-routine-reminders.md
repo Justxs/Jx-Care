@@ -28,7 +28,7 @@ Out:
 - [x] Planner tests: reminders only on run days with due steps; one per A/B group; none when the master switch is off; today's skipped when complete; text counts due steps.
 - [x] Completing a routine cancels today's pending and snoozed reminders (test with the fake OS adapter).
 - [ ] Tapping the reminder opens the player after unlock (manual check, note under Decisions).
-- [x] `npm run check` passes.
+- [x] `pnpm check` passes.
 
 ## Decisions
 

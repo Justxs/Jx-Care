@@ -43,7 +43,7 @@ Out:
 - [ ] The switch has three segments; the Progress photos row pushes C3.
 - [ ] Swiping months doesn't change the grid height; "Today" returns.
 - [ ] Day detail edits work for the last 7 days and update marks and streak; older days are read-only.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

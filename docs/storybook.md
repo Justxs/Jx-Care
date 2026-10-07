@@ -4,13 +4,13 @@ Every component and screen is documented as stories that run on the phone (Story
 
 ## Run it
 
-1. `npm run storybook` (Expo with `EXPO_PUBLIC_STORYBOOK_ENABLED=true`, Storybook telemetry off).
+1. `pnpm storybook` (Expo with `EXPO_PUBLIC_STORYBOOK_ENABLED=true`, Storybook telemetry off).
 2. Open the dev build (`eas build --profile development`) and go to `jxcare://storybook`: `adb shell am start -a android.intent.action.VIEW -d jxcare://storybook` on Android, `xcrun simctl openurl booted jxcare://storybook` on the iOS simulator, or open the link from any app on the phone. The route sits behind the PIN like every other screen.
 3. Pick a story from the sidebar. The bar at the top of every story switches Light/Dark and EN/LT; the choice stays as you move between stories. Controls and Actions are in the addons panel.
 
-Without the flag (`npm start`, release builds) metro replaces every Storybook module with an empty one, the `jxcare://storybook` route redirects home, and the bundle carries no stories (checked with `npx expo export --platform android`).
+Without the flag (`pnpm start`, release builds) metro replaces every Storybook module with an empty one, the `jxcare://storybook` route redirects home, and the bundle carries no stories (checked with `pnpm expo export --platform android`).
 
-`.rnstorybook/storybook.requires.ts` is generated: metro rewrites it on `npm run storybook`, and `npm run storybook:generate` does it by hand. It only changes when `.rnstorybook/main.ts` does (stories are found with `require.context`), so new stories need no regeneration. It is committed and left out of oxfmt.
+`.rnstorybook/storybook.requires.ts` is generated: metro rewrites it on `pnpm storybook`, and `pnpm storybook:generate` does it by hand. It only changes when `.rnstorybook/main.ts` does (stories are found with `require.context`), so new stories need no regeneration. It is committed and left out of oxfmt.
 
 ## Write a story
 
@@ -118,7 +118,7 @@ Params reach the story tree only: a bottom sheet or menu rendered through a port
 
 ## Tests
 
-`src/storybook/__tests__/stories.test.tsx` finds every `*.stories.tsx` under `src/`, renders each story with its meta and story args, decorators and `render`, waits for its data and fails on a render error, a failed query, or a control a screen reader reaches without a role or a name (a label or text inside; boxes hidden from screen readers are skipped). It runs in `npm run check`, so a broken story fails the build. It mocks `expo-router` with the same stand-ins (`storyExpoRouterMock()`), `expo-haptics`, `expo-crypto` and `expo-camera` (permission refused); add a mock there when a new story needs a native module Jest doesn't have. `fixtures.test.ts` checks that `seedDemo` holds what the table above says.
+`src/storybook/__tests__/stories.test.tsx` finds every `*.stories.tsx` under `src/`, renders each story with its meta and story args, decorators and `render`, waits for its data and fails on a render error, a failed query, or a control a screen reader reaches without a role or a name (a label or text inside; boxes hidden from screen readers are skipped). It runs in `pnpm check`, so a broken story fails the build. It mocks `expo-router` with the same stand-ins (`storyExpoRouterMock()`), `expo-haptics`, `expo-crypto` and `expo-camera` (permission refused); add a mock there when a new story needs a native module Jest doesn't have. `fixtures.test.ts` checks that `seedDemo` holds what the table above says.
 
 `src/storybook/compose.tsx` (`composeStory`, `storyEntries`) can render a story in any other test too.
 

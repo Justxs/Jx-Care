@@ -46,7 +46,7 @@ Out:
 - [ ] Marking a wash done (today, early or late) logs it, moves the next due date from the done day and updates Today, the calendar and the streak; the sheet shows the next due line at the same height.
 - [ ] Hair calendar marks match `hairMonthMarks` for a seeded month; spoken labels include status.
 - [ ] Planner tests: one reminder per task on its due day within the window; master switch off → none; text per kind; Done marks the task done (fake adapter test).
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

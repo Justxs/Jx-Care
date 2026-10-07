@@ -10,7 +10,7 @@ Every string in the app comes from Lithuanian and English translation files, the
 
 In:
 
-1. **Packages:** `npm install i18next@latest react-i18next@latest`, `npx expo install expo-localization`.
+1. **Packages:** `pnpm add i18next@latest react-i18next@latest`, `pnpm expo install expo-localization`.
 2. **Files:** `src/i18n/en.json`, `src/i18n/lt.json`, `src/i18n/index.ts`.
    - Nested keys by area: `common.*`, `tabs.*`, `onboarding.*`, `lock.*`, `today.*`, `products.*`, `shopping.*`, `routines.*`, `hair.*`, `calendar.*`, `progress.*`, `condition.*`, `settings.*`, `notifications.*`, `errors.*`, `a11y.*`.
    - Seed `common.*` with the shared words from the spec's "Words and copy" table so later tasks reuse them instead of inventing synonyms: `buyAgain`, `markFinished`, `finished`, `archive`, `start`, `timeOfDay`, `morning`, `evening`, `custom`, `everyTime`, `setDays`, `everyFewDays`, `repeatEveryDays`, `otherCare`, `conflict`, `mildConflict` ("Mild conflict"), `mild` (the editor panel label), `weeklyPhoto`, `checkIn` ("Check-in"), `allDone` ("All done"), `notDone` ("Not done", never "Missed"), `save`, `cancel`, `delete`, `edit`, `done`, `undo`, `continue`, `back`, `notNow`, `skin`, `hair`, `skinAndHair` (area pill "Skin + hair"), and the skin tags `tags.calm/glow/oily/dry/breakout/redness/itchy`.
@@ -40,7 +40,7 @@ Out:
 - [ ] `t('common.buyAgain')` returns "Buy again" / the Lithuanian string, and switching language re-renders mounted screens.
 - [ ] `format.ts` has unit tests covering: EN current-year and other-year dates, LT dates, "Today, …", money in LT and EN locales, Lithuanian plural forms (1, 2, 10, 21), negative and zero day counts, durations under and over a minute.
 - [ ] The key-parity test passes.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Notes
 

@@ -17,7 +17,7 @@ If something you need is in none of them, pick the simplest option that fits the
 
 ## Stack (fixed)
 
-Use the newest stable versions. Expo packages go in with `npx expo install <pkg>` so they match the SDK; everything else with `npm install <pkg>@latest`. Versions on 2026-10-06 for reference:
+The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-06 for reference:
 
 | Need | Package | Version seen |
 | --- | --- | --- |
@@ -82,7 +82,7 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 ## Code rules
 
 - **TypeScript strict**, no `any`, no `@ts-ignore`. Export types for anything another area uses.
-- **Lint and format with oxc:** `npm run lint` (oxlint, warnings fail) and `npm run format` (oxfmt). Run `npm run format` before committing; `npm run check` fails on unformatted files.
+- **Lint and format with oxc:** `pnpm lint` (oxlint, warnings fail) and `pnpm format` (oxfmt). Run `pnpm format` before committing; `pnpm check` fails on unformatted files.
 - **Pure logic lives in `src/lib/`** and gets unit tests. Screens never compute expiry, streaks, schedules or conflicts themselves; they call `src/lib`.
 - **Database access lives in `repo.ts` files** as plain functions that take a Drizzle database as their first argument (`listProducts(db, filters)`). That is what lets the same code run on expo-sqlite in the app and on better-sqlite3 in Jest.
 - **Reads go through TanStack Query** hooks in `api.ts` with keys from `src/db/queryKeys.ts`. Mutations invalidate the keys they affect. Use `placeholderData: keepPreviousData` on lists that refilter, so the old list stays on screen instead of a blank.
@@ -112,9 +112,9 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 A task is done when all of this is true:
 
 1. Every acceptance criterion in the task is met.
-2. `npm run check` passes (typecheck, oxlint, oxfmt check, tests). Pure logic and repositories you added have tests.
-3. Every component in `src/components/` (base and shared), every shared component in a feature's `components/` and every screen has a `*.stories.tsx` next to it covering its main states; screens use `withAppData` and the fixtures in `src/storybook/fixtures.ts`. How: [docs/storybook.md](../storybook.md). The story smoke test in `npm run check` renders them all.
-4. If you changed config, native modules or babel/metro setup: `npx expo export --platform android --output-dir /tmp/jx-export` bundles without errors.
+2. `pnpm check` passes (typecheck, oxlint, oxfmt check, tests). Pure logic and repositories you added have tests.
+3. Every component in `src/components/` (base and shared), every shared component in a feature's `components/` and every screen has a `*.stories.tsx` next to it covering its main states; screens use `withAppData` and the fixtures in `src/storybook/fixtures.ts`. How: [docs/storybook.md](../storybook.md). The story smoke test in `pnpm check` renders them all.
+4. If you changed config, native modules or babel/metro setup: `pnpm expo export --platform android --output-dir /tmp/jx-export` bundles without errors.
 5. New strings exist in both `en.json` and `lt.json`.
 6. The status of the task is set to **done** in [README.md](README.md), and anything you decided is written under "Decisions" in the task file.
 7. The work is committed **straight to `main`** (no branches, no pull requests) with the message `Task NNN: <title>` and pushed.

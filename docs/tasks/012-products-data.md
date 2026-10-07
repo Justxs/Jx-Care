@@ -59,7 +59,7 @@ Out:
 
 - [ ] Every repository function has tests on `createTestDb()`, including: search ignores accents and case; area filter includes `both`; status filter and expiry sort agree with task 006; creating two products with "Niacinamide" and " niacinamide" makes one ingredient; updating a product's ingredient list removes dropped links but keeps the ingredient row; delete refuses an active product; duplicate copies ingredients; archive list sorts by cost per day with products lacking a cost last.
 - [ ] zod schema tests for each rule.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

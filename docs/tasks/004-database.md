@@ -10,7 +10,7 @@ The whole local database defined once with Drizzle, migrated on app start before
 
 In:
 
-1. **Packages:** `npx expo install expo-sqlite`, `npm install drizzle-orm@latest`, `npm install -D drizzle-kit@latest better-sqlite3 @types/better-sqlite3 babel-plugin-inline-import`.
+1. **Packages:** `pnpm expo install expo-sqlite`, `pnpm add drizzle-orm@latest`, `pnpm add -D drizzle-kit@latest better-sqlite3 @types/better-sqlite3 babel-plugin-inline-import`.
 2. **`drizzle.config.ts`:** `dialect: 'sqlite'`, `driver: 'expo'`, `schema: './src/db/schema.ts'`, `out: './src/db/migrations'`. Script `db:generate` = `drizzle-kit generate`.
 3. **Metro and Babel for SQL migrations** (Drizzle's Expo guide): add `'sql'` to `resolver.sourceExts` in `metro.config.js` (keep the NativeWind wrapper from 002) and `['inline-import', { extensions: ['.sql'] }]` to `babel.config.js`.
 4. **`src/db/client.ts`:** opens `jx-care.db` with `openDatabaseSync`, runs `PRAGMA foreign_keys = ON` and `PRAGMA journal_mode = WAL`, exports `db = drizzle(expoDb, { schema })` and the type `Db = BaseSQLiteDatabase<'sync', unknown, typeof schema>`. Both the expo-sqlite and the better-sqlite3 Drizzle drivers are synchronous, so both satisfy it; repositories take `Db`.
@@ -45,7 +45,7 @@ In:
 
 8. **Indexes:** `product(archivedAt)`, `product_ingredient(ingredientId)`, `routine_log(day)`, `hair_log(hairTaskId, day)`, `condition_log(day)`, `product_note(productId)`, `shopping_item(boughtAt)`.
 9. **Types:** export `Product`, `NewProduct`, etc. with `typeof product.$inferSelect` / `$inferInsert`.
-10. **Generate the first migration** with `npm run db:generate` and commit `src/db/migrations/` (SQL files, `meta/`, and the `migrations.js` bundle Drizzle makes for Expo).
+10. **Generate the first migration** with `pnpm db:generate` and commit `src/db/migrations/` (SQL files, `meta/`, and the `migrations.js` bundle Drizzle makes for Expo).
 
 Out:
 
@@ -58,11 +58,11 @@ Out:
 - [ ] `createTestDb()` works in Jest; a test inserts a product with two ingredients and reads it back with its ingredients; deleting the product cascades to `product_ingredient`.
 - [ ] Unique constraints hold in tests: `routine_log (routineId, day)`, `condition_log (day, area)`, `progress_entry (area, weekStart)`, `ingredient.normalizedName`.
 - [ ] Deleting a product sets `routine_step.productId` and `shopping_item.productId` to null (tested).
-- [ ] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [ ] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Notes
 
-- Later schema changes are new migrations generated with `npm run db:generate`; never edit a committed migration.
+- Later schema changes are new migrations generated with `pnpm db:generate`; never edit a committed migration.
 - If `better-sqlite3` fails to build in your environment, write why under Decisions and use `sql.js` with `drizzle-orm/sql-js` for tests instead.
 
 ## Decisions

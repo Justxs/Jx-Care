@@ -66,7 +66,7 @@ Out:
 - [ ] First-run card: rows tick from data, keep 72 pt, the next step has the filled button; "You're set" card then gone the next day; Hide works.
 - [ ] Today paints with all sections on unlock (prefetch test: after `prefetchToday`, every Today query is in the cache).
 - [ ] Finishing a routine collapses its card in 250 ms; Reduce Motion makes it a fade.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

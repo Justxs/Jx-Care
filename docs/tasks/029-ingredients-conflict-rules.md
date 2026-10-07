@@ -59,7 +59,7 @@ Out:
 - [ ] Repository tests: merge moves product links, rules and avoid references and removes duplicates; rename into an existing name merges; deleting a group cleans up members and rules; `addCommonRules` is idempotent and links existing ingredients by normalized name.
 - [ ] S3 shows "In N routines" or "No conflicts" correctly for a seeded set of routines (A/B alternates not counted against each other).
 - [ ] Editor saves and shows the affected count callout without jumping the sheet.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

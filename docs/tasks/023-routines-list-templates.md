@@ -30,7 +30,7 @@ Out:
 - [ ] Duplicate and Delete work with their toast and dialog; cards animate in and out (fade + height).
 - [ ] The starter sheet fills steps from the person's products by category, shows gaps in amber, doesn't jump when switching templates, and opens the editor pre-filled without saving.
 - [ ] Empty state in LT and EN; light, dark and 360 pt checked.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

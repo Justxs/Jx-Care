@@ -10,10 +10,10 @@ NativeWind 4.2 with every design token as a Tailwind class that switches between
 
 In:
 
-1. **NativeWind 4.2 + Tailwind 3.4.** Follow the NativeWind v4 Expo install guide (https://www.nativewind.dev/docs/getting-started/installation): `npm install nativewind@^4.2 tailwindcss@^3.4`, `npx expo install react-native-reanimated react-native-worklets react-native-safe-area-context`, `babel.config.js` with `['babel-preset-expo', { jsxImportSource: 'nativewind' }]` and `'nativewind/babel'`, `metro.config.js` with `withNativeWind(config, { input: './global.css' })`, `nativewind-env.d.ts`. Do **not** install Tailwind 4 or NativeWind 5.
+1. **NativeWind 4.2 + Tailwind 3.4.** Follow the NativeWind v4 Expo install guide (https://www.nativewind.dev/docs/getting-started/installation): `pnpm add nativewind@^4.2 tailwindcss@^3.4`, `pnpm expo install react-native-reanimated react-native-worklets react-native-safe-area-context`, `babel.config.js` with `['babel-preset-expo', { jsxImportSource: 'nativewind' }]` and `'nativewind/babel'`, `metro.config.js` with `withNativeWind(config, { input: './global.css' })`, `nativewind-env.d.ts`. Do **not** install Tailwind 4 or NativeWind 5.
 2. **`global.css`** at the repo root with the light `:root` and `.dark:root` variables, copied exactly from [docs/design/nativewind.md](../design/nativewind.md). Import it once in `app/_layout.tsx`.
 3. **`tailwind.config.js`** copied from the same file. `content` must be `['./app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}']`.
-4. **Fonts:** `npx expo install @expo-google-fonts/figtree expo-font expo-splash-screen`. Load `Figtree_400Regular`, `Figtree_500Medium`, `Figtree_600SemiBold`, `Figtree_700Bold` in `app/_layout.tsx`. Call `SplashScreen.preventAutoHideAsync()` at module level and hide the splash only after fonts are loaded (task 004 will also wait for migrations here). Set `font-sans` and `bg-canvas` on the root view.
+4. **Fonts:** `pnpm expo install @expo-google-fonts/figtree expo-font expo-splash-screen`. Load `Figtree_400Regular`, `Figtree_500Medium`, `Figtree_600SemiBold`, `Figtree_700Bold` in `app/_layout.tsx`. Call `SplashScreen.preventAutoHideAsync()` at module level and hide the splash only after fonts are loaded (task 004 will also wait for migrations here). Set `font-sans` and `bg-canvas` on the root view.
 5. **Weights on Android:** each weight is its own family, so the type classes must set the family, not only `fontWeight`. Make `text-body-strong`, `text-title-*`, `text-label`, `text-overline` and `text-display` resolve to the right Figtree family. One way: a small Tailwind plugin that adds `fontFamily` to those `fontSize` utilities; another: a `Text` wrapper in `src/components/ui/text.tsx` that maps the class to the family. Pick one, write it under Decisions, and make sure `<Text className="text-body-strong">` renders semibold on Android and iOS.
 6. **Dark mode:** follows the phone (`userInterfaceStyle: automatic` from 001). Use NativeWind's `useColorScheme()`; no manual toggle in this app. Status bar style follows the theme.
 7. **`src/theme/motion.ts`** exporting the motion scale (values from DESIGN.md and the spec):
@@ -41,7 +41,7 @@ Out:
 - [ ] Type classes match DESIGN.md: `caption` and `overline` are **13 px / 18 px**, overline is semibold and **not** uppercase (DESIGN.md wins over any older 11–12 px value).
 - [ ] Figtree renders in all four weights on Android and iOS; there is no flash of the system font (the splash stays until fonts load).
 - [ ] `motion.ts`, `useMotion()` and `colors.ts` exist with tests; the colour drift test passes.
-- [ ] `npm run check` and `npx expo export --platform android --output-dir /tmp/jx-export` pass.
+- [ ] `pnpm check` and `pnpm expo export --platform android --output-dir /tmp/jx-export` pass.
 
 ## Notes
 

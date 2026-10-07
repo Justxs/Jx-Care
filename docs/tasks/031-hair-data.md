@@ -42,7 +42,7 @@ Out:
 ## Acceptance criteria
 
 - [x] Repository tests: quick setup "every 3 days, last wash yesterday, trim on" creates two tasks with the right next due dates; marking a wash done early moves the next due date from the done day; logging an older wash doesn't move the schedule back; deleting the latest log restores the previous `lastDoneAt`; other care never appears in the streak input as a wash; "twice a week" quick setup gives Monday/Thursday.
-- [x] `npm run check` passes.
+- [x] `pnpm check` passes.
 
 ## Decisions
 

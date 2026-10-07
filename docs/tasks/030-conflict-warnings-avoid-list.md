@@ -51,7 +51,7 @@ Out:
 - [ ] Removing an avoid entry shows "Parfum removed" with Undo, and Undo puts it back in the same place.
 - [ ] Every Conflict tag and "Why?" opens the conflict sheet; every Mild conflict tag and "What does mild mean?" opens the Mild conflict sheet.
 - [ ] No conflict shown as a colour-only dot anywhere; tags have 44 pt hit areas.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 

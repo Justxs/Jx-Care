@@ -36,7 +36,7 @@ Out:
 - [ ] No layout shift: badges keep their min width; switching segments or views doesn't move the header; loading uses skeletons at final size; the last row scrolls clear of the Fab.
 - [ ] Empty state for no products and for no matches, in LT and EN.
 - [ ] Light, dark, 360 pt and Lithuanian checked.
-- [ ] `npm run check` passes.
+- [ ] `pnpm check` passes.
 
 ## Decisions
 

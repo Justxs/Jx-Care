@@ -8,7 +8,7 @@ Creating and editing a skin routine: its name, time of day, days, reminder and a
 
 ## Scope
 
-In: `npx expo install react-native-draggable-flatlist` (check it works with Reanimated 4 and the new architecture; if it doesn't, build the reorder with Reanimated + Gesture Handler and note it). Files: `src/features/routines/screens/RoutineEditorScreen.tsx`, `components/StepRow.tsx`, `components/StepEditorSheet.tsx`, `src/features/products/components/ProductPickerSheet.tsx` (shared with hair tasks and shopping).
+In: `pnpm expo install react-native-draggable-flatlist` (check it works with Reanimated 4 and the new architecture; if it doesn't, build the reorder with Reanimated + Gesture Handler and note it). Files: `src/features/routines/screens/RoutineEditorScreen.tsx`, `components/StepRow.tsx`, `components/StepEditorSheet.tsx`, `src/features/products/components/ProductPickerSheet.tsx` (shared with hair tasks and shopping).
 
 ### R2 Routine editor (`/routines/[id]`, `id = new` with pre-fill from the starter)
 
@@ -44,7 +44,7 @@ Out:
 - [ ] Product picker filters by area, shows Recent, searches by name, lists expired products under "Can't be picked" where they can't be picked, and returns a newly added product selected.
 - [ ] Leaving with changes asks first; validation messages appear in place.
 - [ ] Dragging feels smooth (lift, others slide aside); Reduce Motion turns the lift into a fade.
-- [ ] Light, dark, 360 pt and Lithuanian checked; `npm run check` passes.
+- [ ] Light, dark, 360 pt and Lithuanian checked; `pnpm check` passes.
 
 ## Decisions
 
