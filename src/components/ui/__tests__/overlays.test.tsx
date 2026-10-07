@@ -13,6 +13,7 @@ import { useCloseGuard } from '../close-guard';
 import { EmptyState } from '../empty-state';
 import { Input } from '../input';
 import { ScreenHeader } from '../screen-header';
+import { SelectField } from '../select-field';
 import { ToastHost } from '../toast-host';
 
 jest.mock('expo-haptics', () => ({
@@ -190,6 +191,48 @@ describe('AlertDialog', () => {
     );
     await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
     expect(onCancel).toHaveBeenCalled();
+  });
+});
+
+describe('SelectField', () => {
+  const options = [
+    { value: '0', label: 'Immediately' },
+    { value: '60', label: '1 min' },
+  ];
+
+  it('the menu shows the value in the field and picks another', async () => {
+    const onValueChange = jest.fn();
+    await render(
+      <>
+        <SelectField
+          label="Lock after"
+          value="60"
+          options={options}
+          onValueChange={onValueChange}
+        />
+        <PortalHost />
+      </>,
+    );
+    await fireEvent.press(screen.getByRole('combobox', { name: 'Lock after, 1 min' }));
+    await fireEvent.press(await screen.findByText('Immediately'));
+    expect(onValueChange).toHaveBeenCalledWith('0');
+  });
+
+  it('a disabled menu does not open', async () => {
+    await render(
+      <>
+        <SelectField
+          label="Lock after"
+          value="60"
+          options={options}
+          onValueChange={() => {}}
+          disabled
+        />
+        <PortalHost />
+      </>,
+    );
+    await fireEvent.press(screen.getByRole('combobox', { name: 'Lock after, 1 min' }));
+    expect(screen.queryByText('Immediately')).toBeNull();
   });
 });
 
