@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useMemo } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -8,16 +8,16 @@ import { Card } from '@/components/ui/card';
 import { Field } from '@/components/ui/field';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { SelectField } from '@/components/ui/select-field';
-import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import { isLanguage } from '@/i18n';
 import { setLanguage } from '@/state/app';
 
 import { useSettings, useUpdateSettings } from '../api';
+import { ProgressPrefs } from '../components/ProgressPrefs';
 import { currencyOptions } from '../currencies';
 import { LANGUAGE_NAMES } from './SettingsScreen';
 
-/** S7 Preferences: language and currency now; progress photo options come with task 037. */
+/** S7 Preferences: language, currency and the progress photo options. */
 export function PreferencesScreen() {
   const { t, i18n } = useTranslation();
   const settings = useSettings().data;
@@ -53,12 +53,7 @@ export function PreferencesScreen() {
           />
         </Card>
 
-        {/* TODO(037): tracked skin angles, hair album, hair angles (row space reserved), guide. */}
-        <Card title={t('settings.progressPhotos')}>
-          <View className="min-h-[224px] justify-center">
-            <Text className="text-body text-ink-muted">{t('settings.progressSoon')}</Text>
-          </View>
-        </Card>
+        <ProgressPrefs />
       </ScrollView>
     </SafeAreaView>
   );

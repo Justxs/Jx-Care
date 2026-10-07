@@ -245,7 +245,7 @@ describe('C1 Condition view', () => {
     for (const word of ['Calm', 'Glow', 'Oily', 'Dry', 'Breakout', 'Redness', 'Itchy']) {
       expect(legend.getByText(word)).toBeTruthy();
     }
-    expect(screen.getByRole('button', { name: 'Progress photos' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /^Progress photos/ })).toBeTruthy();
 
     // A new log shows on the grid.
     saveConditionDay(app.db, '2026-10-07', { skin: { states: ['glow'], note: null } });

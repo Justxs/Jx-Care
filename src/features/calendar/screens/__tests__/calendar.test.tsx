@@ -176,12 +176,12 @@ describe('CalendarScreen', () => {
         .map((r) => r.props.accessibilityLabel),
     ).toEqual(['Skin', 'Hair', 'Condition']);
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Progress photos' }));
+    await fireEvent.press(screen.getByRole('button', { name: /^Progress photos/ }));
     expect(router.push).toHaveBeenCalledWith('/calendar/progress');
 
     await fireEvent.press(within(switcher).getByRole('radio', { name: 'Hair' }));
     expect(await screen.findByText('Hair care is not set up')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Progress photos' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /^Progress photos/ })).toBeTruthy();
   });
 
   it('moves months with the arrows and a swipe, keeps 42 days, and Today returns', async () => {

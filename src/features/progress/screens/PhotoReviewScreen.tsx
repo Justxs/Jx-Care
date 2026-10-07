@@ -19,7 +19,7 @@ import { tagLabel } from '@/features/condition/labels';
 import { useFormat } from '@/i18n/useFormat';
 import { showToast } from '@/state/ui';
 
-import { useSaveCheckIn } from '../api';
+import { useSaveCheckIn, useWeekEntry } from '../api';
 import {
   captureStore,
   clearSession,
@@ -28,6 +28,7 @@ import {
   saveDraft,
   sessionPhotos,
   type CaptureState,
+  type ReviewDraft,
 } from '../captureSession';
 import { PROGRESS_NOTE_MAX, emptyReview, reviewSchema } from '../schema';
 import { progressTags } from '../types';
@@ -41,7 +42,9 @@ const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
 export function PhotoReviewScreen() {
   const session = useSelector(captureStore, (s) => s);
   const { area, weekStart } = session;
-  if (!area || !weekStart || !isComplete(session)) {
+  // A retake (C6) starts from the week's saved rating, tags and note.
+  const existing = useWeekEntry(area ?? 'skin', weekStart ?? '');
+  if (!area || !weekStart || !isComplete(session) || existing.isPending) {
     // No photos to review (opened on its own, or just saved and on its way out).
     return (
       <SafeAreaView edges={['top']} className="flex-1 bg-canvas">
@@ -49,12 +52,28 @@ export function PhotoReviewScreen() {
       </SafeAreaView>
     );
   }
-  return <ReviewForm session={session} area={area} weekStart={weekStart} />;
+  const entry = existing.data;
+  const saved: ReviewDraft | null = entry
+    ? { rating: entry.rating ?? 0, tags: entry.tags, note: entry.note ?? '' }
+    : null;
+  return (
+    <ReviewForm
+      session={session}
+      area={area}
+      weekStart={weekStart}
+      initial={session.draft ?? saved ?? emptyReview}
+    />
+  );
 }
 
-type ReviewFormProps = { session: CaptureState; area: ProgressArea; weekStart: string };
+type ReviewFormProps = {
+  session: CaptureState;
+  area: ProgressArea;
+  weekStart: string;
+  initial: ReviewDraft;
+};
 
-function ReviewForm({ session, area, weekStart }: ReviewFormProps) {
+function ReviewForm({ session, area, weekStart, initial }: ReviewFormProps) {
   const { t } = useTranslation();
   const f = useFormat();
   const navigation = useNavigation();
@@ -64,7 +83,7 @@ function ReviewForm({ session, area, weekStart }: ReviewFormProps) {
 
   const form = useAppForm({
     schema: reviewSchema,
-    defaultValues: session.draft ?? emptyReview,
+    defaultValues: initial,
     onSubmit: async (value) => {
       try {
         await save.mutateAsync({
@@ -83,8 +102,8 @@ function ReviewForm({ session, area, weekStart }: ReviewFormProps) {
       // The files now live in private storage, so nothing is deleted.
       clearSession({ discard: false });
       showToast({ message: t('progress.review.saved') });
-      // Progress photos (task 037) once it exists; Today until then.
-      router.dismissTo('/');
+      // On to Progress photos, showing the album just saved.
+      router.dismissTo(`/calendar/progress?area=${area}`);
     },
   });
   const submitting = useStore(form.store, (s) => s.isSubmitting);

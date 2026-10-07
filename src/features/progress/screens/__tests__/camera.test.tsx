@@ -266,17 +266,44 @@ describe('ProgressCameraScreen', () => {
   });
 });
 
-function startReview() {
-  startSession({ area: 'skin', weekStart: WEEK, angles: ['front', 'left'] });
+function startReview(weekStart = WEEK) {
+  startSession({ area: 'skin', weekStart, angles: ['front', 'left'] });
   setPhoto('front', 'file:///cache/Camera/a.jpg');
   setPhoto('left', 'file:///cache/Camera/b.jpg');
 }
 
+/** The review waits for the week's saved check-in (a retake starts from it). */
+async function renderReview(app: ReturnType<typeof setup>) {
+  await app.render(<PhotoReviewScreen />);
+  await screen.findByRole('button', { name: 'Save' });
+}
+
 describe('PhotoReviewScreen', () => {
+  it('starts a retake from the week’s saved rating, tags and note, and replaces its photos', async () => {
+    const app = setup();
+    seedLastWeek(app.db);
+    const old = getWeekEntry(app.db, 'skin', LAST_WEEK)!;
+    startReview(LAST_WEEK);
+    await renderReview(app);
+
+    expect(screen.getByRole('radio', { name: '3 stars' })).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ checked: true }),
+    );
+    await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(router.dismissTo).toHaveBeenCalled());
+
+    const entry = getWeekEntry(app.db, 'skin', LAST_WEEK)!;
+    expect(entry.id).toBe(old.id);
+    expect(entry.rating).toBe(3);
+    expect(entry.photos.map((p) => p.fileUri)).not.toContain(old.photos[0]!.fileUri);
+    expect(progressFiles.deleted).toEqual(expect.arrayContaining(old.photos.map((p) => p.fileUri)));
+  });
+
   it('saves the rating, tags, note and photos into private storage', async () => {
     const app = setup();
     startReview();
-    await app.render(<PhotoReviewScreen />);
+    await renderReview(app);
 
     // Named by its date, never a week number.
     expect(screen.getByText('Skin photo, 7 Oct')).toBeTruthy();
@@ -292,7 +319,9 @@ describe('PhotoReviewScreen', () => {
     await fireEvent.changeText(screen.getByLabelText('Note'), '  Less red  ');
     await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
 
-    await waitFor(() => expect(router.dismissTo).toHaveBeenCalledWith('/'));
+    await waitFor(() =>
+      expect(router.dismissTo).toHaveBeenCalledWith('/calendar/progress?area=skin'),
+    );
     const entry = getWeekEntry(app.db, 'skin', WEEK)!;
     expect(entry).toMatchObject({ rating: 4, tags: ['calm', 'glow'], note: 'Less red' });
     expect(entry.photos.map((p) => p.angle)).toEqual(['front', 'left']);
@@ -304,7 +333,7 @@ describe('PhotoReviewScreen', () => {
   it('sends one angle back to the camera, keeping what was filled in', async () => {
     const app = setup();
     startReview();
-    await app.render(<PhotoReviewScreen />);
+    await renderReview(app);
     await fireEvent.press(screen.getByRole('radio', { name: '2 stars' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Left side. Retake this photo' }));
     expect(captureStore.state.retake).toBe('left');
@@ -315,7 +344,7 @@ describe('PhotoReviewScreen', () => {
   it('shows an error under the note when it is too long', async () => {
     const app = setup();
     startReview();
-    await app.render(<PhotoReviewScreen />);
+    await renderReview(app);
     await fireEvent.changeText(screen.getByLabelText('Note'), 'x'.repeat(281));
     await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText('Keep the note to 280 characters.')).toBeTruthy();

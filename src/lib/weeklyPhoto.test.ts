@@ -1,6 +1,7 @@
 import {
   isPhotoAngle,
   isPhotoRowDay,
+  nextPhotoDay,
   photoDayOfWeek,
   photoDays,
   sessionAngles,
@@ -57,6 +58,23 @@ describe('sessionAngles', () => {
     );
     expect(sessionAngles('hair', { skinAngles: [], hairAngles: ['top'] })).toEqual(['top']);
     expect(sessionAngles('hair', { skinAngles: [], hairAngles: [] })).toEqual(['front']);
+  });
+});
+
+describe('nextPhotoDay', () => {
+  it("is this week's photo day until it comes", () => {
+    expect(nextPhotoDay('2026-10-07', 7, false)).toBe('2026-10-11');
+  });
+
+  it('is today once the photo day has come and the photo is still due', () => {
+    expect(nextPhotoDay('2026-10-11', 7, false)).toBe('2026-10-11');
+    // Wednesday photo day, still not taken on Friday.
+    expect(nextPhotoDay('2026-10-09', 3, false)).toBe('2026-10-09');
+  });
+
+  it('moves to next week once this week is taken or skipped', () => {
+    expect(nextPhotoDay('2026-10-07', 7, true)).toBe('2026-10-18');
+    expect(nextPhotoDay('2026-10-05', 1, true)).toBe('2026-10-12');
   });
 });
 

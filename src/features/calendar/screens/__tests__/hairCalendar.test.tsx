@@ -118,7 +118,7 @@ describe('C1 Hair view', () => {
     expect(
       screen.getByLabelText('Hair: 0 days in a row. Started again. Your best is still 1 day.'),
     ).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Progress photos' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /^Progress photos/ })).toBeTruthy();
   });
 
   it('opens the day detail from a hair day', async () => {

@@ -26,6 +26,17 @@ export function photoDays(today: string, weekday: number, weeks: number): string
   return Array.from({ length: Math.max(0, weeks) }, (_, i) => addDays(first, i * 7));
 }
 
+/**
+ * When the next weekly photo is due, for the Calendar's Progress photos row: this week's photo
+ * day until it comes, today once it has come and the photo is still due, and next week's photo
+ * day once this week is taken or skipped.
+ */
+export function nextPhotoDay(today: string, weekday: number, thisWeekDone: boolean): string {
+  const day = photoDayOfWeek(today, weekday);
+  if (thisWeekDone) return addDays(day, 7);
+  return day <= today ? today : day;
+}
+
 const skinOrder: readonly PhotoAngle[] = ['front', 'left', 'right'];
 const hairOrder: readonly PhotoAngle[] = ['front', 'back', 'top'];
 
