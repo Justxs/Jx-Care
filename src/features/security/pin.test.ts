@@ -113,8 +113,7 @@ describe('PIN service', () => {
       failures: 5,
       lockedUntil: T0 + PIN_LOCK_SHORT_MS,
     });
-    expect(await service.lockoutRemaining(T0)).toBe(30);
-    expect(await service.lockoutRemaining(T0 + 20_500)).toBe(10);
+    expect(await service.lockoutUntil(T0)).toBe(T0 + PIN_LOCK_SHORT_MS);
     expect(await service.lockoutUntil(T0 + 20_500)).toBe(T0 + PIN_LOCK_SHORT_MS);
     expect(await service.lockoutUntil(T0 + PIN_LOCK_SHORT_MS)).toBe(0);
 
@@ -123,7 +122,7 @@ describe('PIN service', () => {
       locked: true,
       lockedUntil: T0 + PIN_LOCK_SHORT_MS,
     });
-    expect(await service.lockoutRemaining(T0 + PIN_LOCK_SHORT_MS)).toBe(0);
+    expect(await service.lockoutUntil(T0 + PIN_LOCK_SHORT_MS)).toBe(0);
     expect(await service.verifyPin('2580', T0 + PIN_LOCK_SHORT_MS)).toEqual({ ok: true });
   });
 
@@ -138,7 +137,7 @@ describe('PIN service', () => {
       failures: 10,
       lockedUntil: t1 + PIN_LOCK_LONG_MS,
     });
-    expect(await service.lockoutRemaining(t1)).toBe(300);
+    expect(await service.lockoutUntil(t1)).toBe(t1 + PIN_LOCK_LONG_MS);
     expect((await service.verifyPin('2580', t1 + PIN_LOCK_LONG_MS - 1)).ok).toBe(false);
 
     const t2 = t1 + PIN_LOCK_LONG_MS;
@@ -162,7 +161,7 @@ describe('PIN service', () => {
     await failPin(service, 5, T0);
 
     const restarted = createPinService(createMemoryKV(kv.map));
-    expect(await restarted.lockoutRemaining(T0 + 10_000)).toBe(20);
+    expect(await restarted.lockoutUntil(T0 + 10_000)).toBe(T0 + PIN_LOCK_SHORT_MS);
     expect(await restarted.verifyPin('2580', T0 + 10_000)).toEqual({
       ok: false,
       locked: true,
@@ -206,7 +205,6 @@ describe('recovery answer', () => {
       failures: 5,
       lockedUntil: T0 + RECOVERY_LOCK_MS,
     });
-    expect(await service.recoveryLockoutRemaining(T0)).toBe(900);
     expect(await service.recoveryLockoutUntil(T0 + 1000)).toBe(T0 + RECOVERY_LOCK_MS);
     expect(await service.lockoutUntil(T0)).toBe(0);
     expect(await service.verifyRecoveryAnswer('rex', T0 + RECOVERY_LOCK_MS - 1)).toEqual({
@@ -230,7 +228,7 @@ describe('recovery answer', () => {
     await failPin(service, 10, T0);
     expect(await service.verifyRecoveryAnswer('Rex', T0)).toEqual({ ok: true });
     await service.setPin('9137');
-    expect(await service.lockoutRemaining(T0)).toBe(0);
+    expect(await service.lockoutUntil(T0)).toBe(0);
     expect(await service.verifyPin('9137', T0)).toEqual({ ok: true });
     expect((await service.verifyPin('2580', T0)).ok).toBe(false);
   });
@@ -308,6 +306,6 @@ describe('resetAll', () => {
     expect(kv.map.size).toBe(0);
     expect(await service.isPinSet()).toBe(false);
     expect(await service.getRecoveryQuestion()).toBeNull();
-    expect(await service.lockoutRemaining(T0)).toBe(0);
+    expect(await service.lockoutUntil(T0)).toBe(0);
   });
 });

@@ -261,7 +261,7 @@ describe('Change PIN', () => {
     // Even the right PIN does nothing while locked.
     await typePin('2580');
     expect(screen.queryByText('Create a new PIN')).toBeNull();
-    expect(await pinService.lockoutRemaining(Date.now())).toBeGreaterThan(0);
+    expect(await pinService.lockoutUntil(Date.now())).toBeGreaterThan(0);
 
     await act(async () => {
       jest.advanceTimersByTime(31_000);
