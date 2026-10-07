@@ -155,6 +155,13 @@ function MyProducts({
   const locale = i18n.language;
   const filters = useSelector(productListStore, (s) => s.filters);
   const [search, setSearch] = useState(filters.search);
+  // The search the store had when this field last matched it. A store search changed elsewhere
+  // (Reset filters, Today's See all, the weekly digest) is copied into the field.
+  const [synced, setSynced] = useState(filters.search);
+  if (filters.search !== synced) {
+    setSynced(filters.search);
+    setSearch(filters.search);
+  }
   const [sheetKey, setSheetKey] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
   const products = useProducts(filters, locale);
@@ -169,7 +176,9 @@ function MyProducts({
   useEffect(() => {
     const id = setTimeout(() => {
       const current = productListStore.state.filters;
-      if (current.search !== search) setProductFilters({ ...current, search });
+      if (current.search === search) return;
+      setSynced(search);
+      setProductFilters({ ...current, search });
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(id);
   }, [search]);
@@ -244,10 +253,7 @@ function MyProducts({
                   icon="search"
                   title={t('products.noMatchTitle')}
                   secondaryLabel={t('products.resetFilters')}
-                  onSecondary={() => {
-                    setSearch('');
-                    resetProductFilters();
-                  }}
+                  onSecondary={resetProductFilters}
                 >
                   {t('products.noMatchBody')}
                 </EmptyState>

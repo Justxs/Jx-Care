@@ -7,7 +7,7 @@ import { appStore } from '@/state/app';
 import { dismissToast, runToastAction, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
-import { productListStore } from '../../listState';
+import { productListStore, showExpiringProducts } from '../../listState';
 import { countArchived, createProduct, markFinished } from '../../repo';
 import type { ProductInput } from '../../schema';
 import { defaultProductFilters } from '../../types';
@@ -156,6 +156,22 @@ describe('ProductsScreen', () => {
     await wait(0);
     expect(rowNames()).toEqual(['Face wash', 'Hair wash']);
     expect(screen.getByLabelText('Search products')).toHaveProp('value', 'wash');
+  });
+
+  it('clears the search field when a link opens the list filtered', async () => {
+    const app = setup();
+    createProduct(app.db, input({ name: 'Gone', expiresAt: '2026-10-01' }));
+    createProduct(app.db, input({ name: 'Face wash' }));
+    await app.render(<ProductsScreen />);
+    await screen.findByText('Gone');
+    await fireEvent.changeText(screen.getByLabelText('Search products'), 'wash');
+    await waitFor(() => expect(rowNames()).toEqual(['Face wash']));
+
+    await act(async () => showExpiringProducts());
+    await waitFor(() => expect(rowNames()).toEqual(['Gone']));
+    expect(screen.getByLabelText('Search products')).toHaveProp('value', '');
+    await wait(200);
+    expect(productListStore.state.filters.search).toBe('');
   });
 
   it('filters by status and category', async () => {
