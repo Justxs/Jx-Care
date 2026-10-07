@@ -73,7 +73,10 @@ export type TodayRoutineGroup = {
   timeOfDay: Routine['timeOfDay'];
   customName: string | null;
   routines: DayRoutine[];
-  /** The routine the card shows: the one already ticked, else the remembered pick, else the first. */
+  /**
+   * The routine the card shows: the finished one, else the one already ticked, else the
+   * remembered pick, else the first.
+   */
   chosenId: number;
   /** Something is ticked, so the A/B choice is fixed for the day. */
   started: boolean;
@@ -190,12 +193,14 @@ export function groupDayRoutines(
   return groups.map((g) => {
     const first = g.routines[0]!;
     const started = g.routines.find((r) => r.progress.done > 0);
+    // When both options have ticks, the finished one is what the done row shows and opens.
+    const finished = g.routines.find((r) => r.progress.complete);
     return {
       key: g.key,
       timeOfDay: first.timeOfDay,
       customName: first.customName,
       routines: [...g.routines],
-      chosenId: started?.id ?? g.chosenId,
+      chosenId: finished?.id ?? started?.id ?? g.chosenId,
       started: !!started,
       complete: groupComplete(g.routines.map((r) => r.progress)),
     };

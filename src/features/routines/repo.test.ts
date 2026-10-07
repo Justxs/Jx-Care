@@ -339,6 +339,19 @@ describe('getTodayRoutines', () => {
     expect(evening).toMatchObject({ chosenId: eveB, started: true, complete: true });
   });
 
+  it('shows the finished option when both have ticks', () => {
+    const { db, eveA, eveB } = fixture();
+    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }));
+    saveRoutine(db, routineInput({ id: eveA, name: 'Evening A', steps: [step(), step()] }));
+    // A started from Today, then B done in full from the Routines tab.
+    const [a1, a2] = stepIds(db, eveA);
+    tickSteps(db, eveA, [a1!], MON, true, [a1!, a2!]);
+    const [sb] = stepIds(db, eveB);
+    tickSteps(db, eveB, [sb!], MON, true, [sb!]);
+    const evening = getTodayRoutines(db, MON, WARN)[1]!;
+    expect(evening).toMatchObject({ chosenId: eveB, complete: true });
+  });
+
   it('only counts steps due that day', () => {
     const db = createTestDb();
     const id = addRoutine(db, {
