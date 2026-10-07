@@ -248,10 +248,11 @@ export function useTickStep() {
       const db = getDb();
       const wasComplete = getDayLog(db, v.routineId, v.day)?.completedAt != null;
       const log = tickSteps(db, v.routineId, v.stepIds, v.day, v.done, v.dueStepIds);
-      // Today's reminder for the time of day (and any snoozed copy) is no longer needed.
-      if (!wasComplete && log?.completedAt != null) {
-        void cancelTodaysRoutineReminders(v.routineId);
-      }
+      const isComplete = log?.completedAt != null;
+      // Today's reminder for the time of day (and any snoozed copy) goes once the routine is
+      // done, and comes back when an untick (Undo) makes it not done again.
+      if (!wasComplete && isComplete) void cancelTodaysRoutineReminders(v.routineId);
+      if (wasComplete && !isComplete) void resyncRoutineReminders();
       return log;
     },
     onMutate: async (v) => {

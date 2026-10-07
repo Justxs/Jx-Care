@@ -155,6 +155,28 @@ describe('completing a routine', () => {
     await tick([due[1]!], true);
     expect(cancel).toHaveBeenCalledTimes(2);
   });
+
+  it('schedules today’s reminder again when an untick (Undo) makes it not done', async () => {
+    const resync = jest.spyOn(reminders, 'resyncRoutineReminders');
+    const app = setup();
+    const due = repo.getRoutineDay(app.db, app.id, MON, 30)!.progress.dueStepIds;
+    const { result } = await app.renderHook(() => useTickStep());
+    const tick = (done: boolean) =>
+      act(async () => {
+        await result.current.mutateAsync({
+          routineId: app.id,
+          stepIds: due,
+          day: MON,
+          done,
+          dueStepIds: due,
+        });
+      });
+
+    await tick(true);
+    expect(resync).not.toHaveBeenCalled();
+    await tick(false);
+    expect(resync).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('applyTickToGroups', () => {
