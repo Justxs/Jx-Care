@@ -137,18 +137,34 @@ export function useKnownIngredients() {
 
 // ─── Mutations ──────────────────────────────────────────────────────────────
 
-function invalidate(client: QueryClient, opts: { ingredients?: boolean } = {}): void {
-  client.invalidateQueries({ queryKey: qk.products.all });
-  // Today shows expiring products and routine steps by product.
-  client.invalidateQueries({ queryKey: ['today'] });
-  // Shopping rows show the product's price and size; Suggested lists finished and expiring ones.
-  client.invalidateQueries({ queryKey: qk.shopping.all });
-  // Day detail lists notes with their product's name; deleting a product deletes its notes.
-  client.invalidateQueries({ queryKey: qk.notes.all });
-  if (opts.ingredients) {
-    client.invalidateQueries({ queryKey: qk.ingredients.all });
-    client.invalidateQueries({ queryKey: qk.conflicts.all });
+/**
+ * Refreshes every query that shows product data after a product changes. `ingredients`: its
+ * ingredient list changed, so conflict warnings are recomputed too.
+ */
+export function invalidateProductQueries(
+  client: QueryClient,
+  opts: { ingredients?: boolean } = {},
+): void {
+  for (const queryKey of [
+    qk.products.all,
+    // Today shows expiring products and routine steps by product.
+    ['today'],
+    // Routine steps and hair tasks name their products and flag finished or expired ones.
+    qk.routines.all,
+    qk.hair.all,
+    // Hair logs on the calendar name their products; week detail lists products opened and finished.
+    qk.calendar.all,
+    qk.progress.all,
+    // Shopping rows show the product's price and size; Suggested lists finished and expiring ones.
+    qk.shopping.all,
+    // Day detail lists notes with their product's name; deleting a product deletes its notes.
+    qk.notes.all,
+    // The ingredient sheet (S2) lists the products that use it, finished ones last.
+    qk.ingredients.all,
+  ]) {
+    client.invalidateQueries({ queryKey });
   }
+  if (opts.ingredients) client.invalidateQueries({ queryKey: qk.conflicts.all });
 }
 
 export function useAvoidContext() {
@@ -171,7 +187,7 @@ export function useCreateProduct() {
       return { id: createProduct(db, input), isFirstWithExpiry };
     },
     onSuccess: ({ id }) => {
-      invalidate(client, { ingredients: true });
+      invalidateProductQueries(client, { ingredients: true });
       onProductChanged(id);
     },
   });
@@ -195,7 +211,7 @@ export function useUpdateProduct() {
       return id;
     },
     onSuccess: (id) => {
-      invalidate(client, { ingredients: true });
+      invalidateProductQueries(client, { ingredients: true });
       onProductChanged(id);
     },
   });
@@ -209,7 +225,7 @@ export function useMarkOpened() {
       return id;
     },
     onSuccess: (id) => {
-      invalidate(client);
+      invalidateProductQueries(client);
       onProductChanged(id);
     },
   });
@@ -223,7 +239,7 @@ export function useMarkFinished() {
       previous: markFinished(getDb(), id, appStore.state.activeDay),
     }),
     onSuccess: ({ id }) => {
-      invalidate(client);
+      invalidateProductQueries(client);
       onProductChanged(id);
     },
   });
@@ -234,7 +250,7 @@ export function useMarkFinishedMany() {
   return useMutation({
     mutationFn: async (ids: number[]) => markFinishedMany(getDb(), ids, appStore.state.activeDay),
     onSuccess: (previous) => {
-      invalidate(client);
+      invalidateProductQueries(client);
       for (const p of previous) onProductChanged(p.id);
     },
   });
@@ -249,7 +265,7 @@ export function useUndoFinished() {
       return previous;
     },
     onSuccess: (previous) => {
-      invalidate(client);
+      invalidateProductQueries(client);
       for (const p of previous) onProductChanged(p.id);
     },
   });
@@ -263,7 +279,7 @@ export function useRestoreProduct() {
       return id;
     },
     onSuccess: (id) => {
-      invalidate(client);
+      invalidateProductQueries(client);
       onProductChanged(id);
     },
   });
@@ -278,7 +294,7 @@ export function useDeleteProduct() {
     },
     onSuccess: (id) => {
       client.removeQueries({ queryKey: qk.products.detail(id) });
-      invalidate(client, { ingredients: true });
+      invalidateProductQueries(client, { ingredients: true });
       onProductChanged(id);
     },
   });
@@ -289,7 +305,7 @@ export function useDuplicateProduct() {
   return useMutation({
     mutationFn: async (id: number) => duplicateProduct(getDb(), id, appStore.state.activeDay),
     onSuccess: (id) => {
-      invalidate(client);
+      invalidateProductQueries(client);
       onProductChanged(id);
     },
   });
