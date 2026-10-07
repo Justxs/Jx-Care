@@ -1,6 +1,9 @@
+import { Paths } from 'expo-file-system';
+
 import { getDb } from '@/db';
 import { queryClient } from '@/db/queryClient';
 import { qk } from '@/db/queryKeys';
+import { rebasePhotoUris } from '@/features/backup/repo';
 import { seedDefaultRules } from '@/features/conflicts/seed';
 import { checkOnboarding } from '@/features/onboarding/gate';
 import { getSettings, hasSettingsRow } from '@/features/settings/repo';
@@ -16,6 +19,12 @@ import { appStore, setLanguage, setReady } from './app';
  */
 export async function bootstrapAfterMigrations(): Promise<void> {
   const db = getDb();
+  // Before any screen reads a photo: an update can move the documents folder (iOS).
+  try {
+    rebasePhotoUris(db, Paths.document.uri);
+  } catch {
+    // Never blocks the launch; the next launch tries again.
+  }
   const settings = getSettings(db, phoneLanguage());
   queryClient.setQueryData(qk.settings, settings);
   // Bought shopping items leave the list 30 days after they were ticked.

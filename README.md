@@ -61,7 +61,7 @@ pnpm dlx eas-cli build --profile preview --platform android       # installable 
 pnpm dlx eas-cli build --profile preview --platform ios           # ad-hoc IPA (needs an Apple account)
 ```
 
-Version is 1.0.0; build numbers are set by EAS (`appVersionSource: remote`).
+The version lives in `app.json` (`pnpm version:bump`); build numbers are set by EAS (`appVersionSource: remote`). Before shipping a new version to phones that already have the app, follow [docs/releasing.md](docs/releasing.md): it covers the signing key to keep, database changes and the update test.
 
 The first build asks to create the EAS project and link it (it writes the project id into `app.json`); say yes and commit that change. After installing a build, walk [docs/device-checklist.md](docs/device-checklist.md).
 

@@ -1,47 +1,56 @@
-import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
+
+import { DataErrorScreen } from '@/components/DataErrorScreen';
 
 import { db } from './client';
+import { DatabaseNewerError, runMigrations } from './migrate';
 import migrations from './migrations/migrations';
+import { backupBeforeMigrating } from './preMigrationBackup';
 
 type Props = {
   children: ReactNode;
-  /** Called once the database is migrated, so the splash can hide. */
-  onReady?: () => void;
+  /**
+   * Called once migrating has finished, so the splash can hide: `true` when the data is ready,
+   * `false` when an error screen shows instead (the app must not start on that data).
+   */
+  onReady?: (migrated: boolean) => void;
 };
 
+type Outcome = { ok: true } | { ok: false; error: Error };
+
+function migrate(): Outcome {
+  try {
+    runMigrations(db, migrations, { beforeMigrate: backupBeforeMigrating });
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error : new Error(String(error)) };
+  }
+}
+
 function Migrator({ children, onReady, onRetry }: Props & { onRetry: () => void }) {
-  const { success, error } = useMigrations(db, migrations);
-  const { t } = useTranslation();
-  const settled = success || error !== undefined;
+  // Runs once per mount (Try again remounts); the splash is still up. Migrating is idempotent, so
+  // a second render in development finds nothing to do.
+  const [outcome] = useState(migrate);
 
   useEffect(() => {
-    if (settled) onReady?.();
-  }, [settled, onReady]);
+    onReady?.(outcome.ok);
+  }, [outcome, onReady]);
 
-  if (error) {
-    return (
-      <View className="flex-1 items-center justify-center gap-3 bg-canvas px-6">
-        <Text className="text-center text-title-m text-ink">{t('errors.dataTitle')}</Text>
-        <Text className="text-center text-body text-ink-muted">{t('errors.dataBody')}</Text>
-        <Text className="text-center text-caption text-ink-muted">{error.message}</Text>
-        <Pressable
-          accessibilityRole="button"
-          onPress={onRetry}
-          className="mt-3 min-h-[52px] items-center justify-center rounded-md bg-accent px-5"
-        >
-          <Text className="text-body-strong text-on-accent">{t('errors.tryAgain')}</Text>
-        </Pressable>
-      </View>
+  if (!outcome.ok) {
+    return outcome.error instanceof DatabaseNewerError ? (
+      <DataErrorScreen kind="newer" />
+    ) : (
+      <DataErrorScreen kind="failed" detail={outcome.error.message} onRetry={onRetry} />
     );
   }
-  if (!success) return null;
   return <>{children}</>;
 }
 
-/** Runs the Drizzle migrations before rendering the app; shows a retry screen if they fail. */
+/**
+ * Brings the database up to date before rendering the app (`runMigrations`: a copy first, then
+ * every migration in one transaction). Shows a retry screen if that fails, or an "update the app"
+ * screen if the data is from a newer version.
+ */
 export function MigrationGate(props: Props) {
   const [attempt, setAttempt] = useState(0);
   return <Migrator key={attempt} {...props} onRetry={() => setAttempt((n) => n + 1)} />;

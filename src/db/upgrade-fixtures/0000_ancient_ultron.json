@@ -1,0 +1,1393 @@
+{
+  "tag": "0000_ancient_ultron",
+  "note": "Frozen: data as the app stored it at this migration. Never edit; see docs/releasing.md.",
+  "tables": {
+    "avoid_item": [
+      {
+        "id": 1,
+        "kind": "ingredient",
+        "ref_id": 18,
+        "note": "Makes my scalp itchy",
+        "created_at": 1791381438396,
+        "updated_at": 1791381438396
+      }
+    ],
+    "condition_log": [
+      {
+        "id": 1,
+        "day": "2026-10-03",
+        "area": "skin",
+        "states": "[\"dry\"]",
+        "note": null,
+        "created_at": 1791381438433,
+        "updated_at": 1791381438433
+      },
+      {
+        "id": 2,
+        "day": "2026-10-05",
+        "area": "skin",
+        "states": "[\"breakout\",\"redness\"]",
+        "note": "Two spots on the chin.",
+        "created_at": 1791381438434,
+        "updated_at": 1791381438434
+      },
+      {
+        "id": 3,
+        "day": "2026-10-05",
+        "area": "hair",
+        "states": "[\"oily_roots\"]",
+        "note": null,
+        "created_at": 1791381438434,
+        "updated_at": 1791381438434
+      },
+      {
+        "id": 4,
+        "day": "2026-10-06",
+        "area": "skin",
+        "states": "[\"calm\",\"glow\"]",
+        "note": null,
+        "created_at": 1791381438435,
+        "updated_at": 1791381438435
+      },
+      {
+        "id": 5,
+        "day": "2026-10-06",
+        "area": "hair",
+        "states": "[\"shiny\"]",
+        "note": null,
+        "created_at": 1791381438435,
+        "updated_at": 1791381438435
+      }
+    ],
+    "conflict": [
+      {
+        "id": 1,
+        "left_kind": "group",
+        "left_id": 1,
+        "right_kind": "ingredient",
+        "right_id": 23,
+        "note": "Drug labels warn they can irritate and dry the skin together",
+        "created_at": 1791381438379,
+        "updated_at": 1791381438379
+      },
+      {
+        "id": 2,
+        "left_kind": "group",
+        "left_id": 1,
+        "right_kind": "ingredient",
+        "right_id": 24,
+        "note": "Drug labels warn they can irritate and dry the skin together",
+        "created_at": 1791381438380,
+        "updated_at": 1791381438380
+      },
+      {
+        "id": 3,
+        "left_kind": "group",
+        "left_id": 1,
+        "right_kind": "ingredient",
+        "right_id": 25,
+        "note": "Drug labels warn they can irritate and dry the skin together",
+        "created_at": 1791381438381,
+        "updated_at": 1791381438381
+      },
+      {
+        "id": 4,
+        "left_kind": "ingredient",
+        "left_id": 21,
+        "right_kind": "ingredient",
+        "right_id": 26,
+        "note": "Benzoyl peroxide breaks down tretinoin",
+        "created_at": 1791381438382,
+        "updated_at": 1791381438382
+      },
+      {
+        "id": 5,
+        "left_kind": "ingredient",
+        "left_id": 26,
+        "right_kind": "ingredient",
+        "right_id": 23,
+        "note": "Drug labels warn they can irritate and dry the skin together",
+        "created_at": 1791381438383,
+        "updated_at": 1791381438383
+      },
+      {
+        "id": 6,
+        "left_kind": "ingredient",
+        "left_id": 26,
+        "right_kind": "ingredient",
+        "right_id": 24,
+        "note": "Drug labels warn they can irritate and dry the skin together",
+        "created_at": 1791381438384,
+        "updated_at": 1791381438384
+      },
+      {
+        "id": 7,
+        "left_kind": "ingredient",
+        "left_id": 26,
+        "right_kind": "ingredient",
+        "right_id": 25,
+        "note": "Drug labels warn they can irritate and dry the skin together",
+        "created_at": 1791381438386,
+        "updated_at": 1791381438386
+      },
+      {
+        "id": 8,
+        "left_kind": "ingredient",
+        "left_id": 27,
+        "right_kind": "ingredient",
+        "right_id": 26,
+        "note": "Together they can stain the skin for a while",
+        "created_at": 1791381438388,
+        "updated_at": 1791381438388
+      },
+      {
+        "id": 9,
+        "left_kind": "ingredient",
+        "left_id": 27,
+        "right_kind": "ingredient",
+        "right_id": 28,
+        "note": "Together they can stain the skin for a while",
+        "created_at": 1791381438390,
+        "updated_at": 1791381438390
+      },
+      {
+        "id": 10,
+        "left_kind": "ingredient",
+        "left_id": 5,
+        "right_kind": "ingredient",
+        "right_id": 10,
+        "note": "Stings on the same day",
+        "created_at": 1791381438393,
+        "updated_at": 1791381438393
+      }
+    ],
+    "hair_log": [
+      {
+        "id": 1,
+        "hair_task_id": 1,
+        "day": "2026-10-01",
+        "due_day": "2026-10-01",
+        "product_ids": "[7,8]",
+        "note": null,
+        "created_at": 1791381438429,
+        "updated_at": 1791381438429
+      },
+      {
+        "id": 2,
+        "hair_task_id": 1,
+        "day": "2026-10-04",
+        "due_day": "2026-10-04",
+        "product_ids": "[7]",
+        "note": "Scalp a bit itchy",
+        "created_at": 1791381438431,
+        "updated_at": 1791381438431
+      }
+    ],
+    "hair_task": [
+      {
+        "id": 1,
+        "name": "Wash",
+        "kind": "wash",
+        "other_kind": null,
+        "product_ids": "[7,8]",
+        "schedule_kind": "interval",
+        "every_n_days": 3,
+        "interval_unit": "days",
+        "days_of_week": null,
+        "last_done_at": "2026-10-04",
+        "reminder_time": "19:00",
+        "active": 1,
+        "created_at": 1791381438427,
+        "updated_at": 1791381438431
+      },
+      {
+        "id": 2,
+        "name": "Trim",
+        "kind": "other",
+        "other_kind": "trim",
+        "product_ids": "[]",
+        "schedule_kind": "interval",
+        "every_n_days": 56,
+        "interval_unit": "weeks",
+        "days_of_week": null,
+        "last_done_at": "2026-08-18",
+        "reminder_time": null,
+        "active": 1,
+        "created_at": 1791381438432,
+        "updated_at": 1791381438432
+      }
+    ],
+    "ingredient": [
+      {
+        "id": 1,
+        "name": "Aqua",
+        "normalized_name": "aqua",
+        "group_id": null,
+        "created_at": 1791381438335,
+        "updated_at": 1791381438335
+      },
+      {
+        "id": 2,
+        "name": "Glycerin",
+        "normalized_name": "glycerin",
+        "group_id": null,
+        "created_at": 1791381438336,
+        "updated_at": 1791381438336
+      },
+      {
+        "id": 3,
+        "name": "Ceramide NP",
+        "normalized_name": "ceramide np",
+        "group_id": null,
+        "created_at": 1791381438337,
+        "updated_at": 1791381438337
+      },
+      {
+        "id": 4,
+        "name": "Niacinamide",
+        "normalized_name": "niacinamide",
+        "group_id": null,
+        "created_at": 1791381438338,
+        "updated_at": 1791381438338
+      },
+      {
+        "id": 5,
+        "name": "Ascorbic acid",
+        "normalized_name": "ascorbic acid",
+        "group_id": null,
+        "created_at": 1791381438340,
+        "updated_at": 1791381438340
+      },
+      {
+        "id": 6,
+        "name": "Ferulic acid",
+        "normalized_name": "ferulic acid",
+        "group_id": null,
+        "created_at": 1791381438341,
+        "updated_at": 1791381438341
+      },
+      {
+        "id": 7,
+        "name": "Tocopherol",
+        "normalized_name": "tocopherol",
+        "group_id": null,
+        "created_at": 1791381438342,
+        "updated_at": 1791381438342
+      },
+      {
+        "id": 8,
+        "name": "Squalane",
+        "normalized_name": "squalane",
+        "group_id": null,
+        "created_at": 1791381438344,
+        "updated_at": 1791381438344
+      },
+      {
+        "id": 9,
+        "name": "Retinol",
+        "normalized_name": "retinol",
+        "group_id": null,
+        "created_at": 1791381438344,
+        "updated_at": 1791381438344
+      },
+      {
+        "id": 10,
+        "name": "Glycolic acid",
+        "normalized_name": "glycolic acid",
+        "group_id": null,
+        "created_at": 1791381438347,
+        "updated_at": 1791381438347
+      },
+      {
+        "id": 11,
+        "name": "Aloe barbadensis leaf juice",
+        "normalized_name": "aloe barbadensis leaf juice",
+        "group_id": null,
+        "created_at": 1791381438347,
+        "updated_at": 1791381438347
+      },
+      {
+        "id": 12,
+        "name": "Homosalate",
+        "normalized_name": "homosalate",
+        "group_id": null,
+        "created_at": 1791381438349,
+        "updated_at": 1791381438349
+      },
+      {
+        "id": 13,
+        "name": "Octocrylene",
+        "normalized_name": "octocrylene",
+        "group_id": null,
+        "created_at": 1791381438349,
+        "updated_at": 1791381438349
+      },
+      {
+        "id": 14,
+        "name": "Butyrospermum parkii butter",
+        "normalized_name": "butyrospermum parkii butter",
+        "group_id": null,
+        "created_at": 1791381438351,
+        "updated_at": 1791381438351
+      },
+      {
+        "id": 15,
+        "name": "Sodium laureth sulfate",
+        "normalized_name": "sodium laureth sulfate",
+        "group_id": null,
+        "created_at": 1791381438353,
+        "updated_at": 1791381438353
+      },
+      {
+        "id": 16,
+        "name": "Panthenol",
+        "normalized_name": "panthenol",
+        "group_id": null,
+        "created_at": 1791381438353,
+        "updated_at": 1791381438353
+      },
+      {
+        "id": 17,
+        "name": "Cetearyl alcohol",
+        "normalized_name": "cetearyl alcohol",
+        "group_id": null,
+        "created_at": 1791381438355,
+        "updated_at": 1791381438355
+      },
+      {
+        "id": 18,
+        "name": "Parfum",
+        "normalized_name": "parfum",
+        "group_id": null,
+        "created_at": 1791381438355,
+        "updated_at": 1791381438355
+      },
+      {
+        "id": 19,
+        "name": "Kaolin",
+        "normalized_name": "kaolin",
+        "group_id": null,
+        "created_at": 1791381438360,
+        "updated_at": 1791381438360
+      },
+      {
+        "id": 20,
+        "name": "Bentonite",
+        "normalized_name": "bentonite",
+        "group_id": null,
+        "created_at": 1791381438361,
+        "updated_at": 1791381438361
+      },
+      {
+        "id": 21,
+        "name": "Tretinoin",
+        "normalized_name": "tretinoin",
+        "group_id": 1,
+        "created_at": 1791381438375,
+        "updated_at": 1791381438375
+      },
+      {
+        "id": 22,
+        "name": "Adapalene",
+        "normalized_name": "adapalene",
+        "group_id": 1,
+        "created_at": 1791381438376,
+        "updated_at": 1791381438377
+      },
+      {
+        "id": 23,
+        "name": "Salicylic acid",
+        "normalized_name": "salicylic acid",
+        "group_id": null,
+        "created_at": 1791381438379,
+        "updated_at": 1791381438379
+      },
+      {
+        "id": 24,
+        "name": "Sulfur",
+        "normalized_name": "sulfur",
+        "group_id": null,
+        "created_at": 1791381438380,
+        "updated_at": 1791381438380
+      },
+      {
+        "id": 25,
+        "name": "Resorcinol",
+        "normalized_name": "resorcinol",
+        "group_id": null,
+        "created_at": 1791381438380,
+        "updated_at": 1791381438380
+      },
+      {
+        "id": 26,
+        "name": "Benzoyl peroxide",
+        "normalized_name": "benzoyl peroxide",
+        "group_id": null,
+        "created_at": 1791381438381,
+        "updated_at": 1791381438381
+      },
+      {
+        "id": 27,
+        "name": "Hydroquinone",
+        "normalized_name": "hydroquinone",
+        "group_id": null,
+        "created_at": 1791381438387,
+        "updated_at": 1791381438387
+      },
+      {
+        "id": 28,
+        "name": "Hydrogen peroxide",
+        "normalized_name": "hydrogen peroxide",
+        "group_id": null,
+        "created_at": 1791381438390,
+        "updated_at": 1791381438390
+      }
+    ],
+    "ingredient_group": [
+      {
+        "id": 1,
+        "name": "Prescription retinoids",
+        "created_at": 1791381438374,
+        "updated_at": 1791381438374
+      }
+    ],
+    "product": [
+      {
+        "id": 1,
+        "name": "Gentle Foaming Cleanser",
+        "brand": "Lumi Lab",
+        "area": "skin",
+        "category": "cleanser",
+        "photo_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/products/mg1k2x-1f9a8c1d.jpg",
+        "size": 236,
+        "unit": "ml",
+        "price_cents": 1299,
+        "purchased_at": "2026-07-29",
+        "expires_at": null,
+        "opened_at": "2026-08-08",
+        "pao_months": 12,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438334,
+        "updated_at": 1791381438554
+      },
+      {
+        "id": 2,
+        "name": "Vitamin C 15% Serum",
+        "brand": "Lumi Lab",
+        "area": "skin",
+        "category": "serum",
+        "photo_uri": null,
+        "size": 30,
+        "unit": "ml",
+        "price_cents": 2450,
+        "purchased_at": null,
+        "expires_at": "2026-10-19",
+        "opened_at": "2026-08-28",
+        "pao_months": null,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438339,
+        "updated_at": 1791381438339
+      },
+      {
+        "id": 3,
+        "name": "Retinol 0.5% in Squalane",
+        "brand": "Nordic Skin",
+        "area": "skin",
+        "category": "serum",
+        "photo_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/products/mg3k2x-3f9a8c1d.jpg",
+        "size": 30,
+        "unit": "ml",
+        "price_cents": 1890,
+        "purchased_at": "2026-09-02",
+        "expires_at": null,
+        "opened_at": "2026-09-07",
+        "pao_months": 6,
+        "notes": "Start twice a week, then build up.",
+        "rating": 4,
+        "would_rebuy": 1,
+        "archived_at": null,
+        "created_at": 1791381438343,
+        "updated_at": 1791381438554
+      },
+      {
+        "id": 4,
+        "name": "Glycolic Acid 7% Toner",
+        "brand": "Nordic Skin",
+        "area": "skin",
+        "category": "toner",
+        "photo_uri": null,
+        "size": 240,
+        "unit": "ml",
+        "price_cents": 1100,
+        "purchased_at": null,
+        "expires_at": "2027-11-11",
+        "opened_at": null,
+        "pao_months": 12,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438346,
+        "updated_at": 1791381438346
+      },
+      {
+        "id": 5,
+        "name": "Daily Fluid SPF 50",
+        "brand": "Sol Care",
+        "area": "skin",
+        "category": "spf",
+        "photo_uri": null,
+        "size": 50,
+        "unit": "ml",
+        "price_cents": 2200,
+        "purchased_at": null,
+        "expires_at": "2026-10-02",
+        "opened_at": "2026-05-10",
+        "pao_months": null,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438348,
+        "updated_at": 1791381438348
+      },
+      {
+        "id": 6,
+        "name": "Barrier Cream",
+        "brand": "Lumi Lab",
+        "area": "skin",
+        "category": "moisturiser",
+        "photo_uri": null,
+        "size": null,
+        "unit": null,
+        "price_cents": null,
+        "purchased_at": null,
+        "expires_at": null,
+        "opened_at": null,
+        "pao_months": null,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438350,
+        "updated_at": 1791381438350
+      },
+      {
+        "id": 7,
+        "name": "Repair Shampoo",
+        "brand": "Hair Studio",
+        "area": "hair",
+        "category": "shampoo",
+        "photo_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/products/mg7k2x-7f9a8c1d.jpg",
+        "size": 250,
+        "unit": "ml",
+        "price_cents": 1550,
+        "purchased_at": null,
+        "expires_at": null,
+        "opened_at": "2026-09-17",
+        "pao_months": 12,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438352,
+        "updated_at": 1791381438554
+      },
+      {
+        "id": 8,
+        "name": "Silk Conditioner",
+        "brand": "Hair Studio",
+        "area": "hair",
+        "category": "conditioner",
+        "photo_uri": null,
+        "size": null,
+        "unit": null,
+        "price_cents": null,
+        "purchased_at": null,
+        "expires_at": null,
+        "opened_at": null,
+        "pao_months": null,
+        "notes": null,
+        "rating": null,
+        "would_rebuy": null,
+        "archived_at": null,
+        "created_at": 1791381438354,
+        "updated_at": 1791381438354
+      },
+      {
+        "id": 9,
+        "name": "Green Clay Mask",
+        "brand": "Sol Care",
+        "area": "skin",
+        "category": "mask",
+        "photo_uri": null,
+        "size": 75,
+        "unit": "ml",
+        "price_cents": 1400,
+        "purchased_at": null,
+        "expires_at": null,
+        "opened_at": "2026-06-09",
+        "pao_months": 6,
+        "notes": null,
+        "rating": 2,
+        "would_rebuy": 0,
+        "archived_at": "2026-09-27",
+        "created_at": 1791381438356,
+        "updated_at": 1791381438366
+      }
+    ],
+    "product_ingredient": [
+      {
+        "product_id": 1,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438338
+      },
+      {
+        "product_id": 1,
+        "ingredient_id": 2,
+        "position": 1,
+        "created_at": 1791381438338
+      },
+      {
+        "product_id": 1,
+        "ingredient_id": 3,
+        "position": 2,
+        "created_at": 1791381438338
+      },
+      {
+        "product_id": 1,
+        "ingredient_id": 4,
+        "position": 3,
+        "created_at": 1791381438338
+      },
+      {
+        "product_id": 2,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438342
+      },
+      {
+        "product_id": 2,
+        "ingredient_id": 5,
+        "position": 1,
+        "created_at": 1791381438342
+      },
+      {
+        "product_id": 2,
+        "ingredient_id": 6,
+        "position": 2,
+        "created_at": 1791381438342
+      },
+      {
+        "product_id": 2,
+        "ingredient_id": 7,
+        "position": 3,
+        "created_at": 1791381438342
+      },
+      {
+        "product_id": 3,
+        "ingredient_id": 8,
+        "position": 0,
+        "created_at": 1791381438345
+      },
+      {
+        "product_id": 3,
+        "ingredient_id": 9,
+        "position": 1,
+        "created_at": 1791381438345
+      },
+      {
+        "product_id": 3,
+        "ingredient_id": 7,
+        "position": 2,
+        "created_at": 1791381438345
+      },
+      {
+        "product_id": 4,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438348
+      },
+      {
+        "product_id": 4,
+        "ingredient_id": 10,
+        "position": 1,
+        "created_at": 1791381438348
+      },
+      {
+        "product_id": 4,
+        "ingredient_id": 11,
+        "position": 2,
+        "created_at": 1791381438348
+      },
+      {
+        "product_id": 5,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438350
+      },
+      {
+        "product_id": 5,
+        "ingredient_id": 12,
+        "position": 1,
+        "created_at": 1791381438350
+      },
+      {
+        "product_id": 5,
+        "ingredient_id": 13,
+        "position": 2,
+        "created_at": 1791381438350
+      },
+      {
+        "product_id": 5,
+        "ingredient_id": 2,
+        "position": 3,
+        "created_at": 1791381438350
+      },
+      {
+        "product_id": 6,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438352
+      },
+      {
+        "product_id": 6,
+        "ingredient_id": 3,
+        "position": 1,
+        "created_at": 1791381438352
+      },
+      {
+        "product_id": 6,
+        "ingredient_id": 14,
+        "position": 2,
+        "created_at": 1791381438352
+      },
+      {
+        "product_id": 7,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438354
+      },
+      {
+        "product_id": 7,
+        "ingredient_id": 15,
+        "position": 1,
+        "created_at": 1791381438354
+      },
+      {
+        "product_id": 7,
+        "ingredient_id": 16,
+        "position": 2,
+        "created_at": 1791381438354
+      },
+      {
+        "product_id": 8,
+        "ingredient_id": 1,
+        "position": 0,
+        "created_at": 1791381438356
+      },
+      {
+        "product_id": 8,
+        "ingredient_id": 17,
+        "position": 1,
+        "created_at": 1791381438356
+      },
+      {
+        "product_id": 8,
+        "ingredient_id": 18,
+        "position": 2,
+        "created_at": 1791381438356
+      },
+      {
+        "product_id": 9,
+        "ingredient_id": 19,
+        "position": 0,
+        "created_at": 1791381438361
+      },
+      {
+        "product_id": 9,
+        "ingredient_id": 20,
+        "position": 1,
+        "created_at": 1791381438361
+      },
+      {
+        "product_id": 9,
+        "ingredient_id": 18,
+        "position": 2,
+        "created_at": 1791381438361
+      }
+    ],
+    "product_note": [
+      {
+        "id": 1,
+        "product_id": 3,
+        "day": "2026-09-25",
+        "text": "Skin feels smoother already.",
+        "tags": "[\"glow\"]",
+        "created_at": 1791381438363,
+        "updated_at": 1791381438363
+      },
+      {
+        "id": 2,
+        "product_id": 3,
+        "day": "2026-10-05",
+        "text": "A little dry around the nose after two nights in a row.",
+        "tags": "[\"dry\",\"redness\"]",
+        "created_at": 1791381438364,
+        "updated_at": 1791381438364
+      }
+    ],
+    "progress_entry": [
+      {
+        "id": 1,
+        "area": "skin",
+        "week_start": "2026-08-31",
+        "taken_at": 1788678000000,
+        "skipped": 0,
+        "rating": 3,
+        "tags": "[\"dry\",\"redness\"]",
+        "note": "Flaky around the nose after the new toner.",
+        "created_at": 1791381438548,
+        "updated_at": 1791381438548
+      },
+      {
+        "id": 2,
+        "area": "skin",
+        "week_start": "2026-09-07",
+        "taken_at": 1789196400000,
+        "skipped": 0,
+        "rating": null,
+        "tags": "[]",
+        "note": null,
+        "created_at": 1791381438550,
+        "updated_at": 1791381438550
+      },
+      {
+        "id": 3,
+        "area": "skin",
+        "week_start": "2026-09-14",
+        "taken_at": null,
+        "skipped": 1,
+        "rating": null,
+        "tags": "[]",
+        "note": null,
+        "created_at": 1791381438551,
+        "updated_at": 1791381438551
+      },
+      {
+        "id": 4,
+        "area": "skin",
+        "week_start": "2026-09-28",
+        "taken_at": 1791097200000,
+        "skipped": 0,
+        "rating": 4,
+        "tags": "[\"calm\",\"glow\"]",
+        "note": "Less redness on the cheeks.",
+        "created_at": 1791381438552,
+        "updated_at": 1791381438552
+      },
+      {
+        "id": 5,
+        "area": "hair",
+        "week_start": "2026-09-28",
+        "taken_at": 1791010800000,
+        "skipped": 0,
+        "rating": 4,
+        "tags": "[\"shiny\"]",
+        "note": null,
+        "created_at": 1791381438553,
+        "updated_at": 1791381438553
+      }
+    ],
+    "progress_photo": [
+      {
+        "id": 1,
+        "entry_id": 1,
+        "angle": "front",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-08-31/front-1791360000000.jpg",
+        "created_at": 1791381438548
+      },
+      {
+        "id": 2,
+        "entry_id": 1,
+        "angle": "left",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-08-31/left-1791360000000.jpg",
+        "created_at": 1791381438548
+      },
+      {
+        "id": 3,
+        "entry_id": 1,
+        "angle": "right",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-08-31/right-1791360000000.jpg",
+        "created_at": 1791381438548
+      },
+      {
+        "id": 4,
+        "entry_id": 2,
+        "angle": "front",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-09-07/front-1791360000000.jpg",
+        "created_at": 1791381438550
+      },
+      {
+        "id": 5,
+        "entry_id": 4,
+        "angle": "front",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-09-28/front-1791360000000.jpg",
+        "created_at": 1791381438552
+      },
+      {
+        "id": 6,
+        "entry_id": 4,
+        "angle": "left",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-09-28/left-1791360000000.jpg",
+        "created_at": 1791381438552
+      },
+      {
+        "id": 7,
+        "entry_id": 4,
+        "angle": "right",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/skin/2026-09-28/right-1791360000000.jpg",
+        "created_at": 1791381438552
+      },
+      {
+        "id": 8,
+        "entry_id": 5,
+        "angle": "front",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/hair/2026-09-28/front-1791360000000.jpg",
+        "created_at": 1791381438554
+      },
+      {
+        "id": 9,
+        "entry_id": 5,
+        "angle": "back",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/hair/2026-09-28/back-1791360000000.jpg",
+        "created_at": 1791381438554
+      },
+      {
+        "id": 10,
+        "entry_id": 5,
+        "angle": "top",
+        "file_uri": "file:///var/mobile/Containers/Data/Application/0F8E1C2A-5B7D-4E39-9A61-3D2C8B4F7E10/Documents/progress/hair/2026-09-28/top-1791360000000.jpg",
+        "created_at": 1791381438554
+      }
+    ],
+    "routine": [
+      {
+        "id": 1,
+        "name": "Morning",
+        "time_of_day": "morning",
+        "custom_name": null,
+        "sort_time": "07:00",
+        "days_of_week": "[1,2,3,4,5,6,7]",
+        "reminder_time": "07:30",
+        "active": 1,
+        "created_at": 1791381438397,
+        "updated_at": 1791381438397
+      },
+      {
+        "id": 2,
+        "name": "Retinol night",
+        "time_of_day": "evening",
+        "custom_name": null,
+        "sort_time": "21:00",
+        "days_of_week": "[1,2,3,4,5,6,7]",
+        "reminder_time": "21:30",
+        "active": 1,
+        "created_at": 1791381438400,
+        "updated_at": 1791381438400
+      },
+      {
+        "id": 3,
+        "name": "Exfoliating night",
+        "time_of_day": "evening",
+        "custom_name": null,
+        "sort_time": "21:00",
+        "days_of_week": "[1,2,3,4,5,6,7]",
+        "reminder_time": null,
+        "active": 1,
+        "created_at": 1791381438402,
+        "updated_at": 1791381438558
+      }
+    ],
+    "routine_choice": [
+      {
+        "id": 1,
+        "time_of_day_key": "evening",
+        "weekday": 3,
+        "routine_id": 2,
+        "created_at": 1791381438403,
+        "updated_at": 1791381438403
+      }
+    ],
+    "routine_log": [
+      {
+        "id": 1,
+        "routine_id": 1,
+        "day": "2026-10-02",
+        "due_step_ids": "[1,2,3,4]",
+        "done_step_ids": "[1,2,3,4]",
+        "completed_at": 1790914800000,
+        "created_at": 1791381438414,
+        "updated_at": 1791381438414
+      },
+      {
+        "id": 2,
+        "routine_id": 2,
+        "day": "2026-10-02",
+        "due_step_ids": "[5,6,7]",
+        "done_step_ids": "[5,6,7]",
+        "completed_at": 1790966400000,
+        "created_at": 1791381438415,
+        "updated_at": 1791381438415
+      },
+      {
+        "id": 3,
+        "routine_id": 1,
+        "day": "2026-10-03",
+        "due_step_ids": "[1,2,3,4]",
+        "done_step_ids": "[1,2,3,4]",
+        "completed_at": 1791001200000,
+        "created_at": 1791381438416,
+        "updated_at": 1791381438416
+      },
+      {
+        "id": 4,
+        "routine_id": 3,
+        "day": "2026-10-03",
+        "due_step_ids": "[8,9,10]",
+        "done_step_ids": "[8,9,10]",
+        "completed_at": 1791052800000,
+        "created_at": 1791381438417,
+        "updated_at": 1791381438417
+      },
+      {
+        "id": 5,
+        "routine_id": 1,
+        "day": "2026-10-04",
+        "due_step_ids": "[1,2,3,4]",
+        "done_step_ids": "[1,2,3,4]",
+        "completed_at": 1791087600000,
+        "created_at": 1791381438418,
+        "updated_at": 1791381438418
+      },
+      {
+        "id": 6,
+        "routine_id": 2,
+        "day": "2026-10-04",
+        "due_step_ids": "[5,6,7]",
+        "done_step_ids": "[5,6,7]",
+        "completed_at": 1791139200000,
+        "created_at": 1791381438420,
+        "updated_at": 1791381438420
+      },
+      {
+        "id": 7,
+        "routine_id": 1,
+        "day": "2026-10-05",
+        "due_step_ids": "[1,2,3,4]",
+        "done_step_ids": "[1,2,3,4]",
+        "completed_at": 1791174000000,
+        "created_at": 1791381438421,
+        "updated_at": 1791381438421
+      },
+      {
+        "id": 8,
+        "routine_id": 3,
+        "day": "2026-10-05",
+        "due_step_ids": "[8,9,10]",
+        "done_step_ids": "[8,9,10]",
+        "completed_at": 1791225600000,
+        "created_at": 1791381438422,
+        "updated_at": 1791381438422
+      },
+      {
+        "id": 9,
+        "routine_id": 1,
+        "day": "2026-10-06",
+        "due_step_ids": "[1,2,3,4]",
+        "done_step_ids": "[1,2,3,4]",
+        "completed_at": 1791260400000,
+        "created_at": 1791381438423,
+        "updated_at": 1791381438423
+      },
+      {
+        "id": 10,
+        "routine_id": 2,
+        "day": "2026-10-06",
+        "due_step_ids": "[5,6,7]",
+        "done_step_ids": "[5,6,7]",
+        "completed_at": 1791312000000,
+        "created_at": 1791381438424,
+        "updated_at": 1791381438424
+      },
+      {
+        "id": 11,
+        "routine_id": 1,
+        "day": "2026-10-07",
+        "due_step_ids": "[1,2,3,4]",
+        "done_step_ids": "[1,2]",
+        "completed_at": null,
+        "created_at": 1791381438425,
+        "updated_at": 1791381438425
+      }
+    ],
+    "routine_step": [
+      {
+        "id": 1,
+        "routine_id": 1,
+        "product_id": 1,
+        "position": 0,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438398,
+        "updated_at": 1791381438398
+      },
+      {
+        "id": 2,
+        "routine_id": 1,
+        "product_id": 2,
+        "position": 1,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 60,
+        "created_at": 1791381438399,
+        "updated_at": 1791381438399
+      },
+      {
+        "id": 3,
+        "routine_id": 1,
+        "product_id": 6,
+        "position": 2,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438399,
+        "updated_at": 1791381438399
+      },
+      {
+        "id": 4,
+        "routine_id": 1,
+        "product_id": 5,
+        "position": 3,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438399,
+        "updated_at": 1791381438399
+      },
+      {
+        "id": 5,
+        "routine_id": 2,
+        "product_id": 1,
+        "position": 0,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438401,
+        "updated_at": 1791381438401
+      },
+      {
+        "id": 6,
+        "routine_id": 2,
+        "product_id": 3,
+        "position": 1,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 120,
+        "created_at": 1791381438401,
+        "updated_at": 1791381438401
+      },
+      {
+        "id": 7,
+        "routine_id": 2,
+        "product_id": 6,
+        "position": 2,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438401,
+        "updated_at": 1791381438401
+      },
+      {
+        "id": 8,
+        "routine_id": 3,
+        "product_id": 1,
+        "position": 0,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438402,
+        "updated_at": 1791381438402
+      },
+      {
+        "id": 9,
+        "routine_id": 3,
+        "product_id": 4,
+        "position": 1,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438403,
+        "updated_at": 1791381438403
+      },
+      {
+        "id": 10,
+        "routine_id": 3,
+        "product_id": 6,
+        "position": 2,
+        "note": null,
+        "schedule_kind": "always",
+        "days_of_week": null,
+        "every_n_days": null,
+        "start_date": null,
+        "wait_seconds": 0,
+        "created_at": 1791381438403,
+        "updated_at": 1791381438403
+      }
+    ],
+    "scheduled_notification": [
+      {
+        "id": 1,
+        "entity_type": "product",
+        "entity_id": 2,
+        "kind": "expiry_warning",
+        "notification_id": "n-expiry-2",
+        "fire_at": 1791446400000,
+        "created_at": 1791381438557
+      },
+      {
+        "id": 2,
+        "entity_type": "routine",
+        "entity_id": 1,
+        "kind": "routine",
+        "notification_id": "n-routine-1",
+        "fire_at": 1791363600000,
+        "created_at": 1791381438557
+      }
+    ],
+    "settings": [
+      {
+        "id": 1,
+        "language": "en",
+        "currency": "EUR",
+        "expiry_warn_days": 30,
+        "expiry_reminder_time": "09:00",
+        "expiry_reminders_on": 1,
+        "expiry_day_reminder_on": 1,
+        "routine_reminders_on": 1,
+        "hair_reminders_on": 1,
+        "weekly_photo_on": 1,
+        "weekly_photo_weekday": 7,
+        "weekly_photo_time": "10:00",
+        "weekly_digest_on": 1,
+        "snooze_minutes": 15,
+        "auto_lock_seconds": 60,
+        "biometrics_on": 0,
+        "skin_angles": "[\"front\",\"left\",\"right\"]",
+        "hair_album_on": 1,
+        "hair_angles": "[\"front\",\"back\",\"top\"]",
+        "photo_guide_on": 1,
+        "photo_guide_opacity": 0.3,
+        "reminder_ask_done": 1,
+        "setup_done_at": "2026-09-07",
+        "setup_hidden_at": null,
+        "last_backup_at": null,
+        "created_at": 1791381438331,
+        "updated_at": 1791381438440
+      }
+    ],
+    "shopping_dismissal": [
+      {
+        "id": 1,
+        "product_id": 5,
+        "dismissed_at": 1791360000000,
+        "created_at": 1791381438557
+      }
+    ],
+    "shopping_item": [
+      {
+        "id": 1,
+        "product_id": 9,
+        "name": "Green Clay Mask",
+        "brand": "Sol Care",
+        "area": "skin",
+        "note": null,
+        "list": "to_buy",
+        "bought_at": null,
+        "created_at": 1791381438437,
+        "updated_at": 1791381438437
+      },
+      {
+        "id": 2,
+        "product_id": null,
+        "name": "Argan Hair Oil",
+        "brand": null,
+        "area": "hair",
+        "note": "Small bottle to try first",
+        "list": "to_buy",
+        "bought_at": null,
+        "created_at": 1791381438437,
+        "updated_at": 1791381438437
+      },
+      {
+        "id": 3,
+        "product_id": null,
+        "name": "Hydrating Toner",
+        "brand": "Lumi Lab",
+        "area": "skin",
+        "note": null,
+        "list": "want_to_try",
+        "bought_at": null,
+        "created_at": 1791381438438,
+        "updated_at": 1791381438438
+      },
+      {
+        "id": 4,
+        "product_id": null,
+        "name": "Lip Balm",
+        "brand": null,
+        "area": "skin",
+        "note": null,
+        "list": "to_buy",
+        "bought_at": 1791363600000,
+        "created_at": 1791381438438,
+        "updated_at": 1791381438438
+      }
+    ]
+  }
+}

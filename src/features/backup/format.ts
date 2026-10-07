@@ -113,6 +113,18 @@ export function isSafePhotoPath(path: string): boolean {
   return parts.every((p) => p !== '' && p !== '.' && p !== '..' && !p.includes('\\'));
 }
 
+/**
+ * A saved photo uri moved onto this phone's current documents folder. iOS can give the app a new
+ * container folder when it updates (`…/Application/<new id>/Documents/`), so a saved absolute uri
+ * stops pointing at the file even though the file is still there. Uris already under
+ * `documentUri`, and anything that isn't a file in a photo folder, come back unchanged.
+ */
+export function rebasePhotoUri(uri: string, documentUri: string): string {
+  if (!uri.startsWith('file:') || uri.startsWith(withSlash(documentUri))) return uri;
+  const path = toRelativePath(uri, documentUri);
+  return isSafePhotoPath(path) ? toAbsoluteUri(path, documentUri) : uri;
+}
+
 // ─── Build ──────────────────────────────────────────────────────────────────
 
 export type BackupFile = {

@@ -3,6 +3,7 @@ import { Directory, Paths } from 'expo-file-system';
 import { router } from 'expo-router';
 
 import { getDb, type Db } from '@/db';
+import { DB_BACKUP_FOLDER } from '@/db/migrate';
 import { queryClient as appQueryClient } from '@/db/queryClient';
 import { PHOTO_ROOTS } from '@/features/backup/format';
 import { clearDraft } from '@/features/onboarding/draft';
@@ -19,7 +20,7 @@ export type ResetDeps = {
   queryClient: QueryClient;
   /** Cancels every scheduled notification (task 020). */
   cancelNotifications: () => Promise<void>;
-  /** Deletes the `products/` and `progress/` photo folders. */
+  /** Deletes the `products/` and `progress/` photo folders and the pre-update database copies. */
   deletePhotoFolders: () => void;
   /** Deletes the PIN, the recovery answer and the lockout counters (task 016). */
   resetSecureKeys: () => Promise<void>;
@@ -28,7 +29,7 @@ export type ResetDeps = {
 };
 
 function deletePhotoFolders(): void {
-  for (const name of PHOTO_ROOTS) {
+  for (const name of [...PHOTO_ROOTS, DB_BACKUP_FOLDER]) {
     const dir = new Directory(Paths.document, name);
     if (dir.exists) dir.delete();
   }

@@ -1340,7 +1340,9 @@
   "errors": {
     "dataTitle": "Jx Care nepavyko atidaryti duomenų",
     "dataBody": "Niekas neištrinta. Bandykite dar kartą, o jei kartojasi, perkraukite telefoną.",
-    "tryAgain": "Bandyti dar kartą"
+    "tryAgain": "Bandyti dar kartą",
+    "newerTitle": "Atnaujinkite Jx Care, kad atidarytumėte duomenis",
+    "newerBody": "Šiuos duomenis išsaugojo naujesnė Jx Care versija. Atnaujinkite programėlę parduotuvėje; niekas nepakeista."
   },
   "a11y": {
     "deleteLastDigit": "Ištrinti paskutinį skaitmenį",

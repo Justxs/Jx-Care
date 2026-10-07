@@ -69,7 +69,12 @@ export default function RootLayout() {
   // Notifications start once the database is ready and the navigator is mounted (taps navigate).
   useEffect(() => (booted ? startAppNotifications() : undefined), [booted]);
 
-  const onMigrated = useCallback(() => {
+  const onMigrated = useCallback((migrated: boolean) => {
+    // Data that couldn't be migrated is never touched: only the error screen shows.
+    if (!migrated) {
+      SplashScreen.hideAsync().catch(() => {});
+      return;
+    }
     bootstrapAfterMigrations()
       .catch(() => {})
       .finally(() => {

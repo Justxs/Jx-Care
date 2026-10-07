@@ -110,8 +110,48 @@
     "license": "MIT"
   },
   {
+    "name": "expo-application",
+    "version": "57.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-background-task",
+    "version": "57.0.21",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-blur",
+    "version": "57.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-camera",
+    "version": "57.0.6",
+    "license": "MIT"
+  },
+  {
     "name": "expo-constants",
     "version": "57.0.21",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-crypto",
+    "version": "57.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-dev-client",
+    "version": "57.0.19",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-document-picker",
+    "version": "57.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-file-system",
+    "version": "57.0.7",
     "license": "MIT"
   },
   {
@@ -130,8 +170,23 @@
     "license": "MIT"
   },
   {
+    "name": "expo-image-manipulator",
+    "version": "57.0.21",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-image-picker",
+    "version": "57.0.20",
+    "license": "MIT"
+  },
+  {
     "name": "expo-linking",
     "version": "57.0.12",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-local-authentication",
+    "version": "57.0.3",
     "license": "MIT"
   },
   {
@@ -140,8 +195,23 @@
     "license": "MIT"
   },
   {
+    "name": "expo-notifications",
+    "version": "57.0.22",
+    "license": "MIT"
+  },
+  {
     "name": "expo-router",
     "version": "57.0.25",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-secure-store",
+    "version": "57.0.4",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-sharing",
+    "version": "57.0.22",
     "license": "MIT"
   },
   {
@@ -157,6 +227,16 @@
   {
     "name": "expo-status-bar",
     "version": "57.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-task-manager",
+    "version": "57.0.21",
+    "license": "MIT"
+  },
+  {
+    "name": "fflate",
+    "version": "0.8.3",
     "license": "MIT"
   },
   {

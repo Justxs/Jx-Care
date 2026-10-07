@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.3",
     "expo": "~57.0.27",
+    "expo-application": "~57.0.3",
     "expo-background-task": "~57.0.21",
     "expo-blur": "~57.0.3",
     "expo-camera": "~57.0.6",
@@ -108,7 +109,9 @@
     "format": "oxfmt",
     "test": "jest",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test --ci",
-    "db:generate": "drizzle-kit generate",
+    "db:generate": "drizzle-kit generate && node scripts/db-lock.mjs && pnpm db:fixture",
+    "db:fixture": "WRITE_DB_FIXTURES=1 jest src/db/__tests__/upgrade",
+    "version:bump": "node scripts/bump-version.mjs",
     "format:check": "oxfmt --check",
     "licences": "node scripts/licences.mjs"
   },

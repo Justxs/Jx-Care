@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
@@ -14,6 +13,7 @@ import { useFormat } from '@/i18n/useFormat';
 import { appDay } from '@/lib/appDay';
 
 import { useSettings } from '../api';
+import { appVersionLabel } from '../version';
 
 export const LANGUAGE_NAMES = { lt: 'Lietuvių', en: 'English' } as const;
 
@@ -113,7 +113,7 @@ export function SettingsScreen() {
           <ListRow
             icon="info"
             label={t('settings.version')}
-            value={Constants.expoConfig?.version ?? '1.0.0'}
+            value={appVersionLabel()}
             trailing="value"
           />
           <Separator inset />

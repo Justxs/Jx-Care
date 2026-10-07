@@ -1256,7 +1256,9 @@
   "errors": {
     "dataTitle": "Jx Care couldn't open its data",
     "dataBody": "Nothing was deleted. Try again, and if it keeps happening, restart the phone.",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "newerTitle": "Update Jx Care to open your data",
+    "newerBody": "This data was saved by a newer version of Jx Care. Update the app from the store; nothing was changed."
   },
   "a11y": {
     "deleteLastDigit": "Delete last digit",

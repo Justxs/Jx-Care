@@ -1,0 +1,9 @@
+{
+  "rule": "Migrations on main are frozen: phones that ran one never run it again, so an edit never reaches them. Change the schema with a new migration (pnpm db:generate). See docs/releasing.md.",
+  "migrations": {
+    "0000_ancient_ultron": "5562a9f156c0b9974fa2a76ec91a31d89ed9554469e0170dd4a7a5debc0d2a1b",
+    "0001_tired_echo": "ee7603c602894b90ab4ece4c91fa974d45862c8679dd1749de11fb530a72e79f",
+    "0002_conscious_photon": "36bba7de81b9abf4bf9e68fec586e18dfd1bb70070ef02c58adcb0cffa2b3516",
+    "0003_soft_delete_routines": "2f6a36540c0a81f262aa61a48b94448125019e972321d1e72472e43dcef39e8b"
+  }
+}

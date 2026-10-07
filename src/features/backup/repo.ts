@@ -1,10 +1,11 @@
-import { sql } from 'drizzle-orm';
+import { eq, isNotNull, sql } from 'drizzle-orm';
 
 import type { Db } from '@/db';
+import { product, progressPhoto } from '@/db/schema';
 import { allTables } from '@/features/security/repo';
 import { saveSettings } from '@/features/settings/repo';
 
-import { backupTables, type BackupData } from './format';
+import { backupTables, rebasePhotoUri, type BackupData } from './format';
 
 /** Rows per insert statement, well under SQLite's limit on bound values. */
 const INSERT_CHUNK = 100;
@@ -42,4 +43,40 @@ export function replaceAllData(db: Db, data: BackupData): void {
 /** Remembers when the last backup was made (S8, the backup reminder, the reset dialog). */
 export function markBackedUp(db: Db, at: number): void {
   saveSettings(db, { lastBackupAt: at });
+}
+
+/**
+ * At every launch: points saved product and progress photo uris at this launch's documents
+ * folder (`rebasePhotoUri`), so photos survive an app update that moved it (iOS). Returns how many
+ * rows changed; usually none.
+ */
+export function rebasePhotoUris(db: Db, documentUri: string): number {
+  let changed = 0;
+  db.transaction((tx) => {
+    const products = tx
+      .select({ id: product.id, uri: product.photoUri })
+      .from(product)
+      .where(isNotNull(product.photoUri))
+      .all();
+    for (const row of products) {
+      const uri = rebasePhotoUri(row.uri ?? '', documentUri);
+      if (row.uri === uri) continue;
+      // Raw SQL, so `updated_at` keeps the person's last edit.
+      tx.run(
+        sql`UPDATE ${product} SET ${sql.identifier('photo_uri')} = ${uri} WHERE ${product.id} = ${row.id}`,
+      );
+      changed++;
+    }
+    const photos = tx
+      .select({ id: progressPhoto.id, uri: progressPhoto.fileUri })
+      .from(progressPhoto)
+      .all();
+    for (const row of photos) {
+      const uri = rebasePhotoUri(row.uri, documentUri);
+      if (row.uri === uri) continue;
+      tx.update(progressPhoto).set({ fileUri: uri }).where(eq(progressPhoto.id, row.id)).run();
+      changed++;
+    }
+  });
+  return changed;
 }
