@@ -45,7 +45,18 @@
       "breakout": "Breakout",
       "redness": "Redness",
       "itchy": "Itchy"
-    }
+    },
+    "status": {
+      "ok": "OK",
+      "expiring": "Expiring soon",
+      "expired": "Expired",
+      "unopened": "Not opened",
+      "nodate": "No date",
+      "avoid": "Avoid"
+    },
+    "everyDay": "Every day",
+    "best": "Best {{days}}",
+    "stepOf": "Step {{index}} of {{count}}"
   },
   "format": {
     "todayDate": "Today, {{date}}",
@@ -106,5 +117,39 @@
     "dataBody": "Nothing was deleted. Try again, and if it keeps happening, restart the phone.",
     "tryAgain": "Try again"
   },
-  "a11y": {}
+  "a11y": {
+    "deleteLastDigit": "Delete last digit",
+    "moreActions": "More actions",
+    "back": "Back",
+    "close": "Close",
+    "showAnswer": "Show answer",
+    "hideAnswer": "Hide answer",
+    "unlockWithBiometrics": "Unlock with Face ID or fingerprint",
+    "stars": "{{value}} of {{max}} stars",
+    "starButton_one": "{{count}} star",
+    "starButton_other": "{{count}} stars",
+    "rating": "Rating",
+    "pinEntered": "{{count}} of 4 digits entered",
+    "progress": "{{value}} of {{max}} done",
+    "photoAdd": "Add photo",
+    "conflictOpen": "{{label}}. Tap for details.",
+    "noDays": "No days",
+    "scale": "{{value}} of {{max}}"
+  },
+  "streak": {
+    "chip": "{{count}} {{area}}",
+    "chipLabel_one": "{{area}} streak: {{count}} day. Tap to learn how it works.",
+    "chipLabel_other": "{{area}} streak: {{count}} days. Tap to learn how it works.",
+    "inARow_one": "{{count}} day in a row",
+    "inARow_other": "{{count}} days in a row",
+    "best_one": "Best {{count}} day",
+    "best_other": "Best {{count}} days",
+    "restarted_one": "Started again. Your best is still {{count}} day.",
+    "restarted_other": "Started again. Your best is still {{count}} days.",
+    "skinWord": "skin",
+    "hairWord": "hair"
+  },
+  "dev": {
+    "components": "Components"
+  }
 }

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { motion, timing, type MotionDuration, type MotionEasing } from './motion';
@@ -26,7 +27,8 @@ export function motionFor(reduced: boolean): Motion {
 /** Motion helpers that respect Reduce Motion. */
 export function useMotion(): Motion {
   const reduced = useReducedMotion();
-  return motionFor(reduced);
+  // Stable between renders so effects can depend on it.
+  return useMemo(() => motionFor(reduced), [reduced]);
 }
 
 export { motion };

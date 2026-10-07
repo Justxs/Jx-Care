@@ -45,7 +45,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 005 | [Data access and app state](005-data-access-app-state.md) | 003, 004 | Sequence diagrams (Data) | done |
 | 006 | [Logic: app day, expiry, cost, ingredients](006-logic-dates-expiry.md) | 001 | Refinements 1, 4; P1, P4 | done |
 | 007 | [Logic: schedules, streaks, hair, conflicts](007-logic-schedules-streaks-conflicts.md) | 006 | Refinements 2, 3, 5, 6; R3, R5, C1 | done |
-| 008 | [Base components](008-base-components.md) | 002, 003 | DESIGN.md Components | todo |
+| 008 | [Base components](008-base-components.md) | 002, 003 | DESIGN.md Components | done |
 | 009 | [Forms, sheets, dialogs and toasts](009-forms-overlays-feedback.md) | 008 | Global UI rules, Motion | todo |
 | 010 | [App shell and navigation](010-app-shell-navigation.md) | 005, 009 | Navigation map | todo |
 | 011 | [Settings list and preferences](011-settings-preferences.md) | 010 | S1, S7 | todo |

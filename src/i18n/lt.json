@@ -45,7 +45,18 @@
       "breakout": "Išbėrimai",
       "redness": "Paraudimas",
       "itchy": "Niežti"
-    }
+    },
+    "status": {
+      "ok": "Gerai",
+      "expiring": "Baigia galioti",
+      "expired": "Nebegalioja",
+      "unopened": "Neatidaryta",
+      "nodate": "Be datos",
+      "avoid": "Vengti"
+    },
+    "everyDay": "Kasdien",
+    "best": "Geriausia {{days}}",
+    "stepOf": "{{index}} žingsnis iš {{count}}"
   },
   "format": {
     "todayDate": "Šiandien, {{date}}",
@@ -112,5 +123,49 @@
     "dataBody": "Niekas neištrinta. Bandykite dar kartą, o jei kartojasi, perkraukite telefoną.",
     "tryAgain": "Bandyti dar kartą"
   },
-  "a11y": {}
+  "a11y": {
+    "deleteLastDigit": "Ištrinti paskutinį skaitmenį",
+    "moreActions": "Daugiau veiksmų",
+    "back": "Atgal",
+    "close": "Uždaryti",
+    "showAnswer": "Rodyti atsakymą",
+    "hideAnswer": "Slėpti atsakymą",
+    "unlockWithBiometrics": "Atrakinti su Face ID arba piršto atspaudu",
+    "stars": "{{value}} iš {{max}} žvaigždučių",
+    "starButton_one": "{{count}} žvaigždutė",
+    "starButton_few": "{{count}} žvaigždutės",
+    "starButton_many": "{{count}} žvaigždutės",
+    "starButton_other": "{{count}} žvaigždučių",
+    "rating": "Įvertinimas",
+    "pinEntered": "Įvesta {{count}} iš 4 skaitmenų",
+    "progress": "Atlikta {{value}} iš {{max}}",
+    "photoAdd": "Pridėti nuotrauką",
+    "conflictOpen": "{{label}}. Bakstelėkite, kad pamatytumėte daugiau.",
+    "noDays": "Jokių dienų",
+    "scale": "{{value}} iš {{max}}"
+  },
+  "streak": {
+    "chip": "{{count}} {{area}}",
+    "chipLabel_one": "{{area}}: {{count}} diena iš eilės. Bakstelėkite, kad sužinotumėte daugiau.",
+    "chipLabel_few": "{{area}}: {{count}} dienos iš eilės. Bakstelėkite, kad sužinotumėte daugiau.",
+    "chipLabel_many": "{{area}}: {{count}} dienos iš eilės. Bakstelėkite, kad sužinotumėte daugiau.",
+    "chipLabel_other": "{{area}}: {{count}} dienų iš eilės. Bakstelėkite, kad sužinotumėte daugiau.",
+    "inARow_one": "{{count}} diena iš eilės",
+    "inARow_few": "{{count}} dienos iš eilės",
+    "inARow_many": "{{count}} dienos iš eilės",
+    "inARow_other": "{{count}} dienų iš eilės",
+    "best_one": "Geriausia {{count}} diena",
+    "best_few": "Geriausia {{count}} dienos",
+    "best_many": "Geriausia {{count}} dienos",
+    "best_other": "Geriausia {{count}} dienų",
+    "restarted_one": "Pradėta iš naujo. Geriausias rezultatas vis dar {{count}} diena.",
+    "restarted_few": "Pradėta iš naujo. Geriausias rezultatas vis dar {{count}} dienos.",
+    "restarted_many": "Pradėta iš naujo. Geriausias rezultatas vis dar {{count}} dienos.",
+    "restarted_other": "Pradėta iš naujo. Geriausias rezultatas vis dar {{count}} dienų.",
+    "skinWord": "oda",
+    "hairWord": "plaukai"
+  },
+  "dev": {
+    "components": "Komponentai"
+  }
 }

@@ -87,6 +87,9 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 - **Weekdays** are ISO numbers: 1 = Monday … 7 = Sunday. Weeks start on Monday.
 - **Money** is stored as integer cents with the currency code from settings.
 - **Ids** are SQLite integer primary keys.
+- **Tests:** React Native Testing Library 14 makes `render`, `fireEvent` and `act` async; always `await` them (a missed `await` leaves an open act scope and later tests render nothing). Role queries only find accessible elements, so query group containers (radio groups, weekday rows) by label.
+- **Reanimated:** write shared values with `sv.set(...)`, never `sv.value = ...` (oxlint's React immutability rule rejects the assignment). Read `sv.value` inside worklets as usual.
+- **rn-primitives** set `role` on their pressables, and `role` wins over `accessibilityRole`; pass `role` to change the spoken role.
 
 ## UI rules (from the spec and DESIGN.md)
 

@@ -67,4 +67,19 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Files:** every base component is in `src/components/ui/` (kebab-case file per component; `StreakChip` and `StreakCard` share `streak.tsx`, `Chip` and `ChipGroup` share `chip.tsx`). The gallery lives in `src/dev/ComponentGallery.tsx`, routed from `app/dev/components.tsx` (redirects to `/` outside development). It has LT/EN and light/dark switches at the top; section titles are component names and stay untranslated because the screen is dev only.
+- **`cn()`** is `clsx` plus `tailwind-merge`, with our type scale (`text-body`, `text-title-s` …) registered as font sizes so `text-ink` and `text-body` don't cancel each other (`src/lib/cn.ts`).
+- **Icons** are mapped by kebab-case name in `icons` (`src/components/ui/icon.tsx`). Lucide 1.x renamed some: `alert-triangle` → `TriangleAlert`, `trash-2` → `Trash`, `fingerprint` → `FingerprintPattern`, `circle-help` → `CircleQuestionMark`, `filter` → `Funnel`, `home` → `House`. Add new icons to the map; `filled` fills a shape with its stroke colour (picked stars). Decorative icons are hidden from screen readers.
+- **Prop names** follow components.d.ts with React Native names: `aria-label` → `accessibilityLabel`. `Icon` takes a colour `tone` token instead of a raw colour (raw `color` stays for the always-dark camera). `Checkbox` has no `label` prop: rows pair it with their own text.
+- **Roles:** rn-primitives put `role` on their pressables, and `role` wins over `accessibilityRole`. `Chip` overrides the Toggle's `switch` role with `button` plus `selected`, which is how filter chips are announced. `ToggleGroup` and `Rating` items are `radio`; `WeekdayPicker` items are `checkbox`.
+- **ToggleGroup** never goes empty: tapping the selected item does nothing. The indicator is placed on first layout without a slide, then slides 200 ms.
+- **Rating** fills stars in `accent` (no star colour in the design), empty stars `border-strong`. `kind="scale"` shows numbered pills; the spoken label is "Rating: 3 of 5 stars" / "4 of 5".
+- **WeekdayDots** use 20 pt circles; the spoken label is "Monday, Wednesday, Friday", "Every day" or "No days". `useWeekdaysLabel()` and `ISO_WEEKDAYS` are exported for later rows.
+- **StepDots** take a zero-based `index` and read "Step 2 of 5".
+- **StreakChip** without `onPress` reads "Skin: 12 days in a row"; with it, the full `streak.chipLabel` text, and `hitSlop` brings the 28 pt chip to 44 pt.
+- **PinPad** exposes `shake()` through a React 19 `ref` prop (`PinPadHandle`); it also fires an error haptic, and with Reduce Motion it blinks the dots instead of moving them. `disabled` turns every key off; `message` goes in the reserved 36 pt line under the dots. The delete key is disabled while no digit is typed.
+- **Opacity:** apart from pressed (85%) and disabled (45%), opacity is used only for the Skeleton pulse and the Reduce Motion PIN blink. Neither is on text.
+- **Dark mode cards:** `Card`, `StreakCard`, the ToggleGroup indicator and PinPad keys use `dark:shadow-none` with a `border` hairline, as decided in task 002.
+- **Jest setup:** `lucide-react-native` maps to its CommonJS build (its ESM build is `.mjs`, which jest-expo doesn't transform), `@rn-primitives`, `lucide-react-native` and `react-native-svg` are added to `transformIgnorePatterns`, and the Reanimated mock adds `useReducedMotion` and a named `createAnimatedComponent`.
+- **oxlint:** `import/namespace` is off (it can't resolve rn-primitives' `.mjs` re-exports; TypeScript checks these imports) and `jsx-a11y/prefer-tag-over-role` is off (it's about HTML tags).
+- **Device check needed:** haptics, the switch and toggle slides, the PIN shake and how VoiceOver/TalkBack read chips and toggle groups. Open `/dev/components` in a development build.
