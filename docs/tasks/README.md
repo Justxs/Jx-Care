@@ -60,8 +60,8 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 020 | [Notification service](020-notification-service.md) | 005 | Notifications | todo |
 | 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | todo |
 | 022 | [Routines data](022-routines-data.md) | 007, 012 | R1–R3, T2 | done |
-| 023 | [Routines list and templates](023-routines-list-templates.md) | 010, 022 | R1 skin, R2 starter | todo |
-| 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | todo |
+| 023 | [Routines list and templates](023-routines-list-templates.md) | 010, 022 | R1 skin, R2 starter | done |
+| 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | done |
 | 025 | [Today](025-today.md) | 010, 012, 022 | T1 | todo |
 | 026 | [Routine player](026-routine-player.md) | 022, 025 | T2 | todo |
 | 027 | [Routine reminders](027-routine-reminders.md) | 020, 024, 026 | Notifications, sequence 4 | todo |

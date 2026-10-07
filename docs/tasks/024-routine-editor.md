@@ -49,3 +49,5 @@ Out:
 ## Decisions
 
 (Write any choices you make here.)
+
+Note from task 023: "Create routine" in the starter sheet calls `setRoutineDraft(draftFromTemplate(...))` (`src/features/routines/draft.ts`) and pushes `/routines/new` (`NEW_ROUTINE_ID`), which the existing `app/(tabs)/routines/[id].tsx` route catches. The editor should treat `id === 'new'` as a new routine and start from `takeRoutineDraft()` (it clears the draft), falling back to `emptyRoutineForm()` when there is none. Nothing is saved before the editor saves. The editor is dirty from the start for a draft, so leaving asks Discard / Keep editing.

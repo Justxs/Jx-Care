@@ -366,6 +366,36 @@
         "spf": "SPF",
         "rinse": "Rinse"
       }
+    },
+    "title": "Routines",
+    "new": "New routine",
+    "emptyTitle": "No routines yet",
+    "emptyBody": "Start from a template and swap in your products.",
+    "hairSoon": "Hair care tasks arrive in a later update.",
+    "duplicate": "Duplicate as variant",
+    "duplicatedToast": "{{name}} added",
+    "deleteTitle": "Delete {{name}}?",
+    "deleteBody": "Its history in the calendar is deleted too. This can't be undone.",
+    "list": {
+      "alternatives": "{{time}}, A or B",
+      "alternativesNote": "On days both are set, you pick one on Today. A and B are never checked against each other for conflicts.",
+      "alternativesNoteEvening": "On nights both are set, you pick one on Today. A and B are never checked against each other for conflicts."
+    },
+    "card": {
+      "reminderAt": "Reminder at {{time}}",
+      "noReminder": "No reminder",
+      "steps_one": "{{count}} step",
+      "steps_other": "{{count}} steps",
+      "active": "{{name}} on",
+      "off": "Off",
+      "start": "Start {{name}}"
+    },
+    "starter": {
+      "template": "Template",
+      "steps": "Steps",
+      "pickLater": "Pick a product later",
+      "noSteps": "No steps yet. You add them on the next screen.",
+      "create": "Create routine"
     }
   },
   "hair": {

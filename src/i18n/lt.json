@@ -392,6 +392,38 @@
         "spf": "SPF",
         "rinse": "Nuplovimas"
       }
+    },
+    "title": "Rutinos",
+    "new": "Nauja rutina",
+    "emptyTitle": "Rutinų dar nėra",
+    "emptyBody": "Pradėkite nuo šablono ir įsidėkite savo produktus.",
+    "hairSoon": "Plaukų priežiūros užduotys atsiras kitame atnaujinime.",
+    "duplicate": "Kopijuoti kaip variantą",
+    "duplicatedToast": "Pridėta: {{name}}",
+    "deleteTitle": "Ištrinti „{{name}}“?",
+    "deleteBody": "Jos istorija kalendoriuje irgi bus ištrinta. Šio veiksmo atšaukti negalima.",
+    "list": {
+      "alternatives": "{{time}}, A arba B",
+      "alternativesNote": "Dienomis, kai nustatytos abi, vieną pasirenkate skiltyje Šiandien. A ir B tarpusavyje niekada netikrinamos dėl konfliktų.",
+      "alternativesNoteEvening": "Vakarais, kai nustatytos abi, vieną pasirenkate skiltyje Šiandien. A ir B tarpusavyje niekada netikrinamos dėl konfliktų."
+    },
+    "card": {
+      "reminderAt": "Priminimas {{time}}",
+      "noReminder": "Be priminimo",
+      "steps_one": "{{count}} žingsnis",
+      "steps_few": "{{count}} žingsniai",
+      "steps_many": "{{count}} žingsnio",
+      "steps_other": "{{count}} žingsnių",
+      "active": "{{name}} įjungta",
+      "off": "Išjungta",
+      "start": "Pradėti „{{name}}“"
+    },
+    "starter": {
+      "template": "Šablonas",
+      "steps": "Žingsniai",
+      "pickLater": "Produktą pasirinksite vėliau",
+      "noSteps": "Žingsnių dar nėra. Juos pridėsite kitame lange.",
+      "create": "Sukurti rutiną"
     }
   },
   "hair": {
