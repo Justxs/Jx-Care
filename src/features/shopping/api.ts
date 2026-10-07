@@ -77,10 +77,9 @@ export function usePickerProducts(search: string) {
 
 // ─── Mutations ──────────────────────────────────────────────────────────────
 
+/** Every shopping query, Today's To buy count included, sits under `qk.shopping.all`. */
 function invalidate(client: QueryClient): void {
   client.invalidateQueries({ queryKey: qk.shopping.all });
-  // Today's Shopping list row counts the To buy items.
-  client.invalidateQueries({ queryKey: ['today'] });
 }
 
 function useShoppingMutation<TArg, TResult>(fn: (arg: TArg) => TResult) {
@@ -123,10 +122,13 @@ export const useRestoreItems = () =>
 export const useDismissSuggestion = () =>
   useShoppingMutation((productId: number) => dismissSuggestion(getDb(), productId));
 
-export const useBuyAgainMutation = () =>
-  useShoppingMutation((productIds: readonly number[]) =>
-    productIds.map((id) => addBuyAgain(getDb(), id)),
-  );
+/** Buy again for each product; returns the ids of the items it created (already listed: none). */
+function addBuyAgainItems(productIds: readonly number[]): number[] {
+  return productIds.flatMap((id) => {
+    const added = addBuyAgain(getDb(), id);
+    return added?.created ? [added.id] : [];
+  });
+}
 
 /** After Add product saves the bottle made from a bought item (product form `fromShoppingItem`). */
 export const useLinkBoughtItem = () =>
@@ -138,15 +140,11 @@ export const useLinkBoughtItem = () =>
 
 /**
  * Buy again outside React (the expiry-warning notification action, task 021): adds the items
- * and refreshes the list. Returns the ids of the items it created.
+ * and refreshes the list.
  */
-export function addToShoppingList(client: QueryClient, productIds: readonly number[]): number[] {
-  const created = productIds
-    .map((id) => addBuyAgain(getDb(), id))
-    .filter((r) => r?.created)
-    .map((r) => r!.id);
+export function addToShoppingList(client: QueryClient, productIds: readonly number[]): void {
+  addBuyAgainItems(productIds);
   invalidate(client);
-  return created;
 }
 
 /**
@@ -155,15 +153,12 @@ export function addToShoppingList(client: QueryClient, productIds: readonly numb
  */
 function useBuyAgainAction(): BuyAgain {
   const { t } = useTranslation();
-  const add = useBuyAgainMutation();
-  const undo = useDeleteItems();
-  const { mutateAsync } = add;
-  const { mutate: undoMutate } = undo;
+  const { mutateAsync } = useShoppingMutation(addBuyAgainItems);
+  const { mutate: undoMutate } = useDeleteItems();
   return useCallback(
     (products) => {
       if (products.length === 0) return;
-      void mutateAsync(products.map((p) => p.id)).then((results) => {
-        const created = results.filter((r) => r?.created).map((r) => r!.id);
+      void mutateAsync(products.map((p) => p.id)).then((created) => {
         if (created.length === 0) {
           showToast({
             message:
