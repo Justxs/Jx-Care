@@ -26,10 +26,10 @@ export type HairTaskInput = {
   reminderTime: string | null;
 };
 
-/** "3" → 3; empty or anything that is not a whole number → NaN. */
-function parseWhole(text: string): number {
+/** "3" → 3; empty or anything that is not a whole number → null. */
+export function parseWhole(text: string): number | null {
   const v = text.trim();
-  return /^\d+$/.test(v) ? Number(v) : Number.NaN;
+  return /^\d+$/.test(v) ? Number(v) : null;
 }
 
 /**
@@ -62,7 +62,7 @@ export function hairTaskSchema(today: string) {
     .superRefine((v, ctx) => {
       if (v.scheduleKind === 'interval') {
         const n = parseWhole(v.interval);
-        if (Number.isNaN(n)) {
+        if (n === null) {
           ctx.addIssue({
             code: 'custom',
             path: ['interval'],
@@ -94,7 +94,7 @@ export function hairTaskSchema(today: string) {
       scheduleKind: v.scheduleKind,
       everyNDays:
         v.scheduleKind === 'interval'
-          ? parseWhole(v.interval) * (v.intervalUnit === 'weeks' ? 7 : 1)
+          ? (parseWhole(v.interval) ?? 0) * (v.intervalUnit === 'weeks' ? 7 : 1)
           : null,
       intervalUnit: v.scheduleKind === 'interval' ? v.intervalUnit : 'days',
       daysOfWeek:

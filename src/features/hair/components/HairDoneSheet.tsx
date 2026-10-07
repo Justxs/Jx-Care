@@ -16,6 +16,7 @@ import { useAppForm, useFormDirty } from '@/components/ui/form';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { useProductsForPicker } from '@/features/products/api';
+import { ProductPickerSheet } from '@/features/products/components/ProductPickerSheet';
 import { useFormat } from '@/i18n/useFormat';
 import { appStore } from '@/state/app';
 import { uiStore } from '@/state/ui';
@@ -24,7 +25,6 @@ import { motion } from '@/theme/motion';
 import { useHairTask, useMarkHairDone } from '../api';
 import type { HairTaskDetail } from '../repo';
 import { hairDoneSchema, type HairDoneFormValues } from '../schema';
-import { HairProductPickerSheet } from './HairProductPickerSheet';
 
 /** How long "Next wash: Friday, 9 Oct" stays before the sheet closes by itself. */
 export const NEXT_LINE_MS = 1800;
@@ -195,9 +195,11 @@ function HairDoneForm({ task }: { task: HairTaskDetail }) {
                       {t('hair.done.addProduct')}
                     </Chip>
                   </View>
-                  <HairProductPickerSheet
+                  <ProductPickerSheet
                     key={picker.key}
                     open={picker.open}
+                    area="hair"
+                    multiple
                     onClose={() => setPicker((p) => ({ ...p, open: false }))}
                     selected={selected}
                     onPick={(ids) => onPick(ids, field.handleChange)}

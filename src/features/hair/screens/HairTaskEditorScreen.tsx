@@ -28,6 +28,7 @@ import { ToggleGroup } from '@/components/ui/toggle-group';
 import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import { hairOtherKinds, type HairOtherKind, type HairTaskKind } from '@/db/enums';
 import { useProductsForPicker } from '@/features/products/api';
+import { ProductPickerSheet } from '@/features/products/components/ProductPickerSheet';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
 import { appStore } from '@/state/app';
@@ -36,13 +37,13 @@ import { motion } from '@/theme/motion';
 import { askForReminders } from '@/notifications';
 
 import { useDeleteHairTask, useHairTask, useSaveHairTask } from '../api';
-import { HairProductPickerSheet } from '../components/HairProductPickerSheet';
 import { defaultHairName, formNextDue, hairTaskIcon, isDefaultHairName } from '../display';
 import type { HairProductRef, HairTaskDetail } from '../repo';
 import {
   emptyHairTaskForm,
   hairTaskSchema,
   hairTaskToForm,
+  parseWhole,
   type HairTaskFormValues,
 } from '../schema';
 
@@ -113,11 +114,6 @@ function EditHairTask({ id }: { id: number }) {
       )}
     </SafeAreaView>
   );
-}
-
-/** "3" → 3; anything else → null. */
-function whole(text: string): number | null {
-  return /^\d+$/.test(text.trim()) ? Number(text.trim()) : null;
 }
 
 function frequencyOf(v: Pick<HairTaskFormValues, 'scheduleKind' | 'intervalUnit'>): Frequency {
@@ -202,7 +198,7 @@ function HairTaskForm({
       form.setFieldValue('name', defaultHairName(next, otherKind, t));
     // Every few weeks is for other care only: a wash keeps the same interval in days.
     if (next === 'wash' && v.scheduleKind === 'interval' && v.intervalUnit === 'weeks') {
-      const n = whole(v.interval);
+      const n = parseWhole(v.interval);
       form.setFieldValue('intervalUnit', 'days');
       if (n !== null) form.setFieldValue('interval', String(n * 7));
     }
@@ -229,7 +225,7 @@ function HairTaskForm({
       revalidate();
       return;
     }
-    const n = whole(v.interval);
+    const n = parseWhole(v.interval);
     if (n !== null && unit === 'days') form.setFieldValue('interval', String(n * 7));
     if (n !== null && unit === 'weeks' && n % 7 === 0)
       form.setFieldValue('interval', String(n / 7));
@@ -360,9 +356,11 @@ function HairTaskForm({
                       ? t('hair.editor.changeProducts')
                       : t('hair.editor.pickProducts')}
                   </Button>
-                  <HairProductPickerSheet
+                  <ProductPickerSheet
                     key={picker.key}
                     open={picker.open}
+                    area="hair"
+                    multiple
                     onClose={() => setPicker((p) => ({ ...p, open: false }))}
                     selected={field.state.value}
                     onPick={field.handleChange}

@@ -10,8 +10,8 @@ import { useSelector } from '@tanstack/react-store';
 
 import { getDb } from '@/db';
 import { qk } from '@/db/queryKeys';
+import { gridDays } from '@/features/calendar/month';
 import { i18n } from '@/i18n';
-import { daysInMonthGrid } from '@/lib/appDay';
 import { hairStreak } from '@/lib/hair';
 import { cancelSnoozes, syncEntity } from '@/notifications';
 import { appStore } from '@/state/app';
@@ -69,16 +69,17 @@ export const hairDueTodayQuery = (today: string) =>
     queryFn: () => hairDueToday(getDb(), today),
   });
 
+/** Current and best hair streak (washes only). */
+function readHairStreak(today: string) {
+  const input = hairStreakInput(getDb(), today);
+  return hairStreak(input.tasks, input.logs, input.today);
+}
+
 /** Today's hair streak chip: washes only, null while there is no active wash task. */
 export const hairStreakChipQuery = (today: string) =>
   queryOptions({
     queryKey: hairKeys.streakChip(today),
-    queryFn: () => {
-      const db = getDb();
-      if (!hasWashTask(db)) return null;
-      const input = hairStreakInput(db, today);
-      return hairStreak(input.tasks, input.logs, input.today);
-    },
+    queryFn: () => (hasWashTask(getDb()) ? readHairStreak(today) : null),
   });
 
 /** What Today's hair slots read, so Today paints complete (task 025's `prefetchToday`). */
@@ -140,10 +141,7 @@ export function useHairMonth(month: string) {
   const today = useToday();
   return useQuery({
     queryKey: hairKeys.month(month, today),
-    queryFn: () => {
-      const [year = 1970, m = 1] = month.split('-').map(Number);
-      return hairMonth(getDb(), daysInMonthGrid(year, m), today);
-    },
+    queryFn: () => hairMonth(getDb(), gridDays(month), today),
     placeholderData: keepPreviousData,
   });
 }
@@ -153,10 +151,7 @@ export function useHairStreak() {
   const today = useToday();
   return useQuery({
     queryKey: hairKeys.streak(today),
-    queryFn: () => {
-      const input = hairStreakInput(getDb(), today);
-      return hairStreak(input.tasks, input.logs, input.today);
-    },
+    queryFn: () => readHairStreak(today),
   });
 }
 

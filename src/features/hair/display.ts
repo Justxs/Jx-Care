@@ -6,7 +6,7 @@ import type { Formatter } from '@/i18n/useFormat';
 import { isValidDay } from '@/lib/appDay';
 import { nextDue, quickSetupToTask, type HairState, type QuickWashFrequency } from '@/lib/hair';
 
-import type { HairTaskFormValues } from './schema';
+import { parseWhole, type HairTaskFormValues } from './schema';
 
 /** Words and next-due lines for hair rows, the editor preview and the quick setup (R1, R5). */
 
@@ -69,14 +69,6 @@ export function hairTaskIcon(kind: HairTaskKind, otherKind: HairOtherKind | null
   }
 }
 
-/** "3" → 3; anything that is not a whole number above 0 → null. */
-function wholeNumber(text: string): number | null {
-  const v = text.trim();
-  if (!/^\d+$/.test(v)) return null;
-  const n = Number(v);
-  return n >= 1 ? n : null;
-}
-
 /**
  * The editor's "Next due" day for the values as they are, from `nextDue` (task 007). Null while
  * the schedule or the last done day is not filled in yet.
@@ -86,8 +78,8 @@ export function formNextDue(v: HairTaskFormValues, today: string): string | null
   let everyNDays: number | null = null;
   let daysOfWeek: number[] | null = null;
   if (v.scheduleKind === 'interval') {
-    const n = wholeNumber(v.interval);
-    if (n === null) return null;
+    const n = parseWhole(v.interval);
+    if (n === null || n < 1) return null;
     everyNDays = n * (v.intervalUnit === 'weeks' ? 7 : 1);
   } else {
     if (v.daysOfWeek.length === 0) return null;
