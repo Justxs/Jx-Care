@@ -67,6 +67,8 @@ describe('route tree', () => {
       '/settings/avoid',
       '/settings/reminders',
       '/settings/security',
+      '/security/change-pin',
+      '/security/recovery',
       '/settings/preferences',
       '/settings/backup',
       '/product-form',

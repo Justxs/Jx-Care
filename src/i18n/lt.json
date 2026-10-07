@@ -211,6 +211,32 @@
     },
     "biometrics": {
       "usePin": "Naudoti PIN"
+    },
+    "settings": {
+      "changePin": "Keisti PIN",
+      "recovery": "Atkūrimo klausimas",
+      "biometricsFace": "Atrakinti su Face ID",
+      "biometricsFingerprint": "Atrakinti piršto atspaudu",
+      "biometricsIris": "Atrakinti akies rainele",
+      "biometricsDetail": "PIN vis tiek veikia.",
+      "biometricsPrompt": "Patvirtinkite, kad tai jūs",
+      "biometricsFailed": "Neįjungta. Bandykite dar kartą.",
+      "autoLock": "Užrakinti po",
+      "autoLockHint": "Kiek laiko galite būti išėję iš programėlės, kol ji paprašys PIN.",
+      "immediately": "Iš karto"
+    },
+    "changePin": {
+      "title": "Keisti PIN",
+      "oldTitle": "Įveskite dabartinį PIN",
+      "changed": "PIN pakeistas",
+      "failed": "Nepavyko pakeisti PIN. Bandykite dar kartą."
+    },
+    "recovery": {
+      "title": "Atkūrimo klausimas",
+      "pinTitle": "Įveskite PIN",
+      "pinBody": "Atkūrimo klausimui pakeisti reikia jūsų PIN.",
+      "changed": "Atkūrimo klausimas pakeistas",
+      "failed": "Nepavyko išsaugoti. Bandykite dar kartą."
     }
   },
   "today": {

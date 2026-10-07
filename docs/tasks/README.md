@@ -56,7 +56,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | done |
 | 017 | [Onboarding](017-onboarding.md) | 010, 016 | O1–O5 | done |
 | 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | done |
-| 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | todo |
+| 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | done |
 | 020 | [Notification service](020-notification-service.md) | 005 | Notifications | done |
 | 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | done |
 | 022 | [Routines data](022-routines-data.md) | 007, 012 | R1–R3, T2 | done |

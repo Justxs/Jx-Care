@@ -199,6 +199,32 @@
     },
     "biometrics": {
       "usePin": "Use PIN"
+    },
+    "settings": {
+      "changePin": "Change PIN",
+      "recovery": "Recovery question",
+      "biometricsFace": "Unlock with Face ID",
+      "biometricsFingerprint": "Unlock with fingerprint",
+      "biometricsIris": "Unlock with iris scan",
+      "biometricsDetail": "Your PIN still works.",
+      "biometricsPrompt": "Confirm it's you",
+      "biometricsFailed": "Not turned on. Try again.",
+      "autoLock": "Lock after",
+      "autoLockHint": "Time away from the app before it asks for the PIN.",
+      "immediately": "Immediately"
+    },
+    "changePin": {
+      "title": "Change PIN",
+      "oldTitle": "Enter your current PIN",
+      "changed": "PIN changed",
+      "failed": "Couldn't change the PIN. Try again."
+    },
+    "recovery": {
+      "title": "Recovery question",
+      "pinTitle": "Enter your PIN",
+      "pinBody": "Changing the recovery question needs your PIN.",
+      "changed": "Recovery question changed",
+      "failed": "Couldn't save. Try again."
     }
   },
   "today": {
