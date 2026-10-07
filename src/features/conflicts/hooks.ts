@@ -16,7 +16,7 @@ import {
 } from '@/lib/conflicts';
 import { appStore } from '@/state/app';
 
-import { conflictData } from './repo';
+import { conflictData, type ConflictData } from './repo';
 import {
   analyseDraft,
   draftInput,
@@ -42,42 +42,26 @@ export function useConflictData() {
   return useQuery(conflictDataQuery());
 }
 
-const NO_HITS: readonly ConflictHit[] = [];
 const NO_TARGETS: readonly ConflictTarget[] = [];
 
-/** `weeklyConflicts` over every saved routine (memoised in the query cache). */
-export function useWeeklyConflicts(): readonly ConflictHit[] {
-  return useConflictData().data?.weekly ?? NO_HITS;
-}
-
-/** The hits among steps actually due on an app day (Today and the player); never mild. */
-export function useDayConflicts(day: string): readonly ConflictHit[] {
-  const data = useConflictData().data;
-  return useMemo(() => (data ? dayConflicts(data.input, day) : NO_HITS), [data, day]);
-}
+const targetsFor = (data: ConflictData, hits: readonly ConflictHit[], routineId: number) =>
+  pairingsFor(hits, routineId).map((p) => toTarget(p, data.input, data.names));
 
 /** A routine's conflicts this week (R1 card tag; mild when every one is mild). */
 export function useRoutineConflicts(routineId: number): readonly ConflictTarget[] {
   const data = useConflictData().data;
   return useMemo(
-    () =>
-      data
-        ? pairingsFor(data.weekly, routineId).map((p) => toTarget(p, data.input, data.names))
-        : NO_TARGETS,
+    () => (data ? targetsFor(data, data.weekly, routineId) : NO_TARGETS),
     [data, routineId],
   );
 }
 
-/** A routine's conflicts on an app day (T1 card tag, T2 steps). */
+/** A routine's conflicts among the steps due on an app day (T1 card tag, T2 steps); never mild. */
 export function useDayRoutineConflicts(routineId: number, day: string): readonly ConflictTarget[] {
   const data = useConflictData().data;
-  const hits = useDayConflicts(day);
   return useMemo(
-    () =>
-      data
-        ? pairingsFor(hits, routineId).map((p) => toTarget(p, data.input, data.names))
-        : NO_TARGETS,
-    [data, hits, routineId],
+    () => (data ? targetsFor(data, dayConflicts(data.input, day), routineId) : NO_TARGETS),
+    [data, day, routineId],
   );
 }
 
