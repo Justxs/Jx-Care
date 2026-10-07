@@ -157,11 +157,11 @@ One row in a grouped list: Settings, routine summaries, calendar day detail, rea
 
 ## PhotoTile
 
-A progress photo or the "add photo" slot, always 3:4.
+A progress photo, always 3:4.
 
 **Built on:** RN `Pressable` + `expo-image` with a fixed `aspectRatio: 3/4` and `contentFit="cover"`.
 
-**Consumer provides:** `src` (local file URI), `date`, `selected` (compare mode), `add` for the add slot, `label`.
+**Consumer provides:** `src` (local file URI), `date`, `accessibilityLabel`, `onPress`.
 
 - The tile reserves its 3:4 box before the image decodes and shows a neutral placeholder tone underneath (no glyph), so the grid never reflows. Use `expo-image` `transition={220}` for the fade-in.
 - Photos never leave the phone. Hair tiles appear only when the hair album is switched on in Settings.
@@ -223,7 +223,7 @@ A vertical single choice: one row per option, a label with an optional one-line 
 
 ## Rating
 
-A 1–5 picker. `kind="stars"` for product ratings, `kind="scale"` (numbered pills) for daily skin and hair condition.
+A 1–5 star picker for product ratings. Daily skin and hair condition use `ConditionChips` instead.
 
 **Built on:** rn-primitives `ToggleGroup` type single, one item per value.
 
@@ -248,10 +248,9 @@ Header for pushed screens and full-screen modals: a back (or close) button, a ce
 
 **Built on:** RN `View` + `Pressable`; replaces the native stack header (`headerShown: false`) so it can share the screen's background.
 
-**Consumer provides:** `title`, `onBack`, `close` (shows X for modals), optional `action` `{icon, label, onPress, primary, text}`, optional `subtitle` (shown under the title, never above it).
+**Consumer provides:** `title`, `onBack`, `close` (shows X for modals), optional `action`: one word `{text, onPress, disabled}` or the overflow `{menu}`.
 
 - Back and close are bare 44px icon buttons with no circle behind them. Forms save with a text action (`text: true`, "Save") in `accent`; a filled check circle reads as decoration, a word reads as an action.
-- An icon action with `primary` gets a soft `accent-soft` circle, never a filled one: the filled accent is saved for the screen's one main button.
 
 - Always 56px tall, and the right side keeps a 44px spacer when there is no action, so the title never moves between screens.
 - Long titles wrap to two lines at most, then truncate.
@@ -323,11 +322,11 @@ Compact streak for headers and the Today top row. Skin and hair streaks are alwa
 
 **Built on:** Badge with the area colours.
 
-**Consumer provides:** `area` (skin or hair), `value` in days.
+**Consumer provides:** `area` (skin or hair), `value` in days, `onPress`.
 
 - Reads "12 skin" after a `calendar-check` icon: the area is a word, not a second icon.
 - Tabular numbers and the badge minimum width keep it from changing size as the count grows. The big version is StreakCard.
-- Never a flame. With `onPress` it is a button that opens the streak sheet (ExplainSheets).
+- Never a flame. It is a button that opens the streak sheet (ExplainSheets).
 
 ## Switch
 

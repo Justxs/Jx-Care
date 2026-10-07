@@ -5,6 +5,7 @@ import {
   type AnyFieldApi,
   type AnyFormApi,
 } from '@tanstack/react-form';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
 
@@ -13,7 +14,7 @@ import { DateField, TimeField, type DateFieldProps, type TimeFieldProps } from '
 import { Input, type InputProps } from './input';
 import { SelectField, type SelectFieldProps } from './select-field';
 
-const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
+const { fieldContext, formContext, useFieldContext } = createFormHookContexts();
 
 /**
  * The field's first error as text, shown once the field was left or the form was submitted.
@@ -33,6 +34,17 @@ export function useFieldError(field: AnyFieldApi): string | undefined {
         ? first.message
         : undefined;
   return message ? t(message, { defaultValue: message }) : undefined;
+}
+
+/** `useFieldError` for fields drawn by hand inside `form.Field`: renders `children(error)`. */
+export function WithFieldError({
+  field,
+  children,
+}: {
+  field: AnyFieldApi;
+  children: (error: string | undefined) => ReactNode;
+}) {
+  return children(useFieldError(field));
 }
 
 function TextField(props: Omit<InputProps, 'value' | 'onChangeText' | 'error'>) {
@@ -126,10 +138,8 @@ const app = createFormHook({
   formComponents: {},
 });
 
-export { useFormContext };
-
 /** A form-level validator: zod issues become field errors keyed by path (i18n keys). */
-export function zodFormValidator(schema: z.ZodType) {
+function zodFormValidator(schema: z.ZodType) {
   return ({ value }: { value: unknown }) => {
     const result = schema.safeParse(value);
     if (result.success) return undefined;

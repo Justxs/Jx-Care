@@ -2,19 +2,14 @@ import {
   addDays,
   addMonths,
   appDay,
-  compareDays,
   daysBetween,
   daysInMonthGrid,
   diffDays,
   firstOfMonth,
-  isAfter,
-  isBefore,
   isValidDay,
   localDate,
-  maxDay,
   minDay,
   momentOf,
-  monthStart,
   nextDayBoundary,
   weekdayOf,
   weekStart,
@@ -104,14 +99,9 @@ describe('day maths', () => {
     expect(addMonths('2026-08-31', 6)).toBe('2027-02-28');
   });
 
-  it('compares days', () => {
-    expect(compareDays('2026-10-01', '2026-10-02')).toBe(-1);
-    expect(compareDays('2026-10-02', '2026-10-01')).toBe(1);
-    expect(compareDays('2026-10-02', '2026-10-02')).toBe(0);
-    expect(isBefore('2026-09-30', '2026-10-01')).toBe(true);
-    expect(isAfter('2026-09-30', '2026-10-01')).toBe(false);
+  it('picks the earlier day', () => {
     expect(minDay('2026-09-30', '2026-10-01')).toBe('2026-09-30');
-    expect(maxDay('2026-09-30', '2026-10-01')).toBe('2026-10-01');
+    expect(minDay('2026-10-01', '2026-09-30')).toBe('2026-09-30');
   });
 
   it('lists days and month starts', () => {
@@ -121,7 +111,6 @@ describe('day maths', () => {
       '2026-11-01',
       '2026-11-02',
     ]);
-    expect(monthStart('2026-10-17')).toBe('2026-10-01');
     expect(firstOfMonth(2026, 3)).toBe('2026-03-01');
   });
 

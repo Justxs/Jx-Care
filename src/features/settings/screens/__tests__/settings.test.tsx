@@ -88,6 +88,16 @@ describe('SettingsScreen', () => {
     expect(router.push).toHaveBeenCalledWith('/settings/preferences');
   });
 
+  it('shows the last backup on its app day, as Backup and restore does', async () => {
+    const app = setupTestApp();
+    // 01:30 still belongs to the day before (the app day ends at 04:00).
+    saveSettings(app.db, { language: 'en', lastBackupAt: new Date(2025, 2, 2, 1, 30).getTime() });
+    await app.render(<SettingsScreen />);
+    expect(
+      await screen.findByRole('button', { name: 'Backup and restore, 1 Mar 2025' }),
+    ).toBeTruthy();
+  });
+
   it('reads in Lithuanian', async () => {
     const app = setupTestApp();
     saveSettings(app.db, { language: 'lt' });

@@ -16,7 +16,8 @@ import { ProgressRing } from '@/components/ui/progress-ring';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
-import { useBuyAgain } from '@/features/shopping/buyAgain';
+import { usePlayerConflicts, type PlayerConflict } from '@/features/conflicts/hooks';
+import { useBuyAgain } from '@/features/shopping/api';
 import { timeOfDayName } from '@/features/today/cardText';
 import { appStore } from '@/state/app';
 import { setToastInset, uiStore } from '@/state/ui';
@@ -35,7 +36,6 @@ import { ProblemStepCard } from '../components/ProblemStepCard';
 import { StepProductPicker } from '../components/StepProductPicker';
 import { WaitBar } from '../components/WaitBar';
 import { heldStepId, playerSegments, remainingIds, stepCounter } from '../playerLogic';
-import { usePlayerConflicts, type PlayerConflict } from '../playerSlots';
 import type { DayRoutine, RoutineStepItem } from '../repo';
 import { useWaitTimer } from '../useWaitTimer';
 
@@ -242,7 +242,7 @@ function Player({ routine: r }: { routine: DayRoutine }) {
               onToggle={(next) => toggle(segment.step, next)}
               onPick={() => setPicking({ open: true, stepId: segment.step.id })}
               onBuyAgain={
-                buyAgain && segment.step.product
+                segment.step.product
                   ? () =>
                       buyAgain([{ id: segment.step.product!.id, name: segment.step.product!.name }])
                   : null

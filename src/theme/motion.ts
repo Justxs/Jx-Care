@@ -19,8 +19,3 @@ export function timing(
   const [x1, y1, x2, y2] = motion.easing[easing];
   return { duration: motion.duration[duration], easing: Easing.bezier(x1, y1, x2, y2) };
 }
-
-/** Timing for things entering the screen (ease-out). */
-export const enterTiming = (duration: MotionDuration = 'base') => timing(duration, 'enter');
-/** Timing for things leaving the screen (ease-in). */
-export const exitTiming = (duration: MotionDuration = 'base') => timing(duration, 'exit');

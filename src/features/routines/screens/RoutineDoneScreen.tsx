@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { dateToTime } from '@/components/ui/date-field';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import { StreakCard } from '@/components/ui/streak';
@@ -30,14 +31,6 @@ import { attentionProducts, streakRestarted, type NextUp } from '../playerLogic'
 import type { StepProduct } from '../repo';
 
 type TFn = ReturnType<typeof useTranslation>['t'];
-
-const pad = (n: number) => String(n).padStart(2, '0');
-
-/** "21:52" for a moment in time, in the app's time format. */
-function clockTime(ms: number, f: Formatter): string {
-  const d = new Date(ms);
-  return f.time(`${pad(d.getHours())}:${pad(d.getMinutes())}`);
-}
 
 /** "Next: Morning · Tomorrow at 07:30". */
 export function nextUpText(next: NextUp, f: Formatter, t: TFn): string {
@@ -128,7 +121,7 @@ export function RoutineDoneScreen() {
             {r
               ? t('player.done.summary', {
                   count: r.progress.due,
-                  time: clockTime(r.log?.completedAt ?? openedAt, f),
+                  time: f.time(dateToTime(new Date(r.log?.completedAt ?? openedAt))),
                 })
               : ' '}
           </Text>

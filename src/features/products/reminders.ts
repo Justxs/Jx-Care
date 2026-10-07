@@ -7,7 +7,6 @@
  * 30 days"); the body stays empty.
  */
 import { queryClient } from '@/db/queryClient';
-import { qk } from '@/db/queryKeys';
 import { addToShoppingList } from '@/features/shopping/api';
 import { addDays, appDay, diffDays, momentOf, weekdayOf } from '@/lib/appDay';
 import { warningDay } from '@/lib/expiry';
@@ -21,6 +20,7 @@ import {
   WINDOW_MS,
 } from '@/notifications';
 
+import { invalidateProductQueries } from './api';
 import { getProduct, listProducts, markFinished } from './repo';
 import { defaultProductFilters, type ProductListItem } from './types';
 
@@ -142,12 +142,6 @@ export function planDigest(ctx: PlannerContext): PlannedNotification[] {
 registerPlanner('expiry', planExpiry);
 registerPlanner('digest', planDigest);
 
-function refreshProducts(): void {
-  queryClient.invalidateQueries({ queryKey: qk.products.all }).catch(() => {});
-  queryClient.invalidateQueries({ queryKey: ['today'] }).catch(() => {});
-  queryClient.invalidateQueries({ queryKey: qk.shopping.all }).catch(() => {});
-}
-
 // Expiry day, "Mark finished": archives the product (if it is still active) without opening the
 // app, then drops its other reminders.
 registerAction('expiry_day', 'mark_finished', async ({ db, data, now, settings }) => {
@@ -157,7 +151,7 @@ registerAction('expiry_day', 'mark_finished', async ({ db, data, now, settings }
   const p = getProduct(db, id, today, settings.expiryWarnDays);
   if (!p || p.archivedAt) return;
   markFinished(db, id, today);
-  refreshProducts();
+  invalidateProductQueries(queryClient);
   await syncEntity('product', id, now);
 });
 

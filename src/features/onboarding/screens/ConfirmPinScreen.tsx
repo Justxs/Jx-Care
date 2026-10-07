@@ -3,13 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { PinPadHandle } from '@/components/ui/pin-pad';
-import { motion } from '@/theme/motion';
+import { MISMATCH_BACK_MS } from '@/features/security/components/NewPinStep';
 
 import { PinStep, usePinEntry } from '../components/PinStep';
 import { draftStore, rejectDraftPin } from '../draft';
-
-/** After a mismatch: the 300 ms shake, then a moment to read the message before O2 returns. */
-export const MISMATCH_BACK_MS = motion.duration.slow + 400;
 
 /** O3 Confirm PIN. A match moves on; a mismatch shakes, says so and goes back to O2. */
 export function ConfirmPinScreen() {

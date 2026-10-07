@@ -181,11 +181,6 @@ export function createPinService(kv: SecureKV = secureKV) {
     return stored !== null && (await matches(stored, pin));
   }
 
-  async function remaining(kind: AttemptKind, now: number): Promise<number> {
-    const { lockedUntil } = await readAttempts(kind);
-    return lockedUntil > now ? Math.ceil((lockedUntil - now) / 1000) : 0;
-  }
-
   async function until(kind: AttemptKind, now: number): Promise<number> {
     const { lockedUntil } = await readAttempts(kind);
     return lockedUntil > now ? lockedUntil : 0;
@@ -245,14 +240,12 @@ export function createPinService(kv: SecureKV = secureKV) {
       return attempt('pinAttempts', now, () => checkPin(pin));
     },
 
-    /** Seconds left in the PIN lockout, 0 when not locked ("Try again in 30 s"). */
-    lockoutRemaining(now: number): Promise<number> {
-      return remaining('pinAttempts', now);
-    },
-
-    /** Seconds left in the recovery answer lockout, 0 when not locked. */
-    recoveryLockoutRemaining(now: number): Promise<number> {
-      return remaining('recoveryAttempts', now);
+    /**
+     * L1 unlocked with biometrics: the wrong PINs before it no longer count as "in a row". Only
+     * called outside a lockout (the biometrics key is disabled during one).
+     */
+    resetPinFailures(): Promise<void> {
+      return serial(() => kv.delete(KEYS.pinAttempts));
     },
 
     /** When the PIN lockout ends (ms), 0 when not locked; countdowns compute from it (L1). */
@@ -318,20 +311,3 @@ export type PinService = ReturnType<typeof createPinService>;
 
 /** The app's service over the phone's secure storage. */
 export const pinService: PinService = createPinService();
-
-export const {
-  isPinSet,
-  setPin,
-  setRecovery,
-  completeOnboarding,
-  verifyPin,
-  lockoutRemaining,
-  recoveryLockoutRemaining,
-  lockoutUntil,
-  recoveryLockoutUntil,
-  getRecoveryQuestion,
-  verifyRecoveryAnswer,
-  changePin,
-  changeRecovery,
-  resetAll,
-} = pinService;

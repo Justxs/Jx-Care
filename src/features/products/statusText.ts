@@ -10,7 +10,7 @@ type Dated = ExpiryFields & { openedAt: string | null };
 
 /** The status badge, only for a status that needs attention (an OK product has none). */
 export function statusBadge(
-  p: Dated,
+  p: ExpiryFields,
   f: Formatter,
   t: TFunction,
 ): { status: BadgeStatus; label: string } | null {

@@ -52,7 +52,7 @@ export const DayCell = memo(function DayCell({
         <Text
           className={cn(
             'text-body tabular-nums',
-            selected ? 'text-ink' : inMonth ? 'text-ink' : 'text-ink-muted',
+            selected || inMonth ? 'text-ink' : 'text-ink-muted',
             isToday && 'text-body-strong',
           )}
         >

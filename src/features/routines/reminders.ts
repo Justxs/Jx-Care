@@ -30,6 +30,7 @@ import {
 } from '@/notifications';
 
 import {
+  chosenRoutine,
   dayRoutine,
   getDayLog,
   groupDayRoutines,
@@ -85,7 +86,7 @@ export function routineReminders(input: RoutineReminderInput): RoutineReminder[]
     );
     for (const g of groups) {
       if (g.complete) continue;
-      const chosen = g.routines.find((r) => r.id === g.chosenId) ?? g.routines[0]!;
+      const chosen = chosenRoutine(g);
       const time = chosen.reminderTime ?? g.routines.find((r) => r.reminderTime)?.reminderTime;
       if (!time || chosen.progress.due === 0) continue;
       out.push({ day, time, group: g, routine: chosen });
@@ -173,11 +174,6 @@ function run(task: () => Promise<unknown>): Promise<void> {
   );
   settled = next;
   return next;
-}
-
-/** Resolves when reminder work started so far has finished (tests). */
-export function remindersSettled(): Promise<void> {
-  return settled;
 }
 
 /**

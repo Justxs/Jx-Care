@@ -171,6 +171,21 @@ describe('startAutoLock', () => {
     expect(lockStore.state.locked).toBe(true);
   });
 
+  it('does not lock when the camera result ends the pause before the app is active (Android)', () => {
+    autoLock = 0;
+    const { go } = start();
+    const resume = pauseAutoLock();
+    go('background');
+    jest.advanceTimersByTime(20_000);
+    resume();
+    go('active');
+    expect(lockStore.state.locked).toBe(false);
+    // The pause belonged to that trip only.
+    go('background');
+    go('active');
+    expect(lockStore.state.locked).toBe(true);
+  });
+
   it('covers the app while inactive or in the background', () => {
     const { go } = start();
     expect(privacyStore.state.covered).toBe(false);

@@ -293,16 +293,9 @@ function CompareViewer({ mode, space, before, after }: ViewerProps) {
   const { t } = useTranslation();
   const [zoomed, setZoomed] = useState(false);
   const usable = Math.max(0, space.height - LABEL_SPACE - 24);
-  const box =
-    mode === 'side'
-      ? (() => {
-          const width = Math.min((space.width - COLUMN_GAP) / 2, (usable * 3) / 4);
-          return { width, height: (width * 4) / 3 };
-        })()
-      : (() => {
-          const width = Math.min(space.width, (usable * 3) / 4);
-          return { width, height: (width * 4) / 3 };
-        })();
+  const column = mode === 'side' ? (space.width - COLUMN_GAP) / 2 : space.width;
+  const width = Math.min(column, (usable * 3) / 4);
+  const box = { width, height: (width * 4) / 3 };
   const zoom = useSyncedZoom(box, setZoomed);
 
   return (

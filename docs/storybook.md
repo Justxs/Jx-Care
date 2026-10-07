@@ -76,7 +76,6 @@ All under `src/storybook/`.
 | Import | What it does |
 | --- | --- |
 | `withAppData({ seed?, params?, today? })` from `appData` | Story decorator. A fresh in-memory database with every migration, set with `setDb`, seeded with `seed(db, today)`, `appStore.activeDay = today` (default `FIXTURE_TODAY`), the settings query filled as after boot, and `params` returned by `useLocalSearchParams()`. Renders a blank canvas until ready; the app's own database and day come back when the story closes. |
-| `withRouteParams(params)` from `decorators` | Route params without a database (a component that reads params). |
 | `withPendingData()` from `seeds/pending` | Every query stays pending, so the screen shows its skeletons (Loading stories). |
 | `samplePhotoUri` from `seeds/products`, `storyPhotoUri(angle)` from `seeds/progress` | Photos for stories: an inlined product photo, and bundled images for progress photos. |
 | `seedDemo(db, today?)`, `seedEmpty(db)` from `fixtures` | The seeds. Write new ones there, only through repo functions. |

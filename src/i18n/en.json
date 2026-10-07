@@ -4,7 +4,6 @@
     "buyAgain": "Buy again",
     "markFinished": "Mark finished",
     "finished": "Finished",
-    "archive": "Archive",
     "start": "Start",
     "continue": "Continue",
     "timeOfDay": "Time of day",
@@ -22,7 +21,6 @@
     "weeklyPhoto": "Weekly photo",
     "checkIn": "Check-in",
     "allDone": "All done",
-    "notDone": "Not done",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -35,8 +33,6 @@
     "skin": "Skin",
     "hair": "Hair",
     "skinAndHair": "Skin + hair",
-    "today": "Today",
-    "yesterday": "Yesterday",
     "tags": {
       "calm": "Calm",
       "glow": "Glow",
@@ -55,7 +51,6 @@
       "avoid": "Avoid"
     },
     "everyDay": "Every day",
-    "best": "Best {{days}}",
     "stepOf": "Step {{index}} of {{count}}",
     "discardTitle": "Discard changes?",
     "discardBody": "Your changes will be lost.",
@@ -608,8 +603,6 @@
     "alreadyListedToast": "{{name}} is already on your shopping list",
     "allListedToast": "Already on your shopping list",
     "removedToast": "{{name}} removed",
-    "todayRow_one": "Shopping list · {{count}} to buy",
-    "todayRow_other": "Shopping list · {{count}} to buy",
     "areaFilter": "Show items for",
     "sheet": {
       "title": "Add to shopping list",
@@ -1266,10 +1259,8 @@
     "rating": "Rating",
     "pinEntered": "{{count}} of 4 digits entered",
     "progress": "{{value}} of {{max}} done",
-    "photoAdd": "Add photo",
     "conflictOpen": "{{label}}. Tap for details.",
-    "noDays": "No days",
-    "scale": "{{value}} of {{max}}"
+    "noDays": "No days"
   },
   "streak": {
     "chip": "{{count}} {{area}}",
@@ -1285,29 +1276,8 @@
     "hairWord": "hair"
   },
   "dev": {
-    "components": "Components",
-    "sampleForm": "Sample form",
-    "name": "Name",
-    "price": "Price",
-    "purchased": "Purchased",
-    "tags": "Tags",
-    "category": "Category",
-    "answer": "Answer",
-    "notes": "Notes",
-    "nameHint": "As on the bottle",
-    "resetTitle": "Reset app?",
-    "resetBody": "This deletes all products, routines and logs. It can't be undone.",
-    "resetAction": "Reset app",
-    "typeReset": "Type RESET to confirm",
-    "removed": "Parfum removed",
     "openSheet": "Open sheet",
-    "openDialog": "Open dialog",
-    "showToast": "Show toast",
-    "more": "More details",
-    "emptyTitle": "No products yet",
-    "emptyBody": "Add what is on your shelf to see when it expires.",
-    "addProduct": "Add product",
-    "importBackup": "Restore a backup"
+    "showToast": "Show toast"
   },
   "forms": {
     "errors": {

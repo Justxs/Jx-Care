@@ -292,6 +292,25 @@ describe('L1 lock screen', () => {
     expect(auth.authenticateAsync).toHaveBeenCalledTimes(2);
   });
 
+  it('starts the wrong-PIN count again after a biometrics unlock', async () => {
+    const app = await setUp({ biometricsOn: true });
+    await launch(app);
+    await waitFor(() => expect(auth.authenticateAsync).toHaveBeenCalledTimes(1));
+    await settle();
+    for (let i = 0; i < 4; i++) await typePin('1111');
+    auth.authenticateAsync.mockResolvedValueOnce({ success: true } as never);
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Unlock with Face ID or fingerprint' }),
+    );
+    await waitFor(() => expect(lockStore.state.locked).toBe(false));
+    // One wrong PIN later is the first in a row, not the 5th.
+    expect(await pinService.verifyPin('1111', Date.now())).toEqual({
+      ok: false,
+      locked: false,
+      failures: 1,
+    });
+  });
+
   it('opens a notification tapped while locked right after unlock', async () => {
     const app = await setUp();
     await launch(app);
@@ -478,6 +497,33 @@ describe('ResetDialog from Settings', () => {
     // Opening again asks for the PIN again.
     await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
     expect(await screen.findByText('Enter your PIN')).toBeTruthy();
+  });
+
+  it('ignores a PIN check that finishes after Cancel, even when opened again', async () => {
+    const app = await setUp();
+    let finish: (() => void) | undefined;
+    const verify = jest.spyOn(pinService, 'verifyPin').mockImplementation(
+      () =>
+        new Promise((done) => {
+          finish = () => done({ ok: true });
+        }),
+    );
+    await app.render(<SettingsStub onExport={jest.fn()} reset={jest.fn(async () => {})} />);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
+    await fireEvent.changeText(await screen.findByLabelText('PIN'), '2580');
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    // Opened again before the first check finishes.
+    await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
+    await act(async () => finish?.());
+    verify.mockRestore();
+    expect(screen.getByText('Enter your PIN')).toBeTruthy();
+    expect(screen.queryByText('Reset app and delete all data?')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Open reset' }));
+    expect(await screen.findByText('Enter your PIN')).toBeTruthy();
+    expect(screen.queryByText('Reset app and delete all data?')).toBeNull();
   });
 });
 

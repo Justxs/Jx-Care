@@ -4,9 +4,10 @@ import { and, eq } from 'drizzle-orm';
 import * as Haptics from 'expo-haptics';
 
 import type { Db } from '@/db';
+import * as conflictHooks from '@/features/conflicts/hooks';
 import { routineLog, routineStep } from '@/db/schema';
 import { markFinished } from '@/features/products/repo';
-import { registerBuyAgain } from '@/features/shopping/buyAgain';
+import * as shoppingApi from '@/features/shopping/api';
 import { getSettings, saveSettings } from '@/features/settings/repo';
 import { MON, seedProduct, seedRoutine } from '@/features/today/testUtils';
 import { setI18nLanguage } from '@/i18n';
@@ -15,8 +16,7 @@ import { dismissToast, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 import { addBuyAgain } from '@/features/shopping/repo';
 
-import * as events from '../../events';
-import { registerPlayerConflicts } from '../../playerSlots';
+import * as reminders from '../../reminders';
 import { getDayLog, getRoutineDay, tickSteps } from '../../repo';
 import { RoutineDoneScreen } from '../RoutineDoneScreen';
 import { RoutinePlayerScreen } from '../RoutinePlayerScreen';
@@ -112,8 +112,6 @@ beforeEach(async () => {
 
 afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
-  registerPlayerConflicts(() => []);
-  registerBuyAgain(() => null);
   jest.restoreAllMocks();
 });
 
@@ -156,7 +154,7 @@ describe('RoutinePlayerScreen', () => {
 
   it('keeps ticks when left mid-way, and the last tick hands over to the done screen', async () => {
     const app = setup();
-    const completed = jest.spyOn(events, 'onRoutineCompleted');
+    const completed = jest.spyOn(reminders, 'cancelTodaysRoutineReminders');
     const id = seedRoutine(app.db, { name: 'Evening', steps: [null, null] });
     const [s1, s2] = stepIds(app.db, id);
     // Ticked earlier, then the player was closed.
@@ -176,7 +174,7 @@ describe('RoutinePlayerScreen', () => {
       params: { routineId: String(id), from: '0' },
     });
     await waitFor(() => expect(getDayLog(app.db, id, MON)?.completedAt).not.toBeNull());
-    expect(completed).toHaveBeenCalledWith(id, MON);
+    expect(completed).toHaveBeenCalledWith(id);
   });
 
   it('All done ticks every remaining step and opens the done screen', async () => {
@@ -243,8 +241,8 @@ describe('RoutinePlayerScreen', () => {
     ).toHaveLength(2);
     expect(screen.getAllByRole('button', { name: 'Pick another' })).toHaveLength(2);
     expect(screen.getByRole('button', { name: 'Pick a product' })).toBeTruthy();
-    // Buy again waits for task 034.
-    expect(screen.queryByRole('button', { name: 'Buy again' })).toBeNull();
+    // Buy again on the expired and the finished product; the empty step has nothing to buy.
+    expect(screen.getAllByRole('button', { name: 'Buy again' })).toHaveLength(2);
     // The card keeps its checkbox.
     expect(checkbox('Step 1 · SPF 50 fluid, Expired 2 Oct')).not.toBeChecked();
 
@@ -265,7 +263,7 @@ describe('RoutinePlayerScreen', () => {
   it('shows Buy again on a problem card once the shopping list provides it', async () => {
     const app = setup();
     const buy = jest.fn();
-    registerBuyAgain(() => buy);
+    jest.spyOn(shoppingApi, 'useBuyAgain').mockReturnValue(buy);
     const spf = seedProduct(app.db, { name: 'SPF 50 fluid', expiresAt: '2026-10-02' });
     const id = seedRoutine(app.db, { name: 'Evening', steps: [spf, null] });
     await renderPlayer(app, id);
@@ -281,7 +279,7 @@ describe('RoutinePlayerScreen', () => {
     const vc = seedProduct(app.db, { name: 'Vitamin C serum' });
     const id = seedRoutine(app.db, { name: 'Morning', timeOfDay: 'morning', steps: [vc, null] });
     const [s1] = stepIds(app.db, id);
-    registerPlayerConflicts((routineId) =>
+    jest.spyOn(conflictHooks, 'usePlayerConflicts').mockImplementation((routineId) =>
       routineId === id
         ? [
             {

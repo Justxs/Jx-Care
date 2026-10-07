@@ -11,9 +11,8 @@ import { appStore } from '@/state/app';
 import { dismissToast, runToastAction, runToastSecondary, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
-import { ShoppingListRow } from '../../components/ShoppingListRow';
 import { addBuyAgain, addItem, listShopping, setBought, toBuyCount } from '../../repo';
-import { shoppingViewStore } from '../../viewState';
+import { openShoppingList, shoppingViewStore } from '../../viewState';
 import { ShoppingScreen } from '../ShoppingScreen';
 
 jest.mock('expo-router', () => ({
@@ -334,17 +333,9 @@ describe('Shopping in Products', () => {
   });
 });
 
-describe('ShoppingListRow', () => {
-  it('is hidden at 0 and opens the Shopping segment', async () => {
-    const app = setup();
-    await app.render(<ShoppingListRow />);
-    expect(screen.queryByRole('button')).toBeNull();
-    addItem(app.db, item('A'));
-    addItem(app.db, item('B'));
-    addItem(app.db, item('C'));
-    await act(async () => app.client.invalidateQueries());
-    const row = await screen.findByRole('button', { name: 'Shopping list · 3 to buy' });
-    await fireEvent.press(row);
+describe('openShoppingList', () => {
+  it('opens the Products tab on its Shopping segment', () => {
+    openShoppingList();
     expect(productsSegmentStore.state.segment).toBe('shopping');
     expect(router.navigate).toHaveBeenCalledWith('/products');
   });

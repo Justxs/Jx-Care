@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
 import { ResetDialog } from '@/features/security/components/ResetDialog';
 import { useFormat } from '@/i18n/useFormat';
-import { localDate } from '@/lib/appDay';
+import { appDay } from '@/lib/appDay';
 
 import { useSettings } from '../api';
 
@@ -24,7 +24,7 @@ export function SettingsScreen() {
   const settings = useSettings().data;
   const [resetOpen, setResetOpen] = useState(false);
   const lastBackup = settings?.lastBackupAt
-    ? f.date(localDate(settings.lastBackupAt))
+    ? f.date(appDay(settings.lastBackupAt))
     : t('settings.never');
 
   return (

@@ -73,7 +73,10 @@ export type TodayRoutineGroup = {
   timeOfDay: Routine['timeOfDay'];
   customName: string | null;
   routines: DayRoutine[];
-  /** The routine the card shows: the one already ticked, else the remembered pick, else the first. */
+  /**
+   * The routine the card shows: the finished one, else the one already ticked, else the
+   * remembered pick, else the first.
+   */
   chosenId: number;
   /** Something is ticked, so the A/B choice is fixed for the day. */
   started: boolean;
@@ -85,12 +88,8 @@ export type SaveRoutineInput = RoutineInput & { id?: number | null; active?: boo
 
 // ─── Reads ──────────────────────────────────────────────────────────────────
 
-function stepProduct(
-  p: typeof product.$inferSelect | null,
-  today: string,
-  warnDays: number,
-): StepProduct | null {
-  if (!p) return null;
+/** A product with its expiry status on `today`; also the R4 picker's Recent rows. */
+function stepProduct(p: typeof product.$inferSelect, today: string, warnDays: number): StepProduct {
   const status = expiryStatus(p, today, warnDays);
   return {
     id: p.id,
@@ -122,7 +121,7 @@ function loadSteps(
     .all()
     .map(({ step, product: p }) => {
       const { createdAt: _c, updatedAt: _u, ...rest } = step;
-      return { ...rest, product: stepProduct(p, today, warnDays) };
+      return { ...rest, product: p ? stepProduct(p, today, warnDays) : null };
     });
 }
 
@@ -183,6 +182,14 @@ function logsOn(db: DbOrTx, day: string): Map<number, RoutineLog> {
   return new Map(rows.map((l) => [l.routineId, l]));
 }
 
+/** The option a time of day shows and opens: `chosenId`, else the first. */
+export function chosenRoutine<R extends { id: number }>(group: {
+  routines: readonly R[];
+  chosenId: number;
+}): R {
+  return group.routines.find((r) => r.id === group.chosenId) ?? group.routines[0]!;
+}
+
 /** Builds the Today groups from routines already loaded for `day`. Exported for the optimistic tick. */
 export function groupDayRoutines(
   groups: readonly { key: string; routines: readonly DayRoutine[]; chosenId: number }[],
@@ -190,12 +197,14 @@ export function groupDayRoutines(
   return groups.map((g) => {
     const first = g.routines[0]!;
     const started = g.routines.find((r) => r.progress.done > 0);
+    // When both options have ticks, the finished one is what the done row shows and opens.
+    const finished = g.routines.find((r) => r.progress.complete);
     return {
       key: g.key,
       timeOfDay: first.timeOfDay,
       customName: first.customName,
       routines: [...g.routines],
-      chosenId: started?.id ?? g.chosenId,
+      chosenId: finished?.id ?? started?.id ?? g.chosenId,
       started: !!started,
       complete: groupComplete(g.routines.map((r) => r.progress)),
     };
@@ -351,17 +360,7 @@ export function recentStepProducts(
   for (const id of ids) {
     const p = rows.get(id);
     if (!p || p.archivedAt !== null || (p.area !== area && p.area !== 'both')) continue;
-    out.push({
-      id: p.id,
-      name: p.name,
-      brand: p.brand,
-      area: p.area,
-      category: p.category,
-      photoUri: p.photoUri,
-      status: expiryStatus(p, today, warnDays),
-      daysLeft: daysLeft(p, today),
-      effectiveExpiry: effectiveExpiry(p),
-    });
+    out.push(stepProduct(p, today, warnDays));
     if (out.length === limit) break;
   }
   return out;
@@ -377,10 +376,6 @@ export function routinesUsingProduct(db: Db, productId: number): UsedIn[] {
     .orderBy(asc(routine.sortTime), asc(routine.id))
     .all()
     .map((r) => ({ kind: 'routine' as const, id: r.id, name: r.name }));
-}
-
-export function routineCountByProduct(db: Db, productId: number): number {
-  return routinesUsingProduct(db, productId).length;
 }
 
 addUsedInSource(routinesUsingProduct);
@@ -508,19 +503,9 @@ export function deleteRoutine(db: Db, id: number): void {
   db.delete(routine).where(eq(routine.id, id)).run();
 }
 
-/** "Pick another" (T2) and replacing missing steps (sequence 7). Returns the routine id. */
-export function replaceStepProduct(
-  db: Db,
-  stepId: number,
-  productId: number | null,
-): number | null {
-  const row = db
-    .update(routineStep)
-    .set({ productId })
-    .where(eq(routineStep.id, stepId))
-    .returning({ routineId: routineStep.routineId })
-    .get();
-  return row?.routineId ?? null;
+/** "Pick another" (T2) and replacing missing steps (sequence 7). */
+export function replaceStepProduct(db: Db, stepId: number, productId: number | null): void {
+  db.update(routineStep).set({ productId }).where(eq(routineStep.id, stepId)).run();
 }
 
 /** The ticked step ids after ticking (`done`) or unticking `stepIds`, in tick order. */
@@ -563,9 +548,10 @@ export function tickSteps(
         .all()
         .map((s) => s.id),
     );
-    const snapshot = log && log.dueStepIds.length > 0 ? log.dueStepIds : [...dueStepIds];
-    const liveSnapshot = snapshot.filter((id) => live.has(id));
-    const due = liveSnapshot.length > 0 ? liveSnapshot : snapshot;
+    // As `dayRoutine` reads it: the snapshot minus deleted steps, or the caller's due steps when
+    // none of the snapshot is left.
+    const fromLog = (log?.dueStepIds ?? []).filter((id) => live.has(id));
+    const due = fromLog.length > 0 ? fromLog : dueStepIds.filter((id) => live.has(id));
     const complete = due.length > 0 && due.every((id) => doneIds.includes(id));
     const values = {
       dueStepIds: due,
@@ -582,18 +568,6 @@ export function tickSteps(
     }
     return tx.update(routineLog).set(values).where(eq(routineLog.id, log.id)).returning().get();
   });
-}
-
-export function tickStep(
-  db: Db,
-  routineId: number,
-  stepId: number,
-  day: string,
-  done: boolean,
-  dueStepIds: readonly number[],
-  now: number = Date.now(),
-): RoutineLog | null {
-  return tickSteps(db, routineId, [stepId], day, done, dueStepIds, now);
 }
 
 /** Remembers the A/B pick for a time of day on a weekday (T1). */

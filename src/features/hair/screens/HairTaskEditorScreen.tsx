@@ -1,7 +1,7 @@
 import { useStore, type AnyFieldApi } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
@@ -13,7 +13,7 @@ import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
 import { ChipField } from '@/components/ui/chip-field';
 import { Chip } from '@/components/ui/chip';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -28,6 +28,8 @@ import { ToggleGroup } from '@/components/ui/toggle-group';
 import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import { hairOtherKinds, type HairOtherKind, type HairTaskKind } from '@/db/enums';
 import { useProductsForPicker } from '@/features/products/api';
+import { ProductPickerSheet } from '@/features/products/components/ProductPickerSheet';
+import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
 import { appStore } from '@/state/app';
@@ -36,13 +38,13 @@ import { motion } from '@/theme/motion';
 import { askForReminders } from '@/notifications';
 
 import { useDeleteHairTask, useHairTask, useSaveHairTask } from '../api';
-import { HairProductPickerSheet } from '../components/HairProductPickerSheet';
 import { defaultHairName, formNextDue, hairTaskIcon, isDefaultHairName } from '../display';
 import type { HairProductRef, HairTaskDetail } from '../repo';
 import {
   emptyHairTaskForm,
   hairTaskSchema,
   hairTaskToForm,
+  parseWhole,
   type HairTaskFormValues,
 } from '../schema';
 
@@ -115,11 +117,6 @@ function EditHairTask({ id }: { id: number }) {
   );
 }
 
-/** "3" → 3; anything else → null. */
-function whole(text: string): number | null {
-  return /^\d+$/.test(text.trim()) ? Number(text.trim()) : null;
-}
-
 function frequencyOf(v: Pick<HairTaskFormValues, 'scheduleKind' | 'intervalUnit'>): Frequency {
   if (v.scheduleKind === 'days') return 'setDays';
   return v.intervalUnit === 'weeks' ? 'everyFewWeeks' : 'everyFewDays';
@@ -143,7 +140,6 @@ function HairTaskForm({
   const saveTask = useSaveHairTask();
   const deleteTask = useDeleteHairTask();
   const pickerProducts = useProductsForPicker({ area: 'hair' }, i18n.language).data;
-  const leaving = useRef(false);
   const [picker, setPicker] = useState({ open: false, key: 0 });
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -163,30 +159,18 @@ function HairTaskForm({
           name: value.name,
         }),
       });
-      leaving.current = true;
-      router.back();
+      guard.leave();
     },
   });
   const dirty = useFormDirty(form);
   const submitting = useStore(form.store, (s) => s.isSubmitting);
   const kind = useStore(form.store, (s) => s.values.kind);
 
-  const close = () => {
-    leaving.current = true;
-    router.back();
-  };
-  const guard = useCloseGuard({ dirty, onClose: close });
+  const guard = useScreenCloseGuard({ dirty });
 
-  // Android back and any other way of leaving go through the same "Discard changes?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
+  // Back from Add product (opened from the picker): stop waiting, so a product added later from
+  // the Products tab doesn't land in this task while the editor stays open under it.
+  useEffect(() => navigation.addListener('focus', endAddProductForPick), [navigation]);
 
   // Values set from code skip the blur that validates, so check again: an error that no longer
   // applies (or a new one, after a Save attempt) shows at once, and Save is never stuck on it.
@@ -202,7 +186,7 @@ function HairTaskForm({
       form.setFieldValue('name', defaultHairName(next, otherKind, t));
     // Every few weeks is for other care only: a wash keeps the same interval in days.
     if (next === 'wash' && v.scheduleKind === 'interval' && v.intervalUnit === 'weeks') {
-      const n = whole(v.interval);
+      const n = parseWhole(v.interval);
       form.setFieldValue('intervalUnit', 'days');
       if (n !== null) form.setFieldValue('interval', String(n * 7));
     }
@@ -229,7 +213,7 @@ function HairTaskForm({
       revalidate();
       return;
     }
-    const n = whole(v.interval);
+    const n = parseWhole(v.interval);
     if (n !== null && unit === 'days') form.setFieldValue('interval', String(n * 7));
     if (n !== null && unit === 'weeks' && n % 7 === 0)
       form.setFieldValue('interval', String(n / 7));
@@ -240,10 +224,9 @@ function HairTaskForm({
   const remove = async () => {
     if (taskId === undefined) return;
     setConfirmDelete(false);
-    leaving.current = true;
     await deleteTask.mutateAsync(taskId);
     showToast({ message: t('hair.editor.deletedToast', { name: initial.name }) });
-    router.back();
+    guard.leave();
   };
 
   const frequencyItems = [
@@ -360,9 +343,11 @@ function HairTaskForm({
                       ? t('hair.editor.changeProducts')
                       : t('hair.editor.pickProducts')}
                   </Button>
-                  <HairProductPickerSheet
+                  <ProductPickerSheet
                     key={picker.key}
                     open={picker.open}
+                    area="hair"
+                    multiple
                     onClose={() => setPicker((p) => ({ ...p, open: false }))}
                     selected={field.state.value}
                     onPick={field.handleChange}

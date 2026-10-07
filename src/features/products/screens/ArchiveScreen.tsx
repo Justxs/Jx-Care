@@ -14,16 +14,16 @@ import { ProductThumb } from '@/components/ui/product-thumb';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { Separator } from '@/components/ui/separator';
 import { Sheet } from '@/components/ui/sheet';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
-import { useBuyAgain } from '@/features/shopping/buyAgain';
+import { useBuyAgain } from '@/features/shopping/api';
 import { useFormat } from '@/i18n/useFormat';
-import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
 import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
 
-import { useArchivedProducts, useDeleteProduct, useRestoreProduct, useUndoFinished } from '../api';
+import { useArchivedProducts, useDeleteProduct } from '../api';
+import { useRestoreFromArchive } from '../archiveActions';
+import { ProductRowsSkeleton } from '../components/ProductRow';
 import type { ArchiveSort, ArchivedProduct } from '../types';
 
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/products'));
@@ -34,8 +34,7 @@ export function ArchiveScreen() {
   const [sort, setSort] = useState<ArchiveSort>('date');
   const archived = useArchivedProducts(sort);
   const buyAgain = useBuyAgain();
-  const restore = useRestoreProduct();
-  const undo = useUndoFinished();
+  const restore = useRestoreFromArchive();
   const remove = useDeleteProduct();
   // The row whose action sheet is open (kept while it slides away).
   const [menuItem, setMenuItem] = useState<ArchivedProduct | null>(null);
@@ -52,14 +51,9 @@ export function ArchiveScreen() {
     setMenuOpen(true);
   };
 
-  const restoreItem = async (item: ArchivedProduct) => {
+  const restoreItem = (item: ArchivedProduct) => {
     setMenuOpen(false);
-    await restore.mutateAsync(item.id);
-    showToast({
-      message: t('products.archive.restoredToast', { name: item.name }),
-      actionLabel: t('common.undo'),
-      onAction: () => undo.mutate([{ id: item.id, archivedAt: item.archivedAt }]),
-    });
+    void restore.run(item);
   };
 
   return (
@@ -78,7 +72,7 @@ export function ArchiveScreen() {
           />
         ) : null}
         {archived.isPending ? (
-          <SkeletonRows />
+          <ProductRowsSkeleton rows={4} />
         ) : items.length === 0 ? (
           <Animated.View entering={FadeIn.duration(motion.duration.fast)}>
             <EmptyState icon="archive" title={t('products.archive.emptyTitle')}>
@@ -123,17 +117,15 @@ export function ArchiveScreen() {
               trailing="none"
               onPress={() => restoreItem(menuItem)}
             />
-            {buyAgain ? (
-              <ListRow
-                label={t('common.buyAgain')}
-                icon="shopping-cart"
-                trailing="none"
-                onPress={() => {
-                  setMenuOpen(false);
-                  buyAgain([{ id: menuItem.id, name: menuItem.name }]);
-                }}
-              />
-            ) : null}
+            <ListRow
+              label={t('common.buyAgain')}
+              icon="shopping-cart"
+              trailing="none"
+              onPress={() => {
+                setMenuOpen(false);
+                buyAgain([{ id: menuItem.id, name: menuItem.name }]);
+              }}
+            />
             <ListRow
               label={t('common.delete')}
               icon="trash-2"
@@ -200,24 +192,5 @@ function ArchiveRow({ item, onMore }: { item: ArchivedProduct; onMore: () => voi
         <Icon name="ellipsis" size={22} tone="ink-muted" />
       </Pressable>
     </View>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <Card flush>
-      {[0, 1, 2, 3].map((i) => (
-        <View key={i}>
-          {i > 0 ? <Separator inset /> : null}
-          <View className="min-h-[72px] flex-row items-center gap-3 px-4 py-3">
-            <Skeleton width={48} height={48} radius={8} />
-            <View className="flex-1 gap-2">
-              <Skeleton width="60%" height={16} />
-              <Skeleton width="40%" height={12} />
-            </View>
-          </View>
-        </View>
-      ))}
-    </Card>
   );
 }

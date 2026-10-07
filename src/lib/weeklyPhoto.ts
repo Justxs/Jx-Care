@@ -1,4 +1,4 @@
-import { photoAngles, type PhotoAngle, type ProgressArea } from '@/db/enums';
+import type { PhotoAngle, ProgressArea } from '@/db/enums';
 
 import { addDays, weekStart } from './appDay';
 
@@ -53,9 +53,4 @@ export function sessionAngles(
   }
   const hair = hairOrder.filter((a) => tracked.hairAngles.includes(a));
   return hair.length > 0 ? hair : ['front'];
-}
-
-/** True for a known angle name (route params). */
-export function isPhotoAngle(value: unknown): value is PhotoAngle {
-  return typeof value === 'string' && (photoAngles as readonly string[]).includes(value);
 }

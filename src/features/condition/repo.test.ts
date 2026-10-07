@@ -8,14 +8,7 @@ import {
   saveConditionDay,
   toggleState,
 } from './repo';
-import {
-  bySeverity,
-  cleanNote,
-  mainSkinState,
-  normaliseStates,
-  toggleInDay,
-  CONDITION_NOTE_MAX,
-} from './tags';
+import { bySeverity, cleanNote, normaliseStates, toggleInDay, CONDITION_NOTE_MAX } from './tags';
 
 const TODAY = '2026-10-07';
 const YESTERDAY = '2026-10-06';
@@ -39,9 +32,6 @@ describe('tags', () => {
       'calm',
       'glow',
     ]);
-    expect(mainSkinState(['calm', 'redness'])).toBe('redness');
-    expect(mainSkinState(['dry', 'itchy'])).toBe('itchy');
-    expect(mainSkinState([])).toBeNull();
   });
 
   it('trims the note, cuts it to 280 and turns empty into null', () => {

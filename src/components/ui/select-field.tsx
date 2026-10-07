@@ -3,10 +3,9 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { cn } from '@/lib/cn';
 import { motion } from '@/theme/motion';
 
-import { Field, fieldBoxClass } from './field';
+import { Field } from './field';
 import { FieldButton } from './field-button';
 import { Icon } from './icon';
 import { RadioList } from './radio-list';
@@ -86,18 +85,16 @@ export function SelectField({
         }}
         disabled={disabled}
       >
-        <SelectPrimitive.Trigger
-          accessibilityRole="button"
-          accessibilityLabel={`${label}, ${selected?.label ?? placeholder ?? ''}`}
-          className={cn(fieldBoxClass({ invalid: !!error, disabled }), 'gap-2 active:opacity-85')}
-        >
-          <Text
-            numberOfLines={valueLines}
-            className={cn('flex-1 py-2 text-body', selected ? 'text-ink' : 'text-ink-muted')}
-          >
-            {selected?.label ?? placeholder}
-          </Text>
-          <Icon name="chevron-down" size={20} tone="ink-muted" />
+        {/* The primitive's own `disabled` defaults to false and ignores the Root's, so pass both. */}
+        <SelectPrimitive.Trigger asChild disabled={disabled}>
+          <FieldButton
+            label={label}
+            value={selected?.label}
+            placeholder={placeholder}
+            invalid={!!error}
+            disabled={disabled}
+            valueLines={valueLines}
+          />
         </SelectPrimitive.Trigger>
         <SelectPrimitive.Portal>
           <SelectPrimitive.Overlay className="absolute inset-0">

@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { act, waitFor } from '@testing-library/react-native';
 import { eq } from 'drizzle-orm';
 
@@ -12,8 +13,9 @@ import {
   useSaveRoutine,
   useSkinStreak,
   useTickStep,
-  useTodayRoutines,
+  todayRoutinesQuery,
 } from './api';
+import * as reminders from './reminders';
 import * as repo from './repo';
 import type { SaveRoutineInput } from './repo';
 
@@ -57,7 +59,7 @@ describe('useTickStep', () => {
   it('shows the tick in the cache before it is saved, then completes the routine', async () => {
     const app = setup();
     const { result } = await app.renderHook(() => ({
-      today: useTodayRoutines(),
+      today: useQuery(todayRoutinesQuery(MON, 30)),
       streak: useSkinStreak(),
       tick: useTickStep(),
     }));
@@ -94,7 +96,7 @@ describe('useTickStep', () => {
   it('rolls the cache back when saving fails', async () => {
     const app = setup();
     const { result } = await app.renderHook(() => ({
-      today: useTodayRoutines(),
+      today: useQuery(todayRoutinesQuery(MON, 30)),
       tick: useTickStep(),
     }));
     await waitFor(() => expect(result.current.today.data).toHaveLength(1));
@@ -120,6 +122,60 @@ describe('useTickStep', () => {
     expect(result.current.tick.isError).toBe(true);
     expect(result.current.today.data![0]!.routines[0]!.progress.done).toBe(0);
     expect(repo.getDayLog(app.db, r.id, MON)).toBeNull();
+  });
+});
+
+describe('completing a routine', () => {
+  it('cancels today’s reminder each time a tick (player or All done) makes it complete', async () => {
+    const cancel = jest.spyOn(reminders, 'cancelTodaysRoutineReminders');
+    const app = setup();
+    const due = repo.getRoutineDay(app.db, app.id, MON, 30)!.progress.dueStepIds;
+    const { result } = await app.renderHook(() => useTickStep());
+    const tick = (stepIds: number[], done: boolean) =>
+      act(async () => {
+        await result.current.mutateAsync({
+          routineId: app.id,
+          stepIds,
+          day: MON,
+          done,
+          dueStepIds: due,
+        });
+      });
+
+    await tick([due[0]!], true);
+    expect(cancel).not.toHaveBeenCalled();
+    await tick([due[1]!], true);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(cancel).toHaveBeenLastCalledWith(app.id);
+
+    // Ticking again while complete changes nothing; unticking and finishing again counts again.
+    await tick([due[1]!], true);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    await tick([due[1]!], false);
+    await tick([due[1]!], true);
+    expect(cancel).toHaveBeenCalledTimes(2);
+  });
+
+  it('schedules today’s reminder again when an untick (Undo) makes it not done', async () => {
+    const resync = jest.spyOn(reminders, 'resyncRoutineReminders');
+    const app = setup();
+    const due = repo.getRoutineDay(app.db, app.id, MON, 30)!.progress.dueStepIds;
+    const { result } = await app.renderHook(() => useTickStep());
+    const tick = (done: boolean) =>
+      act(async () => {
+        await result.current.mutateAsync({
+          routineId: app.id,
+          stepIds: due,
+          day: MON,
+          done,
+          dueStepIds: due,
+        });
+      });
+
+    await tick(true);
+    expect(resync).not.toHaveBeenCalled();
+    await tick(false);
+    expect(resync).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -159,7 +215,8 @@ describe('applyTickToGroups', () => {
 });
 
 describe('routine mutations', () => {
-  it('saves and duplicates, refreshing the list', async () => {
+  it('saves and duplicates, refreshing the list and the reminders', async () => {
+    const resync = jest.spyOn(reminders, 'resyncRoutineReminders');
     const app = setup();
     const { result } = await app.renderHook(() => ({
       list: useRoutines(),
@@ -171,11 +228,13 @@ describe('routine mutations', () => {
       await result.current.save.mutateAsync(input({ name: 'Morning', timeOfDay: 'morning' }));
     });
     await waitFor(() => expect(result.current.list.data).toHaveLength(2));
+    expect(resync).toHaveBeenCalledTimes(1);
     await act(async () => {
       await result.current.duplicate.mutateAsync(app.id);
     });
     await waitFor(() =>
       expect(result.current.list.data?.map((r) => r.name)).toContain('Evening (copy)'),
     );
+    expect(resync).toHaveBeenCalledTimes(2);
   });
 });

@@ -30,16 +30,6 @@ import {
 } from './repo';
 import type { SaveCheckInInput } from './types';
 
-/**
- * The weekly photo reminder reschedules whenever a week is taken, skipped or deleted, so a week
- * that is done gets no reminder (task 036).
- */
-export function onWeeklyPhotoChanged(_area: ProgressArea): void {
-  syncEntity('weekly_photo', null).catch(() => {
-    // No notification layer yet (tests) or no permission: the next sync catches up.
-  });
-}
-
 const useToday = () => useSelector(appStore, (s) => s.activeDay);
 
 const keys = {
@@ -52,7 +42,6 @@ const keys = {
   status: (area: ProgressArea, today: string) =>
     [...qk.progress.all, 'status', area, today] as const,
   day: (day: string) => [...qk.progress.all, 'day', day] as const,
-  bytes: [...qk.progress.all, 'bytes'] as const,
 };
 
 /** Progress photos (C3): one tile per week, newest first. */
@@ -109,64 +98,52 @@ export function usePhotosForDay(day: string) {
   return useQuery({ queryKey: keys.day(day), queryFn: () => photoForDay(getDb(), day) });
 }
 
-/** Space the photos take, for Backup and restore (S8). */
-export function usePhotoStorageBytes() {
-  return useQuery({ queryKey: keys.bytes, queryFn: () => progressFiles.totalPhotoBytes() });
-}
-
 // ─── Mutations ──────────────────────────────────────────────────────────────
 
-function invalidate(client: QueryClient): void {
+/**
+ * After a week is taken, skipped or deleted: refreshes the progress screens, Today's check-in
+ * photo row (qk.today.day(day)) and day detail (qk.calendar.day(day)), and reschedules the weekly
+ * photo reminder, so a week that is done gets no reminder (task 036).
+ */
+function onChanged(client: QueryClient): void {
   client.invalidateQueries({ queryKey: qk.progress.all });
-  // Today's check-in photo row (qk.today(day)) and day detail (qk.calendar.day(day)).
-  client.invalidateQueries({ queryKey: ['today'] });
+  client.invalidateQueries({ queryKey: qk.today.all });
   client.invalidateQueries({ queryKey: [...qk.calendar.all, 'day'] });
+  syncEntity('weekly_photo', null).catch(() => {
+    // No notification layer yet (tests) or no permission: the next sync catches up.
+  });
 }
 
 export function useSaveCheckIn() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (input: SaveCheckInInput) => saveCheckInWithFiles(getDb(), input, progressFiles),
-    onSuccess: (_result, input) => {
-      invalidate(client);
-      onWeeklyPhotoChanged(input.area);
-    },
+    onSuccess: () => onChanged(client),
   });
 }
 
-/** "Skip this week"; the week defaults to the one that holds today. */
+/** "Skip this week" for the week that holds today. */
 export function useSkipWeek() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async ({ area, weekStart }: { area: ProgressArea; weekStart?: string }) =>
-      skipWeek(getDb(), area, weekStart ?? weekOf(appStore.state.activeDay)),
-    onSuccess: (_id, { area }) => {
-      invalidate(client);
-      onWeeklyPhotoChanged(area);
-    },
+    mutationFn: async (area: ProgressArea) =>
+      skipWeek(getDb(), area, weekOf(appStore.state.activeDay)),
+    onSuccess: () => onChanged(client),
   });
 }
 
 export function useDeletePhoto() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async ({ photoId }: { photoId: number; area: ProgressArea }) =>
-      deletePhoto(getDb(), photoId, progressFiles),
-    onSuccess: (_result, { area }) => {
-      invalidate(client);
-      onWeeklyPhotoChanged(area);
-    },
+    mutationFn: async (photoId: number) => deletePhoto(getDb(), photoId, progressFiles),
+    onSuccess: () => onChanged(client),
   });
 }
 
 export function useDeleteWeek() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async ({ entryId }: { entryId: number; area: ProgressArea }) =>
-      deleteWeek(getDb(), entryId, progressFiles),
-    onSuccess: (_result, { area }) => {
-      invalidate(client);
-      onWeeklyPhotoChanged(area);
-    },
+    mutationFn: async (entryId: number) => deleteWeek(getDb(), entryId, progressFiles),
+    onSuccess: () => onChanged(client),
   });
 }

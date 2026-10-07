@@ -36,7 +36,7 @@ export type MonthGridProps = {
   selectedDay: string | null;
   onMonthChange: (month: string) => void;
   onDayPress: (day: string) => void;
-  /** The view's mark for a day (skin status; hair and condition views in tasks 033 and 038). */
+  /** The view's mark for a day (skin status, hair wash, condition chip). */
   renderMark: (day: string) => ReactNode;
   /** The spoken label for a day, with its status. */
   dayLabel: (day: string) => string;

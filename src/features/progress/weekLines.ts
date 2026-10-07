@@ -16,9 +16,8 @@ const MAX_TAGS = 3;
 export function weekContextLines(t: TFunction, area: ProgressArea, ctx: WeekContext): string[] {
   const lines: string[] = [];
   for (const r of ctx.routines) {
-    const key = r.timeOfDay === 'custom' ? 'custom' : r.timeOfDay;
     lines.push(
-      t(`progress.week.${key}`, {
+      t(`progress.week.${r.timeOfDay}`, {
         count: r.due,
         done: r.done,
         name: r.customName ?? t('common.custom'),

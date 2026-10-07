@@ -1,12 +1,13 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 
+import { avoidItem } from '@/db/schema';
 import { getSettings, saveSettings } from '@/features/settings/repo';
 import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
 import { dismissToast, runToastAction, uiStore } from '@/state/ui';
 import { setupTestApp } from '@/test/render';
 
-import { productListStore } from '../../listState';
+import { productListStore, showExpiringProducts } from '../../listState';
 import { countArchived, createProduct, markFinished } from '../../repo';
 import type { ProductInput } from '../../schema';
 import { defaultProductFilters } from '../../types';
@@ -138,6 +139,41 @@ describe('ProductsScreen', () => {
     expect(productListStore.state.filters).toMatchObject({ area: 'hair', sort: 'name' });
   });
 
+  it('keeps the search when the filters sheet is reset', async () => {
+    const app = setup();
+    createProduct(app.db, input({ name: 'Hair wash', area: 'hair' }));
+    createProduct(app.db, input({ name: 'Hair oil', area: 'hair' }));
+    createProduct(app.db, input({ name: 'Face wash', area: 'skin' }));
+    productListStore.setState(() => ({
+      filters: { ...defaultProductFilters, area: 'hair', search: 'wash' },
+    }));
+    await app.render(<ProductsScreen />);
+    await waitFor(() => expect(rowNames()).toEqual(['Hair wash']));
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Filters, 1 on' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Reset filters' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Show 2 products' }));
+    await wait(0);
+    expect(rowNames()).toEqual(['Face wash', 'Hair wash']);
+    expect(screen.getByLabelText('Search products')).toHaveProp('value', 'wash');
+  });
+
+  it('clears the search field when a link opens the list filtered', async () => {
+    const app = setup();
+    createProduct(app.db, input({ name: 'Gone', expiresAt: '2026-10-01' }));
+    createProduct(app.db, input({ name: 'Face wash' }));
+    await app.render(<ProductsScreen />);
+    await screen.findByText('Gone');
+    await fireEvent.changeText(screen.getByLabelText('Search products'), 'wash');
+    await waitFor(() => expect(rowNames()).toEqual(['Face wash']));
+
+    await act(async () => showExpiringProducts());
+    await waitFor(() => expect(rowNames()).toEqual(['Gone']));
+    expect(screen.getByLabelText('Search products')).toHaveProp('value', '');
+    await wait(200);
+    expect(productListStore.state.filters.search).toBe('');
+  });
+
   it('filters by status and category', async () => {
     const app = setup();
     createProduct(app.db, input({ name: 'Gone', expiresAt: '2026-10-01', category: 'serum' }));
@@ -244,6 +280,18 @@ describe('ProductsScreen', () => {
     expect(screen.queryByTestId('product-row-1')).toBeNull();
     expect(getSettings(app.db).productView).toBe('shelf');
     expect(screen.getByRole('button', { name: 'List view' })).toBeTruthy();
+  });
+
+  it('names the Avoid badge on a shelf tile for screen readers', async () => {
+    const app = setup();
+    saveSettings(app.db, { productView: 'shelf' });
+    createProduct(app.db, input({ name: 'Perfumed', ingredients: ['Parfum'] }));
+    app.db.insert(avoidItem).values({ kind: 'ingredient', refId: 1 }).run();
+    await app.render(<ProductsScreen />);
+    expect(await screen.findByTestId('product-tile-1')).toHaveProp(
+      'accessibilityLabel',
+      expect.stringMatching(/, Avoid$/),
+    );
   });
 
   it('opens the archive from the footer link', async () => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BackHandler, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,18 +7,13 @@ import { useTranslation } from 'react-i18next';
 import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { PinPadHandle } from '@/components/ui/pin-pad';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { Text } from '@/components/ui/text';
-import { motion } from '@/theme/motion';
 
-import { NewPinStep, usePinDigits } from '../components/NewPinStep';
+import { ConfirmNewPinStep, CreateNewPinStep } from '../components/NewPinStep';
 import { ResetDialog } from '../components/ResetDialog';
-import { pinService, presetQuestionKey, validateNewPin, type RecoveryQuestion } from '../pin';
+import { pinService, presetQuestionKey, type RecoveryQuestion } from '../pin';
 import { tryAgainText, useCountdown } from '../useCountdown';
-
-/** After a mismatch: the 300 ms shake, then a moment to read the message before step 1 returns. */
-export const MISMATCH_BACK_MS = motion.duration.slow + 400;
 
 export type ForgotPinScreenProps = {
   /** Back to L1. */
@@ -37,6 +32,7 @@ type Step = 'answer' | 'create' | 'confirm';
  * 15 minutes. "Reset app and delete all data" is always there as the last resort.
  */
 export function ForgotPinScreen({ onClose, onDone, portalHost }: ForgotPinScreenProps) {
+  const { t } = useTranslation();
   const [step, setStep] = useState<Step>('answer');
   const [newPin, setNewPin] = useState<string | null>(null);
 
@@ -56,25 +52,28 @@ export function ForgotPinScreen({ onClose, onDone, portalHost }: ForgotPinScreen
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-canvas">
+      <ScreenHeader title={t('lock.forgot.title')} onBack={back} />
       {step === 'answer' ? (
-        <AnswerStep onBack={back} onCorrect={() => setStep('create')} portalHost={portalHost} />
+        <AnswerStep onCorrect={() => setStep('create')} portalHost={portalHost} />
       ) : step === 'create' ? (
-        <CreateStep
-          onBack={back}
+        <CreateNewPinStep
           onPicked={(pin) => {
             setNewPin(pin);
             setStep('confirm');
           }}
         />
       ) : (
-        <ConfirmStep
-          onBack={back}
+        <ConfirmNewPinStep
           expected={newPin}
           onMismatch={() => {
             setNewPin(null);
             setStep('create');
           }}
-          onDone={onDone}
+          failedMessage={t('lock.newPin.saveFailed')}
+          save={async (pin) => {
+            await pinService.setPin(pin);
+            onDone();
+          }}
         />
       )}
     </SafeAreaView>
@@ -85,15 +84,7 @@ function questionText(t: (key: string) => string, q: RecoveryQuestion): string {
   return q.kind === 'preset' ? t(presetQuestionKey(q.id)) : q.text;
 }
 
-function AnswerStep({
-  onBack,
-  onCorrect,
-  portalHost,
-}: {
-  onBack: () => void;
-  onCorrect: () => void;
-  portalHost?: string;
-}) {
+function AnswerStep({ onCorrect, portalHost }: { onCorrect: () => void; portalHost?: string }) {
   const { t } = useTranslation();
   // undefined while reading secure storage, null when nothing is saved.
   const [question, setQuestion] = useState<RecoveryQuestion | null | undefined>(undefined);
@@ -145,7 +136,6 @@ function AnswerStep({
 
   return (
     <View className="flex-1">
-      <ScreenHeader title={t('lock.forgot.title')} onBack={onBack} />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
         bottomOffset={BOTTOM_BAR_HEIGHT + 16}
@@ -207,107 +197,6 @@ function AnswerStep({
         onOpenChange={setResetOpen}
         onFailed={() => setResetFailed(true)}
         portalHost={portalHost}
-      />
-    </View>
-  );
-}
-
-function CreateStep({ onBack, onPicked }: { onBack: () => void; onPicked: (pin: string) => void }) {
-  const { t } = useTranslation();
-  const pad = useRef<PinPadHandle>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const onComplete = useCallback(
-    (pin: string, clear: () => void) => {
-      const problem = validateNewPin(pin);
-      if (problem) {
-        pad.current?.shake();
-        setError(t(problem, { pin }));
-        clear();
-        return;
-      }
-      onPicked(pin);
-    },
-    [onPicked, t],
-  );
-
-  const entry = usePinDigits(onComplete, () => setError(null));
-
-  return (
-    <View className="flex-1">
-      <ScreenHeader title={t('lock.forgot.title')} onBack={onBack} />
-      <NewPinStep
-        title={t('lock.newPin.createTitle')}
-        body={t('lock.newPin.createBody')}
-        filled={entry.filled}
-        message={error ?? undefined}
-        onDigit={entry.onDigit}
-        onDelete={entry.onDelete}
-        padRef={pad}
-      />
-    </View>
-  );
-}
-
-function ConfirmStep({
-  onBack,
-  expected,
-  onMismatch,
-  onDone,
-}: {
-  onBack: () => void;
-  expected: string | null;
-  onMismatch: () => void;
-  onDone: () => void;
-}) {
-  const { t } = useTranslation();
-  const pad = useRef<PinPadHandle>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [mismatch, setMismatch] = useState(false);
-
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const onComplete = useCallback(
-    async (pin: string, clear: () => void) => {
-      if (pin !== expected) {
-        pad.current?.shake();
-        setMismatch(true);
-        setError(t('lock.newPin.mismatch'));
-        timer.current = setTimeout(onMismatch, MISMATCH_BACK_MS);
-        return;
-      }
-      setSaving(true);
-      try {
-        await pinService.setPin(pin);
-      } catch {
-        setSaving(false);
-        setError(t('lock.newPin.saveFailed'));
-        clear();
-        return;
-      }
-      onDone();
-    },
-    [expected, onDone, onMismatch, t],
-  );
-
-  const entry = usePinDigits(
-    (pin, clear) => void onComplete(pin, clear),
-    () => setError(null),
-  );
-
-  return (
-    <View className="flex-1">
-      <ScreenHeader title={t('lock.forgot.title')} onBack={onBack} />
-      <NewPinStep
-        title={t('lock.newPin.confirmTitle')}
-        filled={entry.filled}
-        message={error ?? undefined}
-        disabled={saving || mismatch}
-        onDigit={entry.onDigit}
-        onDelete={entry.onDelete}
-        padRef={pad}
       />
     </View>
   );

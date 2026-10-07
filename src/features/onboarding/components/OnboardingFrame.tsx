@@ -13,8 +13,6 @@ export const ONBOARDING_STEPS = 5;
 export type OnboardingFrameProps = {
   /** Zero-based step: O1 is 0, O5 is 4. */
   step: number;
-  /** Back arrow on every step after the first; defaults to going back one screen. */
-  onBack?: () => void;
   /** Pinned under the body (the step's buttons); rides above the keyboard. */
   footer?: ReactNode;
   children: ReactNode;
@@ -24,16 +22,16 @@ export type OnboardingFrameProps = {
  * Shared frame for O1–O5: a fixed-height top row with Back on the left and the step dots in the
  * middle, then the step inside the `space-6` gutter, then the pinned buttons.
  */
-export function OnboardingFrame({ step, onBack, footer, children }: OnboardingFrameProps) {
+export function OnboardingFrame({ step, footer, children }: OnboardingFrameProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const back = step > 0 ? (onBack ?? (() => router.back())) : undefined;
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-canvas">
       <View className="h-[56px] flex-row items-center px-2">
-        {back ? (
+        {/* Back on every step after the first. */}
+        {step > 0 ? (
           <Pressable
-            onPress={back}
+            onPress={() => router.back()}
             accessibilityRole="button"
             accessibilityLabel={t('a11y.back')}
             className="h-[44px] w-[44px] items-center justify-center rounded-full active:opacity-85"

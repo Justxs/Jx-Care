@@ -43,9 +43,10 @@ export function useIngredients() {
   });
 }
 
+/** Under `qk.products.all`: Mark finished, Restore and product edits change the list. */
 export function useIngredientProducts(id: number | null) {
   return useQuery({
-    queryKey: qk.ingredients.detail(id ?? 0),
+    queryKey: [...qk.products.all, 'byIngredient', id ?? 0],
     queryFn: () => ingredientProducts(getDb(), id ?? 0),
     enabled: id !== null,
   });
@@ -89,7 +90,7 @@ function invalidateCare(client: QueryClient): void {
     qk.avoid.all,
     qk.products.all,
     qk.routines.all,
-    ['today'],
+    qk.today.all,
   ]) {
     client.invalidateQueries({ queryKey });
   }

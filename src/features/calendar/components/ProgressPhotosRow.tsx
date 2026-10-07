@@ -5,8 +5,8 @@ import { Card } from '@/components/ui/card';
 import { ListRow } from '@/components/ui/list-row';
 import { useThisWeekStatus, useTimeline } from '@/features/progress/api';
 import { useSettings } from '@/features/settings/api';
-import { isoWeekdayOf } from '@/i18n/format';
 import { useFormat } from '@/i18n/useFormat';
+import { weekdayOf } from '@/lib/appDay';
 import { nextPhotoDay } from '@/lib/weeklyPhoto';
 
 /**
@@ -24,8 +24,7 @@ export function ProgressPhotosRow() {
   let next: string | null = null;
   if (settings?.weeklyPhotoOn && status) {
     const day = nextPhotoDay(f.today, settings.weeklyPhotoWeekday, status !== 'due');
-    next =
-      day === f.today ? t('progress.calendarRow.today') : t(`weekdays.long.${isoWeekdayOf(day)}`);
+    next = day === f.today ? t('progress.calendarRow.today') : t(`weekdays.long.${weekdayOf(day)}`);
   }
   let detail: string | undefined;
   if (timeline) {

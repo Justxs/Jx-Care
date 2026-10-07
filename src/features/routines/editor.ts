@@ -4,7 +4,7 @@ import type { RoutineItem, SaveRoutineInput } from './repo';
 import {
   defaultSortTimes,
   emptyStep,
-  stepSchema,
+  stepSchemaWithin,
   type RoutineFormValues,
   type RoutineInput,
   type StepFormValues,
@@ -81,9 +81,6 @@ export function defaultReminderTime(values: Pick<RoutineFormValues, 'timeOfDay' 
  * because the step editor that would show it is closed.
  */
 export function stepProblem(step: StepFormValues, routineDays: readonly number[]): string | null {
-  const parsed = stepSchema.safeParse(step);
-  if (!parsed.success) return parsed.error.issues[0]?.message ?? null;
-  const days = parsed.data.daysOfWeek;
-  if (days && days.some((d) => !routineDays.includes(d))) return 'routines.errors.stepDaysOutside';
-  return null;
+  const parsed = stepSchemaWithin(routineDays).safeParse(step);
+  return parsed.success ? null : (parsed.error.issues[0]?.message ?? null);
 }

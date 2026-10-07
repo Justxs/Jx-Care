@@ -13,7 +13,6 @@ const meta = {
   args: { title: 'Retinol serum', close: false },
   argTypes: {
     title: { control: 'text' },
-    subtitle: { control: 'text' },
     close: { control: 'boolean' },
     onBack: { action: 'back' },
   },
@@ -30,9 +29,6 @@ export const Back: Story = {};
 export const TitleOnly: Story = {
   render: ({ onBack: _onBack, ...args }) => <ScreenHeader {...args} />,
 };
-
-/** A subtitle line under the title. */
-export const WithSubtitle: Story = { args: { subtitle: 'The Ordinary · Serum' } };
 
 /** A full-screen modal: X instead of the arrow, a word action on the right. */
 export const CloseWithTextAction: Story = {
@@ -52,16 +48,6 @@ export const CloseWithTextAction: Story = {
 /** A word action that isn't available yet. */
 export const DisabledTextAction: Story = {
   args: { action: { text: 'Compare', onPress: noop, disabled: true } },
-};
-
-/** An icon action in a soft accent circle. */
-export const PrimaryIconAction: Story = {
-  args: { action: { icon: 'plus', label: 'Add product', primary: true, onPress: noop } },
-};
-
-/** A plain icon action. */
-export const IconAction: Story = {
-  args: { action: { icon: 'share-2', label: 'Share', onPress: noop } },
 };
 
 /** The overflow menu (⋯); tap it to open. */
@@ -87,7 +73,6 @@ export const MenuAction: Story = {
 export const LongLithuanian: Story = {
   args: {
     title: 'Drėkinamasis veido kremas jautriai ir sausai odai su hialurono rūgštimi',
-    subtitle: 'Pažymėti kaip baigtą ir pirkti dar kartą',
     action: { text: 'Bendrinti', onPress: noop },
   },
 };

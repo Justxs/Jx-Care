@@ -87,24 +87,8 @@ export function addMonths(day: string, n: number): string {
   return fromUtc(target);
 }
 
-export function compareDays(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
-
-export const isBefore = (a: string, b: string) => a < b;
-export const isAfter = (a: string, b: string) => a > b;
-
 export function minDay(a: string, b: string): string {
   return a < b ? a : b;
-}
-
-export function maxDay(a: string, b: string): string {
-  return a > b ? a : b;
-}
-
-/** First day of the month of `day`. */
-export function monthStart(day: string): string {
-  return `${day.slice(0, 7)}-01`;
 }
 
 /** 'YYYY-MM-DD' of a year and 1-based month's first day. */

@@ -8,6 +8,7 @@ import { Sheet } from '@/components/ui/sheet';
 import { Text } from '@/components/ui/text';
 import { useFormat } from '@/i18n/useFormat';
 import type { Streak } from '@/lib/streak';
+import { joinNames } from '@/lib/text';
 
 /**
  * ExplainSheets (spec Global UI rules, Explaining): short sheets that answer "what does this
@@ -51,12 +52,6 @@ export function ExplainSheet({ open, onClose, title, lines, footer }: ExplainShe
 }
 
 type OpenProps = { open: boolean; onClose: () => void };
-
-/** "A, B and C" in the app language. */
-function joinNames(names: readonly string[], and: string): string {
-  if (names.length <= 1) return names.join('');
-  return `${names.slice(0, -1).join(', ')} ${and} ${names.at(-1)}`;
-}
 
 // ─── Skin streak (StreakChip) ───────────────────────────────────────────────
 

@@ -18,12 +18,10 @@ import {
   logsInRange,
   recentStepProducts,
   replaceStepProduct,
-  routineCountByProduct,
   saveRoutine,
   setChoice,
   setRoutineActive,
   streakInput,
-  tickStep,
   tickSteps,
   type SaveRoutineInput,
 } from './repo';
@@ -196,9 +194,8 @@ describe('listRoutines and step products', () => {
     const fresh = createProduct(db, productInput({ name: 'Fresh' }));
     const id = addRoutine(db, { steps: [step({ productId: gone })] });
     const [s] = stepIds(db, id);
-    expect(replaceStepProduct(db, s!, fresh)).toBe(id);
+    replaceStepProduct(db, s!, fresh);
     expect(getRoutine(db, id, MON, WARN)!.steps[0]!.product?.name).toBe('Fresh');
-    expect(replaceStepProduct(db, 999, fresh)).toBeNull();
   });
 });
 
@@ -209,15 +206,15 @@ describe('ticks', () => {
     const [s1, s2] = stepIds(db, id);
     const due = [s1!, s2!];
 
-    expect(tickStep(db, id, s1!, MON, true, due, 1000)).toMatchObject({
+    expect(tickSteps(db, id, [s1!], MON, true, due, 1000)).toMatchObject({
       dueStepIds: due,
       doneStepIds: [s1],
       completedAt: null,
     });
-    expect(tickStep(db, id, s2!, MON, true, due, 2000)!.completedAt).toBe(2000);
+    expect(tickSteps(db, id, [s2!], MON, true, due, 2000)!.completedAt).toBe(2000);
     // A repeat tick keeps the first finish time.
-    expect(tickStep(db, id, s2!, MON, true, due, 3000)!.completedAt).toBe(2000);
-    const unticked = tickStep(db, id, s1!, MON, false, due, 4000)!;
+    expect(tickSteps(db, id, [s2!], MON, true, due, 3000)!.completedAt).toBe(2000);
+    const unticked = tickSteps(db, id, [s1!], MON, false, due, 4000)!;
     expect(unticked).toMatchObject({ doneStepIds: [s2], completedAt: null });
     expect(getDayLog(db, id, MON)!.completedAt).toBeNull();
     expect(getDayLog(db, id, TUE)).toBeNull();
@@ -227,7 +224,7 @@ describe('ticks', () => {
     const db = createTestDb();
     const id = addRoutine(db);
     const [s] = stepIds(db, id);
-    expect(tickStep(db, id, s!, MON, false, [s!])).toBeNull();
+    expect(tickSteps(db, id, [s!], MON, false, [s!])).toBeNull();
     expect(getDayLog(db, id, MON)).toBeNull();
   });
 
@@ -235,7 +232,7 @@ describe('ticks', () => {
     const db = createTestDb();
     const id = addRoutine(db, { steps: [step(), step(), step()] });
     const ids = stepIds(db, id);
-    tickStep(db, id, ids[0]!, MON, true, ids, 1);
+    tickSteps(db, id, [ids[0]!], MON, true, ids, 1);
     const rest = ids.slice(1);
     expect(tickSteps(db, id, rest, MON, true, ids, 2)!.completedAt).toBe(2);
     expect(tickSteps(db, id, rest, MON, false, ids, 3)).toMatchObject({
@@ -248,8 +245,8 @@ describe('ticks', () => {
     const db = createTestDb();
     const id = addRoutine(db, { steps: [step(), step()] });
     const [s1, s2] = stepIds(db, id);
-    tickStep(db, id, s1!, MON, true, [s1!, s2!]);
-    tickStep(db, id, s2!, MON, true, [s1!, s2!], 5000);
+    tickSteps(db, id, [s1!], MON, true, [s1!, s2!]);
+    tickSteps(db, id, [s2!], MON, true, [s1!, s2!], 5000);
 
     // Monday's routine had two steps; it now has three.
     saveRoutine(db, routineInput({ id, steps: [step({ id: s1 }), step({ id: s2 }), step()] }));
@@ -265,12 +262,28 @@ describe('ticks', () => {
     const db = createTestDb();
     const id = addRoutine(db, { steps: [step(), step()] });
     const [s1, s2] = stepIds(db, id);
-    tickStep(db, id, s1!, MON, true, [s1!, s2!]);
+    tickSteps(db, id, [s1!], MON, true, [s1!, s2!]);
     saveRoutine(db, routineInput({ id, steps: [step({ id: s1 })] }));
     expect(getRoutineDay(db, id, MON, WARN)!.progress).toMatchObject({ due: 1, complete: true });
-    expect(tickStep(db, id, s1!, MON, true, [s1!], 7)).toMatchObject({
+    expect(tickSteps(db, id, [s1!], MON, true, [s1!], 7)).toMatchObject({
       dueStepIds: [s1],
       completedAt: 7,
+    });
+  });
+
+  it('a snapshot whose steps were all replaced falls back to the steps due now', () => {
+    const db = createTestDb();
+    const id = addRoutine(db, { steps: [step(), step()] });
+    const [s1, s2] = stepIds(db, id);
+    tickSteps(db, id, [s1!], MON, true, [s1!, s2!]);
+    saveRoutine(db, routineInput({ id, steps: [step()] }));
+    const r = getRoutineDay(db, id, MON, WARN)!;
+    const [s3] = r.progress.dueStepIds;
+    expect(r.progress).toMatchObject({ due: 1, done: 0 });
+    // Finishing the new step completes the day in the log too, not only on screen.
+    expect(tickSteps(db, id, [s3!], MON, true, r.progress.dueStepIds, 9)).toMatchObject({
+      dueStepIds: [s3],
+      completedAt: 9,
     });
   });
 });
@@ -320,9 +333,22 @@ describe('getTodayRoutines', () => {
     saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }));
     setChoice(db, 'evening', 1, eveA);
     const [sb] = stepIds(db, eveB);
-    tickStep(db, eveB, sb!, MON, true, [sb!]);
+    tickSteps(db, eveB, [sb!], MON, true, [sb!]);
     const evening = getTodayRoutines(db, MON, WARN)[1]!;
     expect(evening).toMatchObject({ chosenId: eveB, started: true, complete: true });
+  });
+
+  it('shows the finished option when both have ticks', () => {
+    const { db, eveA, eveB } = fixture();
+    saveRoutine(db, routineInput({ id: eveB, name: 'Evening B', daysOfWeek: EVERY_DAY }));
+    saveRoutine(db, routineInput({ id: eveA, name: 'Evening A', steps: [step(), step()] }));
+    // A started from Today, then B done in full from the Routines tab.
+    const [a1, a2] = stepIds(db, eveA);
+    tickSteps(db, eveA, [a1!], MON, true, [a1!, a2!]);
+    const [sb] = stepIds(db, eveB);
+    tickSteps(db, eveB, [sb!], MON, true, [sb!]);
+    const evening = getTodayRoutines(db, MON, WARN)[1]!;
+    expect(evening).toMatchObject({ chosenId: eveB, complete: true });
   });
 
   it('only counts steps due that day', () => {
@@ -369,7 +395,7 @@ describe('duplicate and delete', () => {
     const id = addRoutine(db);
     const keep = addRoutine(db, { name: 'Keep' });
     const [s] = stepIds(db, id);
-    tickStep(db, id, s!, MON, true, [s!]);
+    tickSteps(db, id, [s!], MON, true, [s!]);
     setChoice(db, 'evening', 1, id);
     deleteRoutine(db, id);
     expect(getRoutine(db, id, MON, WARN)).toBeNull();
@@ -385,7 +411,7 @@ describe('logs and streak input', () => {
     const db = createTestDb();
     const id = addRoutine(db);
     const [s] = stepIds(db, id);
-    for (const day of [MON, TUE, WED]) tickStep(db, id, s!, day, true, [s!]);
+    for (const day of [MON, TUE, WED]) tickSteps(db, id, [s!], day, true, [s!]);
     expect(logsInRange(db, MON, TUE).map((l) => l.day)).toEqual([MON, TUE]);
 
     const input = streakInput(db, TUE);
@@ -412,12 +438,10 @@ describe('products in routines', () => {
     const evening = addRoutine(db, { steps: [step({ productId: p })] });
     addRoutine(db, { name: 'Unrelated', steps: [step({ productId: other })] });
 
-    expect(routineCountByProduct(db, p)).toBe(2);
     expect(getProduct(db, p, MON, WARN)!.usedIn).toEqual([
       { kind: 'routine', id: morning, name: 'Morning' },
       { kind: 'routine', id: evening, name: 'Evening' },
     ]);
-    expect(routineCountByProduct(db, 999)).toBe(0);
   });
 
   it('recentStepProducts lists active products of the area, newest step first', () => {

@@ -3,9 +3,9 @@ import { useSelector } from '@tanstack/react-store';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { ConflictExplain } from '@/components/ExplainSheet';
 import { getDb } from '@/db';
 import { qk } from '@/db/queryKeys';
-import { registerPlayerConflicts, type PlayerConflict } from '@/features/routines/playerSlots';
 import { useFormat } from '@/i18n/useFormat';
 import {
   dayConflicts,
@@ -14,9 +14,10 @@ import {
   weeklyConflicts,
   type ConflictHit,
 } from '@/lib/conflicts';
+import { joinNames } from '@/lib/text';
 import { appStore } from '@/state/app';
 
-import { conflictData } from './repo';
+import { conflictData, type ConflictData } from './repo';
 import {
   analyseDraft,
   draftInput,
@@ -42,48 +43,41 @@ export function useConflictData() {
   return useQuery(conflictDataQuery());
 }
 
-const NO_HITS: readonly ConflictHit[] = [];
 const NO_TARGETS: readonly ConflictTarget[] = [];
 
-/** `weeklyConflicts` over every saved routine (memoised in the query cache). */
-export function useWeeklyConflicts(): readonly ConflictHit[] {
-  return useConflictData().data?.weekly ?? NO_HITS;
-}
-
-/** The hits among steps actually due on an app day (Today and the player); never mild. */
-export function useDayConflicts(day: string): readonly ConflictHit[] {
-  const data = useConflictData().data;
-  return useMemo(() => (data ? dayConflicts(data.input, day) : NO_HITS), [data, day]);
-}
+const targetsFor = (data: ConflictData, hits: readonly ConflictHit[], routineId: number) =>
+  pairingsFor(hits, routineId).map((p) => toTarget(p, data.input, data.names));
 
 /** A routine's conflicts this week (R1 card tag; mild when every one is mild). */
 export function useRoutineConflicts(routineId: number): readonly ConflictTarget[] {
   const data = useConflictData().data;
   return useMemo(
-    () =>
-      data
-        ? pairingsFor(data.weekly, routineId).map((p) => toTarget(p, data.input, data.names))
-        : NO_TARGETS,
+    () => (data ? targetsFor(data, data.weekly, routineId) : NO_TARGETS),
     [data, routineId],
   );
 }
 
-/** A routine's conflicts on an app day (T1 card tag, T2 steps). */
+/** A routine's conflicts among the steps due on an app day (T1 card tag, T2 steps); never mild. */
 export function useDayRoutineConflicts(routineId: number, day: string): readonly ConflictTarget[] {
   const data = useConflictData().data;
-  const hits = useDayConflicts(day);
   return useMemo(
-    () =>
-      data
-        ? pairingsFor(hits, routineId).map((p) => toTarget(p, data.input, data.names))
-        : NO_TARGETS,
-    [data, hits, routineId],
+    () => (data ? targetsFor(data, dayConflicts(data.input, day), routineId) : NO_TARGETS),
+    [data, day, routineId],
   );
 }
 
 // ─── The routine player (T2) ────────────────────────────────────────────────
 
-function usePlayerConflicts(routineId: number, day: string): readonly PlayerConflict[] {
+/** A conflict on one of the player's steps. */
+export type PlayerConflict = {
+  /** The step in this routine that carries the ConflictTag. */
+  stepId: number;
+  /** `first` is this step's product and routine; `second` is the other side. */
+  conflict: ConflictExplain;
+};
+
+/** The ConflictTags and amber lines in the player: one line per step pair. */
+export function usePlayerConflicts(routineId: number, day: string): readonly PlayerConflict[] {
   const targets = useDayRoutineConflicts(routineId, day);
   return useMemo(() => {
     // One line per step pair, even when several rules match it.
@@ -98,8 +92,6 @@ function usePlayerConflicts(routineId: number, day: string): readonly PlayerConf
     return out;
   }, [targets]);
 }
-
-registerPlayerConflicts(usePlayerConflicts);
 
 // ─── The routine editor (R2) ────────────────────────────────────────────────
 
@@ -185,12 +177,6 @@ export function useEditorConflicts(draft: DraftRoutine): EditorConflicts {
         : null;
     return { hits, steps: analysis.steps, alternatives };
   }, [analysis, t, f, timeOfDay, customName]);
-}
-
-/** "A, B and C". */
-function joinNames(names: readonly string[], and: string): string {
-  if (names.length <= 1) return names.join('');
-  return `${names.slice(0, -1).join(', ')} ${and} ${names.at(-1)}`;
 }
 
 // ─── Ingredient chips (P2, P3, P4) ──────────────────────────────────────────

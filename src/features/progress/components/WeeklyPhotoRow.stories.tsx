@@ -8,8 +8,6 @@ import { WeeklyPhotoRow } from './WeeklyPhotoRow';
 const meta = {
   title: 'Components/Progress/WeeklyPhotoRow',
   component: WeeklyPhotoRow,
-  args: { area: 'skin' },
-  argTypes: { area: { control: 'radio', options: ['skin', 'hair'] } },
   decorators: [withAppData({ seed: seedWeeklyPhotoOn })],
 } satisfies Meta<typeof WeeklyPhotoRow>;
 
@@ -21,7 +19,4 @@ type Story = StoryObj<typeof meta>;
  * T1 check-in's photo row: Take photo (logs the push to the camera) and "Skip this week", which
  * skips in the story database and shows the Undo toast.
  */
-export const Skin: Story = {};
-
-/** The hair album's row. */
-export const Hair: Story = { args: { area: 'hair' } };
+export const Default: Story = {};

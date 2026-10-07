@@ -10,11 +10,11 @@ import { Switch } from '@/components/ui/switch';
 import { Text } from '@/components/ui/text';
 import { WeekdayDots, useWeekdaysLabel } from '@/components/ui/weekday-dots';
 import { ConflictTagButton } from '@/features/conflicts/components/ConflictSheets';
+import { useRoutineConflicts } from '@/features/conflicts/hooks';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
 
 import type { RoutineItem } from '../repo';
-import { useRoutineConflicts } from '../useRoutineConflicts';
 
 export type RoutineCardProps = {
   routine: Pick<

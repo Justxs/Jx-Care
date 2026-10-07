@@ -145,12 +145,13 @@ describe('ProductDetailScreen', () => {
     expect(await screen.findByLabelText('Parfum, Avoid')).toBeTruthy();
     expect(screen.getByText('Keep in the fridge.')).toBeTruthy();
 
-    // Not finished: no cost per day, and the bar has Edit and Mark finished (Buy again: 034).
+    // Not finished: no cost per day, and the bar has Edit, Mark finished and Buy again.
     expect(screen.queryByText('Cost per day')).toBeNull();
     const bar = within(screen.getByTestId('detail-actions'));
-    expect(bar.getAllByRole('button').map((b) => b.props.accessibilityLabel ?? '')).toHaveLength(2);
+    expect(bar.getAllByRole('button')).toHaveLength(3);
     expect(bar.getByText('Edit')).toBeTruthy();
     expect(bar.getByText('Mark finished')).toBeTruthy();
+    expect(bar.getByText('Buy again')).toBeTruthy();
 
     await fireEvent.press(bar.getByText('Edit'));
     expect(router.push).toHaveBeenCalledWith({
@@ -411,7 +412,7 @@ describe('ArchiveScreen', () => {
     await fireEvent.press(
       within(screen.getByTestId(`archive-row-${b}`)).getByRole('button', { name: 'More actions' }),
     );
-    expect(screen.queryByRole('button', { name: 'Buy again' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Buy again' })).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Delete' }));
     expect(await screen.findByText('Delete Toner?')).toBeTruthy();
     const deletes = screen.getAllByRole('button', { name: 'Delete' });

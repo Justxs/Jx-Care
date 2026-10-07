@@ -8,14 +8,14 @@ import { ChipGroup } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
 import { ProgressRing } from '@/components/ui/progress-ring';
 import { Text } from '@/components/ui/text';
-import type { TodayRoutineGroup } from '@/features/routines/repo';
+import { chosenRoutine, type TodayRoutineGroup } from '@/features/routines/repo';
 import { useFormat } from '@/i18n/useFormat';
 import { weekdayOf } from '@/lib/appDay';
 import { motion } from '@/theme/motion';
 import { useMotion } from '@/theme/useMotion';
 
 import { expiredText, routineMeta, timeOfDayName } from '../cardText';
-import { chosenRoutine, doneTransition, expiredProducts } from '../logic';
+import { doneTransition, expiredProducts } from '../logic';
 import { useCardConflictSlot } from '../slots';
 
 export type RoutineCardProps = {

@@ -2,11 +2,9 @@ import {
   dayConflicts,
   ingredientInRules,
   parseToken,
-  productsInConflict,
   productTokens,
   routineConflictSummary,
   routinesPerRule,
-  routinesWithConflicts,
   ruleMatches,
   ruleTokens,
   weeklyConflicts,
@@ -107,8 +105,11 @@ describe('weeklyConflicts', () => {
     );
     expect(hits).toHaveLength(1);
     expect(hits[0]).toMatchObject({ ruleId: 1, weekday: 1, mild: false });
-    expect(routinesWithConflicts(hits)).toEqual(new Set([1, 2]));
-    expect(productsInConflict(hits)).toEqual(new Set([100, 200]));
+    // Sides follow the day's order: Morning first.
+    expect(hits[0]).toMatchObject({
+      a: { routineId: 2, productId: 200 },
+      b: { routineId: 1, productId: 100 },
+    });
   });
 
   it('does not flag the same products on different weekdays', () => {

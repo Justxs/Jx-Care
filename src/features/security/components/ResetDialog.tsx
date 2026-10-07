@@ -79,7 +79,8 @@ export function ResetDialog({
   const [wasOpen, setWasOpen] = useState(open);
   if (wasOpen !== open) {
     setWasOpen(open);
-    if (!open) setPinOk(false);
+    // On opening too: a PIN check that finished after Cancel must not carry over.
+    setPinOk(false);
   }
 
   // Counted each time the dialog opens, so they are never stale.

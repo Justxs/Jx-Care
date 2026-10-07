@@ -179,14 +179,18 @@ describe('action buttons', () => {
     unregisterAction('expiry_day', 'mark_finished');
   });
 
-  it('snoozes a routine: a copy after the snooze length, in the background too', async () => {
-    await handleResponse(response('snooze'), { background: true, now: NOW });
+  it('snoozes: a copy after the snooze length, in the background too', async () => {
+    // Hair's Snooze is the shared handler (routines add a "done today" check of their own).
+    await handleResponse(response('snooze', { categoryIdentifier: 'hair' }), {
+      background: true,
+      now: NOW,
+    });
     const copy = os.pending.get(snoozeIdFor(data.key));
     expect(copy).toMatchObject({
       fireAt: NOW + 30 * 60 * 1000,
       title: 'Evening routine',
       body: 'Evening routine: 5 steps',
-      categoryId: 'routine',
+      categoryId: 'hair',
       channelId: 'routines',
       data: { url: '/player/5', entityType: 'routine', entityId: 5 },
     });

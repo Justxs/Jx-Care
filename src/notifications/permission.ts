@@ -1,7 +1,6 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
-import { useEffect } from 'react';
-import { AppState, Linking } from 'react-native';
+import { Linking } from 'react-native';
 
 import { queryClient } from '@/db/queryClient';
 import { qk } from '@/db/queryKeys';
@@ -47,23 +46,15 @@ export function openPhoneSettings(): Promise<void> {
 }
 
 /**
- * The current permission for the S5 banner, re-checked whenever the app returns to the
- * foreground (the person may have changed it in phone settings). `null` until the first check.
+ * The current permission for the S5 banner. `null` until the first check. The notification layer
+ * re-checks it whenever the app returns to the foreground (the person may have changed it in phone
+ * settings) and writes the answer here (src/notifications/start.ts).
  */
 export function usePermission(): PermissionState | null {
-  const client = useQueryClient();
   const query = useQuery({
     queryKey: qk.notifications.permission,
     queryFn: getPermission,
     staleTime: Infinity,
   });
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        client.invalidateQueries({ queryKey: qk.notifications.permission }).catch(() => {});
-      }
-    });
-    return () => sub.remove();
-  }, [client]);
   return query.data ?? null;
 }

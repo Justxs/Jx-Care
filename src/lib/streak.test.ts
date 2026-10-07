@@ -4,7 +4,6 @@ import {
   groupComplete,
   skinDayStatus,
   skinDayStatuses,
-  skinDaySucceeded,
   skinStreak,
   type SkinStreakInput,
 } from './streak';
@@ -71,10 +70,11 @@ describe('day status', () => {
     expect(skinDayStatus('2026-10-05', input)).toBe('done');
     expect(skinDayStatus('2026-10-06', input)).toBe('partly');
     expect(skinDayStatus('2026-10-07', input)).toBe('partly'); // morning not done
-    expect(skinDaySucceeded('2026-10-07', input)).toBe(true);
     expect(skinDayStatus('2026-10-04', input)).toBe('missed');
     expect(skinDayStatus(today, input)).toBe('pending');
     expect(skinDayStatus('2026-08-01', input)).toBe('none');
+    // 7 Oct is partly done but still succeeded (one time of day finished); 6 Oct broke the run.
+    expect(skinStreak(input).current).toBe(1);
   });
 
   it('never marks days before a routine existed as missed', () => {

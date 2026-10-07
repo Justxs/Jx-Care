@@ -72,7 +72,7 @@ export const skipWeekAction: ActionHandler = ({ db, settings, now }) => {
   const today = appDay(now);
   for (const area of dueAreas(db, settings, today)) skipWeek(db, area, weekStart(today));
   queryClient.invalidateQueries({ queryKey: qk.progress.all }).catch(() => {});
-  queryClient.invalidateQueries({ queryKey: ['today'] }).catch(() => {});
+  queryClient.invalidateQueries({ queryKey: qk.today.all }).catch(() => {});
 };
 
 registerPlanner('weekly_photo', planWeeklyPhoto);

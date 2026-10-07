@@ -3,7 +3,6 @@ import { useSelector } from '@tanstack/react-store';
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 
-import { SkinCheckIn } from '@/features/condition/components/SkinCheckIn';
 import { ConflictTagButton } from '@/features/conflicts/components/ConflictSheets';
 import { useDayRoutineConflicts } from '@/features/conflicts/hooks';
 import { useHairDueToday, useHairStreakChip } from '@/features/hair/api';
@@ -19,8 +18,8 @@ import { appStore } from '@/state/app';
 import { setupQuery } from './api';
 
 /**
- * Places in Today that later tasks fill in. Each returns "nothing" for now, so its section or
- * row stays hidden. When a slot gets data, add its query to `prefetchToday` too, so Today still
+ * Parts of Today that other areas fill in; each returns null while it has nothing to show, so its
+ * section or row stays hidden. A query a slot reads goes in `prefetchToday` too, so Today still
  * paints complete on the first frame.
  */
 
@@ -65,10 +64,5 @@ export function useWeeklyPhotoSlot(): ReactNode {
   const settings = useSettings().data;
   const status = useThisWeekStatus('skin').data;
   if (!settings?.weeklyPhotoOn || !isPhotoRowDay(day, settings.weeklyPhotoWeekday)) return null;
-  return status === 'due' ? <WeeklyPhotoRow area="skin" /> : null;
-}
-
-/** Check-in "How's your skin today?" chips and "Hair and note" (task 038). */
-export function useSkinCheckInSlot(): ReactNode {
-  return <SkinCheckIn />;
+  return status === 'due' ? <WeeklyPhotoRow /> : null;
 }

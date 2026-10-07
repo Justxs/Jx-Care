@@ -6,7 +6,12 @@ import { withAppData } from '@/storybook/appData';
 import { FIXTURE_TODAY, seedEmpty } from '@/storybook/fixtures';
 import { samplePhotoUri, sampleProduct } from '@/storybook/seeds/products';
 
-import { ProductRow, type ProductRowProps, type RowAction } from './ProductRow';
+import {
+  ProductRow,
+  ProductRowsSkeleton,
+  type ProductRowProps,
+  type RowAction,
+} from './ProductRow';
 
 const day = (n: number) => addDays(FIXTURE_TODAY, n);
 const noop = () => {};
@@ -179,3 +184,6 @@ export const LongName: Story = {
     }),
   },
 };
+
+/** While the list loads: rows at their final 72 pt height. */
+export const Loading: Story = { render: () => <ProductRowsSkeleton rows={3} /> };

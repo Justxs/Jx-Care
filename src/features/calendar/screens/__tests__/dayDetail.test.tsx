@@ -8,7 +8,7 @@ import {
   getDayLog,
   getRoutine,
   saveRoutine,
-  tickStep,
+  tickSteps,
   type SaveRoutineInput,
 } from '@/features/routines/repo';
 import type { StepInput } from '@/features/routines/schema';
@@ -93,7 +93,7 @@ beforeEach(async () => {
 describe('DayDetailScreen', () => {
   it('ticks forgotten steps on a recent day and updates the mark and the streak', async () => {
     const app = setup('2026-10-06');
-    tickStep(app.db, app.evening, app.ev[0]!, '2026-10-06', true, app.ev);
+    tickSteps(app.db, app.evening, [app.ev[0]!], '2026-10-06', true, app.ev);
     await app.render(
       <>
         <DayDetailScreen />
@@ -127,7 +127,7 @@ describe('DayDetailScreen', () => {
 
   it('can untick a step on today', async () => {
     const app = setup(TODAY);
-    tickStep(app.db, app.morning, app.m[0]!, TODAY, true, app.m);
+    tickSteps(app.db, app.morning, [app.m[0]!], TODAY, true, app.m);
     await app.render(<DayDetailScreen />);
     const spf = await screen.findByRole('checkbox', { name: 'SPF' });
     await fireEvent.press(spf);

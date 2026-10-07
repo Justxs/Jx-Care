@@ -20,12 +20,25 @@ export function parseDecimal(text: string): number | null {
   return /^\d*\.?\d+$|^\d+\.$/.test(v) ? Number(v) : Number.NaN;
 }
 
-const optionalText = (max: number, key: string) =>
+/** A stored decimal as the form shows it: 12.5 → "12,5". */
+export function decimalText(n: number): string {
+  return String(n).replace('.', ',');
+}
+
+/** Optional text: tidied, at most `max` long (`key` is the error), empty → null. */
+export const optionalText = (max: number, key: string) =>
   z
     .string()
     .transform(tidy)
     .refine((v) => v.length <= max, key)
     .transform((v) => (v === '' ? null : v));
+
+/** A product or shopping item name: tidied, required, at most 80. */
+export const nameSchema = z
+  .string()
+  .transform(tidy)
+  .refine((v) => v.length > 0, 'products.errors.nameRequired')
+  .refine((v) => v.length <= 80, 'products.errors.nameLong');
 
 const optionalDay = z
   .string()
@@ -38,11 +51,7 @@ const optionalDay = z
  */
 export function productSchema(today: string) {
   return z.object({
-    name: z
-      .string()
-      .transform(tidy)
-      .refine((v) => v.length > 0, 'products.errors.nameRequired')
-      .refine((v) => v.length <= 80, 'products.errors.nameLong'),
+    name: nameSchema,
     brand: optionalText(80, 'products.errors.brandLong'),
     area: z.enum(areas, { message: 'products.errors.areaRequired' }),
     category: z.enum(productCategories).default('other'),

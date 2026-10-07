@@ -31,23 +31,12 @@ export interface ProgressFileStore {
 
 export type SavePhotoTarget = { area: ProgressArea; weekStart: string; angle: PhotoAngle };
 
-export type StoredPhotoFile = {
-  uri: string;
-  /** Path under the document folder, e.g. `progress/skin/2026-10-05/front-1759730400000.jpg`. */
-  path: string;
-  bytes: number;
-};
-
 /** Everything the app does with progress photo files (`files.ts` on the phone). */
 export interface ProgressFiles extends ProgressFileStore {
   /** Crops to 3:4, shrinks to 1600 px, saves as JPEG in the private folder; returns its uri. */
   savePhoto(tempUri: string, target: SavePhotoTarget, takenAt?: number): Promise<string>;
   /** True for a file already inside the private progress folder. */
   isProgressFile(uri: string): boolean;
-  /** Every saved progress photo (backup, task 040). */
-  listAllPhotoFiles(): StoredPhotoFile[];
-  /** Size of all progress photos in bytes (S8). */
-  totalPhotoBytes(): number;
 }
 
 export type PhotoRef = Pick<ProgressPhoto, 'id' | 'angle' | 'fileUri'>;

@@ -9,7 +9,6 @@ import {
   formatTime,
   formatWeekdayDate,
   formatWeekdayList,
-  isoWeekdayOf,
 } from './format';
 
 const nbsp = (s: string) => s.replace(/ | /g, ' ');
@@ -34,10 +33,6 @@ describe('formatDate', () => {
 });
 
 describe('weekdays', () => {
-  it('knows ISO weekdays', () => {
-    expect(isoWeekdayOf('2026-10-05')).toBe(1);
-    expect(isoWeekdayOf('2026-10-11')).toBe(7);
-  });
   it('formats weekday dates', () => {
     expect(formatWeekdayDate('2026-10-06', 'en')).toBe('Tuesday, 6 Oct');
     expect(formatWeekdayDate('2026-10-06', 'lt')).toBe('Antradienis, 2026-10-06');

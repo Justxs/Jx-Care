@@ -8,7 +8,6 @@ import { routine } from '@/db/schema';
 import {
   getRoutine,
   saveRoutine,
-  tickStep,
   tickSteps,
   type SaveRoutineInput,
 } from '@/features/routines/repo';
@@ -71,9 +70,9 @@ function seed(db: Db) {
   const ids = (id: number) => getRoutine(db, id, TODAY, 30)!.steps.map((s) => s.id);
   const [m1] = ids(morning);
   const ev = ids(evening);
-  tickStep(db, morning, m1!, '2026-10-05', true, [m1!]);
+  tickSteps(db, morning, [m1!], '2026-10-05', true, [m1!]);
   tickSteps(db, evening, ev, '2026-10-05', true, ev);
-  tickStep(db, evening, ev[0]!, '2026-10-06', true, ev);
+  tickSteps(db, evening, [ev[0]!], '2026-10-06', true, ev);
 }
 
 function setup({ seeded = true } = {}) {

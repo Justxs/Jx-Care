@@ -1,7 +1,6 @@
-import type { AnyFieldApi } from '@tanstack/react-form';
 import { useStore } from '@tanstack/react-form';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,11 +10,11 @@ import { AlertDialog } from '@/components/ui/alert-dialog';
 import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
 import { Chip, ChipGroup } from '@/components/ui/chip';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
 import { Field } from '@/components/ui/field';
-import { useAppForm, useFieldError, useFormDirty } from '@/components/ui/form';
+import { useAppForm, useFormDirty, WithFieldError } from '@/components/ui/form';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { ScreenHeader } from '@/components/ui/screen-header';
@@ -26,12 +25,13 @@ import { TimeField } from '@/components/ui/date-field';
 import { WeekdayPicker } from '@/components/ui/weekday-picker';
 import type { TimeOfDay } from '@/db/enums';
 import { useConflictSheets } from '@/features/conflicts/components/ConflictSheets';
+import { useEditorConflicts } from '@/features/conflicts/hooks';
 import { useProductsForPicker } from '@/features/products/api';
 import { endAddProductForPick } from '@/features/products/pickReturn';
 import { useFormat } from '@/i18n/useFormat';
 import { showToast } from '@/state/ui';
 
-import { onRoutineReminderSwitchedOn, useDeleteRoutine, useRoutine, useSaveRoutine } from '../api';
+import { useDeleteRoutine, useRoutine, useSaveRoutine } from '../api';
 import { EditorConflictPanel } from '../components/EditorConflictPanel';
 import { editorProductMap, type EditorProduct } from '../components/editorProducts';
 import { StepEditorSheet } from '../components/StepEditorSheet';
@@ -48,6 +48,7 @@ import {
   withStepKeys,
 } from '../editor';
 import type { StepProduct } from '../repo';
+import { askForRoutineReminders } from '../reminders';
 import { moveItem } from '../reorder';
 import {
   emptyRoutineForm,
@@ -56,7 +57,6 @@ import {
   type RoutineFormValues,
   type StepFormValues,
 } from '../schema';
-import { useEditorConflicts } from '../useRoutineConflicts';
 
 /**
  * R2 routine editor. `/routines/new` starts from the starter sheet's draft (or empty);
@@ -120,17 +120,6 @@ function EditRoutine({ id }: { id: number }) {
   );
 }
 
-/** Gives a custom field its error the same way the built-in fields do. */
-function WithError({
-  field,
-  children,
-}: {
-  field: AnyFieldApi;
-  children: (error: string | undefined) => ReactNode;
-}) {
-  return children(useFieldError(field));
-}
-
 type StepEditorState = {
   open: boolean;
   key: number;
@@ -164,7 +153,6 @@ function RoutineForm({
     [stepProducts, active],
   );
 
-  const leaving = useRef(false);
   /** Set while Add product is open from the picker: the step editor opens again on return. */
   const returning = useRef(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -182,8 +170,7 @@ function RoutineForm({
     onSubmit: async (value) => {
       await save.mutateAsync(toSaveInput(value, routineId));
       showToast({ message: t('routines.editor.savedToast', { name: value.name }) });
-      leaving.current = true;
-      router.back();
+      guard.leave();
     },
   });
   const formDirty = useFormDirty(form);
@@ -202,22 +189,7 @@ function RoutineForm({
   // Already in the editor: the conflict sheet offers "See the rule" only.
   const conflictSheets = useConflictSheets();
 
-  const close = () => {
-    leaving.current = true;
-    router.back();
-  };
-  const guard = useCloseGuard({ dirty, onClose: close });
-
-  // Android back and swipe-back go through the same "Discard changes?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
+  const guard = useScreenCloseGuard({ dirty });
   // Back from Add product (opened from the picker): show the step editor again.
   useEffect(
     () =>
@@ -318,7 +290,7 @@ function RoutineForm({
           <View className="pt-4">
             <form.Field name="customName">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <Input
                       label={t('routines.editor.customName')}
@@ -331,12 +303,12 @@ function RoutineForm({
                       autoCapitalize="sentences"
                     />
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
             <form.Field name="sortTime">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <TimeField
                       label={t('routines.editor.customTime')}
@@ -349,7 +321,7 @@ function RoutineForm({
                       error={error}
                     />
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
           </View>
@@ -358,7 +330,7 @@ function RoutineForm({
 
         <form.Field name="daysOfWeek">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => {
                 const all = everyDay.every((d) => field.state.value.includes(d));
                 return (
@@ -384,13 +356,13 @@ function RoutineForm({
                   </Field>
                 );
               }}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 
         <form.Field name="reminderTime">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <View>
                   <View className="min-h-[48px] flex-row items-center justify-between gap-3">
@@ -400,7 +372,8 @@ function RoutineForm({
                       accessibilityLabel={t('routines.editor.reminder')}
                       onCheckedChange={(on) => {
                         field.handleChange(on ? defaultReminderTime(form.state.values) : null);
-                        if (on) onRoutineReminderSwitchedOn();
+                        // Asks for notifications in context (refinement 8).
+                        if (on) void askForRoutineReminders();
                       }}
                     />
                   </View>
@@ -417,14 +390,14 @@ function RoutineForm({
                   </Collapsible>
                 </View>
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
         <View className="h-4" />
 
         <form.Field name="steps">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <View className="gap-2">
                   <Text accessibilityRole="header" className="text-title-s">
@@ -461,7 +434,7 @@ function RoutineForm({
                   </View>
                 </View>
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 
@@ -526,9 +499,8 @@ function RoutineForm({
         onAction={() => {
           setDeleteOpen(false);
           if (routineId === null) return;
-          leaving.current = true;
           del.mutate(routineId);
-          router.back();
+          guard.leave();
         }}
         onCancel={() => setDeleteOpen(false)}
       />

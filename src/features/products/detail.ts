@@ -2,10 +2,11 @@ import type { TFunction } from 'i18next';
 
 import type { BadgeStatus } from '@/components/ui/badge';
 import type { Formatter } from '@/i18n/useFormat';
-import { avoidMatches, type AvoidItemLite } from '@/lib/avoid';
-import { parseIngredientLines } from '@/lib/ingredients';
+import { avoidMatches, parsedLinesAvoidMatches, type AvoidItemLite } from '@/lib/avoid';
+import { classifyIngredients, parseIngredientLines, type KnownIngredient } from '@/lib/ingredients';
 
 import type { IngredientPill } from './components/IngredientPills';
+import type { AvoidContext } from './repo';
 import type { ProductInput } from './schema';
 import type { ProductDetail } from './types';
 
@@ -44,6 +45,32 @@ export function ingredientPills(
     name: i.name,
     avoided: avoidMatches([i.id], new Map([[i.id, i.groupId]]), avoidItems).length > 0,
     conflict: inRule(i.id),
+  }));
+}
+
+/** Typed ingredient lines on the avoid list (by ingredient or its group), once each, in order. */
+export function avoidedLines(
+  lines: readonly string[],
+  known: readonly KnownIngredient[],
+  avoid: AvoidContext,
+): string[] {
+  const matches = parsedLinesAvoidMatches(lines, known, avoid.groupOf, avoid.items);
+  return [...new Set(matches.map((m) => m.line))];
+}
+
+/** Chips for typed lines (P3, P4): new ones tagged, avoided ones red, ones in a rule linked. */
+export function linePills(
+  lines: readonly string[],
+  known: readonly KnownIngredient[],
+  avoid: AvoidContext,
+  inRule: (ingredientId: number) => boolean,
+): IngredientPill[] {
+  const avoided = new Set(avoidedLines(lines, known, avoid));
+  return classifyIngredients(lines, known).map((c) => ({
+    name: c.name,
+    isNew: c.status === 'new',
+    avoided: avoided.has(c.name),
+    conflict: c.status === 'existing' && inRule(c.id),
   }));
 }
 

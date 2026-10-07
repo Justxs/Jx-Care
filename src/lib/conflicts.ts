@@ -241,26 +241,6 @@ export function routineConflictSummary(
   return { lines, alternatives };
 }
 
-/** Routine ids that have at least one hit. */
-export function routinesWithConflicts(hits: readonly ConflictHit[]): Set<number> {
-  const ids = new Set<number>();
-  for (const h of hits) {
-    ids.add(h.a.routineId);
-    ids.add(h.b.routineId);
-  }
-  return ids;
-}
-
-/** Product ids that have at least one hit. */
-export function productsInConflict(hits: readonly ConflictHit[]): Set<number> {
-  const ids = new Set<number>();
-  for (const h of hits) {
-    ids.add(h.a.productId);
-    ids.add(h.b.productId);
-  }
-  return ids;
-}
-
 /** Rule id → the routines it fires in (either side), for "In 2 routines" (S3). */
 export function routinesPerRule(hits: readonly ConflictHit[]): Map<number, Set<number>> {
   const out = new Map<number, Set<number>>();

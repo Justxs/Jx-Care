@@ -1,8 +1,7 @@
-import type { AnyFieldApi } from '@tanstack/react-form';
 import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,11 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { AlertDialog } from '@/components/ui/alert-dialog';
 import { BOTTOM_BAR_HEIGHT, BottomBar } from '@/components/ui/bottom-bar';
 import { Button } from '@/components/ui/button';
-import { useCloseGuard } from '@/components/ui/close-guard';
+import { useScreenCloseGuard } from '@/components/ui/screen-close-guard';
 import { Collapsible } from '@/components/ui/collapsible';
 import { DateField } from '@/components/ui/date-field';
 import { DiscardDialog } from '@/components/ui/discard-dialog';
-import { useAppForm, useFieldError, useFormDirty } from '@/components/ui/form';
+import { useAppForm, useFormDirty, WithFieldError } from '@/components/ui/form';
 import { Icon } from '@/components/ui/icon';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -26,8 +25,7 @@ import { useIngredientInRule } from '@/features/conflicts/hooks';
 import { useSettings } from '@/features/settings/api';
 import { useLinkBoughtItem } from '@/features/shopping/api';
 import { currencySymbol } from '@/features/settings/currencies';
-import { parsedLinesAvoidMatches } from '@/lib/avoid';
-import { classifyIngredients, parseIngredientLines } from '@/lib/ingredients';
+import { parseIngredientLines } from '@/lib/ingredients';
 import { appStore } from '@/state/app';
 import { showToast } from '@/state/ui';
 
@@ -50,10 +48,12 @@ import {
   PhotoField,
 } from '../components/ProductFields';
 import { QuickOpenFields } from '../components/QuickFields';
+import { avoidedLines, linePills } from '../detail';
 import { onProductSaved } from '../events';
 import { productAddedForPick } from '../pickReturn';
 import type { AvoidContext } from '../repo';
 import {
+  decimalText,
   emptyProductForm,
   productSchema,
   type ProductFormValues,
@@ -116,7 +116,7 @@ function toFormValues(p: ProductDetail): ProductFormValues {
     brand: p.brand ?? '',
     area: p.area,
     category: p.category,
-    size: p.size == null ? '' : String(p.size).replace('.', ','),
+    size: p.size == null ? '' : decimalText(p.size),
     unit: p.unit,
     price: p.priceCents == null ? '' : (p.priceCents / 100).toFixed(2).replace('.', ','),
     purchasedAt: p.purchasedAt,
@@ -137,15 +137,19 @@ function AddProduct({
   fromShoppingItem?: number;
 }) {
   const today = useSelector(appStore, (s) => s.activeDay);
-  const initial = useMemo(() => newProductValues(today, prefill), [today, prefill]);
-  return <ProductForm mode="add" initial={initial} fromShoppingItem={fromShoppingItem} />;
+  return (
+    <ProductForm
+      mode="add"
+      initial={newProductValues(today, prefill)}
+      fromShoppingItem={fromShoppingItem}
+    />
+  );
 }
 
 function EditProduct({ id }: { id: number }) {
   const { t } = useTranslation();
   const product = useProduct(id);
-  const initial = useMemo(() => (product.data ? toFormValues(product.data) : null), [product.data]);
-  if (!initial) {
+  if (!product.data) {
     return (
       <SafeAreaView edges={['top']} className="flex-1 bg-canvas">
         <ScreenHeader title={t('products.form.editTitle')} onBack={() => router.back()} close />
@@ -158,18 +162,7 @@ function EditProduct({ id }: { id: number }) {
       </SafeAreaView>
     );
   }
-  return <ProductForm mode="edit" productId={id} initial={initial} />;
-}
-
-/** Gives a custom field its error the same way the built-in fields do. */
-function WithError({
-  field,
-  children,
-}: {
-  field: AnyFieldApi;
-  children: (error: string | undefined) => ReactNode;
-}) {
-  return children(useFieldError(field));
+  return <ProductForm mode="edit" productId={id} initial={toFormValues(product.data)} />;
 }
 
 function ProductForm({
@@ -184,7 +177,6 @@ function ProductForm({
   fromShoppingItem?: number;
 }) {
   const { t, i18n } = useTranslation();
-  const navigation = useNavigation();
   const today = useSelector(appStore, (s) => s.activeDay);
   const schema = useMemo(() => productSchema(today), [today]);
   const currency = useSettings().data?.currency ?? 'EUR';
@@ -199,7 +191,6 @@ function ProductForm({
   const scroll = useRef<React.ComponentRef<typeof KeyboardAwareScrollView>>(null);
   /** Photos picked in this form; the ones not saved are deleted on save or discard. */
   const picked = useRef<string[]>([]);
-  const leaving = useRef(false);
   const linked = useRef(false);
   const afterSave = useRef<'close' | 'another'>('close');
   const [savingAs, setSavingAs] = useState<'close' | 'another'>('close');
@@ -207,12 +198,9 @@ function ProductForm({
   const [ingredientsKey, setIngredientsKey] = useState(0);
   const [ingredientsOpen, setIngredientsOpen] = useState(false);
   const [pending, setPending] = useState<ProductInput | null>(null);
-
-  const avoidedLines = (lines: readonly string[]) => [
-    ...new Set(
-      parsedLinesAvoidMatches(lines, known, avoid.groupOf, avoid.items).map((m) => m.line),
-    ),
-  ];
+  // The form's defaults live here: TanStack Form re-applies `defaultValues` on every render, so
+  // "Save and add another" must change them too or a prefilled form would fill itself again.
+  const [defaults, setDefaults] = useState(initial);
 
   const save = async (value: ProductInput) => {
     const keep = value.photoUri;
@@ -224,8 +212,7 @@ function ProductForm({
       await update.mutateAsync({ id: productId, input: value });
       cleanUp();
       showToast({ message: t('products.form.savedToast') });
-      leaving.current = true;
-      router.back();
+      guard.leave();
       return;
     }
     const { id, isFirstWithExpiry } = await create.mutateAsync(value);
@@ -240,20 +227,21 @@ function ProductForm({
     onProductSaved({ id, name: value.name }, { isFirstWithExpiry });
     productAddedForPick({ id, area: value.area });
     if (afterSave.current === 'another') {
-      form.reset(newProductValues(today));
+      const next = newProductValues(today);
+      setDefaults(next);
+      form.reset(next);
       setMoreOpen(false);
       scroll.current?.scrollTo({ y: 0, animated: true });
     } else {
-      leaving.current = true;
-      router.back();
+      guard.leave();
     }
   };
 
   const form = useAppForm({
     schema,
-    defaultValues: initial,
+    defaultValues: defaults,
     onSubmit: async (value) => {
-      if (avoidedLines(value.ingredients).length > 0) {
+      if (avoidedLines(value.ingredients, known, avoid).length > 0) {
         setPending(value);
         return;
       }
@@ -261,26 +249,16 @@ function ProductForm({
     },
   });
   const dirty = useFormDirty(form);
+  const pendingAvoided = pending ? avoidedLines(pending.ingredients, known, avoid) : [];
   const submitting = useStore(form.store, (s) => s.isSubmitting);
 
-  const close = () => {
-    for (const uri of picked.current) discardPickedPhoto(uri);
-    picked.current = [];
-    leaving.current = true;
-    router.back();
-  };
-  const guard = useCloseGuard({ dirty, onClose: close });
-
-  // Android back and any other way of leaving go through the same "Discard changes?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        guard.setConfirmOpen(true);
-      }),
-    [navigation, dirty, guard],
-  );
+  const guard = useScreenCloseGuard({
+    dirty,
+    onDiscard: () => {
+      for (const uri of picked.current) discardPickedPhoto(uri);
+      picked.current = [];
+    },
+  });
 
   const submit = (next: 'close' | 'another') => {
     afterSave.current = next;
@@ -309,7 +287,7 @@ function ProductForm({
   const brand = (
     <form.Field name="brand">
       {(field) => (
-        <WithError field={field}>
+        <WithFieldError field={field}>
           {(error) => (
             <BrandField
               value={field.state.value}
@@ -318,7 +296,7 @@ function ProductForm({
               error={error}
             />
           )}
-        </WithError>
+        </WithFieldError>
       )}
     </form.Field>
   );
@@ -348,20 +326,12 @@ function ProductForm({
     <form.Field name="ingredients">
       {(field) => {
         const lines = parseIngredientLines(field.state.value);
-        const avoided = new Set(avoidedLines(lines));
-        const names = [...avoided].join(', ');
+        const avoided = avoidedLines(lines, known, avoid);
         return (
           <View className="gap-1.5">
             <Text className="text-label text-ink">{t('products.form.ingredients')}</Text>
             {lines.length > 0 ? (
-              <IngredientPills
-                items={classifyIngredients(lines, known).map((c) => ({
-                  name: c.name,
-                  isNew: c.status === 'new',
-                  avoided: avoided.has(c.name),
-                  conflict: c.status === 'existing' && inRule(c.id),
-                }))}
-              />
+              <IngredientPills items={linePills(lines, known, avoid, inRule)} />
             ) : (
               <Text className="text-body text-ink-muted">{t('products.form.noIngredients')}</Text>
             )}
@@ -379,14 +349,17 @@ function ProductForm({
             </Button>
             {/* Reserved line for the avoid warning. */}
             <View className="min-h-[36px] flex-row items-start gap-1.5">
-              {avoided.size > 0 ? (
+              {avoided.length > 0 ? (
                 <>
                   <Icon name="ban" size={16} tone="danger" />
                   <Text
                     accessibilityLiveRegion="polite"
                     className="flex-1 text-caption text-danger"
                   >
-                    {t('products.form.avoidWarning', { names, count: avoided.size })}
+                    {t('products.form.avoidWarning', {
+                      names: avoided.join(', '),
+                      count: avoided.length,
+                    })}
                   </Text>
                 </>
               ) : null}
@@ -440,7 +413,7 @@ function ProductForm({
         {mode === 'edit' ? brand : null}
         <form.Field name="area">
           {(field) => (
-            <WithError field={field}>
+            <WithFieldError field={field}>
               {(error) => (
                 <AreaField
                   value={field.state.value as Area | undefined}
@@ -451,7 +424,7 @@ function ProductForm({
                   error={error}
                 />
               )}
-            </WithError>
+            </WithFieldError>
           )}
         </form.Field>
 
@@ -565,7 +538,7 @@ function ProductForm({
             </form.AppField>
             <form.Field name="openedAt">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <View>
                       <View className="min-h-[48px] flex-row items-center justify-between">
@@ -590,12 +563,12 @@ function ProductForm({
                       </Collapsible>
                     </View>
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
             <form.Field name="paoMonths">
               {(field) => (
-                <WithError field={field}>
+                <WithFieldError field={field}>
                   {(error) => (
                     <MonthsField
                       label={t('products.form.pao')}
@@ -610,7 +583,7 @@ function ProductForm({
                       error={error}
                     />
                   )}
-                </WithError>
+                </WithFieldError>
               )}
             </form.Field>
             {ingredients}
@@ -655,8 +628,8 @@ function ProductForm({
         }}
         title={t('products.form.avoidTitle')}
         description={t('products.form.avoidBody', {
-          names: pending ? avoidedLines(pending.ingredients).join(', ') : '',
-          count: pending ? avoidedLines(pending.ingredients).length : 1,
+          names: pendingAvoided.join(', '),
+          count: pendingAvoided.length || 1,
         })}
         actionLabel={t('products.form.saveAnyway')}
         cancelLabel={t('products.form.editIngredients')}

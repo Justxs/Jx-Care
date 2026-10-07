@@ -66,19 +66,15 @@ export type ColorToken = keyof (typeof palette)['light'];
 export type ThemeColors = Record<ColorToken, string>;
 export type ColorSchemeName = 'light' | 'dark';
 
-/** Fixed camera colours (C4), the same in both themes. */
+/**
+ * Fixed camera colours (C4) for icon and SVG props, the same in both themes. Backgrounds use the
+ * `camera-*` classes.
+ */
 export const cameraColors = {
-  bg: '#120D10',
-  control: 'rgba(255,255,255,0.14)',
-  guide: 'rgba(240,168,137,0.30)',
   frame: 'rgba(255,255,255,0.75)',
   /** Text, icons and the shutter ring on the camera. */
   ink: '#FFFFFF',
 } as const;
-
-export function colorsFor(scheme: ColorSchemeName): ThemeColors {
-  return palette[scheme];
-}
 
 const themed = {
   light: { ...palette.light, scheme: 'light' as const },

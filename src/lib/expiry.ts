@@ -11,14 +11,6 @@ export type ExpiryInput = {
 
 export type ExpiryStatus = 'ok' | 'expiring' | 'expired' | 'unopened' | 'nodate';
 
-export const expiryStatuses: readonly ExpiryStatus[] = [
-  'ok',
-  'expiring',
-  'expired',
-  'unopened',
-  'nodate',
-];
-
 /** The earlier of the printed expiry and opened date + period after opening; null when neither exists. */
 export function effectiveExpiry(p: ExpiryInput): string | null {
   const afterOpening =
@@ -65,7 +57,6 @@ export function warningDay(p: ExpiryInput, warnDays: number): string | null {
 /** Expired first (most overdue first), then soonest, then no date last; ties by name. */
 export function sortBySoonestExpiry<T extends ExpiryInput & { name: string }>(
   products: readonly T[],
-  _today?: string,
 ): T[] {
   const keyed = products.map((p, i) => ({ p, i, eff: effectiveExpiry(p) }));
   keyed.sort((a, b) => {
@@ -76,9 +67,4 @@ export function sortBySoonestExpiry<T extends ExpiryInput & { name: string }>(
     return byName !== 0 ? byName : a.i - b.i;
   });
   return keyed.map((k) => k.p);
-}
-
-/** Status needs attention in lists (OK products show no badge). */
-export function needsBadge(status: ExpiryStatus): boolean {
-  return status !== 'ok';
 }

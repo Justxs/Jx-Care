@@ -10,8 +10,8 @@ import { useSelector } from '@tanstack/react-store';
 
 import { getDb } from '@/db';
 import { qk } from '@/db/queryKeys';
+import { gridDays } from '@/features/calendar/month';
 import { i18n } from '@/i18n';
-import { daysInMonthGrid } from '@/lib/appDay';
 import { hairStreak } from '@/lib/hair';
 import { cancelSnoozes, syncEntity } from '@/notifications';
 import { appStore } from '@/state/app';
@@ -30,7 +30,6 @@ import {
   markHairDone,
   quickSetup,
   saveHairTask,
-  setHairTaskActive,
   washDueOn,
   type MarkHairDone,
   type QuickHairSetup,
@@ -41,7 +40,7 @@ import type { HairTaskInput } from './schema';
  * Re-plans a task's reminder (task 033) whenever it is created, changed, marked done or deleted.
  * Fire and forget: a failure is picked up by the next full sync.
  */
-export function onHairTaskChanged(id: number): void {
+function onHairTaskChanged(id: number): void {
   syncEntity('hair_task', id).catch(() => {});
 }
 
@@ -70,16 +69,17 @@ export const hairDueTodayQuery = (today: string) =>
     queryFn: () => hairDueToday(getDb(), today),
   });
 
+/** Current and best hair streak (washes only). */
+function readHairStreak(today: string) {
+  const input = hairStreakInput(getDb(), today);
+  return hairStreak(input.tasks, input.logs, input.today);
+}
+
 /** Today's hair streak chip: washes only, null while there is no active wash task. */
 export const hairStreakChipQuery = (today: string) =>
   queryOptions({
     queryKey: hairKeys.streakChip(today),
-    queryFn: () => {
-      const db = getDb();
-      if (!hasWashTask(db)) return null;
-      const input = hairStreakInput(db, today);
-      return hairStreak(input.tasks, input.logs, input.today);
-    },
+    queryFn: () => (hasWashTask(getDb()) ? readHairStreak(today) : null),
   });
 
 /** What Today's hair slots read, so Today paints complete (task 025's `prefetchToday`). */
@@ -141,10 +141,7 @@ export function useHairMonth(month: string) {
   const today = useToday();
   return useQuery({
     queryKey: hairKeys.month(month, today),
-    queryFn: () => {
-      const [year = 1970, m = 1] = month.split('-').map(Number);
-      return hairMonth(getDb(), daysInMonthGrid(year, m), today);
-    },
+    queryFn: () => hairMonth(getDb(), gridDays(month), today),
     placeholderData: keepPreviousData,
   });
 }
@@ -154,10 +151,7 @@ export function useHairStreak() {
   const today = useToday();
   return useQuery({
     queryKey: hairKeys.streak(today),
-    queryFn: () => {
-      const input = hairStreakInput(getDb(), today);
-      return hairStreak(input.tasks, input.logs, input.today);
-    },
+    queryFn: () => readHairStreak(today),
   });
 }
 
@@ -169,12 +163,15 @@ export function useHairLogsOnDay(day: string) {
 
 function invalidate(client: QueryClient, opts: { usedIn?: boolean } = {}): void {
   client.invalidateQueries({ queryKey: qk.hair.all });
-  client.invalidateQueries({ queryKey: ['today'] });
+  client.invalidateQueries({ queryKey: qk.today.all });
   client.invalidateQueries({ queryKey: qk.calendar.all });
+  // C6 hair "What changed this week" counts the logs.
+  client.invalidateQueries({ queryKey: qk.progress.all });
+  // The R4 picker's Recent hair products follow the tasks' products, latest changed first.
+  client.invalidateQueries({ queryKey: [...qk.routines.all, 'recentProducts', 'hair'] });
   if (opts.usedIn) {
     // Product detail shows the hair tasks that use a product (P2 "Used in").
     client.invalidateQueries({ queryKey: [...qk.products.all, 'detail'] });
-    client.invalidateQueries({ queryKey: [...qk.products.all, 'usedIn'] });
   }
 }
 
@@ -244,20 +241,6 @@ export function useDeleteHairTask() {
     onSuccess: (id) => {
       client.removeQueries({ queryKey: qk.hair.detail(id) });
       invalidate(client, { usedIn: true });
-      onHairTaskChanged(id);
-    },
-  });
-}
-
-export function useSetHairTaskActive() {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, active }: { id: number; active: boolean }) => {
-      setHairTaskActive(getDb(), id, active);
-      return id;
-    },
-    onSuccess: (id) => {
-      invalidate(client);
       onHairTaskChanged(id);
     },
   });

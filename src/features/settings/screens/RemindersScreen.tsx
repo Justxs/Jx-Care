@@ -17,7 +17,7 @@ import { SelectField } from '@/components/ui/select-field';
 import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
 import { useFormat } from '@/i18n/useFormat';
-import { openPhoneSettings, sync, usePermission } from '@/notifications';
+import { openPhoneSettings, usePermission } from '@/notifications';
 import { askForReminders } from '@/notifications/askPermission';
 import { useMotion } from '@/theme/useMotion';
 
@@ -43,8 +43,8 @@ type ReminderSwitch =
 const IN_CARD = 'rounded-none bg-transparent shadow-none dark:shadow-none';
 
 /**
- * S5 Reminders: every notification setting. Each change saves at once and re-plans the
- * notifications. With notifications off in phone settings, an amber card explains it and every
+ * S5 Reminders: every notification setting. Each change saves at once (and so re-plans the
+ * notifications). With notifications off in phone settings, an amber card explains it and every
  * switch shows its saved state as text ("Paused" / "Off"), so nothing looks on when it isn't.
  */
 export function RemindersScreen() {
@@ -60,13 +60,8 @@ export function RemindersScreen() {
   const [reserveCard, setReserveCard] = useState(denied);
   if (denied && !reserveCard) setReserveCard(true);
 
-  const save = (patch: SettingsPatch) => {
-    update.mutate(patch, {
-      onSuccess: () => {
-        sync().catch(() => {});
-      },
-    });
-  };
+  // The notification layer re-plans when the saved settings change (src/notifications/start.ts).
+  const save = (patch: SettingsPatch) => update.mutate(patch);
 
   const toggle = async (key: ReminderSwitch, on: boolean) => {
     if (on && permission === 'undetermined') {

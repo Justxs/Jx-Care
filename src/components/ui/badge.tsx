@@ -3,12 +3,13 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/lib/cn';
+import type { ExpiryStatus } from '@/lib/expiry';
 import type { ColorToken } from '@/theme/colors';
 
 import { Icon } from './icon';
 import { Text } from './text';
 
-export type BadgeStatus = 'ok' | 'expiring' | 'expired' | 'unopened' | 'nodate' | 'avoid';
+export type BadgeStatus = ExpiryStatus | 'avoid';
 
 const tones: Record<BadgeStatus, { box: string; text: string; icon: ColorToken }> = {
   ok: { box: 'bg-ok-soft', text: 'text-ok', icon: 'ok' },

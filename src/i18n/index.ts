@@ -2,13 +2,15 @@ import { getLocales } from 'expo-localization';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import { languages, type LanguageCode } from '@/db/enums';
+
 import en from './en.json';
 import lt from './lt.json';
 
-export type Language = 'lt' | 'en';
-export const languages: readonly Language[] = ['lt', 'en'];
+export type Language = LanguageCode;
+export { languages };
 
-export const resources = { en: { translation: en }, lt: { translation: lt } } as const;
+const resources = { en: { translation: en }, lt: { translation: lt } } as const;
 
 /** The phone's language if it is Lithuanian, otherwise English. */
 export function phoneLanguage(): Language {
@@ -20,7 +22,7 @@ export function phoneLanguage(): Language {
 }
 
 export function isLanguage(value: unknown): value is Language {
-  return value === 'lt' || value === 'en';
+  return (languages as readonly unknown[]).includes(value);
 }
 
 const i18n = createInstance();
@@ -29,7 +31,7 @@ i18n.use(initReactI18next).init({
   resources,
   lng: phoneLanguage(),
   fallbackLng: 'en',
-  supportedLngs: ['lt', 'en'],
+  supportedLngs: [...languages],
   interpolation: { escapeValue: false },
   returnNull: false,
   saveMissing: __DEV__,

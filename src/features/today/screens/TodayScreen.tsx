@@ -12,12 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ABExplainSheet, StreakExplainSheet } from '@/components/ExplainSheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  productListStore,
-  setProductFilters,
-  setProductsSegment,
-} from '@/features/products/listState';
-import { defaultProductFilters } from '@/features/products/types';
+import { showExpiringProducts } from '@/features/products/listState';
 import { openShoppingList } from '@/features/shopping/viewState';
 import { useWeeklyPhotoOptional } from '@/features/progress/useWeeklyPhotoOptional';
 import type { TodayRoutineGroup } from '@/features/routines/repo';
@@ -43,7 +38,6 @@ import {
   useHairDueSlot,
   useHairStreakSlot,
   useShoppingToBuySlot,
-  useSkinCheckInSlot,
   useWeeklyPhotoSlot,
 } from '../slots';
 import { useRoutineActions } from '../useRoutineActions';
@@ -76,12 +70,7 @@ function openSetupStep(step: SetupStepKey): void {
 
 /** "See all": Products filtered to expired and expiring. */
 function seeAllExpiring(): void {
-  setProductFilters({
-    ...defaultProductFilters,
-    sort: productListStore.state.filters.sort,
-    statuses: ['expired', 'expiring'],
-  });
-  setProductsSegment('mine');
+  showExpiringProducts();
   router.navigate('/products');
 }
 
@@ -97,7 +86,6 @@ export function TodayScreen() {
   const toBuy = useShoppingToBuySlot();
   const photoRow = useWeeklyPhotoSlot();
   const weeklyPhoto = useWeeklyPhotoOptional();
-  const skinRow = useSkinCheckInSlot();
 
   const [streakOpen, setStreakOpen] = useState(false);
   const [abOpen, setAbOpen] = useState(false);
@@ -171,7 +159,7 @@ export function TodayScreen() {
     routines: routinesNode,
     expiring: expiringNode,
     hair: hairDue,
-    checkIn: <CheckInCard photo={photoRow} skin={skinRow} />,
+    checkIn: <CheckInCard photo={photoRow} />,
   };
 
   const sections = sectionOrder({
@@ -180,7 +168,6 @@ export function TodayScreen() {
     expiring: expiring === undefined || expiring.length > 0,
     anyExpired,
     hair: !!hairDue,
-    checkIn: !!photoRow || !!skinRow,
   });
 
   return (

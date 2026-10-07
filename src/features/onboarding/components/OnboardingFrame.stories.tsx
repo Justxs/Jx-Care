@@ -27,7 +27,6 @@ const meta = {
   args: { step: 3, children: null },
   argTypes: {
     step: { control: { type: 'number', min: 0, max: 4, step: 1 } },
-    onBack: { action: 'back' },
   },
   render: function Frame(args: OnboardingFrameProps) {
     const { t } = useTranslation();

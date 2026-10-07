@@ -16,8 +16,7 @@ import { useSettings } from '@/features/settings/api';
 import { skinStreak } from '@/lib/streak';
 import { appStore } from '@/state/app';
 
-import { onRoutineCompleted } from './events';
-import { askForRoutineReminders, resyncRoutineReminders } from './reminders';
+import { cancelTodaysRoutineReminders, resyncRoutineReminders } from './reminders';
 import {
   dayRoutine,
   deleteRoutine,
@@ -41,22 +40,6 @@ import {
   type TodayRoutineGroup,
 } from './repo';
 
-/**
- * Called whenever a routine is created, changed, switched on or off, duplicated or deleted.
- * Reschedules reminders (task 027); task 030 refreshes its conflict cache here.
- */
-export function onRoutineChanged(_id: number): void {
-  void resyncRoutineReminders();
-}
-
-/**
- * Called when the reminder switch in the routine editor is turned on: asks for the notification
- * permission in context (refinement 8) and syncs once granted (task 027).
- */
-export function onRoutineReminderSwitchedOn(): void {
-  void askForRoutineReminders();
-}
-
 /** The app day and expiry window that step product statuses depend on; part of each key. */
 function useDayContext() {
   const day = useSelector(appStore, (s) => s.activeDay);
@@ -64,9 +47,9 @@ function useDayContext() {
   return { day, warnDays };
 }
 
-const todayRoutinesKey = (day: string) => [...qk.today(day), 'routines'] as const;
+const todayRoutinesKey = (day: string) => [...qk.today.day(day), 'routines'] as const;
 
-/** Today's routine cards on `day`; shared by `useTodayRoutines` and Today's prefetch. */
+/** Today's routine cards on `day`; shared by `useToday` and Today's prefetch. */
 export const todayRoutinesQuery = (day: string, warnDays: number) =>
   queryOptions({
     queryKey: [...todayRoutinesKey(day), warnDays],
@@ -98,12 +81,6 @@ export function useRoutine(id: number) {
   });
 }
 
-/** Today's routine cards, keyed by the app day. */
-export function useTodayRoutines() {
-  const { day, warnDays } = useDayContext();
-  return useQuery(todayRoutinesQuery(day, warnDays));
-}
-
 /** One routine on the current app day, for the player (T2). */
 export function useRoutineDay(id: number) {
   const { day, warnDays } = useDayContext();
@@ -129,38 +106,32 @@ export function useRecentStepProducts(area: 'skin' | 'hair') {
 
 // ─── Mutations ──────────────────────────────────────────────────────────────
 
-function invalidate(client: QueryClient, opts: { products?: boolean } = {}): void {
+/** After a routine is created, changed, switched on or off, duplicated or deleted. */
+function routinesChanged(client: QueryClient, opts: { products?: boolean } = {}): void {
   client.invalidateQueries({ queryKey: qk.routines.all });
-  client.invalidateQueries({ queryKey: ['today'] });
+  client.invalidateQueries({ queryKey: qk.today.all });
   client.invalidateQueries({ queryKey: qk.calendar.all });
   // Conflict warnings (task 030) and S3's "In N routines" depend on routines and their steps.
   client.invalidateQueries({ queryKey: qk.conflicts.all });
   // Product detail lists the routines a product is used in.
   if (opts.products) client.invalidateQueries({ queryKey: qk.products.all });
+  void resyncRoutineReminders();
 }
 
 export function useSaveRoutine() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (input: SaveRoutineInput) => saveRoutine(getDb(), input),
-    onSuccess: (id) => {
-      invalidate(client, { products: true });
-      onRoutineChanged(id);
-    },
+    onSuccess: () => routinesChanged(client, { products: true }),
   });
 }
 
 export function useSetRoutineActive() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, active }: { id: number; active: boolean }) => {
-      setRoutineActive(getDb(), id, active);
-      return id;
-    },
-    onSuccess: (id) => {
-      invalidate(client);
-      onRoutineChanged(id);
-    },
+    mutationFn: async ({ id, active }: { id: number; active: boolean }) =>
+      setRoutineActive(getDb(), id, active),
+    onSuccess: () => routinesChanged(client),
   });
 }
 
@@ -171,10 +142,7 @@ export function useDuplicateRoutine() {
   return useMutation({
     mutationFn: async (id: number) =>
       duplicateRoutine(getDb(), id, (name) => t('routines.copyName', { name })),
-    onSuccess: (id) => {
-      invalidate(client, { products: true });
-      onRoutineChanged(id);
-    },
+    onSuccess: () => routinesChanged(client, { products: true }),
   });
 }
 
@@ -187,8 +155,7 @@ export function useDeleteRoutine() {
     },
     onSuccess: (id) => {
       client.removeQueries({ queryKey: qk.routines.detail(id) });
-      invalidate(client, { products: true });
-      onRoutineChanged(id);
+      routinesChanged(client, { products: true });
     },
   });
 }
@@ -198,10 +165,7 @@ export function useReplaceStepProduct() {
   return useMutation({
     mutationFn: async ({ stepId, productId }: { stepId: number; productId: number | null }) =>
       replaceStepProduct(getDb(), stepId, productId),
-    onSuccess: (routineId) => {
-      invalidate(client, { products: true });
-      if (routineId !== null) onRoutineChanged(routineId);
-    },
+    onSuccess: () => routinesChanged(client, { products: true }),
   });
 }
 
@@ -211,7 +175,7 @@ export function useSetChoice() {
     mutationFn: async (v: { timeOfDayKey: string; weekday: number; routineId: number }) =>
       setChoice(getDb(), v.timeOfDayKey, v.weekday, v.routineId),
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['today'] });
+      client.invalidateQueries({ queryKey: qk.today.all });
       // The pick decides which routine that weekday's reminder names and opens.
       void resyncRoutineReminders();
     },
@@ -284,7 +248,11 @@ export function useTickStep() {
       const db = getDb();
       const wasComplete = getDayLog(db, v.routineId, v.day)?.completedAt != null;
       const log = tickSteps(db, v.routineId, v.stepIds, v.day, v.done, v.dueStepIds);
-      if (!wasComplete && log?.completedAt != null) onRoutineCompleted(v.routineId, v.day);
+      const isComplete = log?.completedAt != null;
+      // Today's reminder for the time of day (and any snoozed copy) goes once the routine is
+      // done, and comes back when an untick (Undo) makes it not done again.
+      if (!wasComplete && isComplete) void cancelTodaysRoutineReminders(v.routineId);
+      if (wasComplete && !isComplete) void resyncRoutineReminders();
       return log;
     },
     onMutate: async (v) => {
@@ -310,7 +278,7 @@ export function useTickStep() {
       for (const [key, data] of context?.previous ?? []) client.setQueryData(key, data);
     },
     onSettled: (_log, _error, v) => {
-      client.invalidateQueries({ queryKey: qk.today(v.day) });
+      client.invalidateQueries({ queryKey: qk.today.day(v.day) });
       client.invalidateQueries({ queryKey: qk.routines.all });
       client.invalidateQueries({ queryKey: qk.calendar.all });
     },

@@ -9,12 +9,13 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import type { DayRoutine, RoutineStepItem } from '@/features/routines/repo';
+import { timeOfDayName } from '@/features/today/cardText';
 import { cn } from '@/lib/cn';
 import type { SkinDayStatus } from '@/lib/streak';
 import { appStore } from '@/state/app';
 
 import { useSkinDay, useTickDayStep } from '../api';
-import { canEditDay, type SkinDayGroup } from '../repo';
+import { canEditDay } from '../repo';
 import { DayMark } from './DayMark';
 
 type RoutineStatus = Exclude<SkinDayStatus, 'none'>;
@@ -37,9 +38,6 @@ export function SkinDaySection({ day }: { day: string }) {
   const editable = canEditDay(day, today);
   const future = day > today;
 
-  const groupName = (g: Pick<SkinDayGroup, 'timeOfDay' | 'customName'>) =>
-    g.timeOfDay === 'custom' ? (g.customName ?? t('common.custom')) : t(`common.${g.timeOfDay}`);
-
   if (!data) {
     return (
       <Card title={t('calendar.day.skinRoutines')}>
@@ -59,7 +57,7 @@ export function SkinDaySection({ day }: { day: string }) {
         <Text className="px-1 text-body text-ink-muted">
           {t('calendar.day.nothingDone', {
             count: data.groups.length,
-            names: data.groups.map(groupName).join(', '),
+            names: data.groups.map((g) => timeOfDayName(g, t)).join(', '),
           })}
         </Text>
       ) : null}
@@ -87,7 +85,7 @@ export function SkinDaySection({ day }: { day: string }) {
               >
                 <View className="flex-1 gap-0.5">
                   <Text className="text-body-strong">{routine.name}</Text>
-                  <Text className="text-caption text-ink-muted">{groupName(group)}</Text>
+                  <Text className="text-caption text-ink-muted">{timeOfDayName(group, t)}</Text>
                 </View>
                 <View className="flex-row items-center gap-1.5">
                   <DayMark status={status} />

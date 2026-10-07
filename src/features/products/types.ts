@@ -1,4 +1,4 @@
-import type { Area, ProductCategory } from '@/db/enums';
+import type { ProductCategory } from '@/db/enums';
 import type { Product } from '@/db/schema';
 import type { CostPerDay } from '@/lib/cost';
 import type { ExpiryStatus } from '@/lib/expiry';
@@ -55,5 +55,3 @@ export type PickerProduct = Pick<
   'id' | 'name' | 'brand' | 'area' | 'category' | 'photoUri'
 > &
   ExpiryFields;
-
-export type ProductAreaFilter = Area | 'all';

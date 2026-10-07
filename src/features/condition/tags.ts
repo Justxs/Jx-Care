@@ -79,8 +79,3 @@ export function bySeverity(states: readonly string[]): SkinTag[] {
   const picked = new Set(states);
   return skinSeverity.filter((tag) => picked.has(tag));
 }
-
-/** The skin state the calendar shows for a day, or null when none is logged. */
-export function mainSkinState(states: readonly string[]): SkinTag | null {
-  return bySeverity(states)[0] ?? null;
-}

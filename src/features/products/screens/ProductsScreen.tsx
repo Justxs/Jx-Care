@@ -13,30 +13,22 @@ import { FAB_LIST_END_SPACE, Fab } from '@/components/ui/fab';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup } from '@/components/ui/toggle-group';
 import type { ProductView } from '@/db/enums';
 import { useSettings, useUpdateSettings } from '@/features/settings/api';
 import { useToBuyCount } from '@/features/shopping/api';
-import { useBuyAgain, type BuyAgain } from '@/features/shopping/buyAgain';
+import { useBuyAgain, type BuyAgain } from '@/features/shopping/api';
 import { ShoppingScreen, ShoppingShareButton } from '@/features/shopping/screens/ShoppingScreen';
 import { cn } from '@/lib/cn';
 import { showToast } from '@/state/ui';
 import { motion } from '@/theme/motion';
 import { rowEntering, rowExiting, rowLayout } from '@/theme/listMotion';
 
-import {
-  useArchiveCount,
-  useDuplicateProduct,
-  useMarkFinished,
-  useMarkFinishedMany,
-  useMarkOpened,
-  useProducts,
-  useUndoFinished,
-} from '../api';
+import { useArchiveCount, useDuplicateProduct, useMarkOpened, useProducts } from '../api';
+import { useFinishProducts } from '../archiveActions';
 import { ProductFiltersSheet } from '../components/ProductFiltersSheet';
-import { ProductRow, type RowAction } from '../components/ProductRow';
+import { ProductRow, ProductRowsSkeleton, type RowAction } from '../components/ProductRow';
 import { ProductTile } from '../components/ProductTile';
 import {
   activeFilterCount,
@@ -162,6 +154,13 @@ function MyProducts({
   const locale = i18n.language;
   const filters = useSelector(productListStore, (s) => s.filters);
   const [search, setSearch] = useState(filters.search);
+  // The search the store had when this field last matched it. A store search changed elsewhere
+  // (Reset filters, Today's See all, the weekly digest) is copied into the field.
+  const [synced, setSynced] = useState(filters.search);
+  if (filters.search !== synced) {
+    setSynced(filters.search);
+    setSearch(filters.search);
+  }
   const [sheetKey, setSheetKey] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
   const products = useProducts(filters, locale);
@@ -169,15 +168,16 @@ function MyProducts({
   const view: ProductView = useSettings().data?.productView ?? 'list';
   const updateSettings = useUpdateSettings();
   const buyAgain = useBuyAgain();
-  const actions = useRowActions(buyAgain);
-  const finishMany = useMarkFinishedMany();
-  const undo = useUndoFinished();
+  const finish = useFinishProducts();
+  const actions = useRowActions(buyAgain, finish.run);
   const filterCount = activeFilterCount(filters);
 
   useEffect(() => {
     const id = setTimeout(() => {
       const current = productListStore.state.filters;
-      if (current.search !== search) setProductFilters({ ...current, search });
+      if (current.search === search) return;
+      setSynced(search);
+      setProductFilters({ ...current, search });
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(id);
   }, [search]);
@@ -193,17 +193,8 @@ function MyProducts({
   const selectedItems = items.filter((p) => selected.has(p.id));
 
   const finishSelected = async () => {
-    const finished = selectedItems.map((p) => ({ id: p.id, name: p.name }));
-    const previous = await finishMany.mutateAsync(finished.map((p) => p.id));
+    await finish.run(selectedItems.map((p) => ({ id: p.id, name: p.name })));
     onSelectDone();
-    showToast({
-      message: t('products.finishedManyToast', { count: previous.length }),
-      actionLabel: t('common.undo'),
-      onAction: () => undo.mutate(previous),
-      ...(buyAgain
-        ? { secondaryLabel: t('common.buyAgain'), onSecondary: () => buyAgain(finished) }
-        : {}),
-    });
   };
 
   return (
@@ -252,7 +243,7 @@ function MyProducts({
         }}
       >
         {products.isPending ? (
-          <SkeletonRows />
+          <ProductRowsSkeleton rows={5} />
         ) : (
           <Animated.View entering={FadeIn.duration(motion.duration.fast)} className="gap-4">
             {items.length === 0 ? (
@@ -261,10 +252,7 @@ function MyProducts({
                   icon="search"
                   title={t('products.noMatchTitle')}
                   secondaryLabel={t('products.resetFilters')}
-                  onSecondary={() => {
-                    setSearch('');
-                    resetProductFilters();
-                  }}
+                  onSecondary={resetProductFilters}
                 >
                   {t('products.noMatchBody')}
                 </EmptyState>
@@ -343,25 +331,23 @@ function MyProducts({
               className="flex-1"
               icon="archive"
               disabled={selectedItems.length === 0}
-              loading={finishMany.isPending}
+              loading={finish.isPending}
               onPress={finishSelected}
             >
               {t('common.markFinished')}
             </Button>
-            {buyAgain ? (
-              <Button
-                className="flex-1"
-                variant="secondary"
-                icon="shopping-cart"
-                disabled={selectedItems.length === 0}
-                onPress={() => {
-                  buyAgain(selectedItems.map((p) => ({ id: p.id, name: p.name })));
-                  onSelectDone();
-                }}
-              >
-                {t('common.buyAgain')}
-              </Button>
-            ) : null}
+            <Button
+              className="flex-1"
+              variant="secondary"
+              icon="shopping-cart"
+              disabled={selectedItems.length === 0}
+              onPress={() => {
+                buyAgain(selectedItems.map((p) => ({ id: p.id, name: p.name })));
+                onSelectDone();
+              }}
+            >
+              {t('common.buyAgain')}
+            </Button>
           </View>
         </Animated.View>
       ) : (
@@ -389,11 +375,12 @@ function MyProducts({
 }
 
 /** Swipe and long-press actions for one row. */
-function useRowActions(buyAgain: BuyAgain | null) {
+function useRowActions(
+  buyAgain: BuyAgain,
+  finish: (products: { id: number; name: string }[]) => Promise<void>,
+) {
   const { t } = useTranslation();
   const markOpened = useMarkOpened();
-  const markFinished = useMarkFinished();
-  const undo = useUndoFinished();
   const duplicate = useDuplicateProduct();
 
   return (item: ProductListItem): RowAction[] => {
@@ -411,29 +398,14 @@ function useRowActions(buyAgain: BuyAgain | null) {
       label: t('common.markFinished'),
       icon: 'archive',
       primary: true,
-      onPress: async () => {
-        const { previous } = await markFinished.mutateAsync(item.id);
-        showToast({
-          message: t('products.finishedToast', { name: item.name }),
-          actionLabel: t('common.undo'),
-          onAction: () => undo.mutate([{ id: item.id, archivedAt: previous }]),
-          ...(buyAgain
-            ? {
-                secondaryLabel: t('common.buyAgain'),
-                onSecondary: () => buyAgain([{ id: item.id, name: item.name }]),
-              }
-            : {}),
-        });
-      },
+      onPress: () => void finish([{ id: item.id, name: item.name }]),
     });
-    if (buyAgain) {
-      list.push({
-        key: 'buyAgain',
-        label: t('common.buyAgain'),
-        icon: 'shopping-cart',
-        onPress: () => buyAgain([{ id: item.id, name: item.name }]),
-      });
-    }
+    list.push({
+      key: 'buyAgain',
+      label: t('common.buyAgain'),
+      icon: 'shopping-cart',
+      onPress: () => buyAgain([{ id: item.id, name: item.name }]),
+    });
     list.push({
       key: 'duplicate',
       label: t('products.duplicate'),
@@ -479,25 +451,6 @@ function Shelf({
         </Animated.View>
       ))}
     </View>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <Card flush>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <View key={i}>
-          {i > 0 ? <Separator inset /> : null}
-          <View className="min-h-[72px] flex-row items-center gap-3 px-4 py-3">
-            <Skeleton width={48} height={48} radius={8} />
-            <View className="flex-1 gap-2">
-              <Skeleton width="60%" height={16} />
-              <Skeleton width="40%" height={12} />
-            </View>
-          </View>
-        </View>
-      ))}
-    </Card>
   );
 }
 

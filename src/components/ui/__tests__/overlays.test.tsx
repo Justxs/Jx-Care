@@ -1,18 +1,20 @@
 import { PortalHost } from '@rn-primitives/portal';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+import { z } from 'zod';
 
-import { parseDecimal, sampleSchema } from '@/dev/sampleForm';
-import { SampleForm } from '@/dev/FormsGallery';
 import { setI18nLanguage } from '@/i18n';
 import { setupTestApp } from '@/test/render';
 import { dismissToast, showToast, uiStore, setScreenReaderOn, watchScreenReader } from '@/state/ui';
 
 import { AlertDialog } from '../alert-dialog';
+import { Button } from '../button';
 import { useCloseGuard } from '../close-guard';
 import { EmptyState } from '../empty-state';
+import { useAppForm } from '../form';
 import { Input } from '../input';
 import { ScreenHeader } from '../screen-header';
+import { SelectField } from '../select-field';
 import { ToastHost } from '../toast-host';
 
 jest.mock('expo-haptics', () => ({
@@ -47,50 +49,62 @@ function isInside(node: { parent: unknown }, container: unknown): boolean {
   return false;
 }
 
-describe('sample form', () => {
-  it('parses decimals with a comma or a dot', () => {
-    expect(parseDecimal('12,99')).toBe(12.99);
-    expect(parseDecimal('3.')).toBe(3);
-    expect(parseDecimal('')).toBeNull();
-    expect(parseDecimal('abc')).toBeNaN();
-  });
+/** A form built the way every real form is: useAppForm, a zod schema with i18n keys, field components. */
+const sampleSchema = z.object({
+  name: z.string().trim().min(1, 'forms.errors.nameRequired'),
+  price: z
+    .string()
+    .refine((v) => /^\d*([.,]\d+)?$/.test(v.trim()), 'forms.errors.priceNumber')
+    .transform((v) => (v.trim() === '' ? null : Number(v.trim().replace(',', '.')))),
+  purchased: z.string().nullable(),
+  tags: z.array(z.string()).min(1, 'forms.errors.pickOne'),
+  notes: z.string(),
+});
 
-  it('schema gives i18n keys and parses the price', () => {
-    const bad = sampleSchema.safeParse({
-      name: ' ',
-      price: '-1',
-      purchased: null,
-      tags: [],
-      answer: '',
-      notes: '',
-    });
-    expect(bad.success).toBe(false);
-    const messages = bad.error?.issues.map((i) => i.message);
-    expect(messages).toEqual(
-      expect.arrayContaining([
-        'forms.errors.nameRequired',
-        'forms.errors.priceMin',
-        'forms.errors.pickOne',
-      ]),
-    );
-    const good = sampleSchema.parse({
-      name: 'Serum',
-      price: '12,50',
-      purchased: '2026-10-06',
-      tags: ['calm'],
-      answer: '',
-      notes: '',
-    });
-    expect(good.price).toBe(12.5);
+function SampleForm({ onSaved }: { onSaved: (value: z.output<typeof sampleSchema>) => void }) {
+  const form = useAppForm({
+    schema: sampleSchema,
+    defaultValues: { name: '', price: '', purchased: null, tags: [], notes: '' },
+    onSubmit: onSaved,
   });
+  return (
+    <>
+      <form.AppField name="name">
+        {(field) => <field.TextField label="Name" hint="As on the bottle" />}
+      </form.AppField>
+      <form.AppField name="price">
+        {(field) => <field.TextField label="Price" keyboard="decimal" suffix="€" />}
+      </form.AppField>
+      <form.AppField name="purchased">
+        {(field) => <field.DateField label="Purchased" />}
+      </form.AppField>
+      <form.AppField name="tags">
+        {(field) => (
+          <field.ChipField
+            label="Tags"
+            items={[
+              { value: 'calm', label: 'Calm' },
+              { value: 'oily', label: 'Oily' },
+            ]}
+          />
+        )}
+      </form.AppField>
+      <form.AppField name="notes">
+        {(field) => <field.TextField label="Notes" multiline />}
+      </form.AppField>
+      <Button onPress={() => void form.handleSubmit()}>Save</Button>
+    </>
+  );
+}
 
-  it('shows errors in the reserved line without adding or removing anything', async () => {
+describe('forms', () => {
+  it('show errors in the reserved line without adding or removing anything', async () => {
     const app = setupTestApp();
     const onSaved = jest.fn();
     await app.render(<SampleForm onSaved={onSaved} />);
     expect(screen.getByText('As on the bottle')).toBeTruthy();
     const before = helperLines();
-    expect(before).toHaveLength(7);
+    expect(before).toHaveLength(5);
 
     await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
 
@@ -190,6 +204,48 @@ describe('AlertDialog', () => {
     );
     await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
     expect(onCancel).toHaveBeenCalled();
+  });
+});
+
+describe('SelectField', () => {
+  const options = [
+    { value: '0', label: 'Immediately' },
+    { value: '60', label: '1 min' },
+  ];
+
+  it('the menu shows the value in the field and picks another', async () => {
+    const onValueChange = jest.fn();
+    await render(
+      <>
+        <SelectField
+          label="Lock after"
+          value="60"
+          options={options}
+          onValueChange={onValueChange}
+        />
+        <PortalHost />
+      </>,
+    );
+    await fireEvent.press(screen.getByRole('combobox', { name: 'Lock after, 1 min' }));
+    await fireEvent.press(await screen.findByText('Immediately'));
+    expect(onValueChange).toHaveBeenCalledWith('0');
+  });
+
+  it('a disabled menu does not open', async () => {
+    await render(
+      <>
+        <SelectField
+          label="Lock after"
+          value="60"
+          options={options}
+          onValueChange={() => {}}
+          disabled
+        />
+        <PortalHost />
+      </>,
+    );
+    await fireEvent.press(screen.getByRole('combobox', { name: 'Lock after, 1 min' }));
+    expect(screen.queryByText('Immediately')).toBeNull();
   });
 });
 

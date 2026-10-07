@@ -4,7 +4,6 @@
     "buyAgain": "Pirkti dar kartą",
     "markFinished": "Pažymėti kaip baigtą",
     "finished": "Baigta",
-    "archive": "Archyvas",
     "start": "Pradėti",
     "continue": "Tęsti",
     "timeOfDay": "Paros metas",
@@ -22,7 +21,6 @@
     "weeklyPhoto": "Savaitės nuotrauka",
     "checkIn": "Savijauta",
     "allDone": "Viskas atlikta",
-    "notDone": "Neatlikta",
     "save": "Išsaugoti",
     "cancel": "Atšaukti",
     "delete": "Ištrinti",
@@ -35,8 +33,6 @@
     "skin": "Oda",
     "hair": "Plaukai",
     "skinAndHair": "Oda + plaukai",
-    "today": "Šiandien",
-    "yesterday": "Vakar",
     "tags": {
       "calm": "Rami",
       "glow": "Švytinti",
@@ -55,7 +51,6 @@
       "avoid": "Vengti"
     },
     "everyDay": "Kasdien",
-    "best": "Geriausia {{days}}",
     "stepOf": "{{index}} žingsnis iš {{count}}",
     "discardTitle": "Atmesti pakeitimus?",
     "discardBody": "Pakeitimai bus prarasti.",
@@ -658,10 +653,6 @@
     "alreadyListedToast": "„{{name}}“ jau yra pirkinių sąraše",
     "allListedToast": "Jau yra pirkinių sąraše",
     "removedToast": "„{{name}}“ pašalintas",
-    "todayRow_one": "Pirkinių sąrašas · pirkti {{count}}",
-    "todayRow_few": "Pirkinių sąrašas · pirkti {{count}}",
-    "todayRow_many": "Pirkinių sąrašas · pirkti {{count}}",
-    "todayRow_other": "Pirkinių sąrašas · pirkti {{count}}",
     "areaFilter": "Rodyti prekes",
     "sheet": {
       "title": "Įtraukti į pirkinių sąrašą",
@@ -1354,10 +1345,8 @@
     "rating": "Įvertinimas",
     "pinEntered": "Įvesta {{count}} iš 4 skaitmenų",
     "progress": "Atlikta {{value}} iš {{max}}",
-    "photoAdd": "Pridėti nuotrauką",
     "conflictOpen": "{{label}}. Bakstelėkite, kad pamatytumėte daugiau.",
-    "noDays": "Jokių dienų",
-    "scale": "{{value}} iš {{max}}"
+    "noDays": "Jokių dienų"
   },
   "streak": {
     "chip": "{{count}} {{area}}",
@@ -1381,29 +1370,8 @@
     "hairWord": "plaukai"
   },
   "dev": {
-    "components": "Komponentai",
-    "sampleForm": "Pavyzdinė forma",
-    "name": "Pavadinimas",
-    "price": "Kaina",
-    "purchased": "Pirkta",
-    "tags": "Žymos",
-    "category": "Kategorija",
-    "answer": "Atsakymas",
-    "notes": "Pastabos",
-    "nameHint": "Kaip ant buteliuko",
-    "resetTitle": "Atkurti programėlę?",
-    "resetBody": "Bus ištrinti visi produktai, rutinos ir įrašai. To atšaukti negalima.",
-    "resetAction": "Atkurti programėlę",
-    "typeReset": "Įrašykite RESET, kad patvirtintumėte",
-    "removed": "Parfum pašalintas",
     "openSheet": "Atidaryti lapą",
-    "openDialog": "Atidaryti dialogą",
-    "showToast": "Rodyti pranešimą",
-    "more": "Daugiau informacijos",
-    "emptyTitle": "Produktų dar nėra",
-    "emptyBody": "Pridėkite, ką turite lentynoje, ir matysite, kada baigiasi galiojimas.",
-    "addProduct": "Pridėti produktą",
-    "importBackup": "Atkurti atsarginę kopiją"
+    "showToast": "Rodyti pranešimą"
   },
   "forms": {
     "errors": {

@@ -3,14 +3,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import type { PinPadHandle } from '@/components/ui/pin-pad';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { showToast } from '@/state/ui';
 
 import { CurrentPinStep } from '../components/CurrentPinStep';
-import { NewPinStep, usePinDigits } from '../components/NewPinStep';
-import { pinService, validateNewPin } from '../pin';
-import { MISMATCH_BACK_MS } from './ForgotPinScreen';
+import { ConfirmNewPinStep, CreateNewPinStep } from '../components/NewPinStep';
+import { pinService } from '../pin';
 
 type Step = 'old' | 'create' | 'confirm';
 
@@ -34,17 +32,22 @@ export function ChangePinScreen() {
     router.back();
   }, []);
 
+  const restart = useCallback(() => {
+    oldPin.current = null;
+    setNewPin(null);
+    setStep('old');
+  }, []);
+
   const back = useCallback(() => {
     if (step === 'confirm') {
       setNewPin(null);
       setStep('create');
     } else if (step === 'create') {
-      oldPin.current = null;
-      setStep('old');
+      restart();
     } else {
       leave();
     }
-  }, [leave, step]);
+  }, [leave, restart, step]);
 
   // Android back and the swipe step back through the flow the same way the header arrow does.
   useEffect(
@@ -69,128 +72,33 @@ export function ChangePinScreen() {
           }}
         />
       ) : step === 'create' ? (
-        <CreateStep
+        <CreateNewPinStep
           onPicked={(pin) => {
             setNewPin(pin);
             setStep('confirm');
           }}
         />
       ) : (
-        <ConfirmStep
+        <ConfirmNewPinStep
           expected={newPin}
           onMismatch={() => {
             setNewPin(null);
             setStep('create');
           }}
+          failedMessage={t('security.changePin.failed')}
           save={async (pin) => {
             const old = oldPin.current;
-            if (old === null) return 'restart';
-            const result = await pinService.changePin(old, pin);
-            if (!result.ok) return 'restart';
+            const result = old === null ? null : await pinService.changePin(old, pin);
+            // The old PIN stopped matching (or a lockout started elsewhere): ask for it again.
+            if (!result?.ok) {
+              restart();
+              return;
+            }
             showToast({ message: t('security.changePin.changed') });
             leave();
-            return 'done';
-          }}
-          onRestart={() => {
-            oldPin.current = null;
-            setNewPin(null);
-            setStep('old');
           }}
         />
       )}
     </SafeAreaView>
-  );
-}
-
-function CreateStep({ onPicked }: { onPicked: (pin: string) => void }) {
-  const { t } = useTranslation();
-  const pad = useRef<PinPadHandle>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const entry = usePinDigits(
-    (pin, clear) => {
-      const problem = validateNewPin(pin);
-      if (problem) {
-        pad.current?.shake();
-        setError(t(problem, { pin }));
-        clear();
-        return;
-      }
-      onPicked(pin);
-    },
-    () => setError(null),
-  );
-
-  return (
-    <NewPinStep
-      title={t('lock.newPin.createTitle')}
-      body={t('lock.newPin.createBody')}
-      filled={entry.filled}
-      message={error ?? undefined}
-      onDigit={entry.onDigit}
-      onDelete={entry.onDelete}
-      padRef={pad}
-    />
-  );
-}
-
-type SaveOutcome = 'done' | 'restart';
-
-function ConfirmStep({
-  expected,
-  onMismatch,
-  save,
-  onRestart,
-}: {
-  expected: string | null;
-  onMismatch: () => void;
-  save: (pin: string) => Promise<SaveOutcome>;
-  onRestart: () => void;
-}) {
-  const { t } = useTranslation();
-  const pad = useRef<PinPadHandle>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const onComplete = async (pin: string, clear: () => void) => {
-    if (pin !== expected) {
-      pad.current?.shake();
-      setBusy(true);
-      setError(t('lock.newPin.mismatch'));
-      timer.current = setTimeout(onMismatch, MISMATCH_BACK_MS);
-      return;
-    }
-    setBusy(true);
-    let outcome: SaveOutcome;
-    try {
-      outcome = await save(pin);
-    } catch {
-      setBusy(false);
-      setError(t('security.changePin.failed'));
-      clear();
-      return;
-    }
-    // The old PIN stopped matching (or a lockout started elsewhere): ask for it again.
-    if (outcome === 'restart') onRestart();
-  };
-
-  const entry = usePinDigits(
-    (pin, clear) => void onComplete(pin, clear),
-    () => setError(null),
-  );
-
-  return (
-    <NewPinStep
-      title={t('lock.newPin.confirmTitle')}
-      filled={entry.filled}
-      message={error ?? undefined}
-      disabled={busy}
-      onDigit={entry.onDigit}
-      onDelete={entry.onDelete}
-      padRef={pad}
-    />
   );
 }

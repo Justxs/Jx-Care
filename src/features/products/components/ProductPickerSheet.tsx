@@ -256,7 +256,7 @@ function PickerRow({
 }) {
   const { t } = useTranslation();
   const f = useFormat();
-  const badge = statusBadge({ ...product, openedAt: null }, f, t);
+  const badge = statusBadge(product, f, t);
   const spoken = [
     product.name,
     product.brand,

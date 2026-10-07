@@ -4,6 +4,8 @@ import { createTestDb } from '@/db/test-db';
 import { product, shoppingItem } from '@/db/schema';
 import { createProduct, deleteProduct, markFinished } from '@/features/products/repo';
 import type { ProductInput } from '@/features/products/schema';
+import { i18n } from '@/i18n';
+import { makeFormatter } from '@/i18n/useFormat';
 
 import {
   addBuyAgain,
@@ -24,7 +26,6 @@ import {
   suggestions,
   toBuyCount,
   updateItem,
-  type Translate,
 } from './repo';
 
 const TODAY = '2026-10-07';
@@ -59,13 +60,14 @@ const newItem = (name: string, over: Partial<Parameters<typeof addItem>[1]> = {}
   ...over,
 });
 
-const t: Translate = (key) =>
-  ({
-    'shopping.toBuy': 'To buy',
-    'shopping.wantToTry': 'Want to try',
-    'products.detail.units.ml': 'ml',
-    'products.detail.units.g': 'g',
-  })[key] ?? key;
+const t = i18n.getFixedT('en');
+const f = makeFormatter({
+  lang: 'en',
+  locale: 'en-GB',
+  currency: 'EUR',
+  today: TODAY,
+  uses24h: true,
+});
 
 describe('addBuyAgain', () => {
   it('adds a linked To buy item with the product name, brand and area', () => {
@@ -313,6 +315,29 @@ describe('suggestions', () => {
     clearBought(db);
     expect(suggestions(db, TODAY, WARN)).toEqual([]);
   });
+
+  it('comes back after a tick is taken back and the item removed', () => {
+    const db = createTestDb();
+    const id = createProduct(db, input({ name: 'Serum' }));
+    markFinished(db, id, '2026-10-01');
+    const item = addBuyAgain(db, id)!.id;
+    setBought(db, item, NOW);
+    setBought(db, item, null);
+    deleteItem(db, item);
+    expect(suggestions(db, TODAY, WARN).map((s) => s.name)).toEqual(['Serum']);
+  });
+
+  it('keeps a dismissal made before the tick when the tick is taken back', () => {
+    const db = createTestDb();
+    const id = createProduct(db, input({ name: 'Serum' }));
+    markFinished(db, id, '2026-10-01');
+    dismissSuggestion(db, id, NOW - 1000);
+    const item = addBuyAgain(db, id)!.id;
+    setBought(db, item, NOW);
+    setBought(db, item, null);
+    deleteItem(db, item);
+    expect(suggestions(db, TODAY, WARN)).toEqual([]);
+  });
 });
 
 describe('prefillFromItem', () => {
@@ -403,7 +428,7 @@ describe('shareText', () => {
     addItem(db, newItem('Hair oil', { brand: 'Argan', list: 'want_to_try' }));
     setBought(db, addItem(db, newItem('Soap')), NOW);
 
-    expect(shareText(db, t, 'en')).toBe(
+    expect(shareText(db, t, f)).toBe(
       [
         'To buy',
         '• Body lotion (Nivea), 400 ml',
@@ -417,7 +442,7 @@ describe('shareText', () => {
   });
 
   it('is empty for an empty list', () => {
-    expect(shareText(createTestDb(), t)).toBe('');
+    expect(shareText(createTestDb(), t, f)).toBe('');
   });
 });
 

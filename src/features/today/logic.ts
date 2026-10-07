@@ -1,3 +1,4 @@
+import { attentionProducts } from '@/features/routines/playerLogic';
 import type { DayRoutine, StepProduct, TodayRoutineGroup } from '@/features/routines/repo';
 import type { AppSettings } from '@/features/settings/repo';
 import { DAY_ENDS_AT_HOUR } from '@/lib/appDay';
@@ -21,24 +22,9 @@ export function greetingFor(now: number | Date): Greeting {
   return 'evening';
 }
 
-/** The routine a card shows: the one ticked, else the remembered pick, else the first. */
-export function chosenRoutine(group: TodayRoutineGroup): DayRoutine {
-  return group.routines.find((r) => r.id === group.chosenId) ?? group.routines[0]!;
-}
-
-/** Due steps not ticked yet: what All done ticks (and its Undo unticks). */
-export function remainingStepIds(r: DayRoutine): number[] {
-  const done = new Set(r.log?.doneStepIds ?? []);
-  return r.progress.dueStepIds.filter((id) => !done.has(id));
-}
-
 /** Expired products in the routine's steps due today, each named once. */
 export function expiredProducts(r: DayRoutine): StepProduct[] {
-  const out = new Map<number, StepProduct>();
-  for (const step of r.dueSteps) {
-    if (step.product?.problem === 'expired') out.set(step.product.id, step.product);
-  }
-  return [...out.values()];
+  return attentionProducts(r).filter((p) => p.problem === 'expired');
 }
 
 /** The card whose Start gets the one filled button: the first time of day not finished. */
@@ -92,8 +78,9 @@ export function setupView(
 export type SectionKey = 'setup' | 'routines' | 'expiring' | 'hair' | 'checkIn';
 
 /**
- * Today's sections top to bottom, each left out when empty. While any product is expired,
- * Expiring soon sits directly under the routine cards; otherwise it comes after Hair due.
+ * Today's sections top to bottom, each left out when empty (Check-in never is: its skin chips
+ * always show). While any product is expired, Expiring soon sits directly under the routine
+ * cards; otherwise it comes after Hair due.
  */
 export function sectionOrder(p: {
   setup: boolean;
@@ -101,7 +88,6 @@ export function sectionOrder(p: {
   expiring: boolean;
   anyExpired: boolean;
   hair: boolean;
-  checkIn: boolean;
 }): SectionKey[] {
   const out: SectionKey[] = [];
   if (p.setup) out.push('setup');
@@ -109,7 +95,7 @@ export function sectionOrder(p: {
   if (p.expiring && p.anyExpired) out.push('expiring');
   if (p.hair) out.push('hair');
   if (p.expiring && !p.anyExpired) out.push('expiring');
-  if (p.checkIn) out.push('checkIn');
+  out.push('checkIn');
   return out;
 }
 

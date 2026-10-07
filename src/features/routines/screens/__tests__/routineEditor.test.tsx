@@ -11,8 +11,8 @@ import { setupTestApp } from '@/test/render';
 
 import { pickReturnStore, productAddedForPick } from '@/features/products/pickReturn';
 
-import * as api from '../../api';
 import { routineDraftStore, setRoutineDraft } from '../../draft';
+import * as reminders from '../../reminders';
 import { getRoutine, listRoutines, saveRoutine, type SaveRoutineInput } from '../../repo';
 import { buildFromTemplate, draftFromTemplate, routineTemplates } from '../../templates';
 import { RoutineEditorScreen } from '../RoutineEditorScreen';
@@ -192,7 +192,7 @@ describe('New routine', () => {
     const app = setup('new');
     const serum = createProduct(app.db, productInput({ name: 'Retinol serum', category: 'serum' }));
     createProduct(app.db, productInput({ name: 'Hair oil', area: 'hair', category: 'hair_oil' }));
-    const askSpy = jest.spyOn(api, 'onRoutineReminderSwitchedOn');
+    const askSpy = jest.spyOn(reminders, 'askForRoutineReminders');
     await app.show();
 
     await fireEvent.changeText(screen.getByLabelText('Name'), 'Gym');
