@@ -1344,7 +1344,6 @@
     "rating": "Įvertinimas",
     "pinEntered": "Įvesta {{count}} iš 4 skaitmenų",
     "progress": "Atlikta {{value}} iš {{max}}",
-    "photoAdd": "Pridėti nuotrauką",
     "conflictOpen": "{{label}}. Bakstelėkite, kad pamatytumėte daugiau.",
     "noDays": "Jokių dienų"
   },

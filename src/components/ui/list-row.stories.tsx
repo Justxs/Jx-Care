@@ -37,7 +37,6 @@ const meta = {
     detail: { control: 'text' },
     value: { control: 'text' },
     icon: { control: 'select', options: [undefined, ...Object.keys(icons)] },
-    area: { control: 'radio', options: [undefined, 'skin', 'hair', 'both'] },
     trailing: { control: 'radio', options: ['chevron', 'switch', 'value', 'none'] },
     checked: { control: 'boolean' },
     tone: { control: 'radio', options: [undefined, 'danger'] },
@@ -86,11 +85,6 @@ export const Value: Story = {
   args: { label: 'Products', icon: 'package', trailing: 'value', value: '12' },
 };
 
-/** The care area as a tag. */
-export const WithArea: Story = {
-  args: { label: 'Shampoo', icon: undefined, area: 'hair', value: undefined },
-};
-
 /** Danger tone, no trailing mark (Reset app). */
 export const Danger: Story = {
   args: { label: 'Reset app', icon: 'trash-2', tone: 'danger', trailing: 'none', value: undefined },
@@ -108,7 +102,7 @@ export const Group: Story = {
         <Separator inset />
         <Stateful label={t('common.weeklyPhoto')} icon="camera" trailing="switch" checked />
         <Separator inset />
-        <ListRow label={t('common.skin')} area="skin" trailing="value" value="12" />
+        <ListRow label={t('common.skin')} trailing="value" value="12" />
         <Separator inset />
         <ListRow
           label={t('settings.resetApp')}

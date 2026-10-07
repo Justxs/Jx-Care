@@ -1,12 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-native';
 import { View } from 'react-native';
 
-import { StreakCard, StreakChip } from './streak';
+import { StreakCard, StreakChip, type StreakChipProps } from './streak';
 
 const meta = {
   title: 'UI/Streak',
   component: StreakChip,
-  args: { area: 'skin', value: 12 },
+  args: {
+    area: 'skin',
+    value: 12,
+    // Callbacks come from the `action` argTypes (Actions panel); a value here would replace them.
+    ...({} as Pick<StreakChipProps, 'onPress'>),
+  },
   argTypes: {
     area: { control: 'radio', options: ['skin', 'hair'] },
     value: { control: { type: 'number', min: 0, step: 1 } },
@@ -27,11 +32,6 @@ export const HairChip: Story = { args: { area: 'hair', value: 3 } };
 /** No streak yet. */
 export const ZeroChip: Story = { args: { value: 0 } };
 
-/** Not tappable: read as one line, no button role. */
-export const StaticChip: Story = {
-  render: ({ onPress: _onPress, ...args }) => <StreakChip {...args} />,
-};
-
 /** Both chips side by side, as in the Today header; the chip widens for three digits. */
 export const ChipRow: Story = {
   render: (args) => (
@@ -44,10 +44,10 @@ export const ChipRow: Story = {
 
 /** Half-width cards (Calendar): current streak large, best below. */
 export const Cards: Story = {
-  render: (args) => (
+  render: () => (
     <View className="flex-row gap-3">
-      <StreakCard area="skin" value={12} best={21} onPress={args.onPress} />
-      <StreakCard area="hair" value={4} best={4} onPress={args.onPress} />
+      <StreakCard area="skin" value={12} best={21} />
+      <StreakCard area="hair" value={4} best={4} />
     </View>
   ),
 };

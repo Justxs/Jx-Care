@@ -157,11 +157,11 @@ One row in a grouped list: Settings, routine summaries, calendar day detail, rea
 
 ## PhotoTile
 
-A progress photo or the "add photo" slot, always 3:4.
+A progress photo, always 3:4.
 
 **Built on:** RN `Pressable` + `expo-image` with a fixed `aspectRatio: 3/4` and `contentFit="cover"`.
 
-**Consumer provides:** `src` (local file URI), `date`, `selected` (compare mode), `add` for the add slot, `label`.
+**Consumer provides:** `src` (local file URI), `date`, `accessibilityLabel`, `onPress`.
 
 - The tile reserves its 3:4 box before the image decodes and shows a neutral placeholder tone underneath (no glyph), so the grid never reflows. Use `expo-image` `transition={220}` for the fade-in.
 - Photos never leave the phone. Hair tiles appear only when the hair album is switched on in Settings.
@@ -322,11 +322,11 @@ Compact streak for headers and the Today top row. Skin and hair streaks are alwa
 
 **Built on:** Badge with the area colours.
 
-**Consumer provides:** `area` (skin or hair), `value` in days.
+**Consumer provides:** `area` (skin or hair), `value` in days, `onPress`.
 
 - Reads "12 skin" after a `calendar-check` icon: the area is a word, not a second icon.
 - Tabular numbers and the badge minimum width keep it from changing size as the count grows. The big version is StreakCard.
-- Never a flame. With `onPress` it is a button that opens the streak sheet (ExplainSheets).
+- Never a flame. It is a button that opens the streak sheet (ExplainSheets).
 
 ## Switch
 

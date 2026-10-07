@@ -20,25 +20,17 @@ const AnimatedCircle = createAnimatedComponent(Circle);
 export type ProgressRingProps = {
   value: number;
   max?: number;
-  size?: number;
-  /** Shown in the middle; defaults to "value/max". */
-  label?: string;
-  accessibilityLabel?: string;
 };
 
-/** Fixed-size ring; the arc animates with strokeDashoffset and turns `ok` when complete. */
-export function ProgressRing({
-  value,
-  max = 1,
-  size = 44,
-  label,
-  accessibilityLabel,
-}: ProgressRingProps) {
+const SIZE = 44;
+const STROKE = 4;
+
+/** 44 pt ring showing "value/max"; the arc animates with strokeDashoffset and turns `ok` when complete. */
+export function ProgressRing({ value, max = 1 }: ProgressRingProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const m = useMotion();
-  const stroke = size >= 64 ? 6 : 4;
-  const r = (size - stroke) / 2;
+  const r = (SIZE - STROKE) / 2;
   const circumference = 2 * Math.PI * r;
   const ratio = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0;
   const complete = max > 0 && value >= max;
@@ -52,44 +44,38 @@ export function ProgressRing({
     <View
       accessible
       accessibilityRole="progressbar"
-      accessibilityLabel={accessibilityLabel ?? t('a11y.progress', { value, max })}
+      accessibilityLabel={t('a11y.progress', { value, max })}
       accessibilityValue={{ min: 0, max, now: value }}
-      style={{ width: size, height: size }}
+      style={{ width: SIZE, height: SIZE }}
       className="items-center justify-center"
     >
       <Svg
-        width={size}
-        height={size}
+        width={SIZE}
+        height={SIZE}
         style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}
       >
         <Circle
-          cx={size / 2}
-          cy={size / 2}
+          cx={SIZE / 2}
+          cy={SIZE / 2}
           r={r}
           stroke={colors.subtle}
-          strokeWidth={stroke}
+          strokeWidth={STROKE}
           fill="none"
         />
         <AnimatedCircle
-          cx={size / 2}
-          cy={size / 2}
+          cx={SIZE / 2}
+          cy={SIZE / 2}
           r={r}
           stroke={complete ? colors.ok : colors.accent}
-          strokeWidth={stroke}
+          strokeWidth={STROKE}
           strokeLinecap="round"
           strokeDasharray={`${circumference} ${circumference}`}
           animatedProps={arc}
           fill="none"
         />
       </Svg>
-      <Text
-        className={cn(
-          size >= 64 ? 'text-body-strong' : 'text-tiny',
-          'tabular-nums',
-          complete ? 'text-ok' : 'text-ink',
-        )}
-      >
-        {label ?? `${value}/${max}`}
+      <Text className={cn('text-tiny tabular-nums', complete ? 'text-ok' : 'text-ink')}>
+        {`${value}/${max}`}
       </Text>
     </View>
   );

@@ -327,12 +327,6 @@ describe('StreakChip and StreakCard', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('chip without onPress is not a button', async () => {
-    await render(<StreakChip area="hair" value={1} />);
-    expect(screen.queryByRole('button')).toBeNull();
-    expect(screen.getByLabelText('Hair: 1 day in a row')).toBeTruthy();
-  });
-
   it('card shows best, or the restarted line', async () => {
     await render(
       <>
@@ -342,6 +336,9 @@ describe('StreakChip and StreakCard', () => {
     );
     expect(screen.getByText('Best 21 days')).toBeTruthy();
     expect(screen.getByText('Started again. Your best is still 21 days.')).toBeTruthy();
+    expect(
+      screen.getByLabelText('Hair: 1 day in a row. Started again. Your best is still 21 days.'),
+    ).toBeTruthy();
   });
 });
 
@@ -360,15 +357,15 @@ describe('ProductThumb, PhotoTile, Fab', () => {
     expect(screen.queryAllByRole('image')).toHaveLength(0);
   });
 
-  it('PhotoTile add slot is a labelled button; selected tiles say so', async () => {
+  it('PhotoTile is a button named by its date, or an image without onPress', async () => {
     await render(
       <>
-        <PhotoTile add onPress={() => {}} />
-        <PhotoTile date="6 Oct" selected onPress={() => {}} />
+        <PhotoTile date="6 Oct" onPress={() => {}} />
+        <PhotoTile date="13 Oct" />
       </>,
     );
-    expect(screen.getByRole('button', { name: 'Add photo' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: '6 Oct' })).toBeSelected();
+    expect(screen.getByRole('button', { name: '6 Oct' })).toBeTruthy();
+    expect(screen.getByRole('image', { name: '13 Oct' })).toBeTruthy();
   });
 
   it('Fab always shows its label', async () => {

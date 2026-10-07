@@ -1258,7 +1258,6 @@
     "rating": "Rating",
     "pinEntered": "{{count}} of 4 digits entered",
     "progress": "{{value}} of {{max}} done",
-    "photoAdd": "Add photo",
     "conflictOpen": "{{label}}. Tap for details.",
     "noDays": "No days"
   },

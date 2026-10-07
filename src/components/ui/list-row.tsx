@@ -1,9 +1,7 @@
 import { Pressable, View } from 'react-native';
 
-import type { Area } from '@/db/enums';
 import { cn } from '@/lib/cn';
 
-import { AreaTag } from './area-tag';
 import { Icon, type IconName } from './icon';
 import { Switch } from './switch';
 import { Text } from './text';
@@ -13,7 +11,6 @@ export type ListRowProps = {
   detail?: string;
   /** Drawn bare in `ink-muted`; only when icons tell rows apart. */
   icon?: IconName;
-  area?: Area;
   /** Right-hand text (with `trailing` `chevron` or `value`). */
   value?: string;
   trailing?: 'chevron' | 'switch' | 'value' | 'none';
@@ -30,7 +27,6 @@ export function ListRow({
   label,
   detail,
   icon,
-  area,
   value,
   trailing = 'chevron',
   checked = false,
@@ -48,7 +44,6 @@ export function ListRow({
         <Text className={cn('text-body', danger && 'text-danger')}>{label}</Text>
         {detail ? <Text className="text-caption text-ink-muted">{detail}</Text> : null}
       </View>
-      {area ? <AreaTag area={area} /> : null}
       {value && trailing !== 'switch' ? (
         <Text numberOfLines={1} className="max-w-[45%] text-body text-ink-muted">
           {value}
