@@ -63,6 +63,8 @@ pnpm dlx eas-cli build --profile preview --platform ios           # ad-hoc IPA (
 
 The version lives in `app.json` (`pnpm version:bump`); build numbers are set by EAS (`appVersionSource: remote`). Before shipping a new version to phones that already have the app, follow [docs/releasing.md](docs/releasing.md): it covers the signing key to keep, database changes and the update test.
 
+Without EAS, `pnpm apk` builds a test APK on this computer (needs Android Studio; it writes `dist/jx-care-<version>.apk`). It is signed with the debug key, so it and an EAS build can't update each other: move between them with Settings → Backup.
+
 The first build asks to create the EAS project and link it (it writes the project id into `app.json`); say yes and commit that change. After installing a build, walk [docs/device-checklist.md](docs/device-checklist.md).
 
 ## Website
