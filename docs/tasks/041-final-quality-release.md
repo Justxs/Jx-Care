@@ -76,4 +76,4 @@ Not done, on purpose:
 - iOS permission texts (camera, photo library, Face ID) are in English in `app.json` with Lithuanian through `locales/lt.json` (`CFBundleAllowMixedLocalizations`). Notifications have no iOS usage text.
 - Icons, splash and adaptive icon are the frog from docs/brand.md (task 001); the notification icon is the white frog (task 020).
 - README has the build commands.
-- **Skipped for now (Justas, 2026-10-07):** the `preview` build and the phone walk-through. When picked up: `npx eas-cli login` (or an `EXPO_TOKEN`), the first build links the project (`eas init`), the iOS build needs Justas's Apple account, then walk [docs/device-checklist.md](../device-checklist.md). The task is marked done with these two acceptance criteria open.
+- **Skipped for now (Justas, 2026-10-07):** the `preview` build and the phone walk-through. When picked up: `npx eas-cli login` (or an `EXPO_TOKEN`), the first build links the project (`eas init`), the iOS build needs Justas's Apple account, then walk [docs/device-checklist.md](../device-checklist.md). The task is marked deferred in the README until these two acceptance criteria are met; everything else is done.
