@@ -31,30 +31,20 @@ function expiryFields(p: Product, today: string, warnDays: number): ExpiryFields
   };
 }
 
-/** Product id → avoid list hit, for every product that has ingredients. */
+/** Ids of the products (every one, or `productIds`) that contain something on the avoid list. */
 function avoidedProductIds(db: DbOrTx, productIds?: readonly number[]): Set<number> {
-  const items: AvoidItemLite[] = db
-    .select({ id: avoidItem.id, kind: avoidItem.kind, refId: avoidItem.refId })
-    .from(avoidItem)
-    .all();
+  const { items, groupOf } = avoidContext(db);
   if (items.length === 0) return new Set();
-  const links = db
+  const byProduct = new Map<number, number[]>();
+  for (const l of db
     .select({
       productId: productIngredient.productId,
       ingredientId: productIngredient.ingredientId,
-      groupId: ingredient.groupId,
     })
     .from(productIngredient)
-    .innerJoin(ingredient, eq(ingredient.id, productIngredient.ingredientId))
     .where(productIds ? inArray(productIngredient.productId, [...productIds]) : undefined)
-    .all();
-  const groupOf = new Map<number, number | null>();
-  const byProduct = new Map<number, number[]>();
-  for (const l of links) {
-    groupOf.set(l.ingredientId, l.groupId);
-    const list = byProduct.get(l.productId) ?? [];
-    list.push(l.ingredientId);
-    byProduct.set(l.productId, list);
+    .all()) {
+    byProduct.set(l.productId, [...(byProduct.get(l.productId) ?? []), l.ingredientId]);
   }
   const out = new Set<number>();
   for (const [productId, ids] of byProduct) {
@@ -436,7 +426,7 @@ export type AvoidContext = {
 };
 
 /** What the product form needs to warn about avoided ingredients before saving (P3). */
-export function avoidContext(db: Db): AvoidContext {
+export function avoidContext(db: DbOrTx): AvoidContext {
   const items: AvoidItemLite[] = db
     .select({ id: avoidItem.id, kind: avoidItem.kind, refId: avoidItem.refId })
     .from(avoidItem)
