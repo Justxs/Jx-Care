@@ -163,9 +163,12 @@
     "photos": {
       "title": "Progreso nuotraukos",
       "span": "Prieš 4 savaites ir dabar",
-      "label": "Dvi odos nuotraukos greta, 2026-09-08 ir 2026-10-06",
       "before": "2026-09-08",
       "after": "2026-10-06",
+      "alt": {
+        "before": "Pavyzdinė nuotrauka, 2026-09-08: paraudę skruostai ir smulkūs spuogeliai",
+        "after": "Pavyzdinė nuotrauka, 2026-10-06: ramesnė, tolygesnė oda"
+      },
       "changed": "Kas pasikeitė per tą laiką",
       "changes": {
         "started": "Pradėta naudoti: Retinolio serumas",

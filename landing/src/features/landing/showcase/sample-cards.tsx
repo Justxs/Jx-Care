@@ -13,6 +13,8 @@ import {
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import afterPhoto from '@/assets/progress/after.webp';
+import beforePhoto from '@/assets/progress/before.webp';
 import { AreaTag, ConflictTag, StatusBadge, type Status, Tag } from '@/components/badges';
 import { CheckMark } from '@/components/check-mark';
 import { WholeDates } from '@/components/whole-dates';
@@ -377,6 +379,9 @@ export function IngredientsCard({ className, delay }: Readonly<CardProps>) {
 
 const photoChanges = ['started', 'finished', 'mostly'] as const;
 
+/** Generated sample photos of a fictional person, 600x800 WebP: redness on 8 Sep, calmer on 6 Oct. */
+const progressPhotos = { before: beforePhoto, after: afterPhoto } as const;
+
 /**
  * Two weekly photos side by side, as on the app's Compare screen, and the "What changed" lines
  * from the week in between. Photos are plain 3:4 boxes like the app's PhotoTile placeholder.
@@ -391,18 +396,24 @@ export function PhotoCard({ className, delay }: Readonly<CardProps>) {
         <CardTitle id={titleId}>{t('showcase.photos.title')}</CardTitle>
         <span className="text-label text-ink-muted">{t('showcase.photos.span')}</span>
       </div>
-      <div
-        role="img"
-        aria-label={t('showcase.photos.label')}
-        className="mt-3 grid grid-cols-2 gap-2"
-      >
+      <div className="mt-3 grid grid-cols-2 gap-2">
         {(['before', 'after'] as const).map((side) => (
-          <div key={side} aria-hidden="true">
-            <span className="block text-label font-medium tabular-nums">
+          <figure key={side} className="m-0">
+            {/* The alt text already says the date, so the visible label is not read twice. */}
+            <span aria-hidden="true" className="block text-label font-medium tabular-nums">
               {t(`showcase.photos.${side}`)}
             </span>
-            <span className="mt-1 block aspect-3/4 rounded-md bg-neutral-soft" />
-          </div>
+            {/* Width and height reserve the 3:4 box before the photo decodes, so nothing moves. */}
+            <img
+              src={progressPhotos[side]}
+              alt={t(`showcase.photos.alt.${side}`)}
+              width={600}
+              height={800}
+              loading="lazy"
+              decoding="async"
+              className="mt-1 block aspect-3/4 w-full rounded-md bg-neutral-soft object-cover"
+            />
+          </figure>
         ))}
       </div>
       <p className="mt-4 text-label text-ink-muted">{t('showcase.photos.changed')}</p>

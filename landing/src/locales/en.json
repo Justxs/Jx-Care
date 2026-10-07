@@ -163,9 +163,12 @@
     "photos": {
       "title": "Progress photos",
       "span": "4 weeks ago vs now",
-      "label": "Two skin photos side by side, 8 Sep and 6 Oct",
       "before": "8 Sep",
       "after": "6 Oct",
+      "alt": {
+        "before": "Sample photo from 8 Sep: redness and small spots on the cheeks",
+        "after": "Sample photo from 6 Oct: calmer, more even skin"
+      },
       "changed": "What changed in between",
       "changes": {
         "started": "Started Retinol serum",
