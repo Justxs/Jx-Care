@@ -3,9 +3,9 @@ import { useSelector } from '@tanstack/react-store';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { ConflictExplain } from '@/components/ExplainSheet';
 import { getDb } from '@/db';
 import { qk } from '@/db/queryKeys';
-import { registerPlayerConflicts, type PlayerConflict } from '@/features/routines/playerSlots';
 import { useFormat } from '@/i18n/useFormat';
 import {
   dayConflicts,
@@ -67,7 +67,16 @@ export function useDayRoutineConflicts(routineId: number, day: string): readonly
 
 // ─── The routine player (T2) ────────────────────────────────────────────────
 
-function usePlayerConflicts(routineId: number, day: string): readonly PlayerConflict[] {
+/** A conflict on one of the player's steps. */
+export type PlayerConflict = {
+  /** The step in this routine that carries the ConflictTag. */
+  stepId: number;
+  /** `first` is this step's product and routine; `second` is the other side. */
+  conflict: ConflictExplain;
+};
+
+/** The ConflictTags and amber lines in the player: one line per step pair. */
+export function usePlayerConflicts(routineId: number, day: string): readonly PlayerConflict[] {
   const targets = useDayRoutineConflicts(routineId, day);
   return useMemo(() => {
     // One line per step pair, even when several rules match it.
@@ -82,8 +91,6 @@ function usePlayerConflicts(routineId: number, day: string): readonly PlayerConf
     return out;
   }, [targets]);
 }
-
-registerPlayerConflicts(usePlayerConflicts);
 
 // ─── The routine editor (R2) ────────────────────────────────────────────────
 

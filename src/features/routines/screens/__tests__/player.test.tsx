@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import * as Haptics from 'expo-haptics';
 
 import type { Db } from '@/db';
+import * as conflictHooks from '@/features/conflicts/hooks';
 import { routineLog, routineStep } from '@/db/schema';
 import { markFinished } from '@/features/products/repo';
 import { registerBuyAgain } from '@/features/shopping/buyAgain';
@@ -16,7 +17,6 @@ import { setupTestApp } from '@/test/render';
 import { addBuyAgain } from '@/features/shopping/repo';
 
 import * as reminders from '../../reminders';
-import { registerPlayerConflicts } from '../../playerSlots';
 import { getDayLog, getRoutineDay, tickSteps } from '../../repo';
 import { RoutineDoneScreen } from '../RoutineDoneScreen';
 import { RoutinePlayerScreen } from '../RoutinePlayerScreen';
@@ -112,7 +112,6 @@ beforeEach(async () => {
 
 afterEach(() => {
   for (const toast of uiStore.state.toasts) dismissToast(toast.id);
-  registerPlayerConflicts(() => []);
   registerBuyAgain(() => null);
   jest.restoreAllMocks();
 });
@@ -281,7 +280,7 @@ describe('RoutinePlayerScreen', () => {
     const vc = seedProduct(app.db, { name: 'Vitamin C serum' });
     const id = seedRoutine(app.db, { name: 'Morning', timeOfDay: 'morning', steps: [vc, null] });
     const [s1] = stepIds(app.db, id);
-    registerPlayerConflicts((routineId) =>
+    jest.spyOn(conflictHooks, 'usePlayerConflicts').mockImplementation((routineId) =>
       routineId === id
         ? [
             {
