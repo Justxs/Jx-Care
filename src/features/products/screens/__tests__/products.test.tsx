@@ -1,5 +1,6 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 
+import { avoidItem } from '@/db/schema';
 import { getSettings, saveSettings } from '@/features/settings/repo';
 import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
@@ -244,6 +245,18 @@ describe('ProductsScreen', () => {
     expect(screen.queryByTestId('product-row-1')).toBeNull();
     expect(getSettings(app.db).productView).toBe('shelf');
     expect(screen.getByRole('button', { name: 'List view' })).toBeTruthy();
+  });
+
+  it('names the Avoid badge on a shelf tile for screen readers', async () => {
+    const app = setup();
+    saveSettings(app.db, { productView: 'shelf' });
+    createProduct(app.db, input({ name: 'Perfumed', ingredients: ['Parfum'] }));
+    app.db.insert(avoidItem).values({ kind: 'ingredient', refId: 1 }).run();
+    await app.render(<ProductsScreen />);
+    expect(await screen.findByTestId('product-tile-1')).toHaveProp(
+      'accessibilityLabel',
+      expect.stringMatching(/, Avoid$/),
+    );
   });
 
   it('opens the archive from the footer link', async () => {

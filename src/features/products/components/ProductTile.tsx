@@ -38,7 +38,15 @@ export function ProductTile({
   const f = useFormat();
   const badge = statusBadge(item, f, t);
   const date = dateLine(item, f, t);
-  const spoken = [item.name, metaLine(item, t), date, badge?.label].filter(Boolean).join(', ');
+  const spoken = [
+    item.name,
+    metaLine(item, t),
+    date,
+    badge?.label,
+    item.avoid ? t('common.status.avoid') : null,
+  ]
+    .filter(Boolean)
+    .join(', ');
   return (
     <Pressable
       onPress={selecting ? () => onSelectedChange?.(!selected) : onPress}
