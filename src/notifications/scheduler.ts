@@ -4,7 +4,8 @@
  *
  * Features describe what they want with a planner (`registerPlanner`); `sync()` runs them all,
  * keeps the next 14 days (at most 60 items, iOS allows 64 pending) and changes only what differs
- * from the `scheduled_notification` table.
+ * from the `scheduled_notification` table. Snoozed copies pending on the phone count towards the
+ * 60, so the plan shrinks while they wait.
  *
  * Each notification's OS identifier is `<key>#<content hash>`, so a change of time or text gives
  * a new identifier: the old one is cancelled and the new one scheduled, with no extra columns.
@@ -28,6 +29,7 @@ import type {
   NotificationKind,
   NotificationOS,
   OsNotificationRequest,
+  OsScheduledNotification,
   PlannedNotification,
   Planner,
   PlannerContext,
@@ -36,7 +38,10 @@ import type {
 export const DAY_MS = 24 * 60 * 60 * 1000;
 /** Only the next 14 days are kept scheduled (spec: Notifications, scheduling rule). */
 export const WINDOW_MS = 14 * DAY_MS;
-/** iOS keeps 64 pending notifications; 4 stay free for snoozes. */
+/**
+ * iOS keeps 64 pending notifications and silently drops the rest. Planned items plus pending
+ * snoozes stay at or under 60, so a snooze taken before the next re-plan still fits.
+ */
 export const MAX_SCHEDULED = 60;
 
 const SNOOZE_PREFIX = 'snooze:';
@@ -109,9 +114,14 @@ export function collectPlans(ctx: PlannerContext): PlannedNotification[] {
 }
 
 /**
- * Keeps items after `now` and within the next 14 days, one per key, soonest first, at most 60.
+ * Keeps items after `now` and within the next 14 days, one per key, soonest first, at most
+ * `limit` (60 less the snoozes pending on the phone).
  */
-export function selectWindow(items: PlannedNotification[], now: number): PlannedNotification[] {
+export function selectWindow(
+  items: PlannedNotification[],
+  now: number,
+  limit: number = MAX_SCHEDULED,
+): PlannedNotification[] {
   const end = now + WINDOW_MS;
   const sorted = items
     .filter((p) => p.fireAt > now && p.fireAt <= end)
@@ -119,10 +129,10 @@ export function selectWindow(items: PlannedNotification[], now: number): Planned
   const seen = new Set<string>();
   const out: PlannedNotification[] = [];
   for (const p of sorted) {
+    if (out.length >= limit) break;
     if (seen.has(p.key)) continue;
     seen.add(p.key);
     out.push(p);
-    if (out.length === MAX_SCHEDULED) break;
   }
   return out;
 }
@@ -181,12 +191,17 @@ function serial<T>(fn: () => Promise<T>): Promise<T> {
   return run;
 }
 
-/** Everything every planner wants, inside the window. Nothing before onboarding. */
-export function planAll(db: Db, now: number): PlannedNotification[] {
+/** Everything every planner wants, inside the window, at most `limit`. Nothing before onboarding. */
+export function planAll(db: Db, now: number, limit: number = MAX_SCHEDULED): PlannedNotification[] {
   if (!hasSettingsRow(db)) return [];
   const settings = getSettings(db);
   const t = i18n.getFixedT(settings.language);
-  return selectWindow(collectPlans({ db, now, settings, t }), now);
+  return selectWindow(collectPlans({ db, now, settings, t }), now, limit);
+}
+
+/** Room left for planned items: 60 less the snoozed copies still pending on the phone. */
+function roomFor(pending: OsScheduledNotification[]): number {
+  return MAX_SCHEDULED - pending.filter((n) => isSnoozeId(n.id)).length;
 }
 
 function sameEntity(ref: EntityRef) {
@@ -258,8 +273,12 @@ async function cancelRows(db: Db, adapter: NotificationOS, rows: ScheduledRow[])
  * doesn't know (for example after a restore), and forgets rows the phone lost so they are
  * scheduled again. Snoozed copies are left alone.
  */
-async function reconcile(db: Db, adapter: NotificationOS, now: number): Promise<void> {
-  const pending = await adapter.getAllScheduled();
+async function reconcile(
+  db: Db,
+  adapter: NotificationOS,
+  pending: OsScheduledNotification[],
+  now: number,
+): Promise<void> {
   const pendingIds = new Set(pending.map((n) => n.id));
   const rows = listScheduled(db);
   const known = new Set(rows.map((r) => r.notificationId));
@@ -278,15 +297,17 @@ async function syncNow(db: Db, adapter: NotificationOS, now: number, reconcileFi
   if ((await adapter.getPermission()) !== 'granted') {
     return cancelRows(db, adapter, listScheduled(db));
   }
-  if (reconcileFirst) await reconcile(db, adapter, now);
-  const diff = diffScheduled(planAll(db, now), listScheduled(db), now);
+  // One read of the phone's pending list: reconcile uses it, and pending snoozes take room.
+  const pending = await adapter.getAllScheduled();
+  if (reconcileFirst) await reconcile(db, adapter, pending, now);
+  const diff = diffScheduled(planAll(db, now, roomFor(pending)), listScheduled(db), now);
   return apply(db, adapter, diff);
 }
 
 export type SyncOptions = {
   /**
    * Also compare with the phone's pending list first (app open, background refresh, after a
-   * restore). Costs one extra read of the OS.
+   * restore).
    */
   reconcile?: boolean;
 };
@@ -301,7 +322,7 @@ export function sync(now: number = Date.now(), opts: SyncOptions = {}): Promise<
 
 /**
  * The same diff limited to one entity, after a product, routine or hair task changes. Falls back
- * to a full `sync` if the entity's new items would push the phone over 60 pending.
+ * to a full `sync` if the entity's new items would push the phone over 60 pending (snoozes count).
  */
 export function syncEntity(
   entityType: NotificationEntityType,
@@ -315,9 +336,10 @@ export function syncEntity(
     if ((await adapter.getPermission()) !== 'granted') {
       return cancelRows(db, adapter, listScheduled(db, ref));
     }
-    const planned = planAll(db, now).filter(sameEntity(ref));
+    const room = roomFor(await adapter.getAllScheduled());
+    const planned = planAll(db, now, room).filter(sameEntity(ref));
     const result = await apply(db, adapter, diffScheduled(planned, listScheduled(db, ref), now));
-    if (countScheduled(db) > MAX_SCHEDULED) {
+    if (countScheduled(db) > room) {
       const full = await syncNow(db, adapter, now, false);
       return {
         scheduled: result.scheduled + full.scheduled,
@@ -340,7 +362,8 @@ export function cancelAllNotifications(): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Snooze: one-off copies outside the plan, so sync never cancels them.
+// Snooze: one-off copies outside the plan, so sync never cancels them. They are not in the table;
+// the phone's pending list is where sync finds and counts them.
 
 export type SnoozeSource = {
   data: NotificationData;
@@ -354,14 +377,18 @@ export function snoozeIdFor(key: string): string {
   return `${SNOOZE_PREFIX}${key}`;
 }
 
-/** Schedules a copy of a notification `minutes` from now; snoozing again replaces it. */
+/**
+ * Schedules a copy of a notification `minutes` from now; snoozing again replaces it. Then
+ * re-plans, so the latest planned item makes room and the phone stays at or under 60 pending.
+ */
 export function scheduleSnooze(
   source: SnoozeSource,
   minutes: number,
   now: number = Date.now(),
 ): Promise<string> {
-  return serial(() =>
-    getNotificationOS().schedule({
+  return serial(async () => {
+    const adapter = getNotificationOS();
+    const id = await adapter.schedule({
       id: snoozeIdFor(source.data.key),
       fireAt: now + minutes * 60 * 1000,
       title: source.title,
@@ -369,8 +396,15 @@ export function scheduleSnooze(
       categoryId: source.categoryId,
       channelId: source.channelId,
       data: source.data,
-    }),
-  );
+    });
+    try {
+      await syncNow(getDb(), adapter, now, false);
+    } catch (error) {
+      // The snooze is scheduled; the next app open or refresh re-plans.
+      if (__DEV__) console.warn('[notifications] re-plan after snooze failed', error);
+    }
+    return id;
+  });
 }
 
 /** Cancels pending snoozed copies for one entity (a routine completed before the snooze fired). */

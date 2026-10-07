@@ -13,7 +13,14 @@ import { seedProduct, seedRoutine } from '@/features/today/testUtils';
 import { i18n } from '@/i18n';
 
 import { createFakeOS, type FakeOS } from '../fakeOS';
-import { MAX_SCHEDULED, setNotificationOS, sync } from '../scheduler';
+import {
+  MAX_SCHEDULED,
+  isSnoozeId,
+  scheduleSnooze,
+  setNotificationOS,
+  snoozeIdFor,
+  sync,
+} from '../scheduler';
 
 // Wednesday 7 Oct 2026, noon.
 const NOW = new Date(2026, 9, 7, 12, 0).getTime();
@@ -91,6 +98,32 @@ describe('notifications under load (task 041)', () => {
     expect(os.pending.size).toBe(MAX_SCHEDULED);
     expect(os.schedule).not.toHaveBeenCalled();
     expect(os.cancel).not.toHaveBeenCalled();
+  });
+
+  it('keeps planned plus snoozed at most 60, and the snoozes survive a re-plan', async () => {
+    seedBusyPhone();
+    await sync(NOW);
+    const delivered = [...os.pending.values()].slice(0, 10);
+    for (const n of delivered) {
+      await scheduleSnooze(
+        {
+          data: n.data,
+          title: n.title,
+          body: n.body,
+          categoryId: n.categoryId,
+          channelId: n.channelId,
+        },
+        15,
+        NOW,
+      );
+    }
+    const snoozed = [...os.pending.keys()].filter(isSnoozeId);
+    expect(snoozed).toHaveLength(10);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+
+    await sync(NOW, { reconcile: true });
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+    for (const n of delivered) expect(os.pending.has(snoozeIdFor(n.data.key))).toBe(true);
   });
 
   it('tops up as time passes', async () => {

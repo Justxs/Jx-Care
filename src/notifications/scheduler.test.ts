@@ -58,6 +58,23 @@ const row = (id: number, notificationId: string, fireAt: number) => ({
   createdAt: 0,
 });
 
+/** A snoozed copy pending on the phone, as the fake OS holds it. */
+const snoozeCopy = (key: string) => ({
+  id: snoozeIdFor(key),
+  fireAt: NOW + 15 * 60 * 1000,
+  title: 'Snoozed',
+  body: key,
+  channelId: 'routines' as const,
+  data: {
+    url: '/player/5',
+    key,
+    entityType: 'routine' as const,
+    entityId: 5,
+    kind: 'routine' as const,
+    channelId: 'routines' as const,
+  },
+});
+
 let db: Db;
 let os: FakeOS;
 /** What the test planner returns; tests change it between syncs. */
@@ -115,6 +132,15 @@ describe('pure helpers', () => {
     expect(kept.at(-1)!.entityId).toBe(11);
   });
 
+  it('caps at a smaller limit when given one', () => {
+    const items = Array.from({ length: 70 }, (_, i) => item(i + 1, NOW + (i + 1) * HOUR));
+    expect(selectWindow(items, NOW, 55).map((p) => p.entityId)).toEqual(
+      Array.from({ length: 55 }, (_, i) => i + 1),
+    );
+    expect(selectWindow(items, NOW, 0)).toEqual([]);
+    expect(selectWindow(items, NOW, -3)).toEqual([]);
+  });
+
   it('diffs: keeps matches, cancels pending leftovers, drops fired rows', () => {
     const keep = item(1, NOW + HOUR);
     const diff = diffScheduled(
@@ -164,7 +190,8 @@ describe('sync', () => {
     expect(await sync(NOW)).toEqual({ scheduled: 0, cancelled: 0 });
     expect(os.schedule).not.toHaveBeenCalled();
     expect(os.cancel).not.toHaveBeenCalled();
-    expect(os.getAllScheduled).not.toHaveBeenCalled();
+    // Only reads the phone's pending list, for its snoozes.
+    expect(os.getAllScheduled).toHaveBeenCalledTimes(1);
   });
 
   it('cancels and reschedules an item whose time or text changed', async () => {
@@ -347,6 +374,18 @@ describe('syncEntity', () => {
     expect(listScheduled(db)[0]!.entityId).toBe(1);
   });
 
+  it('counts pending snoozes towards the 60 when it falls back', async () => {
+    const others = Array.from({ length: 57 }, (_, i) => item(i + 10, NOW + (i + 2) * HOUR));
+    planned = others;
+    await sync(NOW);
+    for (const k of ['a', 'b', 'c']) os.pending.set(snoozeIdFor(k), snoozeCopy(k));
+    planned = [...others, item(1, NOW + HOUR)];
+    await syncEntity('product', 1, NOW);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+    expect(listScheduled(db)).toHaveLength(MAX_SCHEDULED - 3);
+    expect(listScheduled(db)[0]!.entityId).toBe(1);
+  });
+
   it('handles entities without an id (digest)', async () => {
     const digest = item(0, NOW + HOUR, {
       key: notificationKey('digest', null, 'digest', '2026-10-12'),
@@ -399,6 +438,57 @@ describe('snooze and cancel all', () => {
     expect(await cancelSnoozes('routine', 6)).toBe(0);
     expect(await cancelSnoozes('routine', 5)).toBe(1);
     expect(os.pending.size).toBe(0);
+  });
+
+  it('counts pending snoozes towards the 60: sync plans fewer while they wait', async () => {
+    planned = Array.from({ length: 75 }, (_, i) => item(i + 1, NOW + (i + 1) * HOUR));
+    for (const k of ['a', 'b', 'c']) os.pending.set(snoozeIdFor(k), snoozeCopy(k));
+    await sync(NOW);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+    expect(listScheduled(db)).toHaveLength(MAX_SCHEDULED - 3);
+    expect(listScheduled(db).at(-1)!.entityId).toBe(MAX_SCHEDULED - 3);
+
+    // The snoozes fire and leave the phone: the next sync fills the room again.
+    for (const k of ['a', 'b', 'c']) os.pending.delete(snoozeIdFor(k));
+    await sync(NOW);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+    expect(listScheduled(db)).toHaveLength(MAX_SCHEDULED);
+  });
+
+  it('makes room for each snooze, so many snoozes never push the phone over 60', async () => {
+    planned = Array.from({ length: 75 }, (_, i) => item(i + 1, NOW + (i + 1) * HOUR));
+    await sync(NOW);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+
+    const keys = Array.from({ length: 8 }, (_, i) => `routine:${i}:routine:2026-10-07`);
+    for (const key of keys) {
+      await scheduleSnooze({ ...source, data: { ...source.data, key } }, 15, NOW);
+      expect(os.pending.size).toBeLessThanOrEqual(MAX_SCHEDULED);
+    }
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+    // Every snooze is still pending, and the latest planned items made room for them.
+    for (const key of keys) expect(os.pending.has(snoozeIdFor(key))).toBe(true);
+    expect(listScheduled(db)).toHaveLength(MAX_SCHEDULED - keys.length);
+    expect(listScheduled(db).at(-1)!.entityId).toBe(MAX_SCHEDULED - keys.length);
+
+    // Snoozing the same notification again replaces its copy and takes no more room.
+    await scheduleSnooze({ ...source, data: { ...source.data, key: keys[0]! } }, 30, NOW);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+
+    // A full re-plan with reconcile keeps them all.
+    await sync(NOW, { reconcile: true });
+    for (const key of keys) expect(os.pending.has(snoozeIdFor(key))).toBe(true);
+    expect(os.pending.size).toBe(MAX_SCHEDULED);
+  });
+
+  it('still schedules the snooze when the re-plan after it fails', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    planned = [item(1, NOW + HOUR)];
+    await sync(NOW);
+    os.getPermission.mockRejectedValueOnce(new Error('boom'));
+    await expect(scheduleSnooze(source, 15, NOW)).resolves.toBe(snoozeIdFor(source.data.key));
+    expect(os.pending.has(snoozeIdFor(source.data.key))).toBe(true);
+    warn.mockRestore();
   });
 
   it('cancels everything and empties the table', async () => {
