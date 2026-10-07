@@ -5,6 +5,7 @@ import { getRoutes } from 'expo-router/build/getRoutes';
 import { inMemoryContext } from 'expo-router/build/testing-library/context-stubs';
 
 const appDir = join(__dirname, '../../../app');
+const stub = () => null;
 
 function routeFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -28,7 +29,6 @@ function leafPaths(node: Node, prefix = ''): string[] {
 
 describe('route tree', () => {
   const files = routeFiles(appDir);
-  const stub = () => null;
   const tree = getRoutes(
     inMemoryContext(Object.fromEntries(files.map((f) => [f, stub]))) as never,
     { platform: 'ios', skipGenerated: true, ignoreEntryPoints: true },
