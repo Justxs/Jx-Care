@@ -4,7 +4,9 @@ import type { ReactElement, ReactNode } from 'react';
 
 import { setDb } from '@/db';
 import { createQueryClient } from '@/db/queryClient';
+import { qk } from '@/db/queryKeys';
 import { createTestDb } from '@/db/test-db';
+import { getSettings } from '@/features/settings/repo';
 
 /** A fresh test database and query client, wired up the way the app does it. */
 export function setupTestApp() {
@@ -19,7 +21,11 @@ export function setupTestApp() {
     db,
     client,
     wrapper,
-    render: (ui: ReactElement) => render(ui, { wrapper }),
+    /** Renders like the app does after boot: the settings query is already filled. */
+    render: (ui: ReactElement) => {
+      client.setQueryData(qk.settings, getSettings(db));
+      return render(ui, { wrapper });
+    },
     renderHook: <R,>(hook: () => R) => renderHook(hook, { wrapper }),
   };
 }

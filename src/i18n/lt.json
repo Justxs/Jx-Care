@@ -126,7 +126,30 @@
   "calendar": {},
   "progress": {},
   "condition": {},
-  "settings": {},
+  "settings": {
+    "title": "Nustatymai",
+    "groups": {
+      "careData": "Priežiūros duomenys",
+      "notifications": "Pranešimai",
+      "security": "Saugumas",
+      "preferences": "Nuostatos",
+      "data": "Duomenys",
+      "about": "Apie"
+    },
+    "language": "Kalba",
+    "currency": "Valiuta",
+    "progressPhotos": "Progreso nuotraukos",
+    "never": "Niekada",
+    "resetApp": "Atkurti programėlę",
+    "version": "Versija",
+    "licences": "Licencijos",
+    "resetSoonTitle": "Atkurti programėlę",
+    "resetSoonBody": "Programėlės atkūrimas atsiras kartu su PIN ekranais (18 užduotis). Niekas neištrinta.",
+    "currencyHint": "Visos kainos rodomos šia valiuta.",
+    "languageHint": "Programėlė pasikeičia iš karto.",
+    "progressSoon": "Kampai, plaukų albumas ir nuotraukos gairė atsiras 37 užduotyje.",
+    "licencesIntro": "Jx-Care sukurta naudojant šiuos atvirojo kodo paketus."
+  },
   "notifications": {},
   "errors": {
     "dataTitle": "Jx-Care nepavyko atidaryti duomenų",
@@ -246,6 +269,7 @@
     "player": "Rutina",
     "playerDone": "Rutina atlikta",
     "hairDone": "Plaukų užduotis atlikta",
-    "productEdit": "Redaguoti produktą"
+    "productEdit": "Redaguoti produktą",
+    "licences": "Licencijos"
   }
 }

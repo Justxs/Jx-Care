@@ -120,7 +120,30 @@
   "calendar": {},
   "progress": {},
   "condition": {},
-  "settings": {},
+  "settings": {
+    "title": "Settings",
+    "groups": {
+      "careData": "Care data",
+      "notifications": "Notifications",
+      "security": "Security",
+      "preferences": "Preferences",
+      "data": "Data",
+      "about": "About"
+    },
+    "language": "Language",
+    "currency": "Currency",
+    "progressPhotos": "Progress photos",
+    "never": "Never",
+    "resetApp": "Reset app",
+    "version": "Version",
+    "licences": "Licences",
+    "resetSoonTitle": "Reset app",
+    "resetSoonBody": "Resetting the app arrives with the PIN screens (task 018). Nothing was deleted.",
+    "currencyHint": "Prices everywhere use it.",
+    "languageHint": "Changes the app at once.",
+    "progressSoon": "Angles, the hair album and the photo guide arrive in task 037.",
+    "licencesIntro": "Jx-Care is built with these open-source packages."
+  },
   "notifications": {},
   "errors": {
     "dataTitle": "Jx-Care couldn't open its data",
@@ -230,6 +253,7 @@
     "player": "Routine",
     "playerDone": "Routine done",
     "hairDone": "Hair task done",
-    "productEdit": "Edit product"
+    "productEdit": "Edit product",
+    "licences": "Licences"
   }
 }
