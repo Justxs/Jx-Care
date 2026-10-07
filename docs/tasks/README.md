@@ -55,13 +55,13 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | 015 | [Product detail and archive](015-product-detail-archive.md) | 010, 012 | P2, P5 | done |
 | 016 | [PIN and secure storage service](016-pin-secure-storage.md) | 004 | O2–O4, L1, L2 rules | done |
 | 017 | [Onboarding](017-onboarding.md) | 010, 016 | O1–O5 | done |
-| 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | done |
+| 018 | [Lock screen and forgot PIN](018-lock-forgot-pin.md) | 017 | L1, L2 | todo |
 | 019 | [PIN and security settings](019-security-settings.md) | 011, 018 | S6 | todo |
 | 020 | [Notification service](020-notification-service.md) | 005 | Notifications | done |
 | 021 | [Expiry reminders and the Reminders screen](021-expiry-reminders.md) | 011, 014, 020 | P3 reminder ask, S5 | todo |
 | 022 | [Routines data](022-routines-data.md) | 007, 012 | R1–R3, T2 | done |
 | 023 | [Routines list and templates](023-routines-list-templates.md) | 010, 022 | R1 skin, R2 starter | done |
-| 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | done |
+| 024 | [Routine editor, step editor, product picker](024-routine-editor.md) | 023 | R2, R3, R4 | todo |
 | 025 | [Today](025-today.md) | 010, 012, 022 | T1 | done |
 | 026 | [Routine player](026-routine-player.md) | 022, 025 | T2 | todo |
 | 027 | [Routine reminders](027-routine-reminders.md) | 020, 024, 026 | Notifications, sequence 4 | todo |
