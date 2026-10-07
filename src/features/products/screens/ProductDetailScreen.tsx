@@ -42,7 +42,9 @@ import {
 } from '../api';
 import { IngredientEntrySheet } from '../components/IngredientEntrySheet';
 import { IngredientPills } from '../components/IngredientPills';
+import { NotesTimeline } from '../components/NotesTimeline';
 import { PhotoViewer } from '../components/PhotoViewer';
+import { RatingBlock } from '../components/RatingBlock';
 import { detailBadge, expiryLine, ingredientPills, sizeText, withIngredients } from '../detail';
 import { categoryLabel } from '../statusText';
 import type { ProductDetail, UsedIn } from '../types';
@@ -253,8 +255,8 @@ function Detail({ product: p }: { product: ProductDetail }) {
 
           {p.usedIn.length > 0 ? <UsedInCard items={p.usedIn} /> : null}
 
-          {/* TODO(039): "My rating" (1–5 stars and Would buy again) goes here. */}
-          {/* TODO(039): the notes timeline (dated reaction notes, Add note) goes here. */}
+          <RatingBlock key={p.id} productId={p.id} rating={p.rating} wouldRebuy={p.wouldRebuy} />
+          <NotesTimeline productId={p.id} />
 
           {archived ? (
             <Card title={t('products.detail.costPerDay')}>

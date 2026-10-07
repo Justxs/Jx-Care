@@ -73,6 +73,7 @@ export const qk = {
   notes: {
     all: ['notes'] as const,
     product: (id: number) => ['notes', 'product', id] as const,
+    day: (day: string) => ['notes', 'day', day] as const,
   },
   // Task 020
   notifications: { permission: ['notifications', 'permission'] as const },

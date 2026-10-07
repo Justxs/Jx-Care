@@ -259,6 +259,8 @@ describe('suggestions', () => {
         brand: null,
         area: 'skin',
         reason: { kind: 'expired', day: '2026-10-02' },
+        rating: null,
+        wouldRebuy: null,
       },
       {
         productId: soon,
@@ -266,6 +268,8 @@ describe('suggestions', () => {
         brand: null,
         area: 'skin',
         reason: { kind: 'expiring', day: '2026-10-16', daysLeft: 9 },
+        rating: null,
+        wouldRebuy: null,
       },
       {
         productId: done,
@@ -273,6 +277,8 @@ describe('suggestions', () => {
         brand: null,
         area: 'skin',
         reason: { kind: 'finished', day: '2026-10-02' },
+        rating: null,
+        wouldRebuy: null,
       },
     ]);
   });

@@ -42,6 +42,9 @@ export type Suggestion = {
   brand: string | null;
   area: Area;
   reason: SuggestionReason;
+  /** The product's 1–5 rating and "Would buy again" (never false here), for the row's line. */
+  rating: number | null;
+  wouldRebuy: boolean | null;
 };
 
 /** A product in the P7 Buy again picker: active and finished products alike. */

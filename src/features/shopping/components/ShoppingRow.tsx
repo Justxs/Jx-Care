@@ -6,6 +6,7 @@ import { AreaTag } from '@/components/ui/area-tag';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Text } from '@/components/ui/text';
+import { ratingLine } from '@/features/products/ratingText';
 import { useFormat } from '@/i18n/useFormat';
 import { appDay } from '@/lib/appDay';
 import { cn } from '@/lib/cn';
@@ -47,6 +48,7 @@ export function ShoppingRow({
   ]
     .filter(Boolean)
     .join(' · ');
+  const rated = item.productId !== null ? ratingLine(t, item.rating, item.wouldRebuy) : null;
   const boughtLine =
     item.boughtAt !== null ? t('shopping.boughtOn', { date: f.date(appDay(item.boughtAt)) }) : null;
 
@@ -62,7 +64,7 @@ export function ShoppingRow({
         onLongPress={onLongPress}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: bought }}
-        accessibilityLabel={[item.name, item.brand, meta, item.note, boughtLine]
+        accessibilityLabel={[item.name, item.brand, meta, rated, item.note, boughtLine]
           .filter(Boolean)
           .join(', ')}
         accessibilityActions={actions.map((a) => ({ name: a.key, label: a.label }))}
@@ -86,6 +88,7 @@ export function ShoppingRow({
           </Text>
           {item.brand ? <Text className="text-caption text-ink-muted">{item.brand}</Text> : null}
           {meta ? <Text className="text-caption tabular-nums text-ink-muted">{meta}</Text> : null}
+          {rated ? <Text className="text-caption tabular-nums text-ink-muted">{rated}</Text> : null}
           {item.note ? <Text className="text-caption text-ink">{item.note}</Text> : null}
           {boughtLine ? <Text className="text-caption text-ink-muted">{boughtLine}</Text> : null}
         </View>

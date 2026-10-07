@@ -474,6 +474,39 @@
       "restoredToast": "{{name}} restored to Products",
       "deleteTitle": "Delete {{name}}?",
       "deleteBody": "Its notes and dates are deleted for good. This can't be undone."
+    },
+    "rating": {
+      "title": "My rating",
+      "stars": "My rating",
+      "wouldRebuy": "Would buy again",
+      "yes": "Yes",
+      "no": "No",
+      "starsLine_one": "{{count}} star",
+      "starsLine_other": "{{count}} stars",
+      "rebuyYes": "would buy again",
+      "rebuyNo": "would not buy again",
+      "rebuyYesAlone": "Would buy again",
+      "rebuyNoAlone": "Would not buy again"
+    },
+    "notes": {
+      "title": "My notes",
+      "add": "Add note",
+      "empty": "Note how your skin or hair reacts to it.",
+      "editTitle": "Edit note",
+      "date": "Date",
+      "text": "Note",
+      "placeholder": "Small breakout on chin",
+      "counter": "{{used}}/{{max}}",
+      "tags": "Tags",
+      "deleteTitle": "Delete this note?",
+      "deleteBody": "The note from {{date}} is deleted for good. This can't be undone.",
+      "dayTitle": "Product notes",
+      "openProduct": "{{name}}, open product",
+      "errors": {
+        "required": "Write a note.",
+        "long": "Keep the note under 280 characters.",
+        "future": "The date can't be after today."
+      }
     }
   },
   "shopping": {

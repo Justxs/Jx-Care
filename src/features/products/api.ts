@@ -138,6 +138,8 @@ function invalidate(client: QueryClient, opts: { ingredients?: boolean } = {}): 
   client.invalidateQueries({ queryKey: ['today'] });
   // Shopping rows show the product's price and size; Suggested lists finished and expiring ones.
   client.invalidateQueries({ queryKey: qk.shopping.all });
+  // Day detail lists notes with their product's name; deleting a product deletes its notes.
+  client.invalidateQueries({ queryKey: qk.notes.all });
   if (opts.ingredients) {
     client.invalidateQueries({ queryKey: qk.ingredients.all });
     client.invalidateQueries({ queryKey: qk.conflicts.all });

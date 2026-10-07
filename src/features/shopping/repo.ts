@@ -243,7 +243,14 @@ export function suggestions(db: Db, today: string, warnDays: number): Suggestion
 
   for (const p of db.select().from(product).all()) {
     if (listed.has(p.id) || dismissed.has(p.id) || p.wouldRebuy === false) continue;
-    const base = { productId: p.id, name: p.name, brand: p.brand, area: p.area };
+    const base = {
+      productId: p.id,
+      name: p.name,
+      brand: p.brand,
+      area: p.area,
+      rating: p.rating,
+      wouldRebuy: p.wouldRebuy,
+    };
     if (p.archivedAt) {
       if (p.archivedAt >= finishedSince) {
         finished.push({

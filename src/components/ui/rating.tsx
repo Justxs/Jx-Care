@@ -13,6 +13,8 @@ export type RatingProps = {
   /** Stars for products, numbered pills for daily condition. */
   kind?: 'stars' | 'scale';
   accessibilityLabel?: string;
+  /** Tapping the selected value again clears it (`onValueChange(0)`). */
+  clearable?: boolean;
   disabled?: boolean;
   className?: string;
 };
@@ -24,6 +26,7 @@ export function Rating({
   max = 5,
   kind = 'stars',
   accessibilityLabel,
+  clearable,
   disabled,
   className,
 }: RatingProps) {
@@ -37,6 +40,7 @@ export function Rating({
       value={value > 0 ? String(value) : undefined}
       onValueChange={(v) => {
         if (v) onValueChange?.(Number(v));
+        else if (clearable) onValueChange?.(0);
       }}
       disabled={disabled || !onValueChange}
       accessibilityRole="radiogroup"

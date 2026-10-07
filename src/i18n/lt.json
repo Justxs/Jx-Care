@@ -512,6 +512,41 @@
       "restoredToast": "„{{name}}“ grąžintas į produktus",
       "deleteTitle": "Ištrinti „{{name}}“?",
       "deleteBody": "Jo pastabos ir datos bus ištrintos visam laikui. Šio veiksmo atšaukti negalima."
+    },
+    "rating": {
+      "title": "Mano įvertinimas",
+      "stars": "Mano įvertinimas",
+      "wouldRebuy": "Pirkčiau dar kartą",
+      "yes": "Taip",
+      "no": "Ne",
+      "starsLine_one": "{{count}} žvaigždutė",
+      "starsLine_few": "{{count}} žvaigždutės",
+      "starsLine_many": "{{count}} žvaigždutės",
+      "starsLine_other": "{{count}} žvaigždučių",
+      "rebuyYes": "pirkčiau dar kartą",
+      "rebuyNo": "nepirkčiau dar kartą",
+      "rebuyYesAlone": "Pirkčiau dar kartą",
+      "rebuyNoAlone": "Nepirkčiau dar kartą"
+    },
+    "notes": {
+      "title": "Mano pastabos",
+      "add": "Pridėti pastabą",
+      "empty": "Užsirašykite, kaip oda ar plaukai į jį reaguoja.",
+      "editTitle": "Redaguoti pastabą",
+      "date": "Data",
+      "text": "Pastaba",
+      "placeholder": "Keli spuogeliai ant smakro",
+      "counter": "{{used}}/{{max}}",
+      "tags": "Žymos",
+      "deleteTitle": "Ištrinti šią pastabą?",
+      "deleteBody": "{{date}} pastaba bus ištrinta visam laikui. To atšaukti negalėsite.",
+      "dayTitle": "Produktų pastabos",
+      "openProduct": "{{name}}, atidaryti produktą",
+      "errors": {
+        "required": "Parašykite pastabą.",
+        "long": "Pastaba turi būti trumpesnė nei 280 simbolių.",
+        "future": "Data negali būti vėlesnė nei šiandien."
+      }
     }
   },
   "shopping": {

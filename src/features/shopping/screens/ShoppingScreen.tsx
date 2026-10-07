@@ -17,6 +17,7 @@ import { Sheet } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { getDb } from '@/db';
+import { ratingLine } from '@/features/products/ratingText';
 import type { ShoppingItem } from '@/db/schema';
 import { useFormat } from '@/i18n/useFormat';
 import { cn } from '@/lib/cn';
@@ -379,6 +380,7 @@ function SuggestionRow({ item }: { item: Suggestion }) {
       : item.reason.kind === 'expired'
         ? t('shopping.expiredOn', { date: f.date(item.reason.day) })
         : f.relativeExpiry(item.reason.daysLeft);
+  const rated = ratingLine(t, item.rating, item.wouldRebuy);
   return (
     <View
       testID={`suggestion-${item.productId}`}
@@ -387,7 +389,7 @@ function SuggestionRow({ item }: { item: Suggestion }) {
       <View
         className="flex-1 gap-0.5"
         accessible
-        accessibilityLabel={[item.name, item.brand, why].filter(Boolean).join(', ')}
+        accessibilityLabel={[item.name, item.brand, why, rated].filter(Boolean).join(', ')}
       >
         <Text className="text-body-strong">{item.name}</Text>
         <Text
@@ -398,6 +400,7 @@ function SuggestionRow({ item }: { item: Suggestion }) {
         >
           {item.brand ? `${item.brand} · ${why}` : why}
         </Text>
+        {rated ? <Text className="text-caption tabular-nums text-ink-muted">{rated}</Text> : null}
       </View>
       {buyAgain ? (
         <RoundButton

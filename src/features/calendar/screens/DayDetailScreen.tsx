@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { ScreenHeader } from '@/components/ui/screen-header';
 import { ConditionDaySection } from '@/features/condition/components/ConditionDaySection';
 import { useFormat } from '@/i18n/useFormat';
+import { DayNotesSection } from '@/features/products/components/DayNotesSection';
 import { isValidDay } from '@/lib/appDay';
 
 import { SkinDaySection } from '../components/SkinDaySection';
@@ -39,7 +40,8 @@ export function DayDetailScreen() {
         )}
         {/* Task 033: hair tasks done. */}
         {day ? <ConditionDaySection day={day} /> : null}
-        {/* Task 039: product notes. Task 037: the weekly photo thumbnail. */}
+        {day ? <DayNotesSection day={day} /> : null}
+        {/* Task 037: the weekly photo thumbnail. */}
       </ScrollView>
     </SafeAreaView>
   );
