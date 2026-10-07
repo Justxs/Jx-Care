@@ -137,15 +137,19 @@ function AddProduct({
   fromShoppingItem?: number;
 }) {
   const today = useSelector(appStore, (s) => s.activeDay);
-  const initial = useMemo(() => newProductValues(today, prefill), [today, prefill]);
-  return <ProductForm mode="add" initial={initial} fromShoppingItem={fromShoppingItem} />;
+  return (
+    <ProductForm
+      mode="add"
+      initial={newProductValues(today, prefill)}
+      fromShoppingItem={fromShoppingItem}
+    />
+  );
 }
 
 function EditProduct({ id }: { id: number }) {
   const { t } = useTranslation();
   const product = useProduct(id);
-  const initial = useMemo(() => (product.data ? toFormValues(product.data) : null), [product.data]);
-  if (!initial) {
+  if (!product.data) {
     return (
       <SafeAreaView edges={['top']} className="flex-1 bg-canvas">
         <ScreenHeader title={t('products.form.editTitle')} onBack={() => router.back()} close />
@@ -158,7 +162,7 @@ function EditProduct({ id }: { id: number }) {
       </SafeAreaView>
     );
   }
-  return <ProductForm mode="edit" productId={id} initial={initial} />;
+  return <ProductForm mode="edit" productId={id} initial={toFormValues(product.data)} />;
 }
 
 /** Gives a custom field its error the same way the built-in fields do. */
@@ -207,6 +211,9 @@ function ProductForm({
   const [ingredientsKey, setIngredientsKey] = useState(0);
   const [ingredientsOpen, setIngredientsOpen] = useState(false);
   const [pending, setPending] = useState<ProductInput | null>(null);
+  // The form's defaults live here: TanStack Form re-applies `defaultValues` on every render, so
+  // "Save and add another" must change them too or a prefilled form would fill itself again.
+  const [defaults, setDefaults] = useState(initial);
 
   const avoidedLines = (lines: readonly string[]) => [
     ...new Set(
@@ -240,7 +247,9 @@ function ProductForm({
     onProductSaved({ id, name: value.name }, { isFirstWithExpiry });
     productAddedForPick({ id, area: value.area });
     if (afterSave.current === 'another') {
-      form.reset(newProductValues(today));
+      const next = newProductValues(today);
+      setDefaults(next);
+      form.reset(next);
       setMoreOpen(false);
       scroll.current?.scrollTo({ y: 0, animated: true });
     } else {
@@ -251,7 +260,7 @@ function ProductForm({
 
   const form = useAppForm({
     schema,
-    defaultValues: initial,
+    defaultValues: defaults,
     onSubmit: async (value) => {
       if (avoidedLines(value.ingredients).length > 0) {
         setPending(value);

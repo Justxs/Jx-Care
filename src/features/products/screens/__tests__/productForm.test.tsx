@@ -227,6 +227,23 @@ describe('Add product from a bought shopping item', () => {
     expect(saved?.ingredients.map((i) => i.name)).toEqual(['Aqua']);
     expect(listShopping(app.db).bought[0]).toMatchObject({ productId: 2, needsProduct: false });
   });
+
+  it('continues with a cleared form after Save and add another', async () => {
+    const app = setup();
+    const item = addBuyAgain(app.db, createProduct(app.db, input({ name: 'Body lotion' })))!.id;
+    setBought(app.db, item, Date.now());
+    mockParams.current = {
+      prefill: JSON.stringify(prefillFromItem(app.db, item, TODAY)),
+      fromShoppingItem: String(item),
+    };
+    await app.show();
+    expect(await screen.findByDisplayValue('Body lotion')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Save and add another' }));
+    await flush();
+
+    expect(getProduct(app.db, 2, TODAY, 30)?.name).toBe('Body lotion');
+    expect(screen.getByLabelText('Name')).toHaveProp('value', '');
+  });
 });
 
 describe('Edit product (full form)', () => {
