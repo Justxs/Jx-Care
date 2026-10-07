@@ -56,4 +56,24 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Expiry context in reads.** `listRoutines`, `getRoutine`, `getTodayRoutines` and `recentStepProducts` also take the app day and `warnDays` (like the products repo), so every step product carries its expiry `status`, `effectiveExpiry` and `daysLeft`. The hooks pass `appStore.activeDay` and the settings' warning window, and both are part of the query keys.
+- **Step product problem.** Each step product has `problem: 'finished' | 'expired' | null`; finished (archived) wins over expired (refinement 11). Steps with no product have `product: null`.
+- **Routine created day** is `appDay(createdAt)`, so days before a routine existed never count (README decision).
+- **saveRoutine.** A step id that doesn't belong to the routine is inserted as a new step, never moved. Steps whose values didn't change are not updated, so `routine_step.updatedAt` means "last changed" and drives the picker's Recent group. `active` is optional in the input: new routines start active, edits keep the switch.
+- **Day snapshot.** The first tick of a day saves the `dueStepIds` passed in; later routine edits never change it. Steps deleted since the snapshot are dropped from it (when reading, and saved on the next tick) so a deleted step can never block a day. A step added after the day's first tick doesn't count that day. Unticking a day with no log does nothing; unticking every step keeps the log row with no ticks.
+- **Bulk ticks.** `tickSteps(db, routineId, stepIds, …)` ticks or unticks several steps in one transaction (All done and its Undo, tasks 025 and 026); `tickStep` is the one-step form. `useTickStep` takes `{ routineId, stepIds, day, done, dueStepIds }` and updates both the Today and player caches at once; `applyTickToRoutine` and `applyTickToGroups` are the pure optimistic updates.
+- **Today groups.** Each group adds `timeOfDay`, `customName`, `started` (anything ticked) and `complete` (either A/B option complete). `chosenId` is the routine already ticked when there is one, otherwise the weekday's remembered pick, otherwise the first option, so the choice is fixed after the first tick.
+- **Player data.** `getRoutineDay(db, id, day, warnDays)` and `useRoutineDay(id)` (key `qk.routines.player`) give one routine on a day with its due steps, progress and log, for task 026.
+- **Recent products.** `recentStepProducts(db, area, today, warnDays, limit = 5)`: skin reads routine steps, hair reads hair tasks, both by `updatedAt`; only active (not finished) products of that area or "both". They come back as `PickerProduct` with expiry fields so the picker can still put an expired one in "Can't be picked".
+- **Used in.** `routinesUsingProduct` is registered with `addUsedInSource` when `routines/repo.ts` loads; `app/_layout.tsx` imports that module once so product detail always lists routines. `routineCountByProduct` counts distinct routines.
+- **Duplicate.** `duplicateRoutine(db, id, makeName)` takes a function so the hook can translate `routines.copyName` ("{{name}} (copy)"). The copy keeps the days and active state; the reminder is off.
+- **Templates.** `buildFromTemplate` treats "both" products as skin, skips finished and (when `status` is given) expired products, and picks the newest by `createdAt`. Templates have a `nameKey` for the starter list ("Basics") and a `routineNameKey` for the pre-filled routine name ("Morning basics"); Start empty pre-fills "Morning" or "Evening". `draftFromTemplate(built, t)` turns a built template into editor values.
+- **Schema.** Morning and evening always get `sortTime` 07:00 and 21:00 (only Custom has a time field, spec R2); custom name max 30; step note max 100; `everyNDays` accepts the typed text or a number; fields of the schedules not chosen are cleared; days are sorted and de-duplicated. Error messages are `routines.errors.*` keys in both languages.
+- **Invalidation.** Mutations invalidate `qk.routines.all`, every `today` key and `qk.calendar.all` (routine changes can touch any day); saves, duplicates, deletes and product swaps also invalidate `qk.products.all` because product detail shows "Used in". `useSkinStreak` uses `[...qk.calendar.streaks, 'skin', day]`.
+- `onRoutineChanged(id)` (no-op, in `api.ts`) runs after save, active switch, duplicate (new id), delete and product swap.
+
+Check on a real device:
+
+- The step checkbox fills within 150 ms of a tap (optimistic tick) in a release build.
+- Product detail lists routines under "Used in" on a cold start, before the Routines tab was opened.
+- A native Lithuanian read of the new `routines.templates.*` and `routines.errors.*` strings.

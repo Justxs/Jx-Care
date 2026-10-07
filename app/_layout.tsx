@@ -1,7 +1,8 @@
 import '../global.css';
 import '@/i18n';
-// Registers hair tasks as a product "Used in" source before any product detail opens.
+// Register the routines and hair sources of product detail's "Used in" list before it opens.
 import '@/features/hair/repo';
+import '@/features/routines/repo';
 
 import {
   Figtree_400Regular,

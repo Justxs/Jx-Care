@@ -302,7 +302,48 @@
     }
   },
   "shopping": {},
-  "routines": {},
+  "routines": {
+    "copyName": "{{name}} (kopija)",
+    "errors": {
+      "nameRequired": "Įveskite pavadinimą.",
+      "nameLong": "Pavadinimas turi būti trumpesnis nei 60 simbolių.",
+      "timeOfDayRequired": "Pasirinkite paros metą.",
+      "customNameRequired": "Pavadinkite šį paros metą.",
+      "customNameLong": "Pavadinimas turi būti trumpesnis nei 30 simbolių.",
+      "customTime": "Pasirinkite laiką.",
+      "days": "Pasirinkite bent vieną dieną.",
+      "steps": "Pridėkite bent vieną žingsnį.",
+      "reminderTime": "Pasirinkite priminimo laiką.",
+      "noteLong": "Pastaba turi būti trumpesnė nei 100 simbolių.",
+      "stepDays": "Pasirinkite bent vieną dieną.",
+      "stepDaysOutside": "Rinkitės tik tas dienas, kai atliekama rutina.",
+      "everyNDays": "Įveskite nuo 2 iki 60 dienų.",
+      "startDate": "Pasirinkite pradžios datą.",
+      "waitSeconds": "Pasirinkite laukimo laiką."
+    },
+    "templates": {
+      "basics": "Pagrindai",
+      "light": "Lengva",
+      "treatment": "Priežiūra",
+      "empty": "Pradėti tuščią",
+      "rinseNote": "Nuplaukite vandeniu",
+      "routineName": {
+        "morningBasics": "Rytiniai pagrindai",
+        "morningLight": "Lengvas rytas",
+        "eveningTreatment": "Vakarinė priežiūra",
+        "eveningBasics": "Vakariniai pagrindai",
+        "morning": "Rytas",
+        "evening": "Vakaras"
+      },
+      "steps": {
+        "cleanser": "Prausiklis",
+        "serum": "Serumas",
+        "moisturiser": "Drėkiklis",
+        "spf": "SPF",
+        "rinse": "Nuplovimas"
+      }
+    }
+  },
   "hair": {
     "defaultNames": {
       "wash": "Plovimas",

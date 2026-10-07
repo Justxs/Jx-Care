@@ -278,7 +278,48 @@
     }
   },
   "shopping": {},
-  "routines": {},
+  "routines": {
+    "copyName": "{{name}} (copy)",
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "nameLong": "Keep the name under 60 characters.",
+      "timeOfDayRequired": "Choose a time of day.",
+      "customNameRequired": "Name this time of day.",
+      "customNameLong": "Keep the name under 30 characters.",
+      "customTime": "Choose a time.",
+      "days": "Choose at least one day.",
+      "steps": "Add at least one step.",
+      "reminderTime": "Choose a reminder time.",
+      "noteLong": "Keep the note under 100 characters.",
+      "stepDays": "Choose at least one day.",
+      "stepDaysOutside": "Pick only days the routine runs on.",
+      "everyNDays": "Enter between 2 and 60 days.",
+      "startDate": "Choose a start date.",
+      "waitSeconds": "Choose a wait time."
+    },
+    "templates": {
+      "basics": "Basics",
+      "light": "Light",
+      "treatment": "Treatment",
+      "empty": "Start empty",
+      "rinseNote": "Rinse with water",
+      "routineName": {
+        "morningBasics": "Morning basics",
+        "morningLight": "Light morning",
+        "eveningTreatment": "Evening treatment",
+        "eveningBasics": "Evening basics",
+        "morning": "Morning",
+        "evening": "Evening"
+      },
+      "steps": {
+        "cleanser": "Cleanser",
+        "serum": "Serum",
+        "moisturiser": "Moisturiser",
+        "spf": "SPF",
+        "rinse": "Rinse"
+      }
+    }
+  },
   "hair": {
     "defaultNames": {
       "wash": "Wash",
