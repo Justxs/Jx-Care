@@ -65,6 +65,14 @@
           "icon": "./assets/images/notification-icon.png",
           "color": "#B83A6E"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Jx-Care uses the camera for your weekly progress photos. They stay in the app.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
       ]
     ],
     "experiments": {
