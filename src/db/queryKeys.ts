@@ -22,7 +22,6 @@ export const qk = {
     all: ['ingredients'] as const,
     list: ['ingredients', 'list'] as const,
     groups: ['ingredients', 'groups'] as const,
-    detail: (id: number) => ['ingredients', 'detail', id] as const,
   },
   conflicts: {
     all: ['conflicts'] as const,
