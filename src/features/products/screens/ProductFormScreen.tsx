@@ -54,6 +54,7 @@ import { onProductSaved } from '../events';
 import { productAddedForPick } from '../pickReturn';
 import type { AvoidContext } from '../repo';
 import {
+  decimalText,
   emptyProductForm,
   productSchema,
   type ProductFormValues,
@@ -116,7 +117,7 @@ function toFormValues(p: ProductDetail): ProductFormValues {
     brand: p.brand ?? '',
     area: p.area,
     category: p.category,
-    size: p.size == null ? '' : String(p.size).replace('.', ','),
+    size: p.size == null ? '' : decimalText(p.size),
     unit: p.unit,
     price: p.priceCents == null ? '' : (p.priceCents / 100).toFixed(2).replace('.', ','),
     purchasedAt: p.purchasedAt,

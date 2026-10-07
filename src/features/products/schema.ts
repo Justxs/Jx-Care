@@ -20,6 +20,11 @@ export function parseDecimal(text: string): number | null {
   return /^\d*\.?\d+$|^\d+\.$/.test(v) ? Number(v) : Number.NaN;
 }
 
+/** A stored decimal as the form shows it: 12.5 → "12,5". */
+export function decimalText(n: number): string {
+  return String(n).replace('.', ',');
+}
+
 const optionalText = (max: number, key: string) =>
   z
     .string()

@@ -6,12 +6,12 @@ import { AreaTag } from '@/components/ui/area-tag';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Text } from '@/components/ui/text';
+import { sizeText } from '@/features/products/detail';
 import { ratingLine } from '@/features/products/ratingText';
 import { useFormat } from '@/i18n/useFormat';
 import { appDay } from '@/lib/appDay';
 import { cn } from '@/lib/cn';
 
-import { formatSize } from '../repo';
 import type { ShoppingRowItem } from '../types';
 
 export type ShoppingRowAction = { key: string; label: string; onPress: () => void };
@@ -38,14 +38,11 @@ export function ShoppingRow({
   onMoveToBuy,
   onAddProduct,
 }: ShoppingRowProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const f = useFormat();
   const bought = item.boughtAt !== null;
 
-  const meta = [
-    item.priceCents !== null ? f.money(item.priceCents) : null,
-    item.size !== null ? formatSize(item.size, item.unit, t, i18n.language) : null,
-  ]
+  const meta = [item.priceCents !== null ? f.money(item.priceCents) : null, sizeText(item, f, t)]
     .filter(Boolean)
     .join(' · ');
   const rated = item.productId !== null ? ratingLine(t, item.rating, item.wouldRebuy) : null;

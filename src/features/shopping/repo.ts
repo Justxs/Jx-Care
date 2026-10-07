@@ -1,4 +1,5 @@
 import { and, asc, count, eq, inArray, isNotNull, isNull, lt } from 'drizzle-orm';
+import type { TFunction } from 'i18next';
 
 import type { Db } from '@/db';
 import type { ShoppingList } from '@/db/enums';
@@ -7,8 +8,10 @@ import type { ShoppingItem } from '@/db/schema';
 import { addDays } from '@/lib/appDay';
 import { daysLeft, effectiveExpiry, expiryStatus } from '@/lib/expiry';
 import { normalizeName } from '@/lib/text';
+import { sizeText } from '@/features/products/detail';
 import { productIngredients } from '@/features/products/repo';
-import type { ProductFormValues } from '@/features/products/schema';
+import { decimalText, type ProductFormValues } from '@/features/products/schema';
+import type { Formatter } from '@/i18n/useFormat';
 
 import type {
   NewShoppingItemInput,
@@ -296,10 +299,6 @@ export function toBuyCount(db: Db): number {
   );
 }
 
-function sizeText(size: number): string {
-  return String(size).replace('.', ',');
-}
-
 /**
  * Add product values for a bought item (P3 short form `prefill`): name, brand, category, area,
  * size, unit and ingredients from the item and its product, purchase date today; expiry and
@@ -333,38 +332,20 @@ export function prefillFromItem(
   const area = p?.area ?? item.area;
   if (area) values.area = area;
   if (p?.size != null) {
-    values.size = sizeText(p.size);
+    values.size = decimalText(p.size);
     values.unit = p.unit ?? 'ml';
   }
   return values;
 }
 
-/** i18n `t` as the repository needs it. */
-export type Translate = (key: string, options?: Record<string, unknown>) => string;
-
-/** "400 ml" in the list's language ("12,5 ml" in LT). */
-export function formatSize(
-  size: number,
-  unit: string | null,
-  t: Translate,
-  locale?: string,
-): string {
-  let n: string;
-  try {
-    n = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(size);
-  } catch {
-    n = String(size);
-  }
-  return unit ? `${n} ${t(`products.detail.units.${unit}`)}` : n;
-}
-
 /** The list as plain text for the share sheet, grouped by To buy and Want to try. */
-export function shareText(db: Db, t: Translate, locale?: string): string {
+export function shareText(db: Db, t: TFunction, f: Formatter): string {
   const { toBuy, wantToTry } = listShopping(db, 'all');
   const line = (i: ShoppingRowItem) => {
     let text = `• ${i.name}`;
     if (i.brand) text += ` (${i.brand})`;
-    if (i.size != null) text += `, ${formatSize(i.size, i.unit, t, locale)}`;
+    const size = sizeText(i, f, t);
+    if (size) text += `, ${size}`;
     if (i.note) text += `\n  ${i.note}`;
     return text;
   };

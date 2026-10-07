@@ -45,11 +45,12 @@ import { setShoppingArea, setSuggestionsOpen, shoppingViewStore } from '../viewS
 
 /** Header word Share on the Shopping segment: the list as plain text in the share sheet. */
 export function ShoppingShareButton() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const f = useFormat();
   const all = useShoppingList('all').data;
   const empty = !all || all.toBuy.length + all.wantToTry.length === 0;
   const share = () => {
-    const message = shareText(getDb(), (key, opts) => t(key, opts), i18n.language);
+    const message = shareText(getDb(), t, f);
     Share.share({ message, title: t('shopping.title') }).catch(() => {});
   };
   return (
