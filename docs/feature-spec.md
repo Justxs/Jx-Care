@@ -143,7 +143,7 @@ Every default rule is backed by a published source; pairings that are popular on
 | Hydroquinone × benzoyl peroxide | Together they can stain the skin for a while | [Hydroquinone topical drug information](https://www.drugs.com/mtm/hydroquinone-topical.html): "together with benzoyl peroxide, hydrogen peroxide, or other peroxide products may stain your skin" |
 | Hydroquinone × hydrogen peroxide | Same | Same |
 
-The one group is Prescription retinoids (tretinoin, adapalene): only the retinoids whose labels carry that caution. Adapalene × benzoyl peroxide is not a conflict, since adapalene stays stable with it and the two are sold together as an approved combination. Group names and notes are translated when they are added; ingredient names are INCI names in both languages. The sources are also listed next to the rules in `src/features/conflicts/commonRules.ts`.
+The one group is Prescription retinoids (tretinoin, adapalene): only the retinoids whose labels carry that caution. Adapalene × benzoyl peroxide is not a conflict, since adapalene stays stable with it and the two are sold together as an approved combination. Group names and notes are translated when they are added; ingredient names are INCI names in both languages. The evidence for each rule, and why other popular pairs are left out, is in [ingredient-conflicts.md](ingredient-conflicts.md); the sources are also listed next to the rules in `src/features/conflicts/commonRules.ts`.
 
 ## Navigation map
 

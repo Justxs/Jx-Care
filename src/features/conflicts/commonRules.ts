@@ -5,8 +5,8 @@
  * translated when they are created (see `commonRuleLabels`), after which they are the person's
  * own to edit or delete.
  *
- * Every rule is backed by a published source (`sources`): an FDA drug label, the FDA acne
- * monograph or a stability study. Popular pairings without such evidence (vitamin C with acids,
+ * Every rule is backed by a published source (`sources`, and docs/ingredient-conflicts.md): an
+ * FDA drug label, the FDA acne monograph or a stability study. Popular pairings without such evidence (vitamin C with acids,
  * copper peptides with vitamin C, retinol with AHAs, niacinamide with vitamin C) are not defaults;
  * people can still add them as their own rules. Adapalene with benzoyl peroxide is not a conflict:
  * adapalene stays stable with it, and the two are sold together as an approved combination.
