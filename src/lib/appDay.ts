@@ -1,5 +1,5 @@
 /**
- * App days. A calendar day in Jx-Care is a 'YYYY-MM-DD' string and ends at 04:00, not midnight
+ * App days. A calendar day in Jx Care is a 'YYYY-MM-DD' string and ends at 04:00, not midnight
  * (spec refinement 1), so an evening routine finished at 00:30 counts for the evening before.
  * Day maths works on the strings through UTC dates, so time zones and DST never shift a day.
  */

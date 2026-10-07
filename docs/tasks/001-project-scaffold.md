@@ -11,9 +11,9 @@ An Expo SDK 57 app with TypeScript, Expo Router, linting, formatting and Jest, s
 In:
 
 - Create the Expo project **in the repository root** (the repo already has `assets/`, `docs/`, `DESIGN.md`, `PRODUCT.md`, `README.md`, `LICENSE`; keep them). The simplest way: run `npx create-expo-app@latest jx-care-tmp --template blank-typescript` in a temporary folder, then move its files into the repo root, without overwriting `assets/` or the docs.
-- Expo Router: `npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar`, `"main": "expo-router/entry"` in package.json, an `app/_layout.tsx` with a `Stack` and an `app/index.tsx` placeholder that says "Jx-Care".
+- Expo Router: `npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar`, `"main": "expo-router/entry"` in package.json, an `app/_layout.tsx` with a `Stack` and an `app/index.tsx` placeholder that says "Jx Care".
 - `app.json`:
-  - `name` "Jx-Care", `slug` "jx-care", `scheme` "jxcare", `orientation` "portrait", `userInterfaceStyle` "automatic", `newArchEnabled` true (the default on SDK 57).
+  - `name` "Jx Care", `slug` "jx-care", `scheme` "jxcare", `orientation` "portrait", `userInterfaceStyle` "automatic", `newArchEnabled` true (the default on SDK 57).
   - `ios.bundleIdentifier` and `android.package` both `eu.jxcare.app`; `ios.supportsTablet` false.
   - Icons and splash exactly as in [docs/brand.md](../brand.md) (`assets/images/icon.png`, `adaptive-icon.png` with background `#d94f87`, `splash-icon.png`, `favicon.png`). Splash background `#F8F4F5` (the light `canvas` token) and, under `dark`, `#141112`.
   - `plugins`: `expo-router`, `expo-splash-screen` (config above). Later tasks add their own plugins.

@@ -69,7 +69,7 @@ Out:
 
 ### Check on a real device
 
-- Take a progress photo (once 036 has the camera, or by calling `progressFiles.savePhoto` from a dev screen) and confirm it does not appear in Photos (iOS) or Google Photos / Gallery (Android), and that no "Jx-Care" album is created.
+- Take a progress photo (once 036 has the camera, or by calling `progressFiles.savePhoto` from a dev screen) and confirm it does not appear in Photos (iOS) or Google Photos / Gallery (Android), and that no "Jx Care" album is created.
 - The saved file is 1200 × 1600 and upright for front-camera and back-camera photos (EXIF rotation is applied by expo-image-manipulator) and for a landscape shot (centre-cropped).
 - Delete a week and confirm `progress/skin/<week>/` is gone (S8 storage size drops).
 - `listAllPhotoFiles()` and `totalPhotoBytes()` match what is on disk.

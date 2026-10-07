@@ -40,17 +40,17 @@ describe('biometrics', () => {
 
   it('never offers the phone passcode and returns false on cancel or error', async () => {
     mocked.authenticateAsync.mockResolvedValue({ success: true });
-    expect(await authenticate('Unlock Jx-Care')).toBe(true);
+    expect(await authenticate('Unlock Jx Care')).toBe(true);
     expect(mocked.authenticateAsync).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        promptMessage: 'Unlock Jx-Care',
+        promptMessage: 'Unlock Jx Care',
         disableDeviceFallback: true,
         cancelLabel: expect.any(String),
       }),
     );
     mocked.authenticateAsync.mockResolvedValue({ success: false, error: 'user_cancel' });
-    expect(await authenticate('Unlock Jx-Care')).toBe(false);
+    expect(await authenticate('Unlock Jx Care')).toBe(false);
     mocked.authenticateAsync.mockRejectedValue(new Error('boom'));
-    expect(await authenticate('Unlock Jx-Care')).toBe(false);
+    expect(await authenticate('Unlock Jx Care')).toBe(false);
   });
 });

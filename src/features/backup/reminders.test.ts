@@ -54,7 +54,7 @@ describe('planBackupReminder', () => {
     expect(item).toMatchObject({
       entityType: 'backup',
       kind: 'backup',
-      title: 'Back up your Jx-Care data',
+      title: 'Back up your Jx Care data',
       channelId: 'digest',
       data: { url: BACKUP_URL },
     });
@@ -86,7 +86,7 @@ describe('planBackupReminder', () => {
   it('is written in the app language', async () => {
     setup({ language: 'lt', lastBackupAt: at(2026, 9, 20) });
     await setI18nLanguage('lt');
-    expect(plan()[0]!.title).toBe('Pasidarykite Jx-Care duomenų atsarginę kopiją');
+    expect(plan()[0]!.title).toBe('Pasidarykite Jx Care duomenų atsarginę kopiją');
   });
 });
 

@@ -157,7 +157,7 @@ describe('TodayScreen routine cards', () => {
     await renderToday(app);
 
     expect(
-      screen.getByText('Pick one for tonight; Jx-Care remembers it for Mondays.'),
+      screen.getByText('Pick one for tonight; Jx Care remembers it for Mondays.'),
     ).toBeTruthy();
     const chipB = screen.getByRole('button', { name: 'Evening B' });
     await fireEvent.press(chipB);
@@ -284,7 +284,7 @@ describe('TodayScreen routine cards', () => {
     await app.render(<TodayScreen />);
     expect(screen.getByText('Pirmadienis, 2026-10-05')).toBeTruthy();
     expect(
-      screen.getByText('Pasirinkite vieną šiam vakarui; Jx-Care tai įsimins pirmadieniais.'),
+      screen.getByText('Pasirinkite vieną šiam vakarui; Jx Care tai įsimins pirmadieniais.'),
     ).toBeTruthy();
     expect(screen.getByText('Be priminimo · 2 žingsniai')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Viskas atlikta' })).toBeTruthy();
@@ -296,7 +296,7 @@ describe('TodayScreen first run', () => {
     const app = setup(MON);
     await renderToday(app);
 
-    expect(screen.getByText('Set up Jx-Care')).toBeTruthy();
+    expect(screen.getByText('Set up Jx Care')).toBeTruthy();
     expect(screen.getByText('0 of 3')).toBeTruthy();
     // No streak chips or routine cards until a routine exists.
     expect(screen.queryByRole('button', { name: /Skin streak/ })).toBeNull();
@@ -363,7 +363,7 @@ describe('TodayScreen first run', () => {
     await renderToday(app);
     await fireEvent(screen.getByTestId('setup-card'), 'longPress');
     await fireEvent.press(await screen.findByRole('menuitem', { name: 'Hide' }));
-    await waitFor(() => expect(screen.queryByText('Set up Jx-Care')).toBeNull());
+    await waitFor(() => expect(screen.queryByText('Set up Jx Care')).toBeNull());
     expect(getSettings(app.db).setupHiddenAt).toBe(MON);
   });
 });

@@ -97,7 +97,7 @@ describe('reminder ask after saving a product (P3)', () => {
     expect(await screen.findByText('Get a reminder before it expires?')).toBeTruthy();
     expect(
       screen.getByText(
-        'Jx-Care reminds you about Vitamin C serum 30 days before it expires and on the day, at 09:00.',
+        'Jx Care reminds you about Vitamin C serum 30 days before it expires and on the day, at 09:00.',
       ),
     ).toBeTruthy();
     expect(

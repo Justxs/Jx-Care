@@ -1,10 +1,10 @@
-# Jx-Care Feature Spec
+# Jx Care Feature Spec
 
 Written 2026-10-06, kept in line with design system v18 (2026-10-07). This file is the current version; the [Claude Doc](https://claude.ai/code/artifact/f898c0ac-edef-4786-bbd1-bebf1fa6c8fd) is an earlier copy.
 
 ## Overview
 
-This spec describes every screen, state and flow in Jx-Care in enough detail to design from. It builds on the [feature plan](https://github.com/Justxs/Jx-Care/blob/main/docs/feature-plan.md); where the two differ, this spec wins. Visual style, tokens and components come from the [Jx-Care design system](https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU).
+This spec describes every screen, state and flow in Jx Care in enough detail to design from. It builds on the [feature plan](https://github.com/Justxs/Jx-Care/blob/main/docs/feature-plan.md); where the two differ, this spec wins. Visual style, tokens and components come from the [Jx Care design system](https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU).
 
 ### Refinements made in this review
 
@@ -117,10 +117,10 @@ Every list has a title, one line of body text and at most one action.
 
 | Screen | Title | Body | Action |
 | --- | --- | --- | --- |
-| Products | No products yet | Add the one you use most. Jx-Care tracks when it expires. | Add product |
+| Products | No products yet | Add the one you use most. Jx Care tracks when it expires. | Add product |
 | Shopping | Nothing to buy | Finished and expiring products show up here as suggestions. | Add item |
 | Routines, skin | No routines yet | Start from a template and swap in your products. | New routine |
-| Routines, hair | Hair care is not set up | Tell Jx-Care how often you wash your hair. | Set up hair care |
+| Routines, hair | Hair care is not set up | Tell Jx Care how often you wash your hair. | Set up hair care |
 | Calendar | Your month fills in as you go | Each day you tick a routine gets a dot here. | None |
 | Progress | No photos yet | Take one a week in the same light to see your skin change. | Take first photo |
 | Archive | Nothing finished yet | Products you mark finished move here with their cost per day. | None |
@@ -282,13 +282,13 @@ There is no reminders step. Notification permission is asked in context instead 
 The home screen answers "what do I need to do today?". Sections top to bottom, each hidden when empty:
 
 1. **Header:** greeting by time of day, date ("Tuesday, 6 Oct"), skin and hair streak chips (calendar-check icon + number); tapping a chip opens the streak sheet.
-2. **Routine cards:** one card per time of day due today (Morning, Evening, custom), in time order. Card shows the time of day, "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), progress ring (3/5), and a conflict tag if any (see Conflict tag below). If a product in the routine is expired, the card or its done row names it in red ("SPF 50 fluid expired 2 Oct"). Two routines at one time of day: A/B chips on the card with "Pick one for tonight; Jx-Care remembers it for Tuesdays. About A and B" (the link opens the A or B sheet); the chosen one is remembered for that weekday. The chips show only until the first step is ticked. Buttons: Start (Continue after a tick) opens the routine player; All done ticks every due step at once and shows "Evening done" with Undo. Done: card collapses to a ticked row.
+2. **Routine cards:** one card per time of day due today (Morning, Evening, custom), in time order. Card shows the time of day, "Reminder at 07:30 · 4 steps" (or "No reminder · 2 steps"), progress ring (3/5), and a conflict tag if any (see Conflict tag below). If a product in the routine is expired, the card or its done row names it in red ("SPF 50 fluid expired 2 Oct"). Two routines at one time of day: A/B chips on the card with "Pick one for tonight; Jx Care remembers it for Tuesdays. About A and B" (the link opens the A or B sheet); the chosen one is remembered for that weekday. The chips show only until the first step is ticked. Buttons: Start (Continue after a tick) opens the routine player; All done ticks every due step at once and shows "Evening done" with Undo. Done: card collapses to a ticked row.
 3. **Expiring soon** (only while any product is expired, it sits here, directly under the routine cards): up to 3 product rows and "See all", with a "Shopping list · 3 to buy" row at the foot of the card. An expired row's badge carries the date ("Expired 2 Oct"); the date is never written twice in a row.
 4. **Hair due:** rows for hair tasks due today or overdue ("Wash: shampoo + conditioner", "Overdue 1 day" in orange). Tap: Hair task done sheet.
 5. **Expiring soon** when nothing is expired, same content as 3.
 6. **Check-in:** one card. On the weekly photo day until taken: "This week's skin photo" with Take photo (secondary) and a "Skip this week" text link under it. Then "How's your skin today?" with the seven skin chips in the standard order (tapping one saves at once) and "Hair and note", which opens the Condition log sheet.
 
-First-run state: a "Set up Jx-Care" card with progress "n of 3" and three fixed-height rows: Add your first product (opens P3 quick mode), Build a routine (opens routine templates), Set up hair care (opens quick hair setup). The next step to do is opened with a filled button ("Build a routine"); the others are rows. Done rows show a green check and what was made. Below the card, an Optional group: weekly progress photo, ingredients to avoid. No streak chips or routine cards show until a routine exists. When all three rows are done the card becomes "You're set" (logo, one line, See today, which removes the card at once) and is removed the next day; long press, Hide removes it at once.
+First-run state: a "Set up Jx Care" card with progress "n of 3" and three fixed-height rows: Add your first product (opens P3 quick mode), Build a routine (opens routine templates), Set up hair care (opens quick hair setup). The next step to do is opened with a filled button ("Build a routine"); the others are rows. Done rows show a green check and what was made. Below the card, an Optional group: weekly progress photo, ingredients to avoid. No streak chips or routine cards show until a routine exists. When all three rows are done the card becomes "You're set" (logo, one line, See today, which removes the card at once) and is removed the next day; long press, Hide removes it at once.
 
 ### T2 Routine player
 
@@ -466,7 +466,7 @@ Preview line: "Next due: Friday, 9 Oct". Save task sits in the bottom bar. Washe
 
 ### C5 Photo review + rating
 
-Photos of all angles, rating 1–5, tags (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy), note. Save. Saving shows "Saved privately in Jx-Care".
+Photos of all angles, rating 1–5, tags (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy), note. Save. Saving shows "Saved privately in Jx Care".
 
 ### C6 Week detail
 
@@ -539,7 +539,7 @@ All notifications are local, scheduled on the phone, and open the app behind the
 | Other care due | Due date | "Time for a trim (8 weeks)" | Hair task done sheet | Done |
 | Weekly photo | Chosen weekday and time, once | "Time for this week's skin photo" | Progress camera | Skip this week |
 | Weekly digest | Monday 09:00 | "2 expiring soon, 1 expired, 3 unopened" | Products list, filtered | None |
-| Backup reminder | 30 days after last backup, once a month | "Back up your Jx-Care data" | Backup and restore | None |
+| Backup reminder | 30 days after last backup, once a month | "Back up your Jx Care data" | Backup and restore | None |
 
 Scheduling rule: iOS allows 64 pending notifications, so the app keeps only the next 14 days scheduled and tops up every time it opens and at the daily background refresh.
 
@@ -565,7 +565,7 @@ sequenceDiagram
   A->>S: Save salted pinHash + answerHash
   A->>D: Create settings row (language, currency EUR)
   A->>U: Offer biometrics
-  A->>U: Today first-run state (Set up Jx-Care card)
+  A->>U: Today first-run state (Set up Jx Care card)
   Note over A,N: Notification permission is asked later, when the first product with an expiry date is saved
 ```
 

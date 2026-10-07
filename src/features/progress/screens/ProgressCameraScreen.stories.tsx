@@ -13,8 +13,8 @@ import { ProgressCameraScreen } from './ProgressCameraScreen';
  *   the demo data), the face outline and the angle steps. Taking photos works; "Use photo" on the
  *   last angle logs the push to the review.
  * - Not asked yet: the system prompt appears when the story opens.
- * - Refused: "The camera is off for Jx-Care" with Open phone settings. To see it on a phone that
- *   allowed the camera, turn the camera off for Jx-Care in the phone's settings.
+ * - Refused: "The camera is off for Jx Care" with Open phone settings. To see it on a phone that
+ *   allowed the camera, turn the camera off for Jx Care in the phone's settings.
  *
  * The Jest smoke test has no camera: it mocks expo-camera with the permission refused, so there
  * every story renders the refused screen.

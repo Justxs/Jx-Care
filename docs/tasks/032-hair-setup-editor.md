@@ -15,7 +15,7 @@ In: `src/features/hair/screens/HairListScreen.tsx` (rendered by the Routines tab
 - Two groups, **Washes** and **Other care**, each titled above its card.
 - `HairTaskRow`: name, frequency ("Every 3 days", "Every 8 weeks", "Mon, Thu"), next due date ("Next 9 Oct"; "Due today"; "Overdue 1 day" in `warning`), last done as a date ("Last 18 Aug", never "7 weeks ago"). Icon per kind, bare `ink-muted`: `droplets` (wash), `scissors` (trim), `palette` (colour), `flask-round` (mask), none for other. Tap: editor.
 - New hair task is the `Fab` (task 008), at the bottom right. The list keeps 96 pt at its end so the last row scrolls clear of it.
-- **Empty:** "Hair care is not set up" / "Tell Jx-Care how often you wash your hair." / "Set up hair care" (opens the quick setup sheet).
+- **Empty:** "Hair care is not set up" / "Tell Jx Care how often you wash your hair." / "Set up hair care" (opens the quick setup sheet).
 
 ### Quick hair setup (sheet)
 

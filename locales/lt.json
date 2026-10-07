@@ -1,6 +1,6 @@
 {
-  "CFBundleDisplayName": "Jx-Care",
-  "NSCameraUsageDescription": "Jx-Care naudoja kamerą produktų nuotraukoms ir jūsų savaitės nuotraukoms. Jos lieka programėlėje.",
-  "NSPhotoLibraryUsageDescription": "Jx-Care naudoja jūsų nuotraukas, kad galėtumėte pridėti produkto nuotrauką.",
-  "NSFaceIDUsageDescription": "Atrakinkite Jx-Care naudodami Face ID."
+  "CFBundleDisplayName": "Jx Care",
+  "NSCameraUsageDescription": "Jx Care naudoja kamerą produktų nuotraukoms ir jūsų savaitės nuotraukoms. Jos lieka programėlėje.",
+  "NSPhotoLibraryUsageDescription": "Jx Care naudoja jūsų nuotraukas, kad galėtumėte pridėti produkto nuotrauką.",
+  "NSFaceIDUsageDescription": "Atrakinkite Jx Care naudodami Face ID."
 }

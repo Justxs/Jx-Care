@@ -40,7 +40,7 @@ export type SetupStepKey = (typeof SETUP_STEPS)[number];
 export type SetupView = {
   /** The card shows at all. */
   visible: boolean;
-  /** "Set up Jx-Care" with its rows, or "You're set" once all three are done. */
+  /** "Set up Jx Care" with its rows, or "You're set" once all three are done. */
   mode: 'progress' | 'set';
   done: number;
   total: number;

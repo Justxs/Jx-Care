@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Jx-Care",
+    "appName": "Jx Care",
     "buyAgain": "Pirkti dar kartą",
     "markFinished": "Pažymėti kaip baigtą",
     "finished": "Baigta",
@@ -116,7 +116,7 @@
     "language": "Kalba",
     "privacy": "Viskas lieka šiame telefone. Paskyros nereikia.",
     "createPinTitle": "Sukurkite 4 skaitmenų PIN",
-    "createPinBody": "Jį įvesite kaskart atidarę Jx-Care.",
+    "createPinBody": "Jį įvesite kaskart atidarę Jx Care.",
     "confirmPinTitle": "Įveskite jį dar kartą",
     "pinMismatch": "PIN kodai nesutampa",
     "recoveryTitle": "Pasirinkite atkūrimo klausimą",
@@ -146,7 +146,7 @@
     "wrongPin": "Neteisingas PIN. Bandykite dar kartą.",
     "tryAgainSeconds": "Bandykite dar kartą po {{seconds}} s",
     "tryAgainTime": "Bandykite dar kartą po {{time}}",
-    "biometricsPrompt": "Atrakinti Jx-Care",
+    "biometricsPrompt": "Atrakinti Jx Care",
     "forgot": {
       "title": "Pamiršau PIN",
       "body": "Atsakykite į atkūrimo klausimą ir sukurkite naują PIN.",
@@ -263,9 +263,9 @@
       "expiredMany_many": "Nebegalioja {{count}} produkto",
       "expiredMany_other": "Nebegalioja {{count}} produktų",
       "pick": {
-        "morning": "Pasirinkite vieną šiam rytui; Jx-Care tai įsimins {{weekdays}}.",
-        "evening": "Pasirinkite vieną šiam vakarui; Jx-Care tai įsimins {{weekdays}}.",
-        "custom": "Pasirinkite vieną šiandienai; Jx-Care tai įsimins {{weekdays}}."
+        "morning": "Pasirinkite vieną šiam rytui; Jx Care tai įsimins {{weekdays}}.",
+        "evening": "Pasirinkite vieną šiam vakarui; Jx Care tai įsimins {{weekdays}}.",
+        "custom": "Pasirinkite vieną šiandienai; Jx Care tai įsimins {{weekdays}}."
       },
       "aboutAB": "Apie A ir B",
       "options": "{{name}}: pasirinkite rutiną",
@@ -283,7 +283,7 @@
       "shopping_other": "Pirkinių sąrašas · {{count}} nupirkti"
     },
     "setup": {
-      "title": "Paruoškite Jx-Care",
+      "title": "Paruoškite Jx Care",
       "progress": "{{done}} iš {{total}}",
       "progressLabel": "Paruošimas: atlikta {{done}} iš {{total}}",
       "stepDone": "Atlikta",
@@ -291,7 +291,7 @@
       "stepLabel": "{{index}} žingsnis, {{title}}: {{state}}. {{detail}}",
       "product": {
         "title": "Pridėkite pirmą produktą",
-        "hint": "Jx-Care seks, kada jis nebegalios.",
+        "hint": "Jx Care seks, kada jis nebegalios.",
         "done": "{{name}} pridėtas",
         "action": "Pridėti produktą"
       },
@@ -416,7 +416,7 @@
     "duplicatedToast": "Pridėta „{{name}}“ kopija",
     "archiveLink": "Archyvas ({{count}})",
     "emptyTitle": "Produktų dar nėra",
-    "emptyBody": "Pridėkite tą, kurį naudojate dažniausiai. Jx-Care stebės, kada jis nebegalios.",
+    "emptyBody": "Pridėkite tą, kurį naudojate dažniausiai. Jx Care stebės, kada jis nebegalios.",
     "noMatchTitle": "Tinkančių produktų nėra",
     "noMatchBody": "Pabandykite kitus filtrus ar paieškos žodžius.",
     "resetFilters": "Išvalyti filtrus",
@@ -856,7 +856,7 @@
       "other": "Kita priežiūra",
       "new": "Nauja plaukų užduotis",
       "emptyTitle": "Plaukų priežiūra nenustatyta",
-      "emptyBody": "Nurodykite Jx-Care, kaip dažnai plaunate plaukus.",
+      "emptyBody": "Nurodykite Jx Care, kaip dažnai plaunate plaukus.",
       "setUp": "Nustatyti plaukų priežiūrą"
     },
     "row": {
@@ -1107,10 +1107,10 @@
       "keep": "Palikti",
       "permission": {
         "title": "Leiskite naudoti kamerą",
-        "body": "Jx-Care naudoja kamerą savaitės progreso nuotraukoms. Jos lieka programėlėje ir niekada nepatenka į galeriją.",
+        "body": "Jx Care naudoja kamerą savaitės progreso nuotraukoms. Jos lieka programėlėje ir niekada nepatenka į galeriją.",
         "allow": "Leisti kamerą",
-        "deniedTitle": "Jx-Care negali naudoti kameros",
-        "deniedBody": "Kad galėtumėte daryti progreso nuotraukas, telefono nustatymuose leiskite Jx-Care naudoti kamerą. Nuotraukos lieka programėlėje ir niekada nepatenka į galeriją.",
+        "deniedTitle": "Jx Care negali naudoti kameros",
+        "deniedBody": "Kad galėtumėte daryti progreso nuotraukas, telefono nustatymuose leiskite Jx Care naudoti kamerą. Nuotraukos lieka programėlėje ir niekada nepatenka į galeriją.",
         "openSettings": "Atidaryti telefono nustatymus"
       }
     },
@@ -1126,7 +1126,7 @@
       "noteHint": "Nebūtina. Iki 280 simbolių.",
       "noteTooLong": "Pastaba gali būti iki 280 simbolių.",
       "save": "Išsaugoti",
-      "saved": "Išsaugota privačiai Jx-Care",
+      "saved": "Išsaugota privačiai Jx Care",
       "saveFailed": "Nepavyko išsaugoti nuotraukų. Bandykite dar kartą."
     },
     "row": {
@@ -1301,7 +1301,7 @@
     "licences": "Licencijos",
     "currencyHint": "Visos kainos rodomos šia valiuta.",
     "languageHint": "Programėlė pasikeičia iš karto.",
-    "licencesIntro": "Jx-Care sukurta naudojant šiuos atvirojo kodo paketus."
+    "licencesIntro": "Jx Care sukurta naudojant šiuos atvirojo kodo paketus."
   },
   "notifications": {
     "channels": {
@@ -1325,7 +1325,7 @@
     }
   },
   "errors": {
-    "dataTitle": "Jx-Care nepavyko atidaryti duomenų",
+    "dataTitle": "Jx Care nepavyko atidaryti duomenų",
     "dataBody": "Niekas neištrinta. Bandykite dar kartą, o jei kartojasi, perkraukite telefoną.",
     "tryAgain": "Bandyti dar kartą"
   },
@@ -1652,11 +1652,11 @@
       "daysAhead_many": "{{count}} dienos",
       "daysAhead_other": "{{count}} dienų",
       "line": {
-        "expiry": "Jx-Care primins apie „{{name}}“ {{days}} iki galiojimo pabaigos ir tą dieną, {{time}}.",
-        "expiryWarningOnly": "Jx-Care primins apie „{{name}}“ {{days}} iki galiojimo pabaigos, {{time}}.",
-        "routine": "Jx-Care primins jūsų kiekvienai rutinai nustatytu laiku.",
-        "hair": "Jx-Care primins tą dieną, kai reikia atlikti plaukų priežiūros užduotį.",
-        "weeklyPhoto": "Jx-Care primins kartą per savaitę, jūsų pasirinktą dieną ir laiku."
+        "expiry": "Jx Care primins apie „{{name}}“ {{days}} iki galiojimo pabaigos ir tą dieną, {{time}}.",
+        "expiryWarningOnly": "Jx Care primins apie „{{name}}“ {{days}} iki galiojimo pabaigos, {{time}}.",
+        "routine": "Jx Care primins jūsų kiekvienai rutinai nustatytu laiku.",
+        "hair": "Jx Care primins tą dieną, kai reikia atlikti plaukų priežiūros užduotį.",
+        "weeklyPhoto": "Jx Care primins kartą per savaitę, jūsų pasirinktą dieną ir laiku."
       },
       "example": {
         "routine": "Vakaro rutina: 5 žingsniai",
@@ -1722,7 +1722,7 @@
     "lastBackup": "Paskutinė atsarginė kopija {{date}}",
     "noBackup": "Atsarginės kopijos dar nėra",
     "callout": {
-      "title": "Pasidarykite Jx-Care duomenų atsarginę kopiją",
+      "title": "Pasidarykite Jx Care duomenų atsarginę kopiją",
       "last": "Paskutinė atsarginė kopija padaryta {{date}}.",
       "never": "Atsarginės kopijos dar nesate padarę."
     },
@@ -1739,7 +1739,7 @@
       "zipDetailNone": "Visi duomenys. Nuotraukų dar nėra.",
       "action": "Eksportuoti atsarginę kopiją",
       "progress": "Pridedamos nuotraukos: {{done}} iš {{total}}",
-      "shareTitle": "Išsaugokite Jx-Care atsarginę kopiją",
+      "shareTitle": "Išsaugokite Jx Care atsarginę kopiją",
       "failed": "Nepavyko eksportuoti atsarginės kopijos. Bandykite dar kartą."
     },
     "import": {
@@ -1768,9 +1768,9 @@
       "restored": "Atsarginė kopija atkurta"
     },
     "errors": {
-      "notBackup": "Šis failas nėra Jx-Care atsarginė kopija. Pasirinkite eksportuotą JSON arba zip failą.",
+      "notBackup": "Šis failas nėra Jx Care atsarginė kopija. Pasirinkite eksportuotą JSON arba zip failą.",
       "damaged": "Šis atsarginės kopijos failas sugadintas ir jo nepavyksta perskaityti. Jūsų duomenys nepakeisti.",
-      "newer": "Ši atsarginė kopija iš naujesnės Jx-Care versijos. Pirmiausia atnaujinkite programėlę.",
+      "newer": "Ši atsarginė kopija iš naujesnės Jx Care versijos. Pirmiausia atnaujinkite programėlę.",
       "readFailed": "Nepavyko atidaryti šio failo. Bandykite dar kartą arba pasirinkite kitą.",
       "failed": "Nepavyko atkurti atsarginės kopijos. Jūsų duomenys nepakeisti."
     },
@@ -1784,7 +1784,7 @@
       "gb": "{{value}} GB"
     },
     "reminder": {
-      "title": "Pasidarykite Jx-Care duomenų atsarginę kopiją"
+      "title": "Pasidarykite Jx Care duomenų atsarginę kopiją"
     }
   }
 }

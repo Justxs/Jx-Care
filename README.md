@@ -1,6 +1,6 @@
-# Jx-Care
+# Jx Care
 
-Jx-Care helps one person look after their skin and hair: which products they own and when each expires, what to put on in the morning and evening, when to wash or treat their hair, and how their skin changes week to week. It answers "what do I need to do today?" in one glance. Everything stays on the phone, behind a PIN, in Lithuanian or English.
+Jx Care helps one person look after their skin and hair: which products they own and when each expires, what to put on in the morning and evening, when to wash or treat their hair, and how their skin changes week to week. It answers "what do I need to do today?" in one glance. Everything stays on the phone, behind a PIN, in Lithuanian or English.
 
 ## Run it
 

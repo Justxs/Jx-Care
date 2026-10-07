@@ -26,7 +26,7 @@ export type SetupCardProps = {
 };
 
 /**
- * TodayFirstRunScreen's card: "Set up Jx-Care" with three steps computed from data, the next one
+ * TodayFirstRunScreen's card: "Set up Jx Care" with three steps computed from data, the next one
  * opened up with the filled button, then "You're set" once all three are done.
  */
 export function SetupCard({ view, progress, onStep, onHide }: SetupCardProps) {

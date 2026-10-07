@@ -1,4 +1,4 @@
-# Jx-Care Feature Plan
+# Jx Care Feature Plan
 
 Written 2026-10-06, wording brought in line with design system v18 on 2026-10-07. This file is the current version; the [Claude Doc](https://claude.ai/code/artifact/965d4890-47d1-44a7-a629-985c83b64dd4) is an earlier copy.
 
@@ -6,7 +6,7 @@ Screen-by-screen detail for design, the navigation map and sequence diagrams are
 
 ## Overview
 
-Jx-Care is an offline React Native app for one person to track skin and hair care products, follow routines, and stay consistent. Everything lives on the phone: no account, no server, no sync.
+Jx Care is an offline React Native app for one person to track skin and hair care products, follow routines, and stay consistent. Everything lives on the phone: no account, no server, no sync.
 
 Fixed by the ask:
 

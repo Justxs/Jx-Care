@@ -1,4 +1,4 @@
-# Jx-Care brand
+# Jx Care brand
 
 ## Logo
 

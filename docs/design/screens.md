@@ -74,7 +74,7 @@ The saved question and an answer field. The answer is compared ignoring case, ac
 
 **Spec:** T1 (first-run state) · **Opens from:** the last onboarding step (O5), and Today until setup is done or hidden.
 
-Greeting and date, then a "Set up Jx-Care" card: a progress bar ("1 of 3") and three rows (Add your first product, Build a routine, Set up hair care). Each row has a numbered circle that turns into a green check, and its second line changes to what was made ("Vitamin C serum added"). Below, an Optional group: weekly progress photo and ingredients to avoid.
+Greeting and date, then a "Set up Jx Care" card: a progress bar ("1 of 3") and three rows (Add your first product, Build a routine, Set up hair care). Each row has a numbered circle that turns into a green check, and its second line changes to what was made ("Vitamin C serum added"). Below, an Optional group: weekly progress photo and ingredients to avoid.
 
 - No streak chips or routine cards until there is a routine to show.
 - When all three steps are done, the line under the card reads "You're set" and the card is removed the next day. Long press, Hide removes it at once.
@@ -91,7 +91,7 @@ Answers "what do I need to do today?". Five blocks, each hidden when empty: head
 - Data is prefetched behind the lock screen, so no section pops in after the first frame.
 - **One tap to finish.** Each routine card has Start (filled) and All done (secondary, `check-check`). All done ticks every due step at once and shows "Evening done · Undo"; Start opens the player for step-by-step ticking. A finished card collapses to a ticked row (250ms) and the streak counts up.
 - **Expired products show where they are used.** A routine card or done row names any expired product in it, in danger red ("SPF 50 fluid expired 2 Oct"). While anything is expired, Expiring soon moves up directly under the routine cards; otherwise it sits below hair. The expired row's badge carries the date ("Expired 2 Oct"); the date is never written twice in one row.
-- **A/B choice:** when two routines share a time of day, the card shows A/B chips and "Pick one for tonight; Jx-Care remembers it for Tuesdays. About A and B". The link opens the Evening A or B sheet (ExplainSheets). The chips show only before the first tick; after that the button says "Continue" and the choice is fixed for the day.
+- **A/B choice:** when two routines share a time of day, the card shows A/B chips and "Pick one for tonight; Jx Care remembers it for Tuesdays. About A and B". The link opens the Evening A or B sheet (ExplainSheets). The chips show only before the first tick; after that the button says "Continue" and the choice is fixed for the day.
 - StreakChips are tappable and open the streak sheet; the ConflictTag opens the conflict sheet.
 - **Check-in:** "Take photo" is a secondary button on the photo row; "Skip this week" is a plain text link under it, so the two never look equal. Below a separator, the 7 skin tags in the standard order (Calm, Glow, Oily, Dry, Breakout, Redness, Itchy); "Hair and note" opens the condition sheet (T4) for hair tags and a note. The photo row shows only in the week it is due.
 
@@ -334,7 +334,7 @@ Full-screen camera with last week's photo at 30% as a guide ("Show last photo as
 
 **Spec:** C5 · **Opens from:** Progress camera.
 
-All angles, rating 1 to 5, tags, note. Save shows "Saved privately in Jx-Care".
+All angles, rating 1 to 5, tags, note. Save shows "Saved privately in Jx Care".
 
 - Photos never go to the phone gallery.
 - The title names the photo by date ("Skin photo, 6 Oct"). Tags are the 7 skin tags in the standard order.

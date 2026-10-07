@@ -19,7 +19,7 @@ In: `src/features/products/screens/ProductListScreen.tsx`, `components/ProductRo
 - **Filters sheet:** Area (All, Skin, Hair), Category (multi chips), Status (OK, Expiring soon, Expired, Not opened, No date), "Avoid badge only" switch; Sort: Soonest expiry (default), Name, Recently added; "Reset filters" ghost and "Show N products" primary in the pinned footer (N updates live). Filters persist in `uiStore` for the session, not across restarts.
 - **Footer link:** "Archive (N)" pushes P5; hidden when N is 0.
 - **Loading:** if the query isn't cached on the first frame, five 72 pt skeleton rows, replaced in place with a 150 ms fade. Refiltering keeps the previous list visible (`keepPreviousData`).
-- **Empty states:** no products at all → spec copy "No products yet" / "Add the one you use most. Jx-Care tracks when it expires." / Add product. Filters that match nothing → "No products match" with "Reset filters" (not the first-run empty state).
+- **Empty states:** no products at all → spec copy "No products yet" / "Add the one you use most. Jx Care tracks when it expires." / Add product. Filters that match nothing → "No products match" with "Reset filters" (not the first-run empty state).
 - The `Fab` and the empty state's Add product both open Add product, the short form (task 014, `/product-form` without `id`), for every new product, not only the first.
 
 Out:

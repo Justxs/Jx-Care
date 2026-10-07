@@ -1,4 +1,4 @@
-# Jx-Care
+# Jx Care
 
 Offline React Native (Expo) app for one person to track skin and hair care products, routines and streaks. LT and EN, behind a PIN, everything stored on the phone.
 

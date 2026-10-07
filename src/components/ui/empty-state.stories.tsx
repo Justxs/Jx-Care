@@ -11,7 +11,7 @@ const meta = {
   args: {
     icon: 'package',
     title: 'No products yet',
-    children: 'Add the one you use most. Jx-Care tracks when it expires.',
+    children: 'Add the one you use most. Jx Care tracks when it expires.',
     actionLabel: 'Add product',
     actionIcon: 'plus',
   },
@@ -89,7 +89,7 @@ export const LongLithuanian: Story = {
   args: {
     title: 'Dar neturite jokių produktų savo lentynoje',
     children:
-      'Pridėkite dažniausiai naudojamą produktą. Jx-Care seks, kada baigiasi jo galiojimas, ir primins laiku.',
+      'Pridėkite dažniausiai naudojamą produktą. Jx Care seks, kada baigiasi jo galiojimas, ir primins laiku.',
     actionLabel: 'Pridėti produktą',
     secondaryLabel: 'Atkurti atsarginę kopiją',
   },

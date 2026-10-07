@@ -1,4 +1,4 @@
-# Jx-Care build tasks
+# Jx Care build tasks
 
 The app broken into 41 tasks that a coding agent can pick up one at a time. Each task file says what to build, which spec sections and design cards it covers, what is out of scope, how to test it and when it is done.
 

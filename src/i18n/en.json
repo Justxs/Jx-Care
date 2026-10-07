@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Jx-Care",
+    "appName": "Jx Care",
     "buyAgain": "Buy again",
     "markFinished": "Mark finished",
     "finished": "Finished",
@@ -110,7 +110,7 @@
     "language": "Language",
     "privacy": "Everything stays on this phone. No account needed.",
     "createPinTitle": "Create a 4-digit PIN",
-    "createPinBody": "You'll enter it each time you open Jx-Care.",
+    "createPinBody": "You'll enter it each time you open Jx Care.",
     "confirmPinTitle": "Enter it again",
     "pinMismatch": "PINs don't match",
     "recoveryTitle": "Pick a recovery question",
@@ -140,7 +140,7 @@
     "wrongPin": "Wrong PIN. Try again.",
     "tryAgainSeconds": "Try again in {{seconds}} s",
     "tryAgainTime": "Try again in {{time}}",
-    "biometricsPrompt": "Unlock Jx-Care",
+    "biometricsPrompt": "Unlock Jx Care",
     "forgot": {
       "title": "Forgot PIN",
       "body": "Answer your recovery question to set a new PIN.",
@@ -247,9 +247,9 @@
       "expiredMany_one": "{{count}} product expired",
       "expiredMany_other": "{{count}} products expired",
       "pick": {
-        "morning": "Pick one for this morning; Jx-Care remembers it for {{weekdays}}.",
-        "evening": "Pick one for tonight; Jx-Care remembers it for {{weekdays}}.",
-        "custom": "Pick one for today; Jx-Care remembers it for {{weekdays}}."
+        "morning": "Pick one for this morning; Jx Care remembers it for {{weekdays}}.",
+        "evening": "Pick one for tonight; Jx Care remembers it for {{weekdays}}.",
+        "custom": "Pick one for today; Jx Care remembers it for {{weekdays}}."
       },
       "aboutAB": "About A and B",
       "options": "{{name}}: pick a routine",
@@ -265,7 +265,7 @@
       "shopping_other": "Shopping list · {{count}} to buy"
     },
     "setup": {
-      "title": "Set up Jx-Care",
+      "title": "Set up Jx Care",
       "progress": "{{done}} of {{total}}",
       "progressLabel": "Setup: {{done}} of {{total}} steps done",
       "stepDone": "Done",
@@ -273,7 +273,7 @@
       "stepLabel": "Step {{index}}, {{title}}: {{state}}. {{detail}}",
       "product": {
         "title": "Add your first product",
-        "hint": "Jx-Care tracks when it expires.",
+        "hint": "Jx Care tracks when it expires.",
         "done": "{{name}} added",
         "action": "Add a product"
       },
@@ -285,7 +285,7 @@
       },
       "hair": {
         "title": "Set up hair care",
-        "hint": "Tell Jx-Care how often you wash your hair.",
+        "hint": "Tell Jx Care how often you wash your hair.",
         "done": "{{name}} set up",
         "action": "Set up hair care"
       },
@@ -386,7 +386,7 @@
     "duplicatedToast": "Copy of {{name}} added",
     "archiveLink": "Archive ({{count}})",
     "emptyTitle": "No products yet",
-    "emptyBody": "Add the one you use most. Jx-Care tracks when it expires.",
+    "emptyBody": "Add the one you use most. Jx Care tracks when it expires.",
     "noMatchTitle": "No products match",
     "noMatchBody": "Try other filters or search words.",
     "resetFilters": "Reset filters",
@@ -794,7 +794,7 @@
       "other": "Other care",
       "new": "New hair task",
       "emptyTitle": "Hair care is not set up",
-      "emptyBody": "Tell Jx-Care how often you wash your hair.",
+      "emptyBody": "Tell Jx Care how often you wash your hair.",
       "setUp": "Set up hair care"
     },
     "row": {
@@ -1033,10 +1033,10 @@
       "keep": "Keep them",
       "permission": {
         "title": "Allow the camera",
-        "body": "Jx-Care uses the camera for your weekly progress photos. They stay in the app and never go to your gallery.",
+        "body": "Jx Care uses the camera for your weekly progress photos. They stay in the app and never go to your gallery.",
         "allow": "Allow camera",
-        "deniedTitle": "The camera is off for Jx-Care",
-        "deniedBody": "To take progress photos, allow the camera for Jx-Care in phone settings. Photos stay in the app and never go to your gallery.",
+        "deniedTitle": "The camera is off for Jx Care",
+        "deniedBody": "To take progress photos, allow the camera for Jx Care in phone settings. Photos stay in the app and never go to your gallery.",
         "openSettings": "Open phone settings"
       }
     },
@@ -1052,7 +1052,7 @@
       "noteHint": "Optional. Up to 280 characters.",
       "noteTooLong": "Keep the note to 280 characters.",
       "save": "Save",
-      "saved": "Saved privately in Jx-Care",
+      "saved": "Saved privately in Jx Care",
       "saveFailed": "The photos could not be saved. Try again."
     },
     "row": {
@@ -1217,7 +1217,7 @@
     "licences": "Licences",
     "currencyHint": "Prices everywhere use it.",
     "languageHint": "Changes the app at once.",
-    "licencesIntro": "Jx-Care is built with these open-source packages."
+    "licencesIntro": "Jx Care is built with these open-source packages."
   },
   "notifications": {
     "channels": {
@@ -1241,7 +1241,7 @@
     }
   },
   "errors": {
-    "dataTitle": "Jx-Care couldn't open its data",
+    "dataTitle": "Jx Care couldn't open its data",
     "dataBody": "Nothing was deleted. Try again, and if it keeps happening, restart the phone.",
     "tryAgain": "Try again"
   },
@@ -1536,11 +1536,11 @@
       "daysAhead_one": "{{count}} day",
       "daysAhead_other": "{{count}} days",
       "line": {
-        "expiry": "Jx-Care reminds you about {{name}} {{days}} before it expires and on the day, at {{time}}.",
-        "expiryWarningOnly": "Jx-Care reminds you about {{name}} {{days}} before it expires, at {{time}}.",
-        "routine": "Jx-Care reminds you at the time you set for each routine.",
-        "hair": "Jx-Care reminds you on the day each hair task is due.",
-        "weeklyPhoto": "Jx-Care reminds you once a week, on the day and at the time you pick."
+        "expiry": "Jx Care reminds you about {{name}} {{days}} before it expires and on the day, at {{time}}.",
+        "expiryWarningOnly": "Jx Care reminds you about {{name}} {{days}} before it expires, at {{time}}.",
+        "routine": "Jx Care reminds you at the time you set for each routine.",
+        "hair": "Jx Care reminds you on the day each hair task is due.",
+        "weeklyPhoto": "Jx Care reminds you once a week, on the day and at the time you pick."
       },
       "example": {
         "routine": "Evening routine: 5 steps",
@@ -1596,7 +1596,7 @@
     "lastBackup": "Last backup {{date}}",
     "noBackup": "No backup yet",
     "callout": {
-      "title": "Back up your Jx-Care data",
+      "title": "Back up your Jx Care data",
       "last": "Your last backup is from {{date}}.",
       "never": "You haven't made a backup yet."
     },
@@ -1611,7 +1611,7 @@
       "zipDetailNone": "All data. There are no photos yet.",
       "action": "Export backup",
       "progress": "Adding photos: {{done}} of {{total}}",
-      "shareTitle": "Save your Jx-Care backup",
+      "shareTitle": "Save your Jx Care backup",
       "failed": "Couldn't export the backup. Try again."
     },
     "import": {
@@ -1634,9 +1634,9 @@
       "restored": "Backup restored"
     },
     "errors": {
-      "notBackup": "This file isn't a Jx-Care backup. Pick the JSON or zip file you exported.",
+      "notBackup": "This file isn't a Jx Care backup. Pick the JSON or zip file you exported.",
       "damaged": "This backup file is damaged and can't be read. Your data is unchanged.",
-      "newer": "This backup is from a newer version of Jx-Care. Update the app first.",
+      "newer": "This backup is from a newer version of Jx Care. Update the app first.",
       "readFailed": "Couldn't open this file. Try again or pick another one.",
       "failed": "Couldn't restore the backup. Your data is unchanged."
     },
@@ -1650,7 +1650,7 @@
       "gb": "{{value}} GB"
     },
     "reminder": {
-      "title": "Back up your Jx-Care data"
+      "title": "Back up your Jx Care data"
     }
   }
 }

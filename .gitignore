@@ -40,7 +40,7 @@ yarn-error.*
 /ios
 /android
 
-# Jx-Care
+# Jx Care
 /tmp
 *.db
 

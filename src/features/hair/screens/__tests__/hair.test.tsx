@@ -118,7 +118,7 @@ describe('HairListScreen', () => {
     const app = setup('list');
     await app.show();
     expect(await screen.findByText('Hair care is not set up')).toBeTruthy();
-    expect(screen.getByText('Tell Jx-Care how often you wash your hair.')).toBeTruthy();
+    expect(screen.getByText('Tell Jx Care how often you wash your hair.')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Set up hair care' })).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'New hair task' }));
@@ -126,7 +126,7 @@ describe('HairListScreen', () => {
 
     await setI18nLanguage('lt');
     expect(await screen.findByText('Plaukų priežiūra nenustatyta')).toBeTruthy();
-    expect(screen.getByText('Nurodykite Jx-Care, kaip dažnai plaunate plaukus.')).toBeTruthy();
+    expect(screen.getByText('Nurodykite Jx Care, kaip dažnai plaunate plaukus.')).toBeTruthy();
   });
 
   it('quick setup shows the next wash for every chip and saves the wash and the trim', async () => {

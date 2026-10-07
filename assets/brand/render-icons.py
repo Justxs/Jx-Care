@@ -1,4 +1,4 @@
-# Renders the Jx-Care app icon PNGs with Pillow. Geometry mirrors assets/brand/logo.svg.
+# Renders the Jx Care app icon PNGs with Pillow. Geometry mirrors assets/brand/logo.svg.
 # Usage: python3 assets/brand/render-icons.py   (writes to assets/images/)
 import math, os
 from PIL import Image, ImageDraw

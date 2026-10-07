@@ -2,7 +2,7 @@
 
 Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, v18) on 2026-10-07 so agents can read it offline. Where it differs from docs/feature-spec.md or DESIGN.md, those win; see [README.md](README.md#known-differences).
 
-Jx-Care is a calm, private companion, fronted by a pink spa-day frog, for one person's skin and hair care: products with their dates, daily routines, streaks and reminders, all kept on the phone. The UI should feel like a tidy bathroom shelf: soft blush neutrals, one pink accent that matches the logo, and two area colours that tell skin from hair at a glance.
+Jx Care is a calm, private companion, fronted by a pink spa-day frog, for one person's skin and hair care: products with their dates, daily routines, streaks and reminders, all kept on the phone. The UI should feel like a tidy bathroom shelf: soft blush neutrals, one pink accent that matches the logo, and two area colours that tell skin from hair at a glance.
 
 ## Content fundamentals
 
@@ -139,7 +139,7 @@ The Screens group follows the feature spec's screen inventory; each card's subti
 
 Onboarding is five steps (language, PIN, confirm, recovery question, Face ID) and asks for nothing else. Notification permission is asked in context, right after the first product with an expiry date is saved (ReminderAskSheet), so the phone's prompt has a reason next to it.
 
-- **Today, first run (T1):** a "Set up Jx-Care" card with three steps: first product, first routine, hair care. The next step is open with a filled button; the others are rows. Each opens the short version of its form. Done steps turn into a green check with what was made. When all three are done the card becomes "You're set" with the frog and a "See today" button, and goes away the next day. Every step can be skipped.
+- **Today, first run (T1):** a "Set up Jx Care" card with three steps: first product, first routine, hair care. The next step is open with a filled button; the others are rows. Each opens the short version of its form. Done steps turn into a green check with what was made. When all three are done the card becomes "You're set" with the frog and a "See today" button, and goes away the next day. Every step can be skipped.
 - **Add product (P3):** every new product, not only the first, opens the short form: name, area, whether it is open, and the open-jar period or printed expiry. A live line shows the expiry date. Photo, brand, price and ingredients sit behind "More details". "Save and add another" keeps the form open for the next bottle. The full form (ProductFormScreen) is for editing.
 - **First routine (R2, starter):** pick morning or evening, then a template. Steps are filled from the user's products; a gap says "Pick a product later" in amber.
 - **Hair care (R5, quick setup):** wash frequency, last wash, and an optional trim reminder, with a live "Next wash" line.
@@ -165,4 +165,4 @@ Lucide icons (`lucide-react-native` in the app), stroke 2, round caps and joins,
 
 ## Logo
 
-The mark is a minimal frog with cucumber slices on its eyes, a spa-day frog, in `brand-pink` (Logos group). It is the app icon and sits above the title on the lock screen and onboarding, at 64px or more. Keep it single-colour `brand-pink`; it reads on `canvas` and `surface` in both themes. Never recolour it to `accent`. Beside the mark, set the name "Jx-Care" in `title-l`.
+The mark is a minimal frog with cucumber slices on its eyes, a spa-day frog, in `brand-pink` (Logos group). It is the app icon and sits above the title on the lock screen and onboarding, at 64px or more. Keep it single-colour `brand-pink`; it reads on `canvas` and `surface` in both themes. Never recolour it to `accent`. Beside the mark, set the name "Jx Care" in `title-l`.

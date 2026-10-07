@@ -304,7 +304,7 @@ describe('validation', () => {
     expect(codeOf(JSON.parse(JSON.stringify(valid())))).toBe('ok');
   });
 
-  it('refuses a file that is not a Jx-Care backup', () => {
+  it('refuses a file that is not a Jx Care backup', () => {
     expect(codeOf({ hello: 'world' })).toBe('notBackup');
     expect(codeOf(null)).toBe('notBackup');
     expect(() => parseBackupJson('not json {')).toThrow(BackupError);

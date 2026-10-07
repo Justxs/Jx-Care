@@ -45,7 +45,7 @@ export function isBackupDue(lastBackupAt: number | null, today: string): boolean
 }
 
 /**
- * One "Back up your Jx-Care data" at 10:00, 30 days after the anchor, then every 30 days while no
+ * One "Back up your Jx Care data" at 10:00, 30 days after the anchor, then every 30 days while no
  * new backup is made (at most once a month). The days are fixed from the anchor, so planning
  * again (every app open, the daily background sync) never adds an extra one. Only the next one
  * after `now` is planned; a backup moves the anchor and the scheduler drops the old one.

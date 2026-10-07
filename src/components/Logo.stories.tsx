@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Large, as on the lock and onboarding screens; spoken as an image. */
-export const Large: Story = { args: { size: 168, accessibilityLabel: 'Jx-Care' } };
+export const Large: Story = { args: { size: 168, accessibilityLabel: 'Jx Care' } };
 
 /** Sizes keep the 7:6 ratio. */
 export const Sizes: Story = {

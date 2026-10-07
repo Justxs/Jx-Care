@@ -1,6 +1,6 @@
 # Design reference for coding agents
 
-The Jx-Care design system lives in a Claude artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, version 18 of 2026-10-07: every critique finding fixed in v17, wording aligned with the spec in v18). Agents may not be able to open it, so its text is copied here.
+The Jx Care design system lives in a Claude artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, version 18 of 2026-10-07: every critique finding fixed in v17, wording aligned with the spec in v18). Agents may not be able to open it, so its text is copied here.
 
 | File | What it holds |
 | --- | --- |

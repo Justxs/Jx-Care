@@ -276,7 +276,7 @@ describe('L1 lock screen', () => {
     await launch(app);
     await waitFor(() => expect(auth.authenticateAsync).toHaveBeenCalledTimes(1));
     expect(auth.authenticateAsync.mock.calls[0]![0]).toMatchObject({
-      promptMessage: 'Unlock Jx-Care',
+      promptMessage: 'Unlock Jx Care',
       disableDeviceFallback: true,
     });
     // Cancelled: still locked, and no second prompt by itself.

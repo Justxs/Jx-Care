@@ -1,10 +1,10 @@
-# Jx-Care Competitor Analysis
+# Jx Care Competitor Analysis
 
 Researched 2026-10-06. Living version: [Claude Doc](https://claude.ai/code/artifact/aef7345e-c365-44ed-980b-2b44c61e01dc).
 
 ## Summary
 
-No app I found combines skin routines, hair wash scheduling, expiry tracking and your own conflict rules offline in one place, so Jx-Care's core plan already stands out. Competitors are split three ways: expiry-only trackers, routine-only trackers, and separate hair apps. None of the ones checked offers a PIN lock or Lithuanian.
+No app I found combines skin routines, hair wash scheduling, expiry tracking and your own conflict rules offline in one place, so Jx Care's core plan already stands out. Competitors are split three ways: expiry-only trackers, routine-only trackers, and separate hair apps. None of the ones checked offers a PIN lock or Lithuanian.
 
 Eleven competitor features are worth adding because they work fully offline and fit the existing data model:
 
@@ -48,7 +48,7 @@ Also checked: [Curltine](https://play.google.com/store/apps/details?id=com.curlt
 
 Eleven features to add, four for later, seven to skip. The test was whether a feature works fully offline for one person and fits the planned data model. The Verdict column is a dropdown, so you can change any call.
 
-| Feature | Seen in | Verdict | Why, and how it fits Jx-Care |
+| Feature | Seen in | Verdict | Why, and how it fits Jx Care |
 | --- | --- | --- | --- |
 | Per-step schedule inside a routine (weekdays or every N days) | Mento, FeelinMySkin | Add | One Evening routine with "exfoliant Tue/Fri" replaces several near-identical variants. Adds an optional schedule to routine_step |
 | Progress photo diary with side-by-side compare | FeelinMySkin, Skin Bliss, Mento, HairDiary, Curl Compass | Add | The main way people see if a routine works. Photos stay on the phone; separate skin and hair albums |

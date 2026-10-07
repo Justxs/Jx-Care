@@ -260,7 +260,7 @@ describe('ProgressCameraScreen', () => {
 
     mockCamera.permission = { granted: false, status: 'denied', canAskAgain: false };
     await screen.rerender(<ProgressCameraScreen />);
-    expect(screen.getByText('The camera is off for Jx-Care')).toBeTruthy();
+    expect(screen.getByText('The camera is off for Jx Care')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Open phone settings' })).toBeTruthy();
     expect(mockCamera.request).toHaveBeenCalledTimes(1);
   });
@@ -326,7 +326,7 @@ describe('PhotoReviewScreen', () => {
     expect(entry).toMatchObject({ rating: 4, tags: ['calm', 'glow'], note: 'Less red' });
     expect(entry.photos.map((p) => p.angle)).toEqual(['front', 'left']);
     for (const p of entry.photos) expect(progressFiles.isProgressFile(p.fileUri)).toBe(true);
-    expect(uiStore.state.toasts[0]?.message).toBe('Saved privately in Jx-Care');
+    expect(uiStore.state.toasts[0]?.message).toBe('Saved privately in Jx Care');
     expect(captureStore.state.area).toBeNull();
   });
 

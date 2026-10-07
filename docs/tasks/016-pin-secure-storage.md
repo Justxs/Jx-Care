@@ -8,7 +8,7 @@ One tested module that owns the PIN, the recovery question and answer, biometric
 
 ## Scope
 
-In: `npx expo install expo-secure-store expo-crypto expo-local-authentication`; add the `expo-local-authentication` and `expo-secure-store` config plugins in `app.json` with an iOS `faceIDPermission` text (EN: "Unlock Jx-Care with Face ID."). Files: `src/features/security/pin.ts`, `secureStore.ts`, `biometrics.ts`, `pin.test.ts`.
+In: `npx expo install expo-secure-store expo-crypto expo-local-authentication`; add the `expo-local-authentication` and `expo-secure-store` config plugins in `app.json` with an iOS `faceIDPermission` text (EN: "Unlock Jx Care with Face ID."). Files: `src/features/security/pin.ts`, `secureStore.ts`, `biometrics.ts`, `pin.test.ts`.
 
 ### Storage
 

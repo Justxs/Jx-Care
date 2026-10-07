@@ -247,7 +247,7 @@ describe('BackupScreen', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Import backup' }));
     expect(
       await screen.findByText(
-        "This file isn't a Jx-Care backup. Pick the JSON or zip file you exported.",
+        "This file isn't a Jx Care backup. Pick the JSON or zip file you exported.",
       ),
     ).toBeTruthy();
     expect(screen.queryByTestId('backup-preview')).toBeNull();
@@ -262,7 +262,7 @@ describe('BackupScreen', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Import backup' }));
     expect(
       await screen.findByText(
-        'This backup is from a newer version of Jx-Care. Update the app first.',
+        'This backup is from a newer version of Jx Care. Update the app first.',
       ),
     ).toBeTruthy();
   });
