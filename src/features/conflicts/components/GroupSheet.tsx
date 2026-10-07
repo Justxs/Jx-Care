@@ -48,7 +48,6 @@ export function GroupSheet({ open, onClose, group, ingredients }: GroupSheetProp
   // What Delete takes with it, as saved; read up front so the dialog text never changes.
   const impact = useGroupImpact(group?.id ?? null).data;
 
-  const byId = useMemo(() => new Map(ingredients.map((i) => [i.id, i])), [ingredients]);
   const members = ingredients.filter((i) => memberIds.includes(i.id));
   const candidates = useMemo(
     () =>
@@ -131,7 +130,7 @@ export function GroupSheet({ open, onClose, group, ingredients }: GroupSheetProp
                 >
                   {i > 0 ? <Separator className="ml-3" /> : null}
                   <View className="min-h-[48px] flex-row items-center pl-3">
-                    <Text className="flex-1 text-body">{byId.get(m.id)?.name ?? m.name}</Text>
+                    <Text className="flex-1 text-body">{m.name}</Text>
                     <Pressable
                       onPress={() => setMemberIds((ids) => ids.filter((id) => id !== m.id))}
                       accessibilityRole="button"
