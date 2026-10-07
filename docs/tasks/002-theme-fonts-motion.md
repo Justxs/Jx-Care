@@ -50,4 +50,11 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Weights on Android:** a small Tailwind plugin in `tailwind.config.js` defines every type style (`text-display` … `text-overline`, plus `text-tiny` 12/16 for tab labels and weekday letters) with its size, line height and the Figtree family for its weight, and no `fontWeight`, so Android never synthesises a weight. The `fontSize` block from nativewind.md is replaced by this plugin; the values are the same.
+- **`tabular-nums`:** NativeWind only sets a CSS variable for it, so the same plugin adds `fontVariant: 'tabular-nums'` under the same class name.
+- **Dark shadow:** NativeWind turns `shadow-card` into native shadow props (and `elevation` on Android); it can't switch a shadow value by theme. The Card component (task 008) adds `dark:shadow-none` with a 1 px hairline border in dark mode.
+- **Colour scheme:** NativeWind follows the phone by default (`darkMode: 'class'` with `.dark:root` variables); no code sets it.
+- `babel-preset-expo` is a dev dependency at the root so the project's `babel.config.js` can resolve it (Expo installs it nested under `expo/`).
+- Jest mocks `react-native-reanimated` and `react-native-worklets` in `jest.setup.js` with the mocks both packages ship.
+- `useMotion()` returns `{ reduced, timing(), allowMovement, allowCounting }`; with Reduce Motion `timing()` always gives the 100 ms fade and screens skip translate and scale.
+- The theme preview is `app/dev/theme.tsx`; in a release build it redirects to `/`.

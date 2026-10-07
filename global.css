@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: 248 244 245;
+    --surface: 255 255 255;
+    --subtle: 241 234 236;
+    --ink: 36 31 33;
+    --ink-muted: 105 95 99;
+    --border: 232 223 226;
+    --border-strong: 135 124 128;
+    --brand-pink: 217 79 135;
+    --accent: 184 58 110;
+    --on-accent: 255 255 255;
+    --accent-soft: 251 231 239;
+    --skin: 163 80 47;
+    --skin-soft: 251 235 227;
+    --hair: 107 90 174;
+    --hair-soft: 238 234 248;
+    --ok: 42 116 73;
+    --ok-soft: 227 243 234;
+    --warning: 138 90 16;
+    --warning-soft: 252 241 220;
+    --danger: 178 55 49;
+    --danger-soft: 251 229 227;
+    --neutral: 95 102 98;
+    --neutral-soft: 236 238 236;
+    --focus: 184 58 110;
+    /* Camera screen: always dark, same in both themes */
+    --camera-bg: 18 13 16;
+  }
+  .dark:root {
+    --canvas: 20 17 18;
+    --surface: 32 27 29;
+    --subtle: 42 35 38;
+    --ink: 244 239 241;
+    --ink-muted: 172 162 166;
+    --border: 61 53 56;
+    --border-strong: 119 109 113;
+    --brand-pink: 232 103 156;
+    --accent: 242 141 181;
+    --on-accent: 31 10 19;
+    --accent-soft: 61 34 48;
+    --skin: 240 168 137;
+    --skin-soft: 58 42 34;
+    --hair: 185 174 234;
+    --hair-soft: 44 40 64;
+    --ok: 125 216 165;
+    --ok-soft: 27 51 38;
+    --warning: 242 192 99;
+    --warning-soft: 58 48 32;
+    --danger: 245 154 147;
+    --danger-soft: 61 35 33;
+    --neutral: 179 187 183;
+    --neutral-soft: 42 46 44;
+    --focus: 242 141 181;
+  }
+}

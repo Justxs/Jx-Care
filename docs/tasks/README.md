@@ -39,7 +39,7 @@ Status: **todo**, **in progress**, **done**. Task files 008 onward follow the fi
 | # | Task | Depends on | Spec | Status |
 | --- | --- | --- | --- | --- |
 | 001 | [Project scaffold](001-project-scaffold.md) | none | Global UI rules | done |
-| 002 | [Theme, fonts and motion](002-theme-fonts-motion.md) | 001 | Styling, Motion | todo |
+| 002 | [Theme, fonts and motion](002-theme-fonts-motion.md) | 001 | Styling, Motion | done |
 | 003 | [Translations and formatting](003-i18n-formatting.md) | 001 | Global UI rules, Words and copy | todo |
 | 004 | [Database schema and migrations](004-database.md) | 001 | Data model | todo |
 | 005 | [Data access and app state](005-data-access-app-state.md) | 003, 004 | Sequence diagrams (Data) | todo |
