@@ -56,4 +56,11 @@ Out:
 
 ## Decisions
 
-(Write any choices you make here.)
+- **Where hooks get the database:** `src/db/index.ts` holds the current database (`setDb()` / `getDb()`). `app/_layout.tsx` sets the expo-sqlite one; tests call `setupTestApp()` from `src/test/render.tsx`, which sets a fresh `createTestDb()` and gives a `QueryClientProvider` wrapper. `client.ts` (expo-sqlite) is only imported by the root layout, so Jest never loads it. The `Db` type lives in `src/db/types.ts`.
+- **TanStack Store 0.11 API:** `createStore(initial)`, `store.setState(prev => next)`, `store.state`, and `useSelector(store, selector)` in components (`useStore` is a deprecated alias).
+- **Toasts:** one at a time; a new toast replaces the one on screen ("until the next action"). `runToastAction(id)` runs Undo and removes it. `watchScreenReader()` keeps `uiStore.screenReaderOn` current.
+- **Language:** `setLanguage(lang)` updates the store and i18next always, and writes `settings.language` only when the settings row exists (onboarding saves nothing before O4). `bootstrapAfterMigrations()` applies the saved language at start-up and seeds the settings query.
+- **Day clock:** `startDayClock()` sets a timer for the next 04:00 and refreshes `activeDay` whenever the app returns to the foreground. Task 006 landed first, so it uses the real `appDay()` (no stub).
+- `useFormat()` now takes no arguments: it reads the app day from `appStore` and the currency from `useSettings()`.
+- `createQueryClient({ gcTime })` lets tests turn off garbage-collection timers so Jest exits cleanly.
+- `react-dom` is pinned to exactly 19.2.3; with a caret npm tried to pull React 19.3.

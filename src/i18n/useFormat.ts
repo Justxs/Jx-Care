@@ -1,6 +1,10 @@
+import { useSelector } from '@tanstack/react-store';
 import { getCalendars, getLocales } from 'expo-localization';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useSettings } from '@/features/settings/api';
+import { appStore } from '@/state/app';
 
 import {
   formatCountdown,
@@ -62,11 +66,13 @@ export function makeFormatter(opts: {
 }
 
 /**
- * Formatting bound to the current language, the phone's locale and the currency from settings.
- * `today` is the current app day.
+ * Formatting bound to the current language, the phone's locale, the currency from settings and
+ * the current app day.
  */
-export function useFormat(today: string, currency = 'EUR'): Formatter {
+export function useFormat(): Formatter {
   const { i18n } = useTranslation();
+  const today = useSelector(appStore, (s) => s.activeDay);
+  const currency = useSettings().data?.currency ?? 'EUR';
   const lang: Language = isLanguage(i18n.language) ? i18n.language : 'en';
   return useMemo(
     () => makeFormatter({ lang, locale: phoneLocale(), currency, today, uses24h: phoneUses24h() }),

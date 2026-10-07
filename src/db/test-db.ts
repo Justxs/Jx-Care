@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import path from 'path';
 
-import type { Db } from './client';
+import type { Db } from './types';
 import * as schema from './schema';
 
 /** A fresh in-memory database with every migration applied, for repository tests. */

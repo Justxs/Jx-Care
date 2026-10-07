@@ -1,0 +1,28 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { getDb } from '@/db';
+import { qk } from '@/db/queryKeys';
+import { phoneLanguage } from '@/i18n';
+
+import { getSettings, saveSettings, type AppSettings, type SettingsPatch } from './repo';
+
+/** The settings row (or defaults before onboarding). */
+export function useSettings() {
+  return useQuery({
+    queryKey: qk.settings,
+    queryFn: (): AppSettings => getSettings(getDb(), phoneLanguage()),
+  });
+}
+
+export function useUpdateSettings() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (patch: SettingsPatch) => saveSettings(getDb(), patch),
+    onSuccess: (next) => {
+      client.setQueryData(qk.settings, next);
+      // Settings change Today (warning window, setup card) and every expiry badge.
+      client.invalidateQueries({ queryKey: ['today'] });
+      client.invalidateQueries({ queryKey: qk.products.all });
+    },
+  });
+}
