@@ -6,6 +6,7 @@
  * `seedDemo` checks them, so a story can pass `params: { id: String(demoIds.products.retinol) }`.
  */
 import type { Db } from '@/db';
+import { routine } from '@/db/schema';
 import { addAvoidIngredientByName } from '@/features/conflicts/avoidRepo';
 import { commonRuleLabels } from '@/features/conflicts/commonRules';
 import { addCommonRules, ensureIngredient, saveRule } from '@/features/conflicts/repo';
@@ -369,6 +370,11 @@ export function seedDemo(db: Db, today: string = FIXTURE_TODAY): typeof demoIds 
     r.eveningB,
   );
   setChoice(db, 'evening', weekdayOf(today), r.eveningA);
+  // A routine is due only from the day it was made; date them a month back, so the streak below
+  // counts and a fixed FIXTURE_TODAY still works after the real date has moved past it.
+  db.update(routine)
+    .set({ createdAt: momentOf(day(-30), '08:00') })
+    .run();
 
   const stepIds = (routineId: number) =>
     (getRoutine(db, routineId, today, 30)?.steps ?? []).map((st) => st.id);
