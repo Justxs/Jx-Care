@@ -132,8 +132,7 @@ function SideButton({ className }: Readonly<{ className: string }>) {
 
 /**
  * The app's Today screen in a phone frame, at a fixed size so the page never shifts while it
- * animates. The rows settle in one after another once the phone has risen in. The real app opens
- * from the hero's "View demo" button (DemoDialog), not in here.
+ * animates. The rows settle in one after another once the phone has risen in.
  */
 export function TodayPhone({ className }: Readonly<{ className?: string }>) {
   const { t } = useTranslation();

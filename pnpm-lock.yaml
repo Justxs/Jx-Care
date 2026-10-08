@@ -359,9 +359,6 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
     devDependencies:
-      '@expo/metro-runtime':
-        specifier: ~57.0.16
-        version: 57.0.16(@expo/log-box@57.0.4)(expo@57.0.27)(react-dom@19.2.3(react@19.2.3))(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@react-native/jest-preset':
         specifier: ^0.86.3
         version: 0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)
@@ -392,9 +389,6 @@ importers:
       '@types/react':
         specifier: ~19.2.2
         version: 19.2.18
-      '@types/sql.js':
-        specifier: ^1.4.11
-        version: 1.4.11
       babel-plugin-inline-import:
         specifier: ^3.0.0
         version: 3.0.0
@@ -422,12 +416,6 @@ importers:
       react-dom:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
-      react-native-web:
-        specifier: ~0.21.3
-        version: 0.21.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      sql.js:
-        specifier: ^1.14.2
-        version: 1.14.2
       storybook:
         specifier: ^10.6.1
         version: 10.6.1(@types/react@19.2.18)(react@19.2.3)
@@ -9020,7 +9008,8 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@react-native/normalize-colors@0.74.89': {}
+  '@react-native/normalize-colors@0.74.89':
+    optional: true
 
   '@react-native/normalize-colors@0.86.3': {}
 
@@ -9595,6 +9584,7 @@ snapshots:
     dependencies:
       '@types/emscripten': 1.41.6
       '@types/node': 22.20.5
+    optional: true
 
   '@types/stack-utils@2.0.3': {}
 
@@ -10162,6 +10152,7 @@ snapshots:
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   cross-spawn@7.0.6:
     dependencies:
@@ -10172,6 +10163,7 @@ snapshots:
   css-in-js-utils@3.1.0:
     dependencies:
       hyphenate-style-name: 1.1.0
+    optional: true
 
   css-select@5.2.2:
     dependencies:
@@ -10882,7 +10874,8 @@ snapshots:
     dependencies:
       bser: 2.1.1
 
-  fbjs-css-vars@1.0.2: {}
+  fbjs-css-vars@1.0.2:
+    optional: true
 
   fbjs@3.0.5:
     dependencies:
@@ -10895,6 +10888,7 @@ snapshots:
       ua-parser-js: 1.0.41
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
@@ -11091,7 +11085,8 @@ snapshots:
 
   human-signals@2.1.0: {}
 
-  hyphenate-style-name@1.1.0: {}
+  hyphenate-style-name@1.1.0:
+    optional: true
 
   i18next@26.4.2(typescript@6.0.3):
     optionalDependencies:
@@ -11124,6 +11119,7 @@ snapshots:
   inline-style-prefixer@7.0.1:
     dependencies:
       css-in-js-utils: 3.1.0
+    optional: true
 
   invariant@2.2.4:
     dependencies:
@@ -11824,7 +11820,8 @@ snapshots:
 
   memoize-one@5.2.1: {}
 
-  memoize-one@6.0.0: {}
+  memoize-one@6.0.0:
+    optional: true
 
   memoizerific@1.11.3:
     dependencies:
@@ -12085,6 +12082,7 @@ snapshots:
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
+    optional: true
 
   node-forge@1.4.0: {}
 
@@ -12394,6 +12392,7 @@ snapshots:
   promise@7.3.1:
     dependencies:
       asap: 2.0.6
+    optional: true
 
   promise@8.3.0:
     dependencies:
@@ -12590,6 +12589,7 @@ snapshots:
       styleq: 0.1.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   react-native-worklets@0.10.1(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1):
     dependencies:
@@ -12893,7 +12893,8 @@ snapshots:
 
   sqids@0.3.0: {}
 
-  sql.js@1.14.2: {}
+  sql.js@1.14.2:
+    optional: true
 
   stack-generator@2.0.10:
     dependencies:
@@ -12998,7 +12999,8 @@ snapshots:
 
   structured-headers@0.4.1: {}
 
-  styleq@0.1.3: {}
+  styleq@0.1.3:
+    optional: true
 
   sucrase@3.35.1:
     dependencies:
@@ -13141,7 +13143,8 @@ snapshots:
       universalify: 0.2.0
       url-parse: 1.5.10
 
-  tr46@0.0.3: {}
+  tr46@0.0.3:
+    optional: true
 
   tr46@3.0.0:
     dependencies:
@@ -13171,7 +13174,8 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  ua-parser-js@1.0.41: {}
+  ua-parser-js@1.0.41:
+    optional: true
 
   undici-types@6.21.0: {}
 
@@ -13273,7 +13277,8 @@ snapshots:
     dependencies:
       defaults: 1.0.4
 
-  webidl-conversions@3.0.1: {}
+  webidl-conversions@3.0.1:
+    optional: true
 
   webidl-conversions@5.0.0: {}
 
@@ -13304,6 +13309,7 @@ snapshots:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
+    optional: true
 
   which@2.0.2:
     dependencies:

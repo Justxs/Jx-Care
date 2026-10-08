@@ -27,24 +27,6 @@ describe('LandingPage', () => {
     expect(source).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('opens the live demo in a dialog and closes it again', async () => {
-    const user = userEvent.setup();
-    renderAt('/');
-
-    await user.click(await screen.findByRole('button', { name: 'View demo' }));
-    const dialog = screen.getByRole('dialog', { name: 'Jx Care demo' });
-    expect(dialog).toHaveAttribute('open');
-    expect(within(dialog).getByText('Sample data. Nothing you do here is saved.')).toBeVisible();
-    expect(dialog.querySelector('iframe')).toHaveAttribute(
-      'src',
-      'demo/index.html?theme=light&lang=en',
-    );
-
-    await user.click(within(dialog).getByRole('button', { name: 'Close demo' }));
-    expect(dialog).not.toHaveAttribute('open');
-    expect(dialog.querySelector('iframe')).toBeNull();
-  });
-
   it('shows three feature groups with their cards and links to the rest', async () => {
     renderAt('/');
     const overview = await screen.findByRole('region', { name: "What you'll find inside" });

@@ -70,7 +70,6 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@expo/metro-runtime": "~57.0.16",
     "@react-native/jest-preset": "^0.86.3",
     "@storybook/addon-ondevice-actions": "^10.6.0",
     "@storybook/addon-ondevice-backgrounds": "^10.6.0",
@@ -81,7 +80,6 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.20.5",
     "@types/react": "~19.2.2",
-    "@types/sql.js": "^1.4.11",
     "babel-plugin-inline-import": "^3.0.0",
     "babel-preset-expo": "~57.0.14",
     "better-sqlite3": "^13.0.3",
@@ -91,8 +89,6 @@
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
     "react-dom": "19.2.3",
-    "react-native-web": "~0.21.3",
-    "sql.js": "^1.14.2",
     "storybook": "^10.6.1",
     "test-renderer": "~1.2.0",
     "typescript": "~6.0.3"
@@ -103,7 +99,6 @@
     "ios": "expo start --ios",
     "storybook": "EXPO_PUBLIC_STORYBOOK_ENABLED=true STORYBOOK_DISABLE_TELEMETRY=1 expo start",
     "storybook:generate": "STORYBOOK_DISABLE_TELEMETRY=1 sb-rn-get-stories --config-path .rnstorybook",
-    "web-demo": "node scripts/build-web-demo.mjs",
     "apk": "node scripts/build-apk.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint --deny-warnings",

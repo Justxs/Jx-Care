@@ -22,21 +22,13 @@
   "hero": {
     "title": "Žinokite, ką naudoti šiandien",
     "lead": "Jx Care seka jūsų odos ir plaukų priežiūros produktus: kada kiekvienas nebegalios, ką naudoti ryte ir vakare, kada plauti plaukus ir kaip oda keičiasi kas savaitę. Viskas lieka jūsų telefone, apsaugota PIN kodu.",
-    "demo": "Žiūrėti demonstraciją",
     "primary": "Žiūrėti, kas viduje",
     "source": "Žiūrėti GitHub",
     "soon": "Netrukus iOS ir Android. App Store ir Google Play jos dar nėra."
   },
-  "demo": {
-    "title": "Jx Care demonstracija",
-    "note": "Pavyzdiniai duomenys. Niekas, ką čia darote, neišsaugoma.",
-    "close": "Uždaryti demonstraciją",
-    "loading": "Įkeliama demonstracija…"
-  },
   "sample": {
     "tag": "Pavyzdys",
     "phoneLabel": "Ekranas „Šiandien“ su pavyzdiniais duomenimis",
-    "liveDemo": "Jx Care su pavyzdiniais duomenimis. Bakstelėkite skirtukus ir apsidairykite.",
     "greeting": "Labas rytas",
     "streaks": "Serijos",
     "skinStreak": "12 oda",

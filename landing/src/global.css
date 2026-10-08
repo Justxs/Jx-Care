@@ -229,12 +229,6 @@
     -webkit-text-size-adjust: 100%;
   }
 
-  /* The page holds still behind the demo; the gutter stays so nothing moves sideways. */
-  html:has(dialog[open]) {
-    overflow: hidden;
-    scrollbar-gutter: stable;
-  }
-
   body {
     min-height: 100dvh;
     background-color: var(--canvas);

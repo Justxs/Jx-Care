@@ -5,9 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node ../scripts/build-web-demo.mjs --if-missing && vite",
-    "build": "pnpm demo && pnpm typecheck && vite build",
-    "demo": "node ../scripts/build-web-demo.mjs",
+    "dev": "vite",
+    "build": "pnpm typecheck && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b tsconfig.json tsconfig.node.json",
     "lint": "oxlint --deny-warnings",
