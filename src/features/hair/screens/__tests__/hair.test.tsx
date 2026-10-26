@@ -26,6 +26,9 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
   useLocalSearchParams: () => mockParams.current,
   useNavigation: () => ({ addListener: () => () => {} }),
+  usePreventRemove:
+    jest.requireActual<typeof import('@/test/preventRemove')>('@/test/preventRemove')
+      .usePreventRemove,
 }));
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(() => Promise.resolve()),

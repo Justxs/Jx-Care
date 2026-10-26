@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View, type LayoutChangeEvent } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
@@ -23,8 +23,6 @@ import { StepRow, type StepRowData } from './StepRow';
 /** Space under each row; part of the measured row height so the drag maths stays exact. */
 const ROW_GAP = 8;
 const LIFT_SCALE = 1.03;
-/** Lowercase alias: the linter reads a capitalised call as a component. */
-const { Pan: panGesture } = Gesture;
 
 export type StepListProps = {
   steps: readonly StepRowData[];
@@ -162,35 +160,29 @@ function DraggableStep({
     onHeight(step.key, h);
   };
 
-  // Stable for the whole drag: a new gesture would cancel the one under the finger.
-  const pan = useMemo(
-    () =>
-      panGesture()
-        .minDistance(0)
-        .onStart(() => {
+  // Gesture callbacks are worklets (the worklets plugin spots them) and run on the UI thread.
+  const pan = usePanGesture({
+    minDistance: 0,
+    onActivate: () => {
+      active.set(index);
+      target.set(index);
+      dy.set(0);
+      scheduleOnRN(onLift);
+    },
+    onUpdate: (e) => {
+      dy.set(e.translationY);
+      target.set(dragTarget(heights.value, index, e.translationY));
+    },
+    onDeactivate: () => {
+      const to = target.value;
+      dy.set(
+        withTiming(dropOffset(heights.value, index, to), settle, (finished) => {
           'worklet';
-          active.set(index);
-          target.set(index);
-          dy.set(0);
-          scheduleOnRN(onLift);
-        })
-        .onUpdate((e) => {
-          'worklet';
-          dy.set(e.translationY);
-          target.set(dragTarget(heights.value, index, e.translationY));
-        })
-        .onEnd(() => {
-          'worklet';
-          const to = target.value;
-          dy.set(
-            withTiming(dropOffset(heights.value, index, to), settle, (finished) => {
-              'worklet';
-              if (finished) scheduleOnRN(onDrop, index, to);
-            }),
-          );
+          if (finished) scheduleOnRN(onDrop, index, to);
         }),
-    [active, target, dy, heights, index, onLift, onDrop, settle],
-  );
+      );
+    },
+  });
 
   const rowStyle = useAnimatedStyle(() => {
     const a = active.value;

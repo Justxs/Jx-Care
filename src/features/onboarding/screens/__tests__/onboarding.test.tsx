@@ -100,9 +100,8 @@ let currentPath: () => string = () => '';
 /** Renders the app's routes at `url`, after the boot check, and keeps the pathname readable. */
 async function launch(app: ReturnType<typeof setupTestApp>, url: string) {
   await checkOnboarding(app.db);
-  const result = renderRouter(routes, { initialUrl: url, wrapper: app.wrapper });
+  const result = await renderRouter(routes, { initialUrl: url, wrapper: app.wrapper });
   currentPath = () => result.getPathname();
-  await result;
 }
 
 async function startFirstLaunch() {

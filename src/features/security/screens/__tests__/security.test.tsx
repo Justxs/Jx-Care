@@ -97,9 +97,8 @@ async function setUp(opts: { biometricsOn?: boolean } = {}) {
 /** Opens the security screen with Home underneath, so going back has somewhere to go. */
 async function launch(app: ReturnType<typeof setupTestApp>, path: string) {
   app.client.setQueryData(qk.settings, getSettings(app.db));
-  const result = renderRouter(routes, { initialUrl: '/', wrapper: app.wrapper });
+  const result = await renderRouter(routes, { initialUrl: '/', wrapper: app.wrapper });
   currentPath = () => result.getPathname();
-  await result;
   const { router } = jest.requireActual<typeof import('expo-router')>('expo-router');
   await act(async () => router.push(path as never));
   await waitFor(() => expect(currentPath()).toBe(path));

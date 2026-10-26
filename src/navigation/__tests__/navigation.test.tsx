@@ -49,7 +49,7 @@ describe('routes', () => {
 const tabBarProps = (
   index: number,
   emit = jest.fn(() => ({ defaultPrevented: false })),
-  navigate = jest.fn(),
+  navigateToTab = jest.fn(),
 ) =>
   ({
     state: {
@@ -60,7 +60,8 @@ const tabBarProps = (
         params: undefined,
       })),
     },
-    navigation: { emit, navigate },
+    emitter: { emit },
+    navigateToTab,
     descriptors: {},
     insets: { top: 0, bottom: 0, left: 0, right: 0 },
   }) as unknown as Parameters<typeof TabBar>[0];
@@ -77,12 +78,12 @@ describe('TabBar', () => {
   });
 
   it('navigates to another tab and not to the current one', async () => {
-    const navigate = jest.fn();
-    await render(<TabBar {...tabBarProps(0, undefined, navigate)} />);
+    const navigateToTab = jest.fn();
+    await render(<TabBar {...tabBarProps(0, undefined, navigateToTab)} />);
     await fireEvent.press(screen.getByRole('tab', { name: 'Today' }));
-    expect(navigate).not.toHaveBeenCalled();
+    expect(navigateToTab).not.toHaveBeenCalled();
     await fireEvent.press(screen.getByRole('tab', { name: 'Calendar' }));
-    expect(navigate).toHaveBeenCalledWith('calendar', undefined);
+    expect(navigateToTab).toHaveBeenCalledWith('calendar-key');
   });
 
   it('reports its height so toasts float above it', async () => {

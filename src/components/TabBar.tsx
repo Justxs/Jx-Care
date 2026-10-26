@@ -18,7 +18,7 @@ export const tabs = [
 ] as const satisfies readonly { name: string; label: string; icon: IconName }[];
 
 /** The five bottom tabs. Labels may wrap to two lines so Lithuanian never truncates. */
-export function TabBar({ state, navigation }: BottomTabBarProps) {
+export function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   return (
@@ -35,18 +35,18 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         const focused = state.index === index;
         const label = t(tab.label);
         const onPress = () => {
-          const event = navigation.emit({
+          const event = emitter.emit({
             type: 'tabPress',
             target: route.key,
             canPreventDefault: true,
           });
-          if (!focused && !event.defaultPrevented) navigation.navigate(route.name, route.params);
+          if (!focused && !event.defaultPrevented) navigateToTab(route.key);
         };
         return (
           <Pressable
             key={route.key}
             onPress={onPress}
-            onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })}
+            onLongPress={() => emitter.emit({ type: 'tabLongPress', target: route.key })}
             accessibilityRole="tab"
             accessibilityLabel={label}
             accessibilityState={{ selected: focused }}

@@ -59,7 +59,12 @@ export function setNavigationLogger(logger: NavigationLogger): void {
 type Router = typeof ExpoRouter.router;
 type Real = Pick<
   typeof ExpoRouter,
-  'router' | 'useLocalSearchParams' | 'useNavigation' | 'Redirect' | 'useRouter'
+  | 'router'
+  | 'useLocalSearchParams'
+  | 'useNavigation'
+  | 'usePreventRemove'
+  | 'Redirect'
+  | 'useRouter'
 >;
 
 const loggedRouterMethods = [
@@ -95,7 +100,7 @@ const log =
 
 function fakeNavigation() {
   return {
-    // Screens guard leaving with `beforeRemove`; inside a story nothing leaves.
+    // Inside a story nothing leaves, so no navigation event ever fires.
     addListener: () => noop,
     removeListener: noop,
     setOptions: noop,
@@ -162,6 +167,15 @@ export function storyRouterOverrides(real?: Real) {
       }
     : () => navigation;
 
+  // Screens guard leaving with `usePreventRemove`; a story must never stop Storybook's own screen
+  // from closing, so inside one nothing is prevented.
+  const usePreventRemove: typeof ExpoRouter.usePreventRemove = real
+    ? (prevent, callback, options) => {
+        const story = useContext(StoryRouteContext);
+        return real.usePreventRemove(story ? false : prevent, callback, options);
+      }
+    : () => noop;
+
   const useRouter = real
     ? () => {
         const story = useContext(StoryRouteContext);
@@ -183,6 +197,7 @@ export function storyRouterOverrides(real?: Real) {
     useRouter: useRouter as typeof ExpoRouter.useRouter,
     useLocalSearchParams: useLocalSearchParams as typeof ExpoRouter.useLocalSearchParams,
     useNavigation: useNavigation as unknown as typeof ExpoRouter.useNavigation,
+    usePreventRemove,
     Redirect,
   };
 }

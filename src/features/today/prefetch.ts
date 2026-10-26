@@ -16,20 +16,20 @@ import { todayQueries } from './api';
  * Slots filled by later tasks add their queries here.
  */
 export async function prefetchToday(queryClient: QueryClient, day: string): Promise<void> {
-  const settings = await queryClient.fetchQuery(settingsQuery());
+  const settings = await queryClient.query(settingsQuery());
   const queries = todayQueries(day, settings.expiryWarnDays);
   await Promise.all([
-    queryClient.prefetchQuery(queries.setup),
-    queryClient.prefetchQuery(queries.routines),
-    queryClient.prefetchQuery(queries.skinStreak),
-    queryClient.prefetchQuery(queries.expiring),
+    queryClient.query(queries.setup).catch(() => {}),
+    queryClient.query(queries.routines).catch(() => {}),
+    queryClient.query(queries.skinStreak).catch(() => {}),
+    queryClient.query(queries.expiring).catch(() => {}),
     prefetchShopping(queryClient),
     // Check-in skin chips (task 038).
-    queryClient.prefetchQuery(conditionDayQuery(day)),
+    queryClient.query(conditionDayQuery(day)).catch(() => {}),
     prefetchHair(queryClient, day),
     // The Check-in card's weekly photo row (task 036).
-    queryClient.prefetchQuery(thisWeekStatusQuery('skin', day)),
+    queryClient.query(thisWeekStatusQuery('skin', day)).catch(() => {}),
     // Conflict tags on the routine cards (task 030).
-    queryClient.prefetchQuery(conflictDataQuery()),
+    queryClient.query(conflictDataQuery()).catch(() => {}),
   ]);
 }

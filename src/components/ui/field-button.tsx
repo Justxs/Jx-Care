@@ -1,5 +1,5 @@
-import { forwardRef } from 'react';
-import { Pressable, View, type PressableProps } from 'react-native';
+import type { Ref } from 'react';
+import { Pressable, type PressableInstance, type PressableProps } from 'react-native';
 
 import { cn } from '@/lib/cn';
 
@@ -8,6 +8,7 @@ import { Icon, type IconName } from './icon';
 import { Text } from './text';
 
 export type FieldButtonProps = Omit<PressableProps, 'children'> & {
+  ref?: Ref<PressableInstance>;
   /** Shown value; the placeholder shows when empty. */
   value?: string;
   placeholder?: string;
@@ -19,20 +20,18 @@ export type FieldButtonProps = Omit<PressableProps, 'children'> & {
 };
 
 /** The 48 pt trigger that select, date and time fields share; looks like an Input. */
-export const FieldButton = forwardRef<View, FieldButtonProps>(function FieldButton(
-  {
-    value,
-    placeholder,
-    invalid,
-    icon = 'chevron-down',
-    label,
-    valueLines = 1,
-    disabled,
-    className,
-    ...props
-  },
+export function FieldButton({
   ref,
-) {
+  value,
+  placeholder,
+  invalid,
+  icon = 'chevron-down',
+  label,
+  valueLines = 1,
+  disabled,
+  className,
+  ...props
+}: FieldButtonProps) {
   return (
     <Pressable
       ref={ref}
@@ -56,4 +55,4 @@ export const FieldButton = forwardRef<View, FieldButtonProps>(function FieldButt
       <Icon name={icon} size={20} tone="ink-muted" />
     </Pressable>
   );
-});
+}

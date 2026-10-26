@@ -47,7 +47,7 @@ export function useConditionMonth(month: string) {
   const client = useQueryClient();
   useEffect(() => {
     for (const n of [-1, 1]) {
-      client.prefetchQuery(conditionMonthQuery(shiftMonth(month, n))).catch(() => {});
+      client.query(conditionMonthQuery(shiftMonth(month, n))).catch(() => {});
     }
   }, [client, month]);
   return useQuery({ ...conditionMonthQuery(month), placeholderData: keepPreviousData });

@@ -7,7 +7,14 @@ import {
   type AccessibilityActionEvent,
   type LayoutChangeEvent,
 } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  useCompetingGestures,
+  usePanGesture,
+  usePinchGesture,
+  useSimultaneousGestures,
+  useTapGesture,
+} from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -42,17 +49,6 @@ const MAX_SCALE = 4;
 const LABEL_SPACE = 28;
 const COLUMN_GAP = 8;
 const HANDLE = 44;
-
-// Gesture builders are factories, not components: lowercase names keep the React lint rules quiet.
-// The worklets plugin only spots callbacks on `Gesture.X()` chains, so every callback below says
-// 'worklet' itself and runs on the UI thread.
-const {
-  Pinch: pinchGesture,
-  Pan: panGesture,
-  Tap: tapGesture,
-  Race: race,
-  Simultaneous: simultaneous,
-} = Gesture;
 
 type Side = keyof ComparePair;
 type Mode = 'side' | 'slider';
@@ -296,7 +292,8 @@ function CompareViewer({ mode, space, before, after }: ViewerProps) {
   const column = mode === 'side' ? (space.width - COLUMN_GAP) / 2 : space.width;
   const width = Math.min(column, (usable * 3) / 4);
   const box = { width, height: (width * 4) / 3 };
-  const zoom = useSyncedZoom(box, setZoomed);
+  // Side by side drags with one finger; the slider keeps one finger for its handle.
+  const zoom = useSyncedZoom(box, mode === 'side' ? 1 : 2, setZoomed);
 
   return (
     <View className="items-center gap-2">
@@ -315,8 +312,11 @@ function CompareViewer({ mode, space, before, after }: ViewerProps) {
 type Box = { width: number; height: number };
 type Zoom = ReturnType<typeof useSyncedZoom>;
 
-/** One zoom (scale and offset) shared by both photos, so they move together. */
-function useSyncedZoom(box: Box, onZoomed: (zoomed: boolean) => void) {
+/**
+ * One zoom (scale and offset) shared by both photos, so they move together. Gesture callbacks
+ * are worklets (the worklets plugin spots them) and run on the UI thread.
+ */
+function useSyncedZoom(box: Box, movePointers: number, onZoomed: (zoomed: boolean) => void) {
   const m = useMotion();
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
@@ -327,14 +327,12 @@ function useSyncedZoom(box: Box, onZoomed: (zoomed: boolean) => void) {
   const resetTiming = m.timing('base');
   const { width, height } = box;
 
-  const pinch = pinchGesture()
-    .withTestId('compare-pinch')
-    .onUpdate((e) => {
-      'worklet';
+  const pinch = usePinchGesture({
+    testID: 'compare-pinch',
+    onUpdate: (e) => {
       scale.set(Math.min(MAX_SCALE, Math.max(1, savedScale.value * e.scale)));
-    })
-    .onEnd(() => {
-      'worklet';
+    },
+    onDeactivate: () => {
       savedScale.set(scale.value);
       if (scale.value <= 1) {
         x.set(withTiming(0, resetTiming));
@@ -343,31 +341,29 @@ function useSyncedZoom(box: Box, onZoomed: (zoomed: boolean) => void) {
         savedY.set(0);
       }
       scheduleOnRN(onZoomed, scale.value > 1);
-    });
+    },
+  });
 
-  const move = (minPointers: number) =>
-    panGesture()
-      .minPointers(minPointers)
-      .averageTouches(true)
-      .onUpdate((e) => {
-        'worklet';
-        // Each photo may move until its edge meets its box.
-        const limitX = (width * (scale.value - 1)) / 2;
-        const limitY = (height * (scale.value - 1)) / 2;
-        x.set(Math.min(limitX, Math.max(-limitX, savedX.value + e.translationX)));
-        y.set(Math.min(limitY, Math.max(-limitY, savedY.value + e.translationY)));
-      })
-      .onEnd(() => {
-        'worklet';
-        savedX.set(x.value);
-        savedY.set(y.value);
-      });
+  const move = usePanGesture({
+    minPointers: movePointers,
+    averageTouches: true,
+    onUpdate: (e) => {
+      // Each photo may move until its edge meets its box.
+      const limitX = (width * (scale.value - 1)) / 2;
+      const limitY = (height * (scale.value - 1)) / 2;
+      x.set(Math.min(limitX, Math.max(-limitX, savedX.value + e.translationX)));
+      y.set(Math.min(limitY, Math.max(-limitY, savedY.value + e.translationY)));
+    },
+    onDeactivate: () => {
+      savedX.set(x.value);
+      savedY.set(y.value);
+    },
+  });
 
-  const doubleTap = tapGesture()
-    .numberOfTaps(2)
-    .withTestId('compare-double-tap')
-    .onEnd(() => {
-      'worklet';
+  const doubleTap = useTapGesture({
+    numberOfTaps: 2,
+    testID: 'compare-double-tap',
+    onDeactivate: () => {
       scale.set(withTiming(1, resetTiming));
       x.set(withTiming(0, resetTiming));
       y.set(withTiming(0, resetTiming));
@@ -375,13 +371,16 @@ function useSyncedZoom(box: Box, onZoomed: (zoomed: boolean) => void) {
       savedX.set(0);
       savedY.set(0);
       scheduleOnRN(onZoomed, false);
-    });
+    },
+  });
+
+  const zoomAndMove = useSimultaneousGestures(pinch, move);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ translateX: x.value }, { translateY: y.value }, { scale: scale.value }],
   }));
 
-  return { pinch, move, doubleTap, style };
+  return { doubleTap, zoomAndMove, style };
 }
 
 type PaneProps = { before: ShownPhoto; after: ShownPhoto; box: Box; zoom: Zoom };
@@ -389,7 +388,7 @@ type PaneProps = { before: ShownPhoto; after: ShownPhoto; box: Box; zoom: Zoom }
 /** Two 3:4 columns with their dates on top. */
 function SideBySide({ before, after, box, zoom }: PaneProps) {
   const { t } = useTranslation();
-  const gesture = race(zoom.doubleTap, simultaneous(zoom.pinch, zoom.move(1)));
+  const gesture = useCompetingGestures(zoom.doubleTap, zoom.zoomAndMove);
   return (
     <GestureDetector gesture={gesture}>
       <View testID="compare-side-by-side" collapsable={false} className="flex-row gap-2">
@@ -442,18 +441,17 @@ function Slider({ before, after, box, zoom }: PaneProps) {
   const { width } = box;
 
   const syncReveal = (at: number) => setReveal(Math.round((1 - at) * 100) / 100);
-  const drag = panGesture()
-    .maxPointers(1)
-    .withTestId('compare-slider-drag')
-    .onUpdate((e) => {
-      'worklet';
+  const drag = usePanGesture({
+    maxPointers: 1,
+    testID: 'compare-slider-drag',
+    onUpdate: (e) => {
       handleAt.set(Math.min(1, Math.max(0, e.x / width)));
-    })
-    .onEnd(() => {
-      'worklet';
+    },
+    onDeactivate: () => {
       scheduleOnRN(syncReveal, handleAt.value);
-    });
-  const gesture = race(zoom.doubleTap, simultaneous(zoom.pinch, zoom.move(2)), drag);
+    },
+  });
+  const gesture = useCompetingGestures(zoom.doubleTap, zoom.zoomAndMove, drag);
 
   const onAction = (e: AccessibilityActionEvent) => {
     const direction = e.nativeEvent.actionName === 'increment' ? 1 : -1;

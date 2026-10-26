@@ -1,7 +1,15 @@
 import { Image } from 'expo-image';
 import { useEffect } from 'react';
 import { Modal, Pressable, useWindowDimensions, View } from 'react-native';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  GestureHandlerRootView,
+  useCompetingGestures,
+  usePanGesture,
+  usePinchGesture,
+  useSimultaneousGestures,
+  useTapGesture,
+} from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -12,17 +20,6 @@ import { cameraColors } from '@/theme/colors';
 import { useMotion } from '@/theme/useMotion';
 
 const MAX_SCALE = 4;
-
-// Gesture builders are factories, not components: lowercase names keep the React lint rules quiet.
-// The worklets plugin only spots callbacks on `Gesture.X()` chains, so every callback below says
-// 'worklet' itself and runs on the UI thread.
-const {
-  Pinch: pinchGesture,
-  Pan: panGesture,
-  Tap: tapGesture,
-  Race: race,
-  Simultaneous: simultaneous,
-} = Gesture;
 
 export type PhotoViewerProps = {
   uri: string;
@@ -63,13 +60,12 @@ export function PhotoViewer({ uri, open, onClose }: PhotoViewerProps) {
     savedScale.set(1);
   }, [open, scale, savedScale, x, y, savedX, savedY]);
 
-  const pinch = pinchGesture()
-    .onUpdate((e) => {
-      'worklet';
+  // Gesture callbacks are worklets (the worklets plugin spots them) and run on the UI thread.
+  const pinch = usePinchGesture({
+    onUpdate: (e) => {
       scale.set(Math.min(MAX_SCALE, Math.max(1, savedScale.value * e.scale)));
-    })
-    .onEnd(() => {
-      'worklet';
+    },
+    onDeactivate: () => {
       savedScale.set(scale.value);
       if (scale.value <= 1) {
         x.set(withTiming(0, resetTiming));
@@ -77,36 +73,37 @@ export function PhotoViewer({ uri, open, onClose }: PhotoViewerProps) {
         savedX.set(0);
         savedY.set(0);
       }
-    });
+    },
+  });
 
-  const pan = panGesture()
-    .averageTouches(true)
-    .onUpdate((e) => {
-      'worklet';
+  const pan = usePanGesture({
+    averageTouches: true,
+    onUpdate: (e) => {
       // The photo is a width × width square: it may move until its edge meets the screen edge.
       const limit = (width * (scale.value - 1)) / 2;
       x.set(Math.min(limit, Math.max(-limit, savedX.value + e.translationX)));
       y.set(Math.min(limit, Math.max(-limit, savedY.value + e.translationY)));
-    })
-    .onEnd(() => {
-      'worklet';
+    },
+    onDeactivate: () => {
       savedX.set(x.value);
       savedY.set(y.value);
-    });
+    },
+  });
 
-  const doubleTap = tapGesture()
-    .numberOfTaps(2)
-    .onEnd(() => {
-      'worklet';
+  const doubleTap = useTapGesture({
+    numberOfTaps: 2,
+    onDeactivate: () => {
       scale.set(withTiming(1, resetTiming));
       x.set(withTiming(0, resetTiming));
       y.set(withTiming(0, resetTiming));
       savedScale.set(1);
       savedX.set(0);
       savedY.set(0);
-    });
+    },
+  });
 
-  const gesture = race(doubleTap, simultaneous(pinch, pan));
+  const zoom = useSimultaneousGestures(pinch, pan);
+  const gesture = useCompetingGestures(doubleTap, zoom);
 
   const photoStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: x.value }, { translateY: y.value }, { scale: scale.value }],

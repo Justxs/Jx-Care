@@ -1,4 +1,4 @@
-import { useStore } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-form';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -179,8 +179,8 @@ function RoutineForm({
   });
   const formDirty = useFormDirty(form);
   const dirty = formDirty || startsDirty;
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
-  const values = useStore(form.store, (s) => s.values);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
+  const values = useSelector(form.store, (s) => s.values);
   const conflicts = useEditorConflicts({
     id: routineId,
     name: values.name,

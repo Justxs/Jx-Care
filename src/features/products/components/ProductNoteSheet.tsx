@@ -1,4 +1,3 @@
-import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { useTranslation } from 'react-i18next';
 
@@ -42,8 +41,8 @@ export function ProductNoteSheet({ productId, open, onClose, editing }: ProductN
     },
   });
   const dirty = useFormDirty(form);
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
-  const used = useStore(form.store, (s) => s.values.text.length);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
+  const used = useSelector(form.store, (s) => s.values.text.length);
 
   const submit = () => {
     // Re-check first: a field still focused after a failed try keeps its old error otherwise.

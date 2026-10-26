@@ -1,5 +1,4 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
@@ -108,7 +107,7 @@ function HairDoneForm({ task }: { task: HairTaskDetail }) {
     },
   });
   const dirty = useFormDirty(form);
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
 
   const nextText = nextDue ? t(nextLineKey(task), { date: f.weekdayDate(nextDue) }) : null;
 

@@ -1,4 +1,3 @@
-import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
@@ -250,7 +249,7 @@ function ProductForm({
   });
   const dirty = useFormDirty(form);
   const pendingAvoided = pending ? avoidedLines(pending.ingredients, known, avoid) : [];
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
 
   const guard = useScreenCloseGuard({
     dirty,

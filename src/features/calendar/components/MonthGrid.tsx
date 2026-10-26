@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import Animated, {
   Easing,
   FadeIn,
@@ -27,7 +27,6 @@ const SWIPE_DISTANCE = 48;
 const SWIPE_VELOCITY = 400;
 
 const enter = Easing.bezier(...motion.easing.enter);
-const { Pan: pan } = Gesture;
 
 export type MonthGridProps = {
   /** The month shown, 'YYYY-MM'. */
@@ -70,22 +69,19 @@ export function MonthGrid({
     setDirection(month > shown ? 1 : -1);
   }
 
-  const swipe = useMemo(
-    () =>
-      pan()
-        .runOnJS(true)
-        .activeOffsetX([-16, 16])
-        .failOffsetY([-12, 12])
-        .onEnd((e) => {
-          if (e.translationX <= -SWIPE_DISTANCE || e.velocityX <= -SWIPE_VELOCITY) {
-            onMonthChange(shiftMonth(month, 1));
-          } else if (e.translationX >= SWIPE_DISTANCE || e.velocityX >= SWIPE_VELOCITY) {
-            onMonthChange(shiftMonth(month, -1));
-          }
-        })
-        .withTestId('month-swipe'),
-    [month, onMonthChange],
-  );
+  const swipe = usePanGesture({
+    runOnJS: true,
+    activeOffsetX: [-16, 16],
+    failOffsetY: [-12, 12],
+    testID: 'month-swipe',
+    onDeactivate: (e) => {
+      if (e.translationX <= -SWIPE_DISTANCE || e.velocityX <= -SWIPE_VELOCITY) {
+        onMonthChange(shiftMonth(month, 1));
+      } else if (e.translationX >= SWIPE_DISTANCE || e.velocityX >= SWIPE_VELOCITY) {
+        onMonthChange(shiftMonth(month, -1));
+      }
+    },
+  });
   const go = (n: number) => onMonthChange(shiftMonth(month, n));
 
   const entering = m.reduced

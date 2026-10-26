@@ -1,5 +1,5 @@
-import { router, useNavigation } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { router, usePreventRemove } from 'expo-router';
+import { useState } from 'react';
 
 import { useCloseGuard } from './close-guard';
 
@@ -10,12 +10,7 @@ import { useCloseGuard } from './close-guard';
  */
 export function useScreenCloseGuard(opts: { dirty: boolean; onDiscard?: () => void }) {
   const { dirty, onDiscard } = opts;
-  const navigation = useNavigation();
-  const leaving = useRef(false);
-  const leave = () => {
-    leaving.current = true;
-    router.back();
-  };
+  const [leaving, setLeaving] = useState(false);
   const guard = useCloseGuard({
     dirty,
     onClose: () => {
@@ -24,16 +19,12 @@ export function useScreenCloseGuard(opts: { dirty: boolean; onDiscard?: () => vo
     },
   });
   const { setConfirmOpen } = guard;
-
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || !dirty) return;
-        e.preventDefault();
-        setConfirmOpen(true);
-      }),
-    [navigation, dirty, setConfirmOpen],
-  );
+  const disablePrevention = usePreventRemove(dirty && !leaving, () => setConfirmOpen(true));
+  const leave = () => {
+    setLeaving(true);
+    disablePrevention();
+    router.back();
+  };
 
   return { ...guard, leave };
 }

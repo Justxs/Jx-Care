@@ -1,7 +1,7 @@
 import { useSelector } from '@tanstack/react-store';
 import { CameraView, useCameraPermissions, type CameraType } from 'expo-camera';
 import { Image } from 'expo-image';
-import { router, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams, usePreventRemove } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Linking, Pressable, StyleSheet, View, type LayoutChangeEvent } from 'react-native';
@@ -96,7 +96,6 @@ type CameraBodyProps = { area: ProgressArea; session: CaptureState; settings: Ap
 function CameraBody({ area, session, settings }: CameraBodyProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
   const updateSettings = useUpdateSettings();
   const camera = useRef<CameraView>(null);
   const [facing, setFacing] = useState<CameraType>('front');
@@ -105,7 +104,7 @@ function CameraBody({ area, session, settings }: CameraBodyProps) {
   const [focused, setFocused] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [box, setBox] = useState<{ width: number; height: number } | null>(null);
-  const leaving = useRef(false);
+  const [leaving, setLeaving] = useState(false);
   const pendingRef = useRef(pending);
   useEffect(() => {
     pendingRef.current = pending;
@@ -128,30 +127,25 @@ function CameraBody({ area, session, settings }: CameraBodyProps) {
     }, []),
   );
 
+  // Android back, or anything else that leaves, asks the same "Discard these photos?".
+  const disablePrevention = usePreventRemove(
+    !leaving && (pending !== null || hasPhotos(session)),
+    () => setConfirmOpen(true),
+  );
+
   const close = useCallback(() => {
     if (pendingRef.current) discardTempFile(pendingRef.current);
     setPending(null);
     clearSession({ discard: true });
-    leaving.current = true;
+    setLeaving(true);
+    disablePrevention();
     leave();
-  }, []);
+  }, [disablePrevention]);
 
   const requestClose = () => {
     if (pending || hasPhotos(captureStore.state)) setConfirmOpen(true);
     else close();
   };
-
-  // Android back, or anything else that leaves, asks the same "Discard these photos?".
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current) return;
-        if (!pendingRef.current && !hasPhotos(captureStore.state)) return;
-        e.preventDefault();
-        setConfirmOpen(true);
-      }),
-    [navigation],
-  );
 
   const shoot = async () => {
     if (busy || !camera.current) return;

@@ -129,7 +129,7 @@ export function ProgressPhotosScreen() {
                 <Button icon="camera" onPress={takePhoto} className="mb-1">
                   {t('progress.photos.takeThisWeek')}
                 </Button>
-              ) : null
+              ) : undefined
             }
             renderItem={({ item }) => (
               <WeekTile area={area} tile={item} width={tileWidth} onOpen={openWeek} />

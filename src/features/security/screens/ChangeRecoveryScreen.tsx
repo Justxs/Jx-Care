@@ -1,4 +1,4 @@
-import { useStore } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-form';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
@@ -110,7 +110,7 @@ function RecoveryForm({
     },
   });
 
-  const isCustom = useStore(form.store, (s) => s.values.questionId === CUSTOM_QUESTION);
+  const isCustom = useSelector(form.store, (s) => s.values.questionId === CUSTOM_QUESTION);
   const dirty = useFormDirty(form);
   const guard = useScreenCloseGuard({ dirty });
 

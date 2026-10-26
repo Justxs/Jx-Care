@@ -286,7 +286,9 @@ describe('Shopping in Products', () => {
     const pid = createProduct(app.db, input({ name: 'Body lotion', brand: 'Nivea' }));
     addBuyAgain(app.db, pid);
     addItem(app.db, item('Cotton pads'));
-    const share = jest.spyOn(Share, 'share').mockResolvedValue({ action: 'sharedAction' });
+    const share = jest
+      .spyOn(Share, 'share')
+      .mockResolvedValue({ action: 'sharedAction', activityType: undefined });
     await app.render(<ProductsScreen />);
 
     const segment = await screen.findByRole('radio', { name: 'Shopping, 2' });

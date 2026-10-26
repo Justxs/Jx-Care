@@ -1,4 +1,3 @@
-import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -73,7 +72,7 @@ export function StepEditorSheet({
     },
   });
   const dirty = useFormDirty(form);
-  const values = useStore(form.store, (s) => s.values);
+  const values = useSelector(form.store, (s) => s.values);
   const product = values.productId !== null ? products.get(values.productId) : undefined;
 
   const waitOptions = waitSecondsOptions.map((s) => ({

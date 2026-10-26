@@ -7,6 +7,7 @@ import { saveSettings } from '@/features/settings/repo';
 import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
 import { dismissToast, runToastAction, uiStore } from '@/state/ui';
+import { tryLeave } from '@/test/preventRemove';
 import { setupTestApp } from '@/test/render';
 
 import { pickReturnStore, productAddedForPick } from '@/features/products/pickReturn';
@@ -23,7 +24,7 @@ import {
 import { buildFromTemplate, draftFromTemplate, routineTemplates } from '../../templates';
 import { RoutineEditorScreen } from '../RoutineEditorScreen';
 
-type Listener = (e: { preventDefault: () => void }) => void;
+type Listener = () => void;
 const mockParams: { current: Record<string, string> } = { current: {} };
 const mockListeners: Record<string, Listener[]> = {};
 
@@ -38,6 +39,9 @@ jest.mock('expo-router', () => ({
       };
     },
   }),
+  usePreventRemove:
+    jest.requireActual<typeof import('@/test/preventRemove')>('@/test/preventRemove')
+      .usePreventRemove,
 }));
 
 const { router } = jest.requireMock<{ router: { back: jest.Mock; push: jest.Mock } }>(
@@ -103,11 +107,17 @@ function setup(id: string) {
 
 const flush = () => act(() => new Promise<void>((r) => setTimeout(r, 0)));
 const emit = async (event: string) => {
-  const preventDefault = jest.fn();
   await act(async () => {
-    for (const fn of mockListeners[event] ?? []) fn({ preventDefault });
+    for (const fn of mockListeners[event] ?? []) fn();
   });
-  return preventDefault;
+};
+/** Android back: true when the editor kept the screen open. */
+const leave = async () => {
+  let blocked = false;
+  await act(async () => {
+    blocked = tryLeave();
+  });
+  return blocked;
 };
 const save = () => fireEvent.press(screen.getByRole('button', { name: 'Save routine' }));
 const saveStep = () => fireEvent.press(screen.getByTestId('save-step'));
@@ -151,7 +161,7 @@ describe('New routine', () => {
     // Gaps say so in amber.
     expect(screen.getAllByText('Pick a product later')).toHaveLength(2);
     // Unsaved from the start: leaving asks first.
-    expect(await emit('beforeRemove')).toHaveBeenCalled();
+    expect(await leave()).toBe(true);
     expect(screen.getByText('Discard changes?')).toBeTruthy();
 
     await save();
@@ -172,7 +182,7 @@ describe('New routine', () => {
     await app.show();
     expect(screen.getByText('No steps yet.')).toBeTruthy();
     // Nothing changed yet: leaving doesn't ask.
-    expect(await emit('beforeRemove')).not.toHaveBeenCalled();
+    expect(await leave()).toBe(false);
 
     await fireEvent.press(screen.getByLabelText('Monday'));
     await fireEvent.press(screen.getByLabelText('Tuesday'));
@@ -187,7 +197,7 @@ describe('New routine', () => {
     expect(screen.getByText('Choose at least one day.')).toBeTruthy();
     expect(screen.getByText('Add at least one step.')).toBeTruthy();
     expect(listRoutines(app.db, TODAY, 30)).toEqual([]);
-    expect(await emit('beforeRemove')).toHaveBeenCalled();
+    expect(await leave()).toBe(true);
 
     // "Every day" fills all seven.
     await fireEvent.press(screen.getByRole('button', { name: 'Every day' }));
@@ -407,10 +417,10 @@ describe('Edit routine', () => {
     const id = saveRoutine(app.db, routineInput());
     await app.show();
     expect(await screen.findByDisplayValue('Evening A')).toBeTruthy();
-    expect(await emit('beforeRemove')).not.toHaveBeenCalled();
+    expect(await leave()).toBe(false);
 
     await fireEvent.changeText(screen.getByLabelText('Name'), 'Evening B');
-    expect(await emit('beforeRemove')).toHaveBeenCalled();
+    expect(await leave()).toBe(true);
     await fireEvent.press(screen.getByRole('button', { name: 'Keep editing' }));
     expect(router.back).not.toHaveBeenCalled();
 

@@ -61,8 +61,8 @@ export function useToBuyCount() {
 }
 
 /** For `prefetchToday`, so Today's Shopping list row is known on its first frame. */
-export function prefetchShopping(client: QueryClient): Promise<void> {
-  return client.prefetchQuery({ queryKey: countKey, queryFn: () => toBuyCount(getDb()) });
+export async function prefetchShopping(client: QueryClient): Promise<void> {
+  await client.query({ queryKey: countKey, queryFn: () => toBuyCount(getDb()) }).catch(() => {});
 }
 
 export function usePickerProducts(search: string) {

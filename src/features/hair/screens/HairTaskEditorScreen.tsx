@@ -1,4 +1,4 @@
-import { useStore, type AnyFieldApi } from '@tanstack/react-form';
+import type { AnyFieldApi } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
@@ -167,8 +167,8 @@ function HairTaskForm({
     },
   });
   const dirty = useFormDirty(form);
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
-  const kind = useStore(form.store, (s) => s.values.kind);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
+  const kind = useSelector(form.store, (s) => s.values.kind);
 
   const guard = useScreenCloseGuard({ dirty });
 

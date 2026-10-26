@@ -39,6 +39,9 @@ jest.mock('expo-router', () => {
     },
     useLocalSearchParams: () => mockParams.current,
     useNavigation: () => ({ addListener: () => () => {} }),
+    usePreventRemove:
+      jest.requireActual<typeof import('@/test/preventRemove')>('@/test/preventRemove')
+        .usePreventRemove,
     useFocusEffect: (effect: () => undefined | (() => void)) => useEffect(effect, [effect]),
   };
 });

@@ -8,6 +8,7 @@ import { getSettings, saveSettings, type SettingsPatch } from '@/features/settin
 import { setI18nLanguage } from '@/i18n';
 import { appStore } from '@/state/app';
 import { dismissToast, uiStore } from '@/state/ui';
+import { tryLeave } from '@/test/preventRemove';
 import { setupTestApp } from '@/test/render';
 
 import { captureStore, clearSession, setPhoto, startSession } from '../../captureSession';
@@ -52,7 +53,6 @@ jest.mock('expo-camera', () => {
 });
 
 const mockParams: { area?: string; week?: string } = { area: 'skin' };
-const mockListeners: ((e: { preventDefault: () => void }) => void)[] = [];
 
 jest.mock('expo-router', () => {
   const React = jest.requireActual<typeof import('react')>('react');
@@ -66,12 +66,10 @@ jest.mock('expo-router', () => {
     },
     useLocalSearchParams: () => mockParams,
     useFocusEffect: (effect: () => undefined | (() => void)) => React.useEffect(effect, [effect]),
-    useNavigation: () => ({
-      addListener: (_event: string, fn: (e: { preventDefault: () => void }) => void) => {
-        mockListeners.push(fn);
-        return () => mockListeners.splice(mockListeners.indexOf(fn), 1);
-      },
-    }),
+    useNavigation: () => ({ addListener: () => () => {} }),
+    usePreventRemove:
+      jest.requireActual<typeof import('@/test/preventRemove')>('@/test/preventRemove')
+        .usePreventRemove,
   };
 });
 
@@ -142,7 +140,6 @@ beforeEach(async () => {
   mockCamera.shots = 0;
   mockParams.area = 'skin';
   mockParams.week = undefined;
-  mockListeners.length = 0;
   router.push.mockClear();
   router.back.mockClear();
   router.dismissTo.mockClear();
@@ -224,9 +221,11 @@ describe('ProgressCameraScreen', () => {
     expect(router.back).not.toHaveBeenCalled();
 
     // Android back asks the same.
-    const prevent = jest.fn();
-    await act(async () => mockListeners.forEach((fn) => fn({ preventDefault: prevent })));
-    expect(prevent).toHaveBeenCalled();
+    let blocked = false;
+    await act(async () => {
+      blocked = tryLeave();
+    });
+    expect(blocked).toBe(true);
     await fireEvent.press(await screen.findByRole('button', { name: 'Discard' }));
 
     expect(router.back).toHaveBeenCalled();

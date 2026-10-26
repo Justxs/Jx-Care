@@ -1,7 +1,7 @@
 import {
   createFormHook,
   createFormHookContexts,
-  useStore,
+  useSelector,
   type AnyFieldApi,
   type AnyFormApi,
 } from '@tanstack/react-form';
@@ -22,7 +22,7 @@ const { fieldContext, formContext, useFieldContext } = createFormHookContexts();
  */
 export function useFieldError(field: AnyFieldApi): string | undefined {
   const { t } = useTranslation();
-  const attempts = useStore(field.form.store, (s) => s.submissionAttempts);
+  const attempts = useSelector(field.form.store, (s) => s.submissionAttempts);
   const { errors, isTouched } = field.state.meta;
   if (!isTouched && attempts === 0) return undefined;
   const first: unknown = errors[0];
@@ -182,5 +182,5 @@ export function useAppForm<TSchema extends z.ZodType>(opts: {
 
 /** True once any field differs from its default: closing then asks "Discard changes?". */
 export function useFormDirty(form: AnyFormApi): boolean {
-  return useStore(form.store, (s) => s.isDirty);
+  return useSelector(form.store, (s) => s.isDirty);
 }

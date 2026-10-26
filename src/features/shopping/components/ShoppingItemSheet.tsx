@@ -1,4 +1,4 @@
-import { useStore } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-form';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +77,7 @@ export function ShoppingItemSheet({ open, onClose, editing }: ShoppingItemSheetP
     },
   });
   const dirty = useFormDirty(form);
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
 
   const list = products.data ?? [];
   const pickedProduct = list.find((p) => p.id === picked) ?? null;

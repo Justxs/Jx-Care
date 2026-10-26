@@ -1,15 +1,17 @@
 /* global jest */
 jest.mock('react-native-worklets', () => require('react-native-worklets/src/mock'));
-// The mock module itself gets the missing pieces, because expo-router's testing library mocks
-// Reanimated again straight from 'react-native-reanimated/mock'.
+// Gesture Handler 3 listens to shared values passed in a gesture's config (ReanimatedSwipeable
+// passes some), and Reanimated's mock shared values have no listeners: give them no-op ones. The
+// mock module itself is patched, because expo-router's testing library mocks Reanimated again
+// straight from 'react-native-reanimated/mock'.
 jest.mock('react-native-reanimated/mock', () => {
   const mock = jest.requireActual('react-native-reanimated/mock');
-  return {
-    ...mock,
-    createAnimatedComponent: mock.default.createAnimatedComponent,
-    useReducedMotion: () => false,
-    LayoutAnimationConfig: ({ children }) => children,
-  };
+  const useSharedValue = (init) =>
+    new Proxy(mock.useSharedValue(init), {
+      get: (target, prop) =>
+        prop === 'addListener' || prop === 'removeListener' ? () => {} : Reflect.get(target, prop),
+    });
+  return { ...mock, useSharedValue };
 });
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
 jest.mock('react-native-keyboard-controller', () =>
@@ -51,3 +53,10 @@ jest.mock('expo-task-manager', () =>
 jest.mock('expo-background-task', () =>
   require('./src/test/nativeNotificationMocks').expoBackgroundTaskMock(),
 );
+
+// Jest 30 reads every global when a test file ends (to clear mocks), which would run Expo's lazy
+// polyfills (fetch, URL, ...) after requiring is no longer allowed; node environment tests then
+// fail. Read them now instead, while requiring still works.
+for (const name of Object.getOwnPropertyNames(globalThis)) {
+  if (Object.getOwnPropertyDescriptor(globalThis, name)?.get) void globalThis[name];
+}

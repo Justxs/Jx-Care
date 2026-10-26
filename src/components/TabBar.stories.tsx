@@ -19,8 +19,8 @@ type TabBarDemoProps = {
 };
 
 /**
- * The real TabBar with a stand-in navigator: the five tab routes and a navigation object whose
- * `navigate` selects the tab here instead of switching screens.
+ * The real TabBar with a stand-in navigator: the five tab routes and a `navigateToTab` that
+ * selects the tab here instead of switching screens.
  */
 function TabBarDemo({ initialTab, onTabPress }: TabBarDemoProps) {
   const insets = useSafeAreaInsets();
@@ -32,13 +32,12 @@ function TabBarDemo({ initialTab, onTabPress }: TabBarDemoProps) {
   }, []);
   const routes = tabs.map((tab) => ({ key: `${tab.name}-key`, name: tab.name, params: undefined }));
   const props = {
-    state: { index, routes, key: 'tabs', routeNames: routes.map((r) => r.name), type: 'tab' },
-    navigation: {
-      emit: () => ({ defaultPrevented: false }),
-      navigate: (name: string) => {
-        onTabPress(name);
-        setIndex(routes.findIndex((r) => r.name === name));
-      },
+    state: { index, routes },
+    emitter: { emit: () => ({ defaultPrevented: false }) },
+    navigateToTab: (key: string) => {
+      const route = routes.findIndex((r) => r.key === key);
+      onTabPress(routes[route]?.name ?? key);
+      setIndex(route);
     },
     descriptors: {},
     insets,

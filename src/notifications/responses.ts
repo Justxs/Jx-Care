@@ -158,13 +158,12 @@ export function startResponseHandling(): () => void {
   const sub = Notifications.addNotificationResponseReceivedListener((r) => {
     handleResponse(r).catch(() => {});
   });
-  Notifications.getLastNotificationResponseAsync()
-    .then(async (r) => {
-      if (!r) return;
-      await handleResponse(r);
-      await Notifications.clearLastNotificationResponseAsync();
-    })
-    .catch(() => {});
+  const last = Notifications.getLastNotificationResponse();
+  if (last) {
+    handleResponse(last)
+      .then(() => Notifications.clearLastNotificationResponse())
+      .catch(() => {});
+  }
   return () => sub.remove();
 }
 

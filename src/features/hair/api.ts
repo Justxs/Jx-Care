@@ -85,8 +85,8 @@ export const hairStreakChipQuery = (today: string) =>
 /** What Today's hair slots read, so Today paints complete (task 025's `prefetchToday`). */
 export async function prefetchHair(client: QueryClient, today: string): Promise<void> {
   await Promise.all([
-    client.prefetchQuery(hairDueTodayQuery(today)),
-    client.prefetchQuery(hairStreakChipQuery(today)),
+    client.query(hairDueTodayQuery(today)).catch(() => {}),
+    client.query(hairStreakChipQuery(today)).catch(() => {}),
   ]);
 }
 

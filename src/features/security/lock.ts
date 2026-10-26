@@ -1,5 +1,5 @@
 import { createStore } from '@tanstack/react-store';
-import { AppState, type AppStateStatus, type NativeEventSubscription } from 'react-native';
+import { AppState, type AppStateStatus, type EventSubscription } from 'react-native';
 
 import { openPendingUrl } from '@/notifications';
 import { lockStore, setLastBackgroundAt, setLocked } from '@/state/lock';
@@ -70,11 +70,11 @@ export function shouldLockOnReturn(
 }
 
 type AppStateLike = {
-  currentState?: AppStateStatus | null;
+  currentState?: string | null;
   addEventListener: (
     type: 'change',
     listener: (state: AppStateStatus) => void,
-  ) => Pick<NativeEventSubscription, 'remove'>;
+  ) => Pick<EventSubscription, 'remove'>;
 };
 
 export type AutoLockOptions = {
@@ -89,7 +89,7 @@ export type AutoLockOptions = {
 /** Starts the AppState listener that re-locks and covers the app. Returns a stop function. */
 export function startAutoLock(opts: AutoLockOptions): () => void {
   const now = opts.now ?? Date.now;
-  const appState = opts.appState ?? AppState;
+  const appState: AppStateLike = opts.appState ?? AppState;
   // Whether a pause was running when the app left. Read then, not on return: Android hands the
   // camera or picker result (which ends the pause) to JS before the app is active again.
   let leftPaused = false;

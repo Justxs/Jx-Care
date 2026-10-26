@@ -1,6 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, renderHook } from '@testing-library/react-native';
 import type { ReactElement, ReactNode } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { setDb } from '@/db';
 import { createQueryClient } from '@/db/queryClient';
@@ -14,8 +15,11 @@ export function setupTestApp() {
   setDb(db);
   // No garbage-collection timers in tests, so Jest can exit cleanly.
   const client = createQueryClient({ gcTime: Infinity });
+  // The app's root layout wraps everything in a gesture root; gesture detectors need one.
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    <GestureHandlerRootView>
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    </GestureHandlerRootView>
   );
   return {
     db,

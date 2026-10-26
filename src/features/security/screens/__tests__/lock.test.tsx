@@ -104,9 +104,8 @@ let currentPath: () => string = () => '';
 
 async function launch(app: ReturnType<typeof setupTestApp>, url = '/') {
   app.client.setQueryData(['settings'], getSettings(app.db));
-  const result = renderRouter(routes, { initialUrl: url, wrapper: app.wrapper });
+  const result = await renderRouter(routes, { initialUrl: url, wrapper: app.wrapper });
   currentPath = () => result.getPathname();
-  await result;
   return result;
 }
 

@@ -53,8 +53,8 @@ export function expoNotificationsMock() {
     dismissNotificationAsync: jest.fn(async () => {}),
     addNotificationResponseReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
     addNotificationReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
-    getLastNotificationResponseAsync: jest.fn(async () => null),
-    clearLastNotificationResponseAsync: jest.fn(async () => {}),
+    getLastNotificationResponse: jest.fn(() => null),
+    clearLastNotificationResponse: jest.fn(),
     registerTaskAsync: jest.fn(async () => null),
     unregisterTaskAsync: jest.fn(async () => null),
   };

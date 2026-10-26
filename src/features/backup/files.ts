@@ -85,13 +85,13 @@ export const backupFiles: BackupFiles = {
     const file = new File(Paths.cache, name);
     if (file.exists) file.delete();
     file.create();
-    return { uri: file.uri, append: (chunk) => file.write(chunk, { append: true }) };
+    return { uri: file.uri, append: (chunk) => file.writeSync(chunk, { append: true }) };
   },
 
   writeCacheText(name, text) {
     const file = new File(Paths.cache, name);
     if (file.exists) file.delete();
-    file.write(text);
+    file.writeSync(text);
     return file.uri;
   },
 
@@ -105,7 +105,7 @@ export const backupFiles: BackupFiles = {
     const file = new File(folder(STAGING_FOLDER), path);
     ensureParent(file);
     if (file.exists) file.delete();
-    file.write(bytes);
+    file.writeSync(bytes);
   },
 
   folderExists: (path) => folder(path).exists,

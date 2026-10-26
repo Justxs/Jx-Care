@@ -1,4 +1,4 @@
-import { router, useNavigation } from 'expo-router';
+import { router, usePreventRemove } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -19,18 +19,20 @@ type Step = 'old' | 'create' | 'confirm';
  */
 export function ChangePinScreen() {
   const { t } = useTranslation();
-  const navigation = useNavigation();
   const [step, setStep] = useState<Step>('old');
   // The PINs are never shown; only secure storage keeps them once the change is saved.
   const oldPin = useRef<string | null>(null);
   const [newPin, setNewPin] = useState<string | null>(null);
-  const leaving = useRef(false);
+  const [leaving, setLeaving] = useState(false);
 
   const leave = useCallback(() => {
-    leaving.current = true;
     oldPin.current = null;
-    router.back();
+    setLeaving(true);
   }, []);
+  // Goes back once leaving has turned the prevention below off (it updates in a layout effect).
+  useEffect(() => {
+    if (leaving) router.back();
+  }, [leaving]);
 
   const restart = useCallback(() => {
     oldPin.current = null;
@@ -50,15 +52,7 @@ export function ChangePinScreen() {
   }, [leave, restart, step]);
 
   // Android back and the swipe step back through the flow the same way the header arrow does.
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (leaving.current || step === 'old') return;
-        e.preventDefault();
-        back();
-      }),
-    [back, navigation, step],
-  );
+  usePreventRemove(!leaving && step !== 'old', back);
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-canvas">

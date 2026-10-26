@@ -43,7 +43,7 @@ export function useSkinMonth(month: string) {
   const client = useQueryClient();
   useEffect(() => {
     for (const n of [-1, 1]) {
-      client.prefetchQuery(skinMonthQuery(shiftMonth(month, n), today)).catch(() => {});
+      client.query(skinMonthQuery(shiftMonth(month, n), today)).catch(() => {});
     }
   }, [client, month, today]);
   return useQuery({ ...skinMonthQuery(month, today), placeholderData: keepPreviousData });

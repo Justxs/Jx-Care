@@ -17,19 +17,19 @@ If something you need is in none of them, pick the simplest option that fits the
 
 ## Stack (fixed)
 
-The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-06 for reference:
+The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-26 for reference:
 
 | Need | Package | Version seen |
 | --- | --- | --- |
-| Framework | `expo` (SDK 57), `react-native` 0.87, `react` 19, TypeScript strict | 57.0.x |
-| Routing | `expo-router` (file-based, tabs + stacks) | 57.0.x |
+| Framework | `expo` (SDK 58), `react-native` 0.88, `react` 19.3, TypeScript 7 strict | 58.0.x |
+| Routing | `expo-router` (file-based, tabs + stacks) | 58.0.x |
 | Database | `expo-sqlite` + `drizzle-orm`, `drizzle-kit` for migrations | 0.45 / 0.31 |
 | Data state | `@tanstack/react-query` | 5.x |
 | App state | `@tanstack/react-store` (no Zustand, no Redux, no React Context for state) | 0.11 |
 | Forms | `@tanstack/react-form` + `zod` for schemas | 1.x / 4.x |
 | Base components | `@rn-primitives/*` (React Native Reusables setup) | 1.5 |
 | Styling | `nativewind` **4.2** + `tailwindcss` **3.4** (not Tailwind 4, not NativeWind 5 RC) | 4.2.7 / 3.4.19 |
-| Animation | `react-native-reanimated` 4 (+ `react-native-worklets`), `react-native-gesture-handler` | 4.x |
+| Animation | `react-native-reanimated` 4 (+ `react-native-worklets`), `react-native-gesture-handler` 3 | 4.7 / 3.3 |
 | Sheets | `@gorhom/bottom-sheet` 5 | 5.x |
 | Icons | `lucide-react-native` + `react-native-svg` | latest |
 | Other UI helpers | `expo-haptics` (tick feedback), `expo-blur` (app switcher overlay), `react-native-keyboard-controller` (forms and sheets), `react-native-draggable-flatlist` (step reorder) | latest |
@@ -39,9 +39,9 @@ The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-works
 | Secure data | `expo-secure-store`, `expo-crypto`, `expo-local-authentication` | SDK |
 | Notifications | `expo-notifications` (local only) | SDK |
 | Media | `expo-image`, `expo-image-picker`, `expo-camera`, `expo-file-system`, `expo-sharing` | SDK |
-| Tests | `jest` + `jest-expo`, `@testing-library/react-native`, `better-sqlite3` (repository tests in Node) | 29 / 14 |
-| Lint and format | `oxlint` (`.oxlintrc.json`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.87 / 0.72 |
-| Component docs | `@storybook/react-native` on-device, with the controls and actions addons; see [docs/storybook.md](../storybook.md) (Justas, 2026-10-07) | 10.6 |
+| Tests | `jest` + `jest-expo`, `@testing-library/react-native`, `better-sqlite3` (repository tests in Node) | 30 / 14 |
+| Lint and format | `oxlint` (`.oxlintrc.json`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.89 / 0.74 |
+| Component docs | `@storybook/react-native` on-device, with the controls and actions addons; see [docs/storybook.md](../storybook.md) (Justas, 2026-10-07) | 10.7 |
 
 Don't add other runtime libraries unless the task names them. If you really need one, write why under "Decisions".
 
@@ -95,6 +95,9 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 - **Ids** are SQLite integer primary keys.
 - **Tests:** React Native Testing Library 14 makes `render`, `fireEvent` and `act` async; always `await` them (a missed `await` leaves an open act scope and later tests render nothing). Role queries only find accessible elements, so query group containers (radio groups, weekday rows) by label.
 - **Reanimated:** write shared values with `sv.set(...)`, never `sv.value = ...` (oxlint's React immutability rule rejects the assignment). Read `sv.value` inside worklets as usual.
+- **Gestures** use Gesture Handler 3's hooks (`usePanGesture({ onActivate, onUpdate, onDeactivate })`, `useSimultaneousGestures`, `useCompetingGestures`), not the old `Gesture.Pan()` builders. Their callbacks are worklets without a `'worklet'` line; pass `testID` to reach one with `getByGestureTestId` in tests.
+- **Leaving a screen with unsaved work** is blocked with expo-router's `usePreventRemove` (`useScreenCloseGuard` wraps it); the `beforeRemove` event no longer exists. Tests that mock expo-router use the stand-in in `@/test/preventRemove` and leave with `tryLeave()`.
+- **Deprecated APIs:** use `useSelector` (not `useStore`) for TanStack stores and forms, `queryClient.query(...)` (not `fetchQuery`, or `prefetchQuery` with `.catch(() => {})`), `File.writeSync` in synchronous code (`File.write` returns a promise), and instance types such as `TextInputInstance` for refs.
 - **rn-primitives** set `role` on their pressables, and `role` wins over `accessibilityRole`; pass `role` to change the spoken role.
 
 ## UI rules (from the spec and DESIGN.md)

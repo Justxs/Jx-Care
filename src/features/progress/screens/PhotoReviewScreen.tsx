@@ -1,4 +1,3 @@
-import { useStore } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 import { router, useNavigation } from 'expo-router';
 import { useEffect, useRef } from 'react';
@@ -106,16 +105,17 @@ function ReviewForm({ session, area, weekStart, initial }: ReviewFormProps) {
       router.dismissTo(`/calendar/progress?area=${area}`);
     },
   });
-  const submitting = useStore(form.store, (s) => s.isSubmitting);
+  const submitting = useSelector(form.store, (s) => s.isSubmitting);
 
   // Going back to the camera keeps what was filled in, for when the review opens again.
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', () => {
-        if (!saved.current) saveDraft({ ...emptyReview, ...form.state.values });
-      }),
-    [navigation, form],
-  );
+  // The screen has unmounted when `removed` fires, so only the store is written; the listener
+  // goes away a tick later, as expo-router asks.
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('removed', () => {
+      if (!saved.current) saveDraft({ ...emptyReview, ...form.state.values });
+    });
+    return () => queueMicrotask(unsubscribe);
+  }, [navigation, form]);
 
   const retake = (angle: PhotoAngle) => {
     saveDraft({ ...emptyReview, ...form.state.values });

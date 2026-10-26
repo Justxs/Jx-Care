@@ -1,6 +1,12 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useId, useRef, useState } from 'react';
-import { Pressable, TextInput, View, type TextInputProps } from 'react-native';
+import {
+  Pressable,
+  TextInput,
+  View,
+  type TextInputInstance,
+  type TextInputProps,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/lib/cn';
@@ -54,7 +60,7 @@ export function Input({
   const { t } = useTranslation();
   const colors = useThemeColors();
   const id = useId();
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const hidden = type === 'password' || (!!secret && !revealed);

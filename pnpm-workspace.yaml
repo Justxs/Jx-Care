@@ -11,6 +11,10 @@ peerDependencyRules:
 
 allowBuilds:
   esbuild: true
+  # Jest's file watcher ships prebuilt binaries; its install script only builds from source.
+  '@parcel/watcher': false
+  # Jest's resolver: its native binding comes as an optional dependency, the script only checks it.
+  unrs-resolver: false
 
 # Run package.json scripts in pnpm's own shell, so `VAR=value command` works on Windows too.
 shellEmulator: true

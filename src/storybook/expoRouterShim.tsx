@@ -16,4 +16,5 @@ export const router = overrides.router;
 export const useRouter = overrides.useRouter;
 export const useLocalSearchParams = overrides.useLocalSearchParams;
 export const useNavigation = overrides.useNavigation;
+export const usePreventRemove = overrides.usePreventRemove;
 export const Redirect = overrides.Redirect;

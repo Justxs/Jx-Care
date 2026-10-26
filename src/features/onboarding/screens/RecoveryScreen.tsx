@@ -1,4 +1,4 @@
-import { useStore } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { Redirect, router } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -71,7 +71,7 @@ export function RecoveryScreen() {
     },
   });
 
-  const isCustom = useStore(form.store, (s) => s.values.questionId === CUSTOM_QUESTION);
+  const isCustom = useSelector(form.store, (s) => s.values.questionId === CUSTOM_QUESTION);
 
   if (!hasPin) return <Redirect href="/welcome" />;
 

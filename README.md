@@ -75,7 +75,7 @@ The landing page lives in [landing/](landing/README.md), a separate Vite + React
 
 | Area | What |
 | --- | --- |
-| App | Expo SDK 57, React Native 0.86 (New Architecture), Expo Router |
+| App | Expo SDK 58, React Native 0.88 (New Architecture), Expo Router |
 | Data | SQLite (expo-sqlite) with Drizzle ORM; PIN and secrets in expo-secure-store |
 | State and forms | TanStack Query, TanStack Store, TanStack Form, zod |
 | UI | rn-primitives components styled with NativeWind 4.2, Reanimated 4, lucide icons, Figtree |

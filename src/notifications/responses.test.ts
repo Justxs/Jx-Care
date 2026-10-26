@@ -125,12 +125,12 @@ describe('taps', () => {
   it('handles the tap that cold-started the app', async () => {
     setLocked(true);
     jest
-      .mocked(Notifications.getLastNotificationResponseAsync)
-      .mockResolvedValueOnce(response(TAP, { data: { ...data, url: '/progress/camera' } }));
+      .mocked(Notifications.getLastNotificationResponse)
+      .mockReturnValueOnce(response(TAP, { data: { ...data, url: '/progress/camera' } }));
     const stop = startResponseHandling();
     await new Promise((r) => setTimeout(r, 0));
     expect(lockStore.state.pendingUrl).toBe('/progress/camera');
-    expect(Notifications.clearLastNotificationResponseAsync).toHaveBeenCalled();
+    expect(Notifications.clearLastNotificationResponse).toHaveBeenCalled();
     stop();
   });
 

@@ -65,9 +65,7 @@ function PickerField({ mode, shown, initial, min, max, onPick, field }: PickerPr
         mode,
         minimumDate: min,
         maximumDate: max,
-        onChange: (event, date) => {
-          if (event.type === 'set' && date) onPick(date);
-        },
+        onValueChange: (_, date) => onPick(date),
       });
       return;
     }
@@ -117,9 +115,7 @@ function PickerField({ mode, shown, initial, min, max, onPick, field }: PickerPr
               maximumDate={max}
               accentColor={colors.accent}
               themeVariant={colors.scheme}
-              onChange={(_, date) => {
-                if (date) setDraft(date);
-              }}
+              onValueChange={(_, date) => setDraft(date)}
             />
           </View>
         </Sheet>
