@@ -17,7 +17,7 @@ If something you need is in none of them, pick the simplest option that fits the
 
 ## Stack (fixed)
 
-The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-26 for reference:
+The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-11-02 for reference:
 
 | Need | Package | Version seen |
 | --- | --- | --- |
@@ -40,7 +40,7 @@ The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-works
 | Notifications | `expo-notifications` (local only) | SDK |
 | Media | `expo-image`, `expo-image-picker`, `expo-camera`, `expo-file-system`, `expo-sharing` | SDK |
 | Tests | `jest` + `jest-expo`, `@testing-library/react-native`, `better-sqlite3` (repository tests in Node) | 30 / 14 |
-| Lint and format | `oxlint` (`.oxlintrc.json`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.89 / 0.74 |
+| Lint and format | `oxlint` (`.oxlintrc.json`, type-aware through `oxlint-tsgolint`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.90 / 0.75 |
 | Component docs | `@storybook/react-native` on-device, with the controls and actions addons; see [docs/storybook.md](../storybook.md) (Justas, 2026-10-07) | 10.7 |
 
 Don't add other runtime libraries unless the task names them. If you really need one, write why under "Decisions".
@@ -83,6 +83,7 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 
 - **TypeScript strict**, no `any`, no `@ts-ignore`. Export types for anything another area uses.
 - **Lint and format with oxc:** `pnpm lint` (oxlint, warnings fail) and `pnpm format` (oxfmt). Run `pnpm format` before committing; `pnpm check` fails on unformatted files.
+- **Type-aware lint:** oxlint reads the TypeScript types (`options.typeAware`, which needs `oxlint-tsgolint`), so `typescript/no-deprecated` fails `pnpm lint` on any call a package marks `@deprecated`. The other type-aware rules that the current code trips (floating promises, unsafe assertions and so on) are switched off in `.oxlintrc.json` until someone works through them. The website runs the same check with `oxlint --type-aware`.
 - **Pure logic lives in `src/lib/`** and gets unit tests. Screens never compute expiry, streaks, schedules or conflicts themselves; they call `src/lib`.
 - **Database access lives in `repo.ts` files** as plain functions that take a Drizzle database as their first argument (`listProducts(db, filters)`). That is what lets the same code run on expo-sqlite in the app and on better-sqlite3 in Jest.
 - **Database changes reach phones that already have data.** Change `src/db/schema.ts`, then run `pnpm db:generate` (it also locks the migration and writes its data snapshot). Never edit, rename, reorder or delete a migration once it is on main, and never edit a file in `src/db/upgrade-fixtures/`; fix mistakes with a new migration. A migration that changes existing data also needs an `expectedChanges` entry in the upgrade test and a backup `dataMigrations` step. The upgrade test in `pnpm check` fails if a migration loses data. Details and the release steps: [docs/releasing.md](../releasing.md).

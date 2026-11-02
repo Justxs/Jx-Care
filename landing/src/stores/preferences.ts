@@ -16,7 +16,8 @@ function readSaved(): Partial<Preferences> {
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(storageKey) ?? '{}');
     if (typeof saved !== 'object' || saved === null) return {};
-    const { locale, theme } = saved as Record<string, unknown>;
+    const locale = 'locale' in saved ? saved.locale : undefined;
+    const theme = 'theme' in saved ? saved.theme : undefined;
     return {
       locale: isLocale(locale) ? locale : undefined,
       theme: theme === 'light' || theme === 'dark' ? theme : undefined,

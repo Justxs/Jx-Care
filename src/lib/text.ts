@@ -2,12 +2,7 @@
 
 /** Trim, collapse inner whitespace, strip diacritics, lowercase. "  Ąžuolas " → "azuolas". */
 export function normalizeName(s: string): string {
-  return s
-    .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
+  return s.normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
 /** Collapse whitespace and trim, keeping case and accents (for display names). */

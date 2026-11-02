@@ -20,7 +20,8 @@ describe('LandingPage', () => {
       'href',
       '/features',
     );
-    const hero = screen.getByRole('heading', { level: 1 }).parentElement as HTMLElement;
+    const hero = screen.getByRole('heading', { level: 1 }).parentElement;
+    if (!hero) throw new Error('The page title has no parent element');
     const source = within(hero).getByRole('link', { name: /^See it on GitHub/ });
     expect(source).toHaveAccessibleName(/opens in a new tab/);
     expect(source).toHaveAttribute('href', 'https://github.com/Justxs/Jx-Care');
