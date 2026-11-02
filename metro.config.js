@@ -1,6 +1,6 @@
 const path = require('path');
 const { getDefaultConfig } = require('expo/metro-config');
-const { withNativeWind } = require('nativewind/metro');
+const { withNativewind } = require('nativewind/metro');
 const { withStorybook } = require('@storybook/react-native/metro/withStorybook');
 
 const config = getDefaultConfig(__dirname);
@@ -34,10 +34,11 @@ if (storybookEnabled) {
   };
 }
 
-module.exports = withNativeWind(
+// NativeWind 5 compiles global.css (imported in app/_layout.tsx) and gives every React Native
+// component a className prop.
+module.exports = withNativewind(
   withStorybook(config, {
     enabled: storybookEnabled,
     configPath: path.resolve(__dirname, '.rnstorybook'),
   }),
-  { input: './global.css' },
 );

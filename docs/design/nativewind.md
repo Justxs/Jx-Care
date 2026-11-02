@@ -2,7 +2,7 @@
 
 Copied from the design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU, `project/nativewind.md`) (v18, 2026-10-07). `caption` and `overline` are 13 px / 18 px with no uppercase, as DESIGN.md requires.
 
-NativeWind is how the app applies these tokens: Tailwind classes on React Native components, the same setup React Native Reusables uses for rn-primitives. Use **NativeWind 4.2 with Tailwind CSS 3.4** (newest stable); move to NativeWind 5 / Tailwind 4 when it leaves release candidate. Colours are CSS variables with a light and a dark set, so one class works in both themes.
+NativeWind is how the app applies these tokens: Tailwind classes on React Native components, the same setup React Native Reusables uses for rn-primitives. This page shows the original NativeWind 4.2 / Tailwind 3.4 setup. The app moved to NativeWind 5 and Tailwind 4 on 2026-11-02: the root `global.css` holds the same tokens as `@theme` variables and `@utility` rules, and there is no `tailwind.config.js`. Colours are CSS variables with a light and a dark set, so one class works in both themes.
 
 ## Class names
 

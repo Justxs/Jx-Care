@@ -5,7 +5,7 @@ The Jx Care design system lives in a Claude artifact (https://claude.ai/artifact
 | File | What it holds |
 | --- | --- |
 | [design-system.md](design-system.md) | The brand book: content rules, words we use, visual foundations, rn-primitives mapping, motion, layout stability, what we avoid, icons, logo |
-| [nativewind.md](nativewind.md) | `global.css` and `tailwind.config.js` for NativeWind 4.2 (task 002 copies these) |
+| [nativewind.md](nativewind.md) | `global.css` and `tailwind.config.js` for NativeWind 4.2 (task 002 copied these). The app has since moved to NativeWind 5: the same tokens now live in the root `global.css` |
 | [tokens.json](tokens.json) | Every token with light and dark values and a usage note |
 | [components.md](components.md) | Each base and app component: what it is built on, what the consumer provides, sizes and states |
 | [components.d.ts](components.d.ts) | Props for every component, from the artifact's web bundle. Use the prop names and meanings; the app versions are React Native |

@@ -1,4 +1,4 @@
-import { useColorScheme } from 'nativewind';
+import { useColorScheme } from 'react-native';
 
 /**
  * Token values for the few places that can't take a className: navigation theme, status bar,
@@ -83,7 +83,7 @@ const themed = {
 
 /** The current theme's token values, switching with the phone theme. */
 export function useThemeColors(): ThemeColors & { scheme: ColorSchemeName } {
-  const { colorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   const scheme: ColorSchemeName = colorScheme === 'dark' ? 'dark' : 'light';
   // Stable per scheme so memos and effects that depend on it don't rerun every render.
   return themed[scheme];

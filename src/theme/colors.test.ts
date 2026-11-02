@@ -3,8 +3,9 @@ import path from 'path';
 
 import { palette } from './colors';
 
-function parseBlock(css: string, selector: string): Record<string, string> {
-  const start = css.indexOf(`${selector} {`);
+/** The channel variables in the first block that opens with `opening`. */
+function parseBlock(css: string, opening: string): Record<string, string> {
+  const start = css.indexOf(opening);
   const end = css.indexOf('}', start);
   const block = css.slice(start, end);
   const vars: Record<string, string> = {};
@@ -20,8 +21,8 @@ function parseBlock(css: string, selector: string): Record<string, string> {
 
 describe('colors.ts matches global.css', () => {
   const css = fs.readFileSync(path.join(__dirname, '../../global.css'), 'utf8');
-  const light = parseBlock(css, ':root');
-  const dark = { ...light, ...parseBlock(css, '.dark:root') };
+  const light = parseBlock(css, '\n:root {');
+  const dark = { ...light, ...parseBlock(css, '@media (prefers-color-scheme: dark) {') };
 
   it.each(Object.keys(palette.light))('light %s', (key) => {
     expect(light[key]).toBe(palette.light[key as keyof typeof palette.light]);

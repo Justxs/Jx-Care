@@ -28,7 +28,7 @@ The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-works
 | App state | `@tanstack/react-store` (no Zustand, no Redux, no React Context for state) | 0.11 |
 | Forms | `@tanstack/react-form` + `zod` for schemas | 1.x / 4.x |
 | Base components | `@rn-primitives/*` (React Native Reusables setup) | 1.5 |
-| Styling | `nativewind` **4.2** + `tailwindcss` **3.4** (not Tailwind 4, not NativeWind 5 RC) | 4.2.7 / 3.4.19 |
+| Styling | `nativewind` **5** (release candidate, on `react-native-css`) + `tailwindcss` **4**; tokens live in `global.css` (no `tailwind.config.js`) (Justas, 2026-11-02) | 5.0.0-rc.0 / 4.3 |
 | Animation | `react-native-reanimated` 4 (+ `react-native-worklets`), `react-native-gesture-handler` 3 | 4.7 / 3.3 |
 | Sheets | `@gorhom/bottom-sheet` 5 | 5.x |
 | Icons | `lucide-react-native` + `react-native-svg` | latest |
@@ -103,6 +103,7 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 
 ## UI rules (from the spec and DESIGN.md)
 
+- **NativeWind 5:** tokens, the type scale and `tabular-nums` are defined in `global.css` (`@theme` and `@utility`), and PostCSS runs Tailwind (`postcss.config.mjs`). Dark mode is `@media (prefers-color-scheme: dark)` and follows React Native's `Appearance`; read the scheme with `useColorScheme` from `react-native` (or `useThemeColors()`), and set it with `Appearance.setColorScheme`. Tailwind 4 names apply (`shadow-xs`, `rounded-xs`, `outline-hidden`, `shrink-0`); a bare `border` has no colour, so always add one. Expo's `lightningcss` is pinned to 1.30.1 in `pnpm-workspace.yaml` because react-native-css can't compile with newer ones yet.
 - **Only tokens.** Colours, type, radius and shadow come from Tailwind classes (`bg-surface`, `text-ink-muted`, `text-body-strong`, `rounded-xl`, `shadow-card`). No hex values, no inline style objects, except Reanimated animated styles.
 - **Every string** comes from `en.json` and `lt.json` through `t()`. Add both languages in the same change. Lithuanian runs 20–30% longer: use `min-h-*`, never fixed heights on text containers, and let labels wrap.
 - **Words:** use the "Words and copy" table in the spec (Buy again, Mark finished, Start, Time of day, Every time / Set days / Every few days, Other care, mild, Weekly photo). Sentence case, verbs on buttons, no emoji, no exclamation marks, no em-dashes.

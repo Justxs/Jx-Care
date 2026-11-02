@@ -1,37 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS 4 for NativeWind 5. The tokens (DESIGN.md) live here instead of a tailwind.config.js. */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import 'nativewind/theme';
 
-@layer base {
+/* The website in landing/ is its own project with its own Tailwind. */
+@source not './landing';
+
+/*
+ * Colour tokens as RGB channels, so `bg-ink/40` and the other opacity modifiers work. The dark set
+ * follows the phone theme; colors.ts holds the same numbers (a test keeps them in line).
+ */
+:root {
+  --canvas: 248 244 245;
+  --surface: 255 255 255;
+  --subtle: 241 234 236;
+  --ink: 36 31 33;
+  --ink-muted: 105 95 99;
+  --border: 232 223 226;
+  --border-strong: 135 124 128;
+  --brand-pink: 217 79 135;
+  --accent: 184 58 110;
+  --on-accent: 255 255 255;
+  --accent-soft: 251 231 239;
+  --skin: 163 80 47;
+  --skin-soft: 251 235 227;
+  --hair: 107 90 174;
+  --hair-soft: 238 234 248;
+  --ok: 42 116 73;
+  --ok-soft: 227 243 234;
+  --warning: 138 90 16;
+  --warning-soft: 252 241 220;
+  --danger: 178 55 49;
+  --danger-soft: 251 229 227;
+  --neutral: 95 102 98;
+  --neutral-soft: 236 238 236;
+  --focus: 184 58 110;
+  /* Camera screen: always dark, same in both themes */
+  --camera-bg: 18 13 16;
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    --canvas: 248 244 245;
-    --surface: 255 255 255;
-    --subtle: 241 234 236;
-    --ink: 36 31 33;
-    --ink-muted: 105 95 99;
-    --border: 232 223 226;
-    --border-strong: 135 124 128;
-    --brand-pink: 217 79 135;
-    --accent: 184 58 110;
-    --on-accent: 255 255 255;
-    --accent-soft: 251 231 239;
-    --skin: 163 80 47;
-    --skin-soft: 251 235 227;
-    --hair: 107 90 174;
-    --hair-soft: 238 234 248;
-    --ok: 42 116 73;
-    --ok-soft: 227 243 234;
-    --warning: 138 90 16;
-    --warning-soft: 252 241 220;
-    --danger: 178 55 49;
-    --danger-soft: 251 229 227;
-    --neutral: 95 102 98;
-    --neutral-soft: 236 238 236;
-    --focus: 184 58 110;
-    /* Camera screen: always dark, same in both themes */
-    --camera-bg: 18 13 16;
-  }
-  .dark:root {
     --canvas: 20 17 18;
     --surface: 32 27 29;
     --subtle: 42 35 38;
@@ -57,4 +67,152 @@
     --neutral-soft: 42 46 44;
     --focus: 242 141 181;
   }
+}
+
+@theme inline {
+  --color-canvas: rgb(var(--canvas));
+  --color-surface: rgb(var(--surface));
+  --color-subtle: rgb(var(--subtle));
+  --color-ink: rgb(var(--ink));
+  --color-ink-muted: rgb(var(--ink-muted));
+  --color-border: rgb(var(--border));
+  --color-border-strong: rgb(var(--border-strong));
+  --color-brand-pink: rgb(var(--brand-pink));
+  --color-accent: rgb(var(--accent));
+  --color-on-accent: rgb(var(--on-accent));
+  --color-accent-soft: rgb(var(--accent-soft));
+  --color-skin: rgb(var(--skin));
+  --color-skin-soft: rgb(var(--skin-soft));
+  --color-hair: rgb(var(--hair));
+  --color-hair-soft: rgb(var(--hair-soft));
+  --color-ok: rgb(var(--ok));
+  --color-ok-soft: rgb(var(--ok-soft));
+  --color-warning: rgb(var(--warning));
+  --color-warning-soft: rgb(var(--warning-soft));
+  --color-danger: rgb(var(--danger));
+  --color-danger-soft: rgb(var(--danger-soft));
+  --color-neutral: rgb(var(--neutral));
+  --color-neutral-soft: rgb(var(--neutral-soft));
+  --color-focus: rgb(var(--focus));
+  /* The progress camera is dark in both themes. */
+  --color-camera-bg: rgb(var(--camera-bg));
+  /* Fixed alphas from DESIGN.md (task 036); `camera-ink` is the white for text and icons. */
+  --color-camera-control: rgba(255, 255, 255, 0.14);
+  --color-camera-guide: rgba(240, 168, 137, 0.3);
+  --color-camera-frame: rgba(255, 255, 255, 0.75);
+  --color-camera-ink: rgb(255 255 255);
+
+  /* React Native Reusables names, pointing at the same tokens */
+  --color-background: rgb(var(--canvas));
+  --color-foreground: rgb(var(--ink));
+  --color-card: rgb(var(--surface));
+  --color-card-foreground: rgb(var(--ink));
+  --color-popover: rgb(var(--surface));
+  --color-popover-foreground: rgb(var(--ink));
+  --color-primary: rgb(var(--accent));
+  --color-primary-foreground: rgb(var(--on-accent));
+  --color-secondary: rgb(var(--subtle));
+  --color-secondary-foreground: rgb(var(--ink));
+  --color-muted: rgb(var(--subtle));
+  --color-muted-foreground: rgb(var(--ink-muted));
+  --color-accent-foreground: rgb(var(--on-accent));
+  --color-destructive: rgb(var(--danger));
+  --color-destructive-foreground: rgb(var(--on-accent));
+  --color-input: rgb(var(--border-strong));
+  --color-ring: rgb(var(--focus));
+}
+
+/* nativewind/theme points font-sans at the system font on iOS and Android; the app uses Figtree. */
+:root {
+  @media ios {
+    --font-sans: Figtree_400Regular;
+  }
+  @media android {
+    --font-sans: Figtree_400Regular;
+  }
+}
+
+@theme {
+  /* On Android every Figtree weight is its own font family, so each name picks a family. */
+  --font-sans: Figtree_400Regular;
+  --font-medium: Figtree_500Medium;
+  --font-semibold: Figtree_600SemiBold;
+  --font-bold: Figtree_700Bold;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-xl: 16px;
+
+  --shadow-card: 0 2px 8px rgba(26, 31, 28, 0.06);
+  --shadow-raised: 0 8px 24px rgba(26, 31, 28, 0.12);
+}
+
+/* Type scale from DESIGN.md. Each style sets the Figtree family instead of a font weight. */
+@utility text-display {
+  font-size: 32px;
+  line-height: 40px;
+  font-family: Figtree_700Bold;
+  letter-spacing: -0.32px;
+}
+@utility text-title-l {
+  font-size: 24px;
+  line-height: 32px;
+  font-family: Figtree_700Bold;
+}
+@utility text-title-m {
+  font-size: 20px;
+  line-height: 28px;
+  font-family: Figtree_600SemiBold;
+}
+@utility text-title-s {
+  font-size: 17px;
+  line-height: 24px;
+  font-family: Figtree_600SemiBold;
+}
+@utility text-body-l {
+  font-size: 16px;
+  line-height: 24px;
+  font-family: Figtree_400Regular;
+}
+@utility text-body {
+  font-size: 15px;
+  line-height: 22px;
+  font-family: Figtree_400Regular;
+}
+@utility text-body-strong {
+  font-size: 15px;
+  line-height: 22px;
+  font-family: Figtree_600SemiBold;
+}
+@utility text-label {
+  font-size: 13px;
+  line-height: 18px;
+  font-family: Figtree_500Medium;
+}
+@utility text-caption {
+  font-size: 13px;
+  line-height: 18px;
+  font-family: Figtree_400Regular;
+}
+@utility text-overline {
+  font-size: 13px;
+  line-height: 18px;
+  font-family: Figtree_600SemiBold;
+}
+/* Tab bar labels and single-letter weekday dots only (DESIGN.md exception). */
+@utility text-tiny {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: Figtree_500Medium;
+}
+/* The active tab label. */
+@utility text-tiny-strong {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: Figtree_600SemiBold;
+}
+
+/* Tailwind's `tabular-nums` sets a CSS variable only; React Native needs `fontVariant`. */
+@utility tabular-nums {
+  -rn-font-variant: tabular-nums;
 }

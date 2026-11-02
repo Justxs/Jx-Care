@@ -78,7 +78,7 @@ The landing page lives in [landing/](landing/README.md), a separate Vite + React
 | App | Expo SDK 58, React Native 0.88 (New Architecture), Expo Router |
 | Data | SQLite (expo-sqlite) with Drizzle ORM; PIN and secrets in expo-secure-store |
 | State and forms | TanStack Query, TanStack Store, TanStack Form, zod |
-| UI | rn-primitives components styled with NativeWind 4.2, Reanimated 4, lucide icons, Figtree |
+| UI | rn-primitives components styled with NativeWind 5 and Tailwind 4, Reanimated 4, lucide icons, Figtree |
 | Languages | i18next with Lithuanian and English in [locales/](locales/) |
 | Quality | TypeScript, oxlint, oxfmt, Jest with Testing Library, on-device Storybook 10 |
 
