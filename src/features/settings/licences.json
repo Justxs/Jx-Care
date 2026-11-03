@@ -86,7 +86,7 @@
   },
   {
     "name": "@tanstack/react-query",
-    "version": "5.104.5",
+    "version": "5.105.1",
     "license": "MIT"
   },
   {
@@ -106,7 +106,7 @@
   },
   {
     "name": "expo",
-    "version": "58.0.19",
+    "version": "58.0.22",
     "license": "MIT"
   },
   {
@@ -116,7 +116,7 @@
   },
   {
     "name": "expo-background-task",
-    "version": "58.0.11",
+    "version": "58.0.12",
     "license": "MIT"
   },
   {
@@ -126,12 +126,12 @@
   },
   {
     "name": "expo-camera",
-    "version": "58.0.12",
+    "version": "58.0.14",
     "license": "MIT"
   },
   {
     "name": "expo-constants",
-    "version": "58.0.13",
+    "version": "58.0.14",
     "license": "MIT"
   },
   {
@@ -141,7 +141,7 @@
   },
   {
     "name": "expo-dev-client",
-    "version": "58.0.15",
+    "version": "58.0.18",
     "license": "MIT"
   },
   {
@@ -151,12 +151,12 @@
   },
   {
     "name": "expo-file-system",
-    "version": "58.0.11",
+    "version": "58.0.13",
     "license": "MIT"
   },
   {
     "name": "expo-font",
-    "version": "58.0.10",
+    "version": "58.0.11",
     "license": "MIT"
   },
   {
@@ -166,12 +166,12 @@
   },
   {
     "name": "expo-image",
-    "version": "58.0.17",
+    "version": "58.0.18",
     "license": "MIT"
   },
   {
     "name": "expo-image-manipulator",
-    "version": "58.0.15",
+    "version": "58.0.16",
     "license": "MIT"
   },
   {
@@ -181,7 +181,7 @@
   },
   {
     "name": "expo-linking",
-    "version": "58.0.14",
+    "version": "58.0.15",
     "license": "MIT"
   },
   {
@@ -196,12 +196,12 @@
   },
   {
     "name": "expo-notifications",
-    "version": "58.1.6",
+    "version": "58.1.7",
     "license": "MIT"
   },
   {
     "name": "expo-router",
-    "version": "58.0.26",
+    "version": "58.0.29",
     "license": "MIT"
   },
   {
@@ -211,17 +211,17 @@
   },
   {
     "name": "expo-sharing",
-    "version": "58.0.20",
+    "version": "58.0.21",
     "license": "MIT"
   },
   {
     "name": "expo-splash-screen",
-    "version": "58.0.11",
+    "version": "58.0.12",
     "license": "MIT"
   },
   {
     "name": "expo-sqlite",
-    "version": "58.0.14",
+    "version": "58.0.15",
     "license": "MIT"
   },
   {
@@ -231,7 +231,7 @@
   },
   {
     "name": "expo-task-manager",
-    "version": "58.0.12",
+    "version": "58.0.13",
     "license": "MIT"
   },
   {
@@ -241,17 +241,17 @@
   },
   {
     "name": "i18next",
-    "version": "26.5.11",
+    "version": "26.6.0",
     "license": "MIT"
   },
   {
     "name": "lucide-react-native",
-    "version": "1.61.0",
+    "version": "1.66.0",
     "license": "ISC"
   },
   {
     "name": "nativewind",
-    "version": "4.2.7",
+    "version": "5.0.0-rc.0",
     "license": "MIT"
   },
   {
@@ -261,12 +261,17 @@
   },
   {
     "name": "react-i18next",
-    "version": "17.1.9",
+    "version": "17.1.10",
     "license": "MIT"
   },
   {
     "name": "react-native",
-    "version": "0.88.0",
+    "version": "0.88.1",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-css",
+    "version": "3.1.0-rc.0",
     "license": "MIT"
   },
   {
@@ -291,7 +296,7 @@
   },
   {
     "name": "react-native-screens",
-    "version": "4.30.0",
+    "version": "4.30.1",
     "license": "MIT"
   },
   {
@@ -306,12 +311,12 @@
   },
   {
     "name": "tailwind-merge",
-    "version": "2.6.1",
+    "version": "3.7.0",
     "license": "MIT"
   },
   {
     "name": "tailwindcss",
-    "version": "3.4.19",
+    "version": "4.3.3",
     "license": "MIT"
   },
   {

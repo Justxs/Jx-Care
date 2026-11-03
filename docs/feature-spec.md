@@ -74,7 +74,7 @@ One word per idea, used the same way on every screen and in notifications:
 ### Styling
 
 - **NativeWind 4.2** (Tailwind CSS 3.4 classes on React Native components), the newest stable release. NativeWind 5 (Tailwind 4) is still a release candidate; move to it once it is stable.
-- Design system tokens (colours, type scale, spacing, radius, shadow) live in `tailwind.config.js` as CSS variables, with a light and a dark set, so `bg-background`, `text-foreground` and `bg-accent` switch with the phone theme.
+- Design system tokens (colours, type scale, spacing, radius, shadow) live in `global.css` as CSS variables, with a light and a dark set, so `bg-background`, `text-foreground` and `bg-accent` switch with the phone theme.
 - rn-primitives components are styled with `className`, the same setup React Native Reusables uses. No inline style objects except for animated values.
 - Spacing on a 4 pt scale (`p-1` = 4 pt); screen side padding 16 pt; cards use the `rounded-xl` token.
 

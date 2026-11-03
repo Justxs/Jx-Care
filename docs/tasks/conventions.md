@@ -17,7 +17,7 @@ If something you need is in none of them, pick the simplest option that fits the
 
 ## Stack (fixed)
 
-The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-10-26 for reference:
+The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-11-02 for reference:
 
 | Need | Package | Version seen |
 | --- | --- | --- |
@@ -28,7 +28,7 @@ The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-works
 | App state | `@tanstack/react-store` (no Zustand, no Redux, no React Context for state) | 0.11 |
 | Forms | `@tanstack/react-form` + `zod` for schemas | 1.x / 4.x |
 | Base components | `@rn-primitives/*` (React Native Reusables setup) | 1.5 |
-| Styling | `nativewind` **4.2** + `tailwindcss` **3.4** (not Tailwind 4, not NativeWind 5 RC) | 4.2.7 / 3.4.19 |
+| Styling | `nativewind` **5** (release candidate, on `react-native-css`) + `tailwindcss` **4**; tokens live in `global.css` (no `tailwind.config.js`) (Justas, 2026-11-02) | 5.0.0-rc.0 / 4.3 |
 | Animation | `react-native-reanimated` 4 (+ `react-native-worklets`), `react-native-gesture-handler` 3 | 4.7 / 3.3 |
 | Sheets | `@gorhom/bottom-sheet` 5 | 5.x |
 | Icons | `lucide-react-native` + `react-native-svg` | latest |
@@ -40,7 +40,7 @@ The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-works
 | Notifications | `expo-notifications` (local only) | SDK |
 | Media | `expo-image`, `expo-image-picker`, `expo-camera`, `expo-file-system`, `expo-sharing` | SDK |
 | Tests | `jest` + `jest-expo`, `@testing-library/react-native`, `better-sqlite3` (repository tests in Node) | 30 / 14 |
-| Lint and format | `oxlint` (`.oxlintrc.json`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.89 / 0.74 |
+| Lint and format | `oxlint` (`.oxlintrc.json`, type-aware through `oxlint-tsgolint`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.90 / 0.75 |
 | Component docs | `@storybook/react-native` on-device, with the controls and actions addons; see [docs/storybook.md](../storybook.md) (Justas, 2026-10-07) | 10.7 |
 
 Don't add other runtime libraries unless the task names them. If you really need one, write why under "Decisions".
@@ -83,6 +83,7 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 
 - **TypeScript strict**, no `any`, no `@ts-ignore`. Export types for anything another area uses.
 - **Lint and format with oxc:** `pnpm lint` (oxlint, warnings fail) and `pnpm format` (oxfmt). Run `pnpm format` before committing; `pnpm check` fails on unformatted files.
+- **Type-aware lint:** oxlint reads the TypeScript types (`options.typeAware`, which needs `oxlint-tsgolint`), so `typescript/no-deprecated` fails `pnpm lint` on any call a package marks `@deprecated`. The other type-aware rules that the current code trips (floating promises, unsafe assertions and so on) are switched off in `.oxlintrc.json` until someone works through them. The website runs the same check with `oxlint --type-aware`.
 - **Pure logic lives in `src/lib/`** and gets unit tests. Screens never compute expiry, streaks, schedules or conflicts themselves; they call `src/lib`.
 - **Database access lives in `repo.ts` files** as plain functions that take a Drizzle database as their first argument (`listProducts(db, filters)`). That is what lets the same code run on expo-sqlite in the app and on better-sqlite3 in Jest.
 - **Database changes reach phones that already have data.** Change `src/db/schema.ts`, then run `pnpm db:generate` (it also locks the migration and writes its data snapshot). Never edit, rename, reorder or delete a migration once it is on main, and never edit a file in `src/db/upgrade-fixtures/`; fix mistakes with a new migration. A migration that changes existing data also needs an `expectedChanges` entry in the upgrade test and a backup `dataMigrations` step. The upgrade test in `pnpm check` fails if a migration loses data. Details and the release steps: [docs/releasing.md](../releasing.md).
@@ -102,6 +103,7 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 
 ## UI rules (from the spec and DESIGN.md)
 
+- **NativeWind 5:** tokens, the type scale and `tabular-nums` are defined in `global.css` (`@theme` and `@utility`), and PostCSS runs Tailwind (`postcss.config.mjs`). Dark mode is `@media (prefers-color-scheme: dark)` and follows React Native's `Appearance`; read the scheme with `useColorScheme` from `react-native` (or `useThemeColors()`), and set it with `Appearance.setColorScheme`. Tailwind 4 names apply (`shadow-xs`, `rounded-xs`, `outline-hidden`, `shrink-0`); a bare `border` has no colour, so always add one. Expo's `lightningcss` is pinned to 1.30.1 in `pnpm-workspace.yaml` because react-native-css can't compile with newer ones yet.
 - **Only tokens.** Colours, type, radius and shadow come from Tailwind classes (`bg-surface`, `text-ink-muted`, `text-body-strong`, `rounded-xl`, `shadow-card`). No hex values, no inline style objects, except Reanimated animated styles.
 - **Every string** comes from `en.json` and `lt.json` through `t()`. Add both languages in the same change. Lithuanian runs 20–30% longer: use `min-h-*`, never fixed heights on text containers, and let labels wrap.
 - **Words:** use the "Words and copy" table in the spec (Buy again, Mark finished, Start, Time of day, Every time / Set days / Every few days, Other care, mild, Weekly photo). Sentence case, verbs on buttons, no emoji, no exclamation marks, no em-dashes.

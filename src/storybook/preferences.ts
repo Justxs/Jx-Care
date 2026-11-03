@@ -1,5 +1,5 @@
 import { createStore } from '@tanstack/react-store';
-import { colorScheme } from 'nativewind';
+import { Appearance } from 'react-native';
 
 import { setI18nLanguage, type Language } from '@/i18n';
 import { appStore } from '@/state/app';
@@ -11,8 +11,8 @@ export type StoryPrefs = { scheme: ColorSchemeName; language: Language };
 export const storyPrefsStore = createStore<StoryPrefs>({ scheme: 'light', language: 'en' });
 
 function applyScheme(scheme: ColorSchemeName): void {
-  // `useThemeColors()` and every `dark:` class follow NativeWind's scheme.
-  colorScheme.set(scheme);
+  // `useThemeColors()` and every `dark:` class follow React Native's colour scheme.
+  Appearance.setColorScheme(scheme);
 }
 
 function applyLanguage(language: Language): Promise<unknown> {

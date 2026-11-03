@@ -20,7 +20,7 @@ export function browserLocale(languages: readonly string[] = navigator.languages
 
 export const i18n = createInstance();
 
-i18n.use(initReactI18next).init({
+void i18n.use(initReactI18next).init({
   resources,
   lng: 'en',
   fallbackLng: 'en',

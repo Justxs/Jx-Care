@@ -1,6 +1,6 @@
 # DESIGN.md: Jx Care visual system
 
-Source of truth: the Jx Care design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU). This file mirrors its tokens and rules so coding agents and design checkers (impeccable.style reads DESIGN.md) stay inside the system. Styling in the app is NativeWind 4.2; see the artifact's NativeWind section for `global.css` and `tailwind.config.js`.
+Source of truth: the Jx Care design system artifact (https://claude.ai/artifact/6wezpPoHNSQoe9bM6GUryU). This file mirrors its tokens and rules so coding agents and design checkers (impeccable.style reads DESIGN.md) stay inside the system. Styling in the app is NativeWind 5 with Tailwind 4; the tokens are in `global.css` (the artifact's NativeWind section still shows the older 4.2 `tailwind.config.js` form).
 
 ## Colour
 

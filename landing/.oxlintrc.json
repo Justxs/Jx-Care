@@ -24,7 +24,8 @@
     "typescript/ban-ts-comment": "error",
     "import/no-unassigned-import": "off",
     "import/namespace": "off",
-    "jsx-a11y/prefer-tag-over-role": "off"
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "typescript/no-deprecated": "error"
   },
   "ignorePatterns": ["node_modules", "dist", "storybook-static", "public"]
 }
