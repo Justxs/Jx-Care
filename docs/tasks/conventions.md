@@ -17,7 +17,7 @@ If something you need is in none of them, pick the simplest option that fits the
 
 ## Stack (fixed)
 
-The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-11-02 for reference:
+The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-workspace.yaml`, flat `node_modules`); never commit a `package-lock.json`. pnpm refuses versions published less than a day ago; if a version you need is that new, wait, or list its exact `name@version` under `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`. `landing/` is a separate pnpm project with its own lockfile. Use the newest stable versions. Expo packages go in with `pnpm expo install <pkg>` so they match the SDK; everything else with `pnpm add <pkg>@latest`. Versions on 2026-11-14 for reference:
 
 | Need | Package | Version seen |
 | --- | --- | --- |
@@ -28,19 +28,19 @@ The package manager is pnpm (pinned in `packageManager`, settings in `pnpm-works
 | App state | `@tanstack/react-store` (no Zustand, no Redux, no React Context for state) | 0.11 |
 | Forms | `@tanstack/react-form` + `zod` for schemas | 1.x / 4.x |
 | Base components | `@rn-primitives/*` (React Native Reusables setup) | 1.5 |
-| Styling | `nativewind` **5** (release candidate, on `react-native-css`) + `tailwindcss` **4**; tokens live in `global.css` (no `tailwind.config.js`) (Justas, 2026-11-02) | 5.0.0-rc.0 / 4.3 |
+| Styling | `nativewind` **5** (release candidate, on `react-native-css`) + `tailwindcss` **4**; tokens live in `global.css` (no `tailwind.config.js`) (Justas, 2026-11-02) | 5.0.0-rc.1 / 4.3 |
 | Animation | `react-native-reanimated` 4 (+ `react-native-worklets`), `react-native-gesture-handler` 3 | 4.7 / 3.3 |
 | Sheets | `@gorhom/bottom-sheet` 5 | 5.x |
 | Icons | `lucide-react-native` + `react-native-svg` | latest |
 | Other UI helpers | `expo-haptics` (tick feedback), `expo-blur` (app switcher overlay), `react-native-keyboard-controller` (forms and sheets), `react-native-draggable-flatlist` (step reorder) | latest |
 | Font | `@expo-google-fonts/figtree` + `expo-font` | latest |
-| i18n | `i18next`, `react-i18next`, `expo-localization` | 26 / 17 |
+| i18n | `i18next`, `react-i18next`, `expo-localization` | 27 / 18 |
 | Dates | `date-fns` 4 (+ `Intl.DateTimeFormat` for display) | 4.x |
 | Secure data | `expo-secure-store`, `expo-crypto`, `expo-local-authentication` | SDK |
 | Notifications | `expo-notifications` (local only) | SDK |
 | Media | `expo-image`, `expo-image-picker`, `expo-camera`, `expo-file-system`, `expo-sharing` | SDK |
 | Tests | `jest` + `jest-expo`, `@testing-library/react-native`, `better-sqlite3` (repository tests in Node) | 30 / 14 |
-| Lint and format | `oxlint` (`.oxlintrc.json`, type-aware through `oxlint-tsgolint`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.90 / 0.75 |
+| Lint and format | `oxlint` (`.oxlintrc.json`, type-aware through `oxlint-tsgolint`) and `oxfmt` (`.oxfmtrc.json`) from oxc; no ESLint, no Prettier (Justas, 2026-10-07) | 1.93 / 0.78 |
 | Component docs | `@storybook/react-native` on-device, with the controls and actions addons; see [docs/storybook.md](../storybook.md) (Justas, 2026-10-07) | 10.7 |
 
 Don't add other runtime libraries unless the task names them. If you really need one, write why under "Decisions".
@@ -99,6 +99,7 @@ Import with the `@/` alias (`@/lib/expiry`), which points at `src/`.
 - **Gestures** use Gesture Handler 3's hooks (`usePanGesture({ onActivate, onUpdate, onDeactivate })`, `useSimultaneousGestures`, `useCompetingGestures`), not the old `Gesture.Pan()` builders. Their callbacks are worklets without a `'worklet'` line; pass `testID` to reach one with `getByGestureTestId` in tests.
 - **Leaving a screen with unsaved work** is blocked with expo-router's `usePreventRemove` (`useScreenCloseGuard` wraps it); the `beforeRemove` event no longer exists. Tests that mock expo-router use the stand-in in `@/test/preventRemove` and leave with `tryLeave()`.
 - **Deprecated APIs:** use `useSelector` (not `useStore`) for TanStack stores and forms, `queryClient.query(...)` (not `fetchQuery`, or `prefetchQuery` with `.catch(() => {})`), `File.writeSync` in synchronous code (`File.write` returns a promise), and instance types such as `TextInputInstance` for refs.
+- **Wrapping `t()`:** i18next 27 checks interpolation strictly, so a function that takes a translator should be typed `TFunction` (from `i18next`), or take its options as required (`(key: string, options: { lng: string }) => string`); an optional `options?` no longer matches `t`.
 - **rn-primitives** set `role` on their pressables, and `role` wins over `accessibilityRole`; pass `role` to change the spoken role.
 
 ## UI rules (from the spec and DESIGN.md)

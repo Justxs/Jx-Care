@@ -20,8 +20,9 @@ allowBuilds:
 shellEmulator: true
 
 # NativeWind 5's CSS compiler (react-native-css, which loads Expo's copy of lightningcss) fails
-# on lightningcss 1.31 and newer ("expected an object-like struct named Specifier"). Expo accepts
-# ^1.30.1, so both copies stay on 1.30.1 until react-native-css supports the newer releases.
+# on lightningcss 1.31 and newer ("expected an object-like struct named Specifier"; still true for
+# react-native-css 3.1.0-rc.1 and lightningcss 1.33 on 2026-11-14). Expo accepts ^1.30.1, so both
+# copies stay on 1.30.1 until react-native-css supports the newer releases.
 overrides:
   '@expo/metro-config>lightningcss': 1.30.1
   'react-native-css>lightningcss': 1.30.1

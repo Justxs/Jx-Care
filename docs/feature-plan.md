@@ -194,7 +194,7 @@ Expo-managed React Native with TypeScript on the newest versions, so Android and
 | PIN hash | expo-secure-store + expo-crypto | Keychain/Keystore backed |
 | Biometrics | expo-local-authentication | Fingerprint / Face ID |
 | Notifications | expo-notifications (local only) | Expiry, routine and hair reminders, no server |
-| Translations | i18next 26 + react-i18next 17, expo-localization | LT/EN files, picks phone language |
+| Translations | i18next 27 + react-i18next 18, expo-localization | LT/EN files, picks phone language |
 | Dates | date-fns 4 with lt and en-US locales | Expiry and "every N days" maths |
 | Calendar UI | react-native-calendars | Month view with coloured day marks |
 | Lists | react-native-draggable-flatlist 4 | Reorder routine steps |
