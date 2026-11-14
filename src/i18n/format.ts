@@ -33,7 +33,7 @@ function capitalise(text: string): string {
   return text.charAt(0).toLocaleUpperCase() + text.slice(1);
 }
 
-function t(lang: Language, key: string, options?: Record<string, unknown>): string {
+function t(lang: Language, key: string, options: Record<string, unknown> = {}): string {
   return i18n.getFixedT(lang)(key, options) as string;
 }
 

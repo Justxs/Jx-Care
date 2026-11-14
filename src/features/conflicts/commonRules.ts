@@ -153,7 +153,7 @@ export type CommonRuleLabels = {
   notes: Record<CommonNoteKey, string>;
 };
 
-type Translate = (key: string, options?: { lng?: string }) => string;
+type Translate = (key: string, options: { lng: string }) => string;
 
 /** The pack's words in `language`, with group names in every other language for matching. */
 export function commonRuleLabels(

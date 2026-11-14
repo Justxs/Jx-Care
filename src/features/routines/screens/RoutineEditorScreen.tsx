@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import { AlertDialog } from '@/components/ui/alert-dialog';
@@ -542,7 +543,7 @@ function stepRow(
   products: ReadonlyMap<number, EditorProduct>,
   conflict: StepRowData['conflict'],
   f: ReturnType<typeof useFormat>,
-  t: (key: string, opts?: Record<string, unknown>) => string,
+  t: TFunction,
 ): StepRowData {
   const product = step.productId !== null ? products.get(step.productId) : undefined;
   const n = typeof step.everyNDays === 'string' ? Number(step.everyNDays) : step.everyNDays;
